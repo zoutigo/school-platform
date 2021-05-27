@@ -5,7 +5,8 @@
   margin: 0;
 }
 html {
-  font-size: 62.5%; /* 16px x 62.5 = 10px = 1rem */
+  /* 16px x 62.5 = 10px = 1rem */
+  /* font-size: 62.5%;  */
   box-sizing: border-box;
 }
 
@@ -43,20 +44,29 @@ body {
 .dropdown-content {
   position: absolute;
   display: none;
-  right: 0;
-
-  padding: 1rem;
   z-index: 1;
-  background-color: #203040;
   margin: 0;
-
-  border-radius: 0.5rem;
 }
-.dropdown:hover .dropdown-content {
+.dropdown:hover > .dropdown-content {
   display: block;
 }
 
 /* spacings */
 .mt-2 {
   margin-top: 2rem;
+}
+.w-100 {
+  width: 100%;
+}
+
+/* sizing */
+.btn-size {
+  height: 3rem;
+  width: 10rem;
+  border: solid 0px;
+  box-sizing: border-box;
+}
+.btn-width {
+  min-width: 12rem;
+  box-sizing: border-box;
 }

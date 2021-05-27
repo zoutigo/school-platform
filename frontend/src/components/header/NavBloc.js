@@ -1,7 +1,7 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, styled, Typography } from '@material-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
-
+import { withTheme } from '@material-ui/styles'
 import { StyledIconBox, StyledNavLink } from '../elements/styled'
 
 const useStyles = makeStyles(() => ({
@@ -11,61 +11,107 @@ const useStyles = makeStyles(() => ({
   },
   category: {
     minWidth: '14rem',
-    background: 'blue',
-  },
-  chapter: {
-    background: 'pink',
+    background: 'whitesmoke',
   },
 }))
+
+const StyledRubricLi = withTheme(
+  styled(({ bgcolor, theme, ...rest }) => <li {...rest} />)({
+    background: 'yellow',
+    textAlign: 'center',
+    width: '100%',
+    boxSizing: 'border-box',
+    cursor: 'pointer',
+    '&:hover': {
+      background: ({ bgcolor }) => bgcolor || 'transparent',
+      color: ({ theme }) => theme.palette.secondary.dark,
+    },
+  })
+)
+const StyledCategoryLi = withTheme(
+  styled(({ bgcolor, theme, ...rest }) => <li {...rest} />)({
+    background: 'whitesmoke',
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    cursor: 'pointer',
+    marginTop: '1px',
+    border: 'white',
+    minWidth: '100%',
+    '&:hover': {
+      background: ({ bgcolor }) => bgcolor || 'transparent',
+      color: ({ theme }) => theme.palette.secondary.dark,
+      '& >ul': {
+        // display: 'block',
+      },
+    },
+  })
+)
+
+const StyledChapterUl = withTheme(
+  styled(({ bgcolor, theme, ...rest }) => <ul {...rest} />)({
+    position: 'absolute',
+    display: 'none',
+    top: 0,
+    left: '100%',
+    zIndex: 1,
+    margin: 0,
+    '& >li': {
+      background: 'whitesmoke',
+      '&:hover': {
+        background: ({ bgcolor }) => bgcolor || 'transparent',
+      },
+    },
+  })
+)
 
 function NavBloc({ rubric, rubcolor }) {
   const classes = useStyles()
   const { rubname, icon, categories } = rubric
-  const { chapters } = categories
 
   return (
-    <li className={classes.rubric}>
+    <li className="btn-width">
       <ul>
         <li>
           <StyledIconBox bgcolor={rubcolor}>{icon}</StyledIconBox>
         </li>
-        <li
-          className="mt-2 dropdown "
-          style={{
-            background: 'yellow',
-            textAlign: 'center',
-            width: '100%',
-            boxSizing: 'border-box',
-          }}
-        >
-          <Typography variant="h2">{rubname}</Typography>
+        <StyledRubricLi className="dropdown btn-size" bgcolor={rubcolor}>
+          <StyledNavLink to={rubric.route.path}>
+            <Typography variant="h4">{rubname}</Typography>
+          </StyledNavLink>
           <ul className={`dropdown-content ${classes.category}`}>
             {categories &&
               categories.map((category) => (
-                <li key={category.alias}>
+                <StyledCategoryLi
+                  key={category.alias}
+                  bgcolor={rubcolor}
+                  className="btn-size dropdown"
+                >
                   <StyledNavLink to={category.route.path}>
-                    {category.catname}
+                    <Typography variant="h4">{category.catname}</Typography>
                   </StyledNavLink>{' '}
-                  {chapters && (
-                    <ul className={classes.chapter}>
+                  {category.chapters && (
+                    <StyledChapterUl
+                      bgcolor={rubcolor}
+                      className="dropdown-content"
+                    >
                       {
                         // eslint-disable-next-line
-                        chapters.map((chapter) => (
-                          <li key={chapter.alias}>
-                            <StyledNavLink>
-                              <Typography variant="h3">
-                                {chapter.name}{' '}
+                        category.chapters.map((chapter) => (
+                          <li key={chapter.alias} className="btn-size">
+                            <StyledNavLink to={chapter.route.path}>
+                              <Typography variant="h4">
+                                {chapter.chapname || 'hello'}{' '}
                               </Typography>{' '}
                             </StyledNavLink>
                           </li>
                         ))
                       }
-                    </ul>
+                    </StyledChapterUl>
                   )}
-                </li>
+                </StyledCategoryLi>
               ))}
           </ul>
-        </li>
+        </StyledRubricLi>
       </ul>
     </li>
   )

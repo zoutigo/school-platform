@@ -4,6 +4,8 @@ import { withTheme } from '@material-ui/styles'
 import { NavLink } from 'react-router-dom'
 // import theme from '../../constants/theme'
 
+/* eslint-disable */
+
 export const StyledNavLink = styled(NavLink)(() => ({
   color: 'inherit',
   textDecoration: 'inherit',

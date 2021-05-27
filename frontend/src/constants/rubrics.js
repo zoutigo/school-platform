@@ -20,8 +20,8 @@ const rubrics = [
 
     categories: [
       {
-        catname: 'Equipe pedagogique',
-        alias: 'ep',
+        catname: 'Equipe',
+        alias: 'equipe-pedagogique',
         route: {
           path: '/ecole/equipe-pedagogique',
           exact: true,

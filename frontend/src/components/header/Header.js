@@ -33,29 +33,31 @@ function Header() {
           })}
         </ul>
       )}
-      <ul className="private column">
-        <li>
-          <StyledIconBox bgcolor={theme.palette.apelogec.main}>
-            <AccountCircleIcon fontSize="large" />
-          </StyledIconBox>
-        </li>
-        <li className="mt-2">
-          <div className="dropdown">
-            Login
-            <ul className="dropdown-content">
-              <li>Mon compte</li>
-            </ul>
-          </div>
-          <div className="dropdown">
-            Admin
-            <ul className="dropdown-content">
-              <li>Gestion des roles</li>
-              <li>Organigramme</li>
-              <li>Inscire utilisateur</li>
-            </ul>
-          </div>
-        </li>
-      </ul>
+      {!isSmallScreen && (
+        <ul className="private column">
+          <li>
+            <StyledIconBox bgcolor={theme.palette.apelogec.main}>
+              <AccountCircleIcon fontSize="large" />
+            </StyledIconBox>
+          </li>
+          <li className="mt-2">
+            <div className="dropdown">
+              Login
+              <ul className="dropdown-content">
+                <li>Mon compte</li>
+              </ul>
+            </div>
+            <div className="dropdown">
+              Admin
+              <ul className="dropdown-content">
+                <li>Gestion des roles</li>
+                <li>Organigramme</li>
+                <li>Inscire utilisateur</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      )}
     </header>
   )
 }
