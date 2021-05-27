@@ -4,30 +4,21 @@ import PropTypes from 'prop-types'
 
 import { StyledIconBox, StyledNavLink } from '../elements/styled'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   rubric: {
-    minWidth: '20rem',
-    background: 'red',
-    [theme.breakpoints.between('sm', 'md')]: {
-      minWidth: '15rem',
-    },
-    [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    },
+    minWidth: '16rem',
+    background: 'transparent',
   },
   category: {
-    minWidth: '20rem',
+    minWidth: '14rem',
     background: 'blue',
-    [theme.breakpoints.between('sm', 'md')]: {
-      minWidth: '15rem',
-    },
   },
   chapter: {
     background: 'pink',
   },
 }))
 
-function NavBloc({ rubric }) {
+function NavBloc({ rubric, rubcolor }) {
   const classes = useStyles()
   const { rubname, icon, categories } = rubric
   const { chapters } = categories
@@ -36,7 +27,7 @@ function NavBloc({ rubric }) {
     <li className={classes.rubric}>
       <ul>
         <li>
-          <StyledIconBox>{icon}</StyledIconBox>
+          <StyledIconBox bgcolor={rubcolor}>{icon}</StyledIconBox>
         </li>
         <li
           className="mt-2 dropdown "
@@ -81,6 +72,7 @@ function NavBloc({ rubric }) {
 }
 // NavBloc.defaultProps = null
 NavBloc.propTypes = {
+  rubcolor: PropTypes.string.isRequired,
   rubric: PropTypes.shape({
     rubname: PropTypes.string,
     icon: PropTypes.element,
@@ -88,7 +80,7 @@ NavBloc.propTypes = {
     route: PropTypes.shape({
       path: PropTypes.string.isRequired,
       exact: PropTypes.bool.isRequired,
-      component: PropTypes.element.isRequired,
+      component: PropTypes.func.isRequired,
     }),
     categories: PropTypes.arrayOf(
       PropTypes.shape({
@@ -97,7 +89,7 @@ NavBloc.propTypes = {
         route: PropTypes.shape({
           path: PropTypes.string.isRequired,
           exact: PropTypes.bool.isRequired,
-          component: PropTypes.element.isRequired,
+          component: PropTypes.func.isRequired,
         }).isRequired,
         categories: PropTypes.arrayOf(
           PropTypes.shape({
@@ -106,7 +98,7 @@ NavBloc.propTypes = {
             route: PropTypes.shape({
               path: PropTypes.string,
               exact: PropTypes.bool,
-              component: PropTypes.element,
+              component: PropTypes.func,
             }),
           })
         ),

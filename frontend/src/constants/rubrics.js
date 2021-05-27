@@ -112,7 +112,7 @@ const rubrics = [
   {
     rubname: 'Vie Scolaire',
     icon: <DirectionsRunIcon />,
-    alias: 'vie-scolaire',
+    alias: 'viescolaire',
     route: {
       path: '/vie-scolaire',
       exact: true,
@@ -567,7 +567,7 @@ const rubrics = [
   {
     rubname: 'APEL-OGEC',
     icon: <EcoSharpIcon />,
-    alias: 'apel-ogec',
+    alias: 'apelogec',
     route: {
       path: '/apel-ogec',
       exact: true,

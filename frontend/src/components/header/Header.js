@@ -1,9 +1,7 @@
 import React from 'react'
-
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-
-import './style.css'
-import { useTheme } from '@material-ui/core'
+import { useMediaQuery, useTheme } from '@material-ui/core'
+import './headerStyle.css'
 import Logo from './Logo'
 import { StyledIconBox } from '../elements/styled'
 import rubrics from '../../constants/rubrics'
@@ -11,16 +9,30 @@ import NavBloc from './NavBloc'
 
 function Header() {
   const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
+
   return (
     <header className="row">
       <div className="logo">
         <Logo />
       </div>
-      <ul className="row nav">
-        {rubrics.map((rubric) => (
-          <NavBloc key={rubric.alias} rubric={rubric} />
-        ))}
-      </ul>
+      {!isSmallScreen && (
+        <ul className="row nav">
+          {rubrics.map((rubric) => {
+            const colors = Object.entries(theme.palette)
+            const sortedcolors = colors.filter(
+              /* eslint-disable */
+              ([key, object]) => key === rubric.alias
+            )
+            const [rubcolors] = sortedcolors
+            const rubcolor = rubcolors ? rubcolors[1].main : ''
+
+            return (
+              <NavBloc key={rubric.alias} rubric={rubric} rubcolor={rubcolor} />
+            )
+          })}
+        </ul>
+      )}
       <ul className="private column">
         <li>
           <StyledIconBox bgcolor={theme.palette.apelogec.main}>
