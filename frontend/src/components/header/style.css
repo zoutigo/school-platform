@@ -1,0 +1,20 @@
+header {
+  width: 100%;
+  background: green;
+  position: fixed;
+}
+
+.logo {
+  flex: 2;
+  max-height: 12vh;
+  overflow: hidden;
+  background: chartreuse;
+}
+
+.nav {
+  flex: 6;
+}
+
+.private {
+  flex: 1;
+}
