@@ -1,6 +1,7 @@
 import React from 'react'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import MenuIcon from '@material-ui/icons/Menu'
+import { useDispatch } from 'react-redux'
 
 import { Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import './headerStyle.css'
@@ -8,10 +9,12 @@ import Logo from './Logo'
 import { StyledIconBox } from '../elements/styled'
 import rubrics from '../../constants/rubrics'
 import NavBloc from './NavBloc'
+import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
 
 function Header() {
   const theme = useTheme()
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
+  const isSmallScreen = !useMediaQuery(theme.breakpoints.up('lg'))
+  const dispatch = useDispatch()
 
   return (
     <header className="row">
@@ -76,7 +79,14 @@ function Header() {
       )}
       {isSmallScreen && (
         <div className="mr-1 ml-1">
-          <StyledIconBox bgcolor={theme.palette.primary.main} fontsize="4.2rem">
+          <StyledIconBox
+            className="cursor"
+            bgcolor={theme.palette.primary.main}
+            fontsize="4.2rem"
+            onClick={() => {
+              dispatch(openSmallScreenNav())
+            }}
+          >
             <MenuIcon />
           </StyledIconBox>
         </div>

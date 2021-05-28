@@ -9,21 +9,23 @@ import {
   chaptersRoutes,
   rubricsRoutes,
 } from './constants/rubrics'
+import SmallScreenNav from './components/smallscreennav/SmallScreenNav'
 
 function App() {
   return (
     <BrowserRouter>
       <Grid container>
         <Header />
+        <SmallScreenNav />
         <StyledMainApp>
           {chaptersRoutes.map((chapterRoute) => (
-            <Route {...chapterRoute} />
+            <Route {...chapterRoute} key={chapterRoute.path} />
           ))}
           {categoriesRoutes.map((categoryRoute) => (
-            <Route {...categoryRoute} />
+            <Route {...categoryRoute} key={categoryRoute.path} />
           ))}
           {rubricsRoutes.map((rubricRoute) => (
-            <Route {...rubricRoute} />
+            <Route {...rubricRoute} key={rubricRoute.path} />
           ))}
           <Route path="/" component={HomeScreen} exact />
         </StyledMainApp>

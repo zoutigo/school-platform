@@ -65,7 +65,7 @@ const StyledLine = withTheme(
 )
 
 function NavBloc({ rubric, rubcolor }) {
-  const { rubname, icon, alias: rubalias, categories, route } = rubric
+  const { rubname, icon, categories, route } = rubric
   const { pathname } = useLocation()
 
   const [showDropDown, setShowDropdown] = useState(true)
@@ -101,7 +101,6 @@ function NavBloc({ rubric, rubcolor }) {
       chaptersRouteList.filter((chaproute) => chaproute.path === pathname)
         .length > 0
 
-    console.log(matchChapter)
     if (matchRubric || matchCategory || matchChapter) {
       setActive(true)
     }
@@ -125,18 +124,7 @@ function NavBloc({ rubric, rubcolor }) {
           onClick={() => setShowDropdown(false)}
           role="presentation"
         >
-          <StyledNavLink
-            to={{
-              pathname: rubric.route.path,
-              state: {
-                from: pathname,
-                rubric: {
-                  rubname: rubname,
-                  rubalias: rubalias,
-                },
-              },
-            }}
-          >
+          <StyledNavLink to={rubric.route.path}>
             <Typography variant="h4">{rubname}</Typography>
           </StyledNavLink>
           {showDropDown && (

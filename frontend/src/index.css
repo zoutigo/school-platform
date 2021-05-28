@@ -90,3 +90,8 @@ body {
 .bg-transparent {
   background: transparent;
 }
+
+/* mouse */
+.cursor {
+  cursor: pointer;
+}
