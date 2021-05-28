@@ -1,6 +1,8 @@
 import React from 'react'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import { useMediaQuery, useTheme } from '@material-ui/core'
+import MenuIcon from '@material-ui/icons/Menu'
+
+import { Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import './headerStyle.css'
 import Logo from './Logo'
 import { StyledIconBox } from '../elements/styled'
@@ -34,21 +36,35 @@ function Header() {
         </ul>
       )}
       {!isSmallScreen && (
-        <ul className="private column">
-          <li>
-            <StyledIconBox bgcolor={theme.palette.apelogec.main}>
-              <AccountCircleIcon fontSize="large" />
+        <ul
+          className="private"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            background: 'blue',
+          }}
+        >
+          <li style={{ background: 'pink' }}>
+            <StyledIconBox bgcolor={theme.palette.error.main} fontsize="2.2rem">
+              <AccountCircleIcon />
             </StyledIconBox>
           </li>
-          <li className="mt-2">
-            <div className="dropdown">
-              Login
+          <li
+            className="mt-2 btn-height"
+            style={{
+              background: 'purple',
+              marginTop: '-0.07rem',
+            }}
+          >
+            <div className="dropdown" style={{ marginTop: '0.8rem' }}>
+              <Typography varian="h6">Login</Typography>
               <ul className="dropdown-content">
                 <li>Mon compte</li>
               </ul>
             </div>
             <div className="dropdown">
-              Admin
+              <Typography varian="h6">Admin</Typography>
               <ul className="dropdown-content">
                 <li>Gestion des roles</li>
                 <li>Organigramme</li>
@@ -57,6 +73,13 @@ function Header() {
             </div>
           </li>
         </ul>
+      )}
+      {isSmallScreen && (
+        <div className="mr-1 ml-1">
+          <StyledIconBox bgcolor={theme.palette.primary.main} fontsize="4.2rem">
+            <MenuIcon />
+          </StyledIconBox>
+        </div>
       )}
     </header>
   )

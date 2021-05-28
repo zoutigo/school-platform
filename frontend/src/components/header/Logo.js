@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     // maxHeight: '25vh ',
     overflow: 'hidden',
     textAlign: 'center',
-    marginTop: '-4.5rem',
+    marginTop: '-2.7rem',
   },
   svg: {
     height: '24vh',

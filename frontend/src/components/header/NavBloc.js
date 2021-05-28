@@ -1,19 +1,8 @@
-import { makeStyles, styled, Typography } from '@material-ui/core'
+import { styled, Typography } from '@material-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withTheme } from '@material-ui/styles'
 import { StyledIconBox, StyledNavLink } from '../elements/styled'
-
-const useStyles = makeStyles(() => ({
-  rubric: {
-    minWidth: '16rem',
-    background: 'transparent',
-  },
-  category: {
-    minWidth: '14rem',
-    background: 'whitesmoke',
-  },
-}))
 
 const StyledRubricLi = withTheme(
   styled(({ bgcolor, theme, ...rest }) => <li {...rest} />)({
@@ -65,20 +54,21 @@ const StyledChapterUl = withTheme(
 )
 
 function NavBloc({ rubric, rubcolor }) {
-  const classes = useStyles()
   const { rubname, icon, categories } = rubric
 
   return (
     <li className="btn-width">
       <ul>
         <li>
-          <StyledIconBox bgcolor={rubcolor}>{icon}</StyledIconBox>
+          <StyledIconBox bgcolor={rubcolor} fontsize="2.2rem">
+            {icon}
+          </StyledIconBox>
         </li>
         <StyledRubricLi className="dropdown btn-size" bgcolor={rubcolor}>
           <StyledNavLink to={rubric.route.path}>
             <Typography variant="h4">{rubname}</Typography>
           </StyledNavLink>
-          <ul className={`dropdown-content ${classes.category}`}>
+          <ul className="dropdown-content btn-width bg-transparent">
             {categories &&
               categories.map((category) => (
                 <StyledCategoryLi
