@@ -6,6 +6,8 @@ import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import EcoSharpIcon from '@material-ui/icons/EcoSharp'
 import MenuBookSharpIcon from '@material-ui/icons/MenuBookSharp'
 import FakeScreen from '../screens/FakeScreen'
+import EcoleScreen from '../screens/EcoleScreen'
+import EquipeScreen from '../screens/EquipeScreen'
 
 const rubrics = [
   {
@@ -15,7 +17,7 @@ const rubrics = [
     route: {
       path: '/ecole',
       exact: true,
-      component: FakeScreen,
+      component: EcoleScreen,
     },
 
     categories: [
@@ -25,7 +27,7 @@ const rubrics = [
         route: {
           path: '/ecole/equipe-pedagogique',
           exact: true,
-          component: FakeScreen,
+          component: EquipeScreen,
         },
         chapters: [],
       },
@@ -637,5 +639,26 @@ const rubrics = [
     ],
   },
 ]
+
+const categoriesRoutes = []
+const chaptersRoutes = []
+for (let i = 0; i < rubrics.length; i += 1) {
+  const { categories } = rubrics[i]
+  if (categories.length > 0) {
+    for (let j = 0; j < categories.length; j += 1) {
+      const { route, chapters } = categories[j]
+      categoriesRoutes.push(route)
+      if (chapters.length > 0) {
+        for (let k = 0; k < chapters.length; k += 1) {
+          const { route: chapterRoute } = chapters[k]
+          chaptersRoutes.push(chapterRoute)
+        }
+      }
+    }
+  }
+}
+const rubricsRoutes = rubrics.map((rubric) => rubric.route)
+
+export { categoriesRoutes, chaptersRoutes, rubricsRoutes }
 
 export default rubrics

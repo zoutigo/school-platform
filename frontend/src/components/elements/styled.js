@@ -21,3 +21,19 @@ export const StyledIconBox = withTheme(
     },
   })
 )
+
+export const StyledMain = styled('main')(({ theme }) => ({
+  border: 'solid 1px',
+  width: '100vw',
+  minHeight: '80vh',
+  [theme.breakpoints.down('md')]: {
+    margin: '7rem 0rem 1rem 0rem !important',
+  },
+}))
+
+export const StyledMainApp = withTheme(
+  styled(({ location, ...rest }) => <StyledMain {...rest} />)({
+    margin: ({ location }) =>
+      location === 'home' ? '7rem 0rem 1rem 0rem' : '7rem 5rem 1rem 5rem',
+  })
+)
