@@ -13,11 +13,18 @@ export const StyledNavLink = styled(NavLink)(() => ({
 
 export const StyledIconBox = withTheme(
   styled(({ bgcolor, fontsize, theme, ...rest }) => <Box {...rest} />)({
+    textAlign: 'center',
+    padding: '0px auto',
     color: ({ bgcolor, theme }) => bgcolor || theme.palette.primary.main,
     // marginTop: ({ theme }) => theme.spacing(2),
     textAlign: 'center',
     '& svg': {
       fontSize: ({ fontsize }) => fontsize || '3rem',
+    },
+    '& .fa': {
+      fontSize: ({ fontsize }) => fontsize || '3rem',
+      color: ({ bgcolor, theme }) => bgcolor || theme.palette.primary.main,
+      display: 'inline-block',
     },
   })
 )

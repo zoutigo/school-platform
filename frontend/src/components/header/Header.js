@@ -1,7 +1,8 @@
 import React from 'react'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import MenuIcon from '@material-ui/icons/Menu'
-import { useDispatch } from 'react-redux'
+import CancelIcon from '@material-ui/icons/Cancel'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import './headerStyle.css'
@@ -14,6 +15,8 @@ import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
 function Header() {
   const theme = useTheme()
   const isSmallScreen = !useMediaQuery(theme.breakpoints.up('lg'))
+  const { SmallScreenNavIsOpened } = useSelector((state) => state.settings)
+
   const dispatch = useDispatch()
 
   return (
@@ -81,13 +84,18 @@ function Header() {
         <div className="mr-1 ml-1">
           <StyledIconBox
             className="cursor"
-            bgcolor={theme.palette.primary.main}
+            bgcolor={
+              SmallScreenNavIsOpened
+                ? theme.palette.error.main
+                : theme.palette.primary.main
+            }
             fontsize="4.2rem"
             onClick={() => {
               dispatch(openSmallScreenNav())
             }}
           >
-            <MenuIcon />
+            {!SmallScreenNavIsOpened && <MenuIcon />}
+            {SmallScreenNavIsOpened && <CancelIcon />}
           </StyledIconBox>
         </div>
       )}
