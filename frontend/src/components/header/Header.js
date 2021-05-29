@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import MenuIcon from '@material-ui/icons/Menu'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 
 import { Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import './headerStyle.css'
@@ -18,6 +19,11 @@ function Header() {
   const { SmallScreenNavIsOpened } = useSelector((state) => state.settings)
 
   const dispatch = useDispatch()
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   return (
     <header className="row">

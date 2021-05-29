@@ -10,6 +10,7 @@ import {
   rubricsRoutes,
 } from './constants/rubrics'
 import SmallScreenNav from './components/smallscreennav/SmallScreenNav'
+import Footer from './components/footer/Footer'
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
           ))}
           <Route path="/" component={HomeScreen} exact />
         </StyledMainApp>
-        <footer>The footer</footer>
+        <Footer />
       </Grid>
     </BrowserRouter>
   )

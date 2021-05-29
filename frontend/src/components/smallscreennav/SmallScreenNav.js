@@ -1,4 +1,4 @@
-import { Button, styled, useMediaQuery, useTheme } from '@material-ui/core'
+import { styled, useMediaQuery, useTheme } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openSmallScreenNav } from '../../redux/settings/SettingsActions'

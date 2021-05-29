@@ -15,7 +15,7 @@ const StyledCategoryGrid = styled(Grid)(({ theme }) => ({
   background: theme.palette.primary.light,
   marginTop: '0.05rem',
 }))
-const StyledChapterGrid = styled(Grid)(({ theme }) => ({
+const StyledChapterGrid = styled(Grid)(() => ({
   background: 'whitesmoke',
   marginTop: '0.05rem',
 }))
