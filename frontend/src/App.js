@@ -2,7 +2,6 @@ import { Grid } from '@material-ui/core'
 import { BrowserRouter, Route } from 'react-router-dom'
 import React from 'react'
 import Header from './components/header/Header'
-import { StyledMainApp } from './components/elements/styled'
 import HomeScreen from './screens/HomeScreen'
 import {
   categoriesRoutes,
@@ -11,6 +10,7 @@ import {
 } from './constants/rubrics'
 import SmallScreenNav from './components/smallscreennav/SmallScreenNav'
 import Footer from './components/footer/Footer'
+import { StyledMainApp } from './components/elements/styled'
 
 function App() {
   return (

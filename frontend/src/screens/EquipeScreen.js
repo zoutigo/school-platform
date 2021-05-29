@@ -1,7 +1,8 @@
 import React from 'react'
+import { StyledCentralScreen } from '../components/elements/styled'
 
 function EquipeScreen() {
-  return <div>Equipe Screen</div>
+  return <StyledCentralScreen>Equipe Screen</StyledCentralScreen>
 }
 
 export default EquipeScreen

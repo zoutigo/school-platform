@@ -29,18 +29,28 @@ export const StyledIconBox = withTheme(
   })
 )
 
-export const StyledMain = styled('main')(({ theme }) => ({
-  border: 'solid 1px',
-  width: '100vw',
+export const StyledMainApp = styled('main')(({ theme }) => ({
+  width: '100%',
   minHeight: '80vh',
+}))
+
+const StyledScreen = styled('section')(({ theme }) => ({
+  border: 'solid 1px',
+  width: '98.8vw',
+  minHeight: '80vh',
+  overflow: 'hidden',
   [theme.breakpoints.down('md')]: {
-    margin: '7rem 0rem 1rem 0rem !important',
+    margin: '6.1rem 0rem 1rem 0rem !important',
   },
 }))
 
-export const StyledMainApp = withTheme(
-  styled(({ location, ...rest }) => <StyledMain {...rest} />)({
+export const StyledCentralScreen = withTheme(
+  styled(({ location, ...rest }) => <StyledScreen {...rest} />)({
     margin: ({ location }) =>
-      location === 'home' ? '7rem 0rem 1rem 0rem' : '7rem 5rem 1rem 5rem',
+      location === 'home' ? '6.1rem 0rem 1rem 0rem' : '6.1rem 5rem 1rem 5rem',
   })
 )
+
+export const StyledHomeArticle = styled('article')(() => ({
+  width: '100%',
+}))

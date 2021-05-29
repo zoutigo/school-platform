@@ -43,7 +43,6 @@ const StyledChapterUl = withTheme(
     display: 'none',
     top: 0,
     left: '100%',
-    zIndex: 1,
     margin: 0,
     '& >li': {
       background: 'whitesmoke',

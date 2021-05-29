@@ -1,7 +1,8 @@
 import React from 'react'
+import { StyledCentralScreen } from '../components/elements/styled'
 
 function EcoleScreen() {
-  return <div>Ecole Screen</div>
+  return <StyledCentralScreen>Ecole Screen</StyledCentralScreen>
 }
 
 export default EcoleScreen

@@ -5,7 +5,7 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
-import { Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { styled, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import './headerStyle.css'
 import Logo from './Logo'
 import { StyledIconBox } from '../elements/styled'
@@ -13,6 +13,10 @@ import rubrics from '../../constants/rubrics'
 import NavBloc from './NavBloc'
 import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
 
+const StyledHeader = styled('header')(() => ({
+  zIndex: 10,
+  position: 'fixed',
+}))
 function Header() {
   const theme = useTheme()
   const isSmallScreen = !useMediaQuery(theme.breakpoints.up('lg'))
@@ -26,7 +30,7 @@ function Header() {
   }, [pathname])
 
   return (
-    <header className="row">
+    <StyledHeader className="row">
       <div className="logo">
         <Logo />
       </div>
@@ -105,7 +109,7 @@ function Header() {
           </StyledIconBox>
         </div>
       )}
-    </header>
+    </StyledHeader>
   )
 }
 
