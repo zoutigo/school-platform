@@ -105,7 +105,7 @@ function Introduction() {
       <StyledTitleBloc item container>
         <Title
           title={"L'Ecole Saint Augustin vous souhaite la bienvenue !"}
-          color={theme.palette.primary.main}
+          textcolor={theme.palette.primary.main}
         />
       </StyledTitleBloc>
       <StyledChipContainer item container justify="flex-end" clicked={checked}>

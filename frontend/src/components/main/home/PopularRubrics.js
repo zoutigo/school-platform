@@ -78,8 +78,7 @@ function PopularRubrics() {
     ],
   ]
 
-  const PopularItem = (props) => {
-    const { item } = props
+  const PopularItem = ({ item }) => {
     const [title, link, text, icon, faicon] = item
     const theme = useTheme()
 
@@ -105,7 +104,9 @@ function PopularRubrics() {
   }
 
   PopularItem.propTypes = {
-    item: PropTypes.arrayOf(PropTypes.string, PropTypes.element).isRequired,
+    item: PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.element])
+    ).isRequired,
   }
 
   return (

@@ -3,13 +3,13 @@ import { styled } from '@material-ui/styles'
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const StyledTypo = styled(Typography)(({ color }) => ({
-  color: color,
+const StyledTypo = styled(Typography)(({ textcolor }) => ({
+  color: textcolor,
 }))
 
-function Title({ title, color }) {
+function Title({ title, textcolor }) {
   return (
-    <StyledTypo variant="h3" color={color}>
+    <StyledTypo variant="h3" textcolor={textcolor}>
       {title}
     </StyledTypo>
   )
@@ -17,7 +17,7 @@ function Title({ title, color }) {
 
 Title.propTypes = {
   title: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
+  textcolor: PropTypes.string.isRequired,
 }
 
 export default Title
