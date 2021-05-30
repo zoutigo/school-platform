@@ -13,15 +13,19 @@ import Share from './Share'
 const StyledFooterInfos = styled(Grid)(({ theme }) => ({
   background: theme.palette.secondary.main,
   minHeight: '5vh',
-  minWwidth: '100vw',
   overflow: 'hidden',
   padding: '2rem 4rem !important',
   color: 'white',
 }))
 
+const StyledFooter = styled('footer')(() => ({
+  width: '100%',
+  overflow: 'hidden',
+}))
+
 function Footer() {
   return (
-    <footer>
+    <StyledFooter>
       <StyledFooterInfos container>
         <Grid item container xs={12} sm={6} md={4} justify="center">
           <Contact />
@@ -45,7 +49,7 @@ function Footer() {
       <Grid item container>
         <Copyrights />
       </Grid>
-    </footer>
+    </StyledFooter>
   )
 }
 

@@ -124,7 +124,7 @@ function NavBloc({ rubric, rubcolor }) {
           role="presentation"
         >
           <StyledNavLink to={rubric.route.path}>
-            <Typography variant="h4">{rubname}</Typography>
+            <Typography variant="h2">{rubname}</Typography>
           </StyledNavLink>
           {showDropDown && (
             <ul className="dropdown-content btn-width bg-transparent">

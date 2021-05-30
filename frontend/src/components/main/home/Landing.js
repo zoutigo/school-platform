@@ -1,9 +1,8 @@
 import React from 'react'
-import { styled, Typography } from '@material-ui/core'
+import { Grid, styled, Typography } from '@material-ui/core'
 import media from '../../../assets/videos/landing.mp4'
-import { StyledHomeArticle } from '../../elements/styled'
 
-const StyledLandingContainer = styled(StyledHomeArticle)(({ theme }) => ({
+const StyledLandingContainer = styled(Grid)(({ theme }) => ({
   minHeight: '40vh',
   position: 'relative',
   background: 'green',
@@ -100,7 +99,7 @@ const StyledTextBox = styled('div')(({ theme }) => ({
 }))
 function Landing() {
   return (
-    <StyledLandingContainer item container>
+    <StyledLandingContainer container article="landing">
       <StyledVideo src={media} autoPlay muted loop />
       <StyledTextBox>
         <StyledTypo variant="h1">ECOLE</StyledTypo>

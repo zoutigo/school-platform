@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, styled } from '@material-ui/core'
+import { Box, Button, Grid, styled } from '@material-ui/core'
 import { withTheme } from '@material-ui/styles'
 import { NavLink } from 'react-router-dom'
 // import theme from '../../constants/theme'
@@ -32,6 +32,7 @@ export const StyledIconBox = withTheme(
 export const StyledMainApp = styled('main')(({ theme }) => ({
   width: '100%',
   minHeight: '80vh',
+  overflow: 'hidden',
 }))
 
 const StyledScreen = styled('section')(({ theme }) => ({
@@ -41,6 +42,7 @@ const StyledScreen = styled('section')(({ theme }) => ({
   overflow: 'hidden',
   [theme.breakpoints.down('md')]: {
     margin: '6.1rem 0rem 1rem 0rem !important',
+    width: '100%',
   },
 }))
 
@@ -51,6 +53,15 @@ export const StyledCentralScreen = withTheme(
   })
 )
 
-export const StyledHomeArticle = styled('article')(() => ({
-  width: '100%',
+export const StyledHomeGrid = styled(Grid)(({ theme }) => ({
+  padding: '2rem 3rem ',
+  [theme.breakpoints.down('sm')]: {
+    padding: '2rem 0.6rem',
+  },
+}))
+
+export const StyledBaseButton = styled(Button)(() => ({
+  width: '11rem',
+  height: '3rem',
+  marginTop: '1rem',
 }))
