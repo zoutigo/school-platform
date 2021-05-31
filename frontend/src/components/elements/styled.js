@@ -37,19 +37,19 @@ export const StyledMainApp = styled('main')(({ theme }) => ({
 
 const StyledScreen = styled('section')(({ theme }) => ({
   border: 'solid 1px',
-  width: '98.8vw',
+  // width: '98.8vw',
   minHeight: '80vh',
   overflow: 'hidden',
   [theme.breakpoints.down('md')]: {
-    margin: '6.1rem 0rem 1rem 0rem !important',
-    width: '100%',
+    margin: '5.9rem 0rem 1rem 0rem !important',
+    // width: '100%',
   },
 }))
 
 export const StyledCentralScreen = withTheme(
   styled(({ location, ...rest }) => <StyledScreen {...rest} />)({
     margin: ({ location }) =>
-      location === 'home' ? '6.1rem 0rem 1rem 0rem' : '6.1rem 5rem 1rem 5rem',
+      location === 'home' ? '5.9rem 0rem 1rem 0rem' : '5.9rem 11rem 1rem 11rem',
   })
 )
 
@@ -60,8 +60,25 @@ export const StyledHomeGrid = styled(Grid)(({ theme }) => ({
   },
 }))
 
+export const StyledMainWrapper = styled(Grid)(({ theme }) => ({
+  paddingTop: '6rem',
+  [theme.breakpoints.down('sm')]: {
+    paddingTop: '3rem',
+  },
+}))
+
 export const StyledBaseButton = styled(Button)(() => ({
   width: '11rem',
   height: '3rem',
   marginTop: '1rem',
 }))
+
+export const StyledTitle = withTheme(
+  styled(({ bgcolor, ...rest }) => <div {...rest} />)({
+    width: '11rem',
+    height: '3rem',
+    marginTop: '1rem',
+    marginBottom: '1rem',
+    background: ({ bgcolor }) => bgcolor,
+  })
+)

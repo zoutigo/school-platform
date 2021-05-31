@@ -8,6 +8,11 @@ import MenuBookSharpIcon from '@material-ui/icons/MenuBookSharp'
 import FakeScreen from '../screens/FakeScreen'
 import EcoleScreen from '../screens/EcoleScreen'
 import EquipeScreen from '../screens/EquipeScreen'
+import VieScolaireScreen from '../screens/VieScolaireScreen'
+import ClassesScreen from '../screens/ClassesScreen'
+import InformationsScreen from '../screens/InformationsScreen'
+import ApelOgecScreen from '../screens/ApelOgecScreen'
+import EcoleHistoireScreen from '../screens/EcoleHistoireScreen'
 
 const rubrics = [
   {
@@ -37,7 +42,7 @@ const rubrics = [
         route: {
           path: '/ecole/histoire',
           exact: true,
-          component: FakeScreen,
+          component: EcoleHistoireScreen,
         },
         chapters: [],
       },
@@ -118,7 +123,7 @@ const rubrics = [
     route: {
       path: '/vie-scolaire',
       exact: true,
-      component: FakeScreen,
+      component: VieScolaireScreen,
     },
 
     categories: [
@@ -200,7 +205,7 @@ const rubrics = [
     route: {
       path: '/classes',
       exact: true,
-      component: FakeScreen,
+      component: ClassesScreen,
     },
     categories: [
       {
@@ -446,7 +451,7 @@ const rubrics = [
     route: {
       path: '/informations',
       exact: true,
-      component: FakeScreen,
+      component: InformationsScreen,
     },
     categories: [
       {
@@ -573,7 +578,7 @@ const rubrics = [
     route: {
       path: '/apel-ogec',
       exact: true,
-      component: FakeScreen,
+      component: ApelOgecScreen,
     },
     categories: [
       {
@@ -608,7 +613,6 @@ const rubrics = [
       },
       {
         catname: 'OGEC',
-        link: '/apel-ogec/ogec',
         alias: 'ogec',
         route: {
           path: '/apel-ogec/ogec',
@@ -641,16 +645,33 @@ const rubrics = [
 ]
 
 const categoriesRoutes = []
+const categoriesList = []
 const chaptersRoutes = []
+const chaptersList = []
+
 for (let i = 0; i < rubrics.length; i += 1) {
   const { categories } = rubrics[i]
   if (categories.length > 0) {
     for (let j = 0; j < categories.length; j += 1) {
-      const { route, chapters } = categories[j]
+      const { catname, alias, route, chapters } = categories[j]
+      categoriesList.push({
+        name: catname,
+        alias: alias,
+        path: route.path,
+      })
       categoriesRoutes.push(route)
       if (chapters.length > 0) {
         for (let k = 0; k < chapters.length; k += 1) {
-          const { route: chapterRoute } = chapters[k]
+          const {
+            chapname,
+            alias: chapalias,
+            route: chapterRoute,
+          } = chapters[k]
+          chaptersList.push({
+            name: chapname,
+            alias: chapalias,
+            path: chapterRoute.path,
+          })
           chaptersRoutes.push(chapterRoute)
         }
       }
@@ -658,7 +679,22 @@ for (let i = 0; i < rubrics.length; i += 1) {
   }
 }
 const rubricsRoutes = rubrics.map((rubric) => rubric.route)
+const rubricsList = rubrics.map((rubric) => {
+  const { rubname, alias, route } = rubric
+  return {
+    name: rubname,
+    alias: alias,
+    path: route.path,
+  }
+})
 
-export { categoriesRoutes, chaptersRoutes, rubricsRoutes }
+export {
+  categoriesRoutes,
+  chaptersRoutes,
+  rubricsRoutes,
+  rubricsList,
+  chaptersList,
+  categoriesList,
+}
 
 export default rubrics

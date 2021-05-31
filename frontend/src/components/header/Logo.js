@@ -1,6 +1,8 @@
 import { Box, makeStyles } from '@material-ui/core'
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { StyledNavLink } from '../elements/styled'
+import { setActiveRubric } from '../../redux/settings/SettingsActions'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,9 +29,15 @@ const useStyles = makeStyles((theme) => ({
 
 function Logo() {
   const classes = useStyles()
+  const dispatch = useDispatch()
   return (
     <Box className={classes.root}>
-      <NavLink to="/" style={{ color: 'inherit', textDecoration: 'inherit' }}>
+      <StyledNavLink
+        to="/"
+        onClick={() =>
+          dispatch(setActiveRubric({ rubname: 'home', rubalias: 'home' }))
+        }
+      >
         <svg
           className={classes.svg}
           version="1.1"
@@ -2156,7 +2164,7 @@ function Logo() {
           <circle fill="#F9CE46" cx="197.8" cy="129.5" r="3.7" />
           <circle fill="#C389BC" cx="90.6" cy="109.5" r="6.8" />
         </svg>
-      </NavLink>
+      </StyledNavLink>
     </Box>
   )
 }

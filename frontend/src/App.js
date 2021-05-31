@@ -1,17 +1,22 @@
 import { Grid } from '@material-ui/core'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import Header from './components/header/Header'
 import HomeScreen from './screens/HomeScreen'
 import {
+  categoriesList,
   categoriesRoutes,
+  chaptersList,
   chaptersRoutes,
+  rubricsList,
   rubricsRoutes,
 } from './constants/rubrics'
 import SmallScreenNav from './components/smallscreennav/SmallScreenNav'
 import Footer from './components/footer/Footer'
 import { StyledMainApp } from './components/elements/styled'
+import { setRoutes } from './redux/settings/SettingsActions'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +30,18 @@ const queryClient = new QueryClient({
 })
 
 function App() {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    for (let i = 0; i < rubricsList.length; i += 1) {
+      dispatch(setRoutes(rubricsList[i]))
+    }
+    for (let i = 0; i < categoriesList.length; i += 1) {
+      dispatch(setRoutes(categoriesList[i]))
+    }
+    for (let i = 0; i < chaptersList.length; i += 1) {
+      dispatch(setRoutes(chaptersList[i]))
+    }
+  }, [])
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

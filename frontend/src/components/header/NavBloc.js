@@ -1,9 +1,11 @@
 import { styled, Typography } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 import { withTheme } from '@material-ui/styles'
 import { StyledIconBox, StyledNavLink } from '../elements/styled'
+import { setActiveRubric } from '../../redux/settings/SettingsActions'
 
 const StyledRubricLi = withTheme(
   styled(({ bgcolor, theme, ...rest }) => <li {...rest} />)({
@@ -64,8 +66,9 @@ const StyledLine = withTheme(
 )
 
 function NavBloc({ rubric, rubcolor }) {
-  const { rubname, icon, categories, route } = rubric
+  const { rubname, alias: rubalias, icon, categories, route } = rubric
   const { pathname } = useLocation()
+  const dispatch = useDispatch()
 
   const [showDropDown, setShowDropdown] = useState(true)
   const [active, setActive] = useState(false)
@@ -80,6 +83,16 @@ function NavBloc({ rubric, rubcolor }) {
       window.removeEventListener('mousemove', handleClick)
     }
   }, [showDropDown])
+
+  useEffect(() => {
+    if (active) {
+      const currentRubric = {
+        rubname: rubname,
+        rubalias: rubalias,
+      }
+      dispatch(setActiveRubric(currentRubric))
+    }
+  }, [active, dispatch])
 
   useEffect(() => {
     const matchRubric = pathname === route.path

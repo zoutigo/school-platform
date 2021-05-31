@@ -1,14 +1,13 @@
 header {
   width: 100%;
-  background: blue;
   position: fixed;
+  background: white;
 }
 
 .logo {
   flex: 2;
   max-height: 12vh;
   overflow: hidden;
-  background: chartreuse;
 }
 
 .nav {
