@@ -22,19 +22,22 @@ const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
 
 const StyledCardContent = styled(CardContent)(() => ({
   background: 'whitesmoke',
-  padding: '0.5rem 1.8rem !important',
+  padding: '0.5rem 1.8rem ',
 }))
 
-const StyledCard = styled(Card)(() => ({
-  marginTop: '1rem !important',
-  minWidth: '100%',
+const StyledCard = styled(Card)(({ theme }) => ({
+  marginTop: '1rem',
+  width: '93%',
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+  },
 }))
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.secondary.main,
-  marginRight: '1rem !important',
-  marginLeft: '2rem !important',
+  marginRight: '1rem ',
+  marginLeft: '2rem ',
 }))
 
 function NewsCard({ cardTitle, items, recipe }) {

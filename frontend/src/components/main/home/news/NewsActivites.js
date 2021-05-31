@@ -1,19 +1,19 @@
 import React from 'react'
-import moment from 'moment'
-import DateRangeIcon from '@material-ui/icons/DateRange'
+import MenuBookIcon from '@material-ui/icons/MenuBook'
 import { useQuery } from 'react-query'
+import moment from 'moment'
 import CardItem from './card/CardItem'
 import NewsCard from './card/NewsCard'
-import { apiFetchEvents } from '../../../../utils/api'
+import { apiFetchPaper } from '../../../../utils/api'
 
-function NewsAgenda() {
-  const cardTitle = 'Agenda à venir'
+function NewsActivites() {
+  const cardTitle = "Actualités de l'école"
 
-  const queryKey = ['events']
-  const queryParams = ''
+  const queryKey = ['activites']
+  const queryParams = `type=activite`
 
   const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFetchEvents(queryParams)
+    apiFetchPaper(queryParams)
   )
 
   if (isLoading) {
@@ -38,13 +38,13 @@ function NewsAgenda() {
   if (data && data.length > 0) {
     for (let i = 0; i < 3; i += 1) {
       if (data[i]) {
-        const { place, date, title } = data[i]
+        const { entity, date, title } = data[i]
         const dateString = moment(date).format('DD/MM/YYYY')
         items.push(
           <CardItem
             title={title}
-            detail={`${place} - ${dateString}`}
-            link="/informations/actualites/evenements"
+            detail={`${entity} - ${dateString}`}
+            link="/informations/actualites/activites"
           />
         )
       }
@@ -55,9 +55,9 @@ function NewsAgenda() {
     <NewsCard
       cardTitle={cardTitle}
       items={items}
-      recipe={String(<DateRangeIcon />)}
+      recipe={String(<MenuBookIcon />)}
     />
   )
 }
 
-export default NewsAgenda
+export default NewsActivites

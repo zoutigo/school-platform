@@ -6,22 +6,26 @@ import NewsCard from './card/NewsCard'
 function NewsDocs() {
   const cardTitle = 'Documents récents'
 
-  const items = [
+  const documents = [
     <CardItem
       title="Menu hebdomadaire"
       detail="du 14 au 20 Janvier 2021"
-      key="1"
+      link="vie-scolaire/cantine/menus"
     />,
-    <CardItem title="Newsletter mensuelle" detail="Avril 2021" key="2" />,
     <CardItem
-      title="Circulaire du ministère"
-      detail="11 Decembre 2020"
-      key="3"
+      title="Newsletter mensuelle"
+      detail="Avril 2021"
+      link="/informations/actualites/newsletter"
     />,
+    <CardItem title="Circulaire du ministère" detail="11 Decembre 2020" />,
   ]
 
   return (
-    <NewsCard cardTitle={cardTitle} items={items} recipe={<AttachFileIcon />} />
+    <NewsCard
+      cardTitle={cardTitle}
+      items={documents}
+      recipe={String(<AttachFileIcon />)}
+    />
   )
 }
 
