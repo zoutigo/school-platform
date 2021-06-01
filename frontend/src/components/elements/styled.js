@@ -60,13 +60,6 @@ export const StyledHomeGrid = styled(Grid)(({ theme }) => ({
   },
 }))
 
-export const StyledMainWrapper = styled(Grid)(({ theme }) => ({
-  paddingTop: '6rem',
-  [theme.breakpoints.down('sm')]: {
-    paddingTop: '3rem',
-  },
-}))
-
 export const StyledBaseButton = styled(Button)(() => ({
   width: '11rem',
   height: '3rem',

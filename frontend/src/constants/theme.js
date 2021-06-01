@@ -102,9 +102,10 @@ const initialTheme = createMuiTheme({
       lineHeight: 3,
     },
     subtitle1: {
-      fontSize: '0.8rem',
-      fontFamily: 'sans-serif',
-      letterSpacing: 1,
+      fontSize: '0.9rem',
+      fontFamily: "'Comfortaa',cursive",
+      letterSpacing: '1px',
+      textTransform: 'Capitalize',
     },
     caption: {
       fontFamily: "'Comfortaa',cursive",

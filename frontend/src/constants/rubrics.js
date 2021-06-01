@@ -13,6 +13,7 @@ import ClassesScreen from '../screens/ClassesScreen'
 import InformationsScreen from '../screens/InformationsScreen'
 import ApelOgecScreen from '../screens/ApelOgecScreen'
 import EcoleHistoireScreen from '../screens/EcoleHistoireScreen'
+import ApelOgecApelScreen from '../screens/ApelOgecApelScreen'
 
 const rubrics = [
   {
@@ -588,7 +589,7 @@ const rubrics = [
         route: {
           path: '/apel-ogec/apel',
           exact: false,
-          component: FakeScreen,
+          component: ApelOgecApelScreen,
         },
         chapters: [
           {

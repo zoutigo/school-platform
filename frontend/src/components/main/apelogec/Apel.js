@@ -2,23 +2,21 @@ import { styled } from '@material-ui/core'
 import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 import ReactHtmlParser from 'react-html-parser'
-
-import { apiFecthPage } from '../../../../utils/api'
-import PageForm from '../../../elements/PageForm'
+import { apiFecthPage } from '../../../utils/api'
+import PageForm from '../../elements/PageForm'
 
 const StyledPageDiv = styled('div')(() => ({
   width: '100%',
 }))
 
-function Histoire() {
+function Apel() {
   const [showform, setShowform] = useState(false)
-  const pageName = 'histoire'
+  const pageName = 'apel'
   const queryKey = [pageName, { alias: pageName }]
   const queryParams = `alias=${pageName}`
 
-  const { isLoading, isError, data, error, isSuccess } = useQuery(
-    queryKey,
-    () => apiFecthPage(queryParams)
+  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
+    apiFecthPage(queryParams)
   )
 
   if (isLoading) {
@@ -48,4 +46,4 @@ function Histoire() {
   return <StyledPageDiv>{textcontent}</StyledPageDiv>
 }
 
-export default Histoire
+export default Apel
