@@ -659,6 +659,7 @@ for (let i = 0; i < rubrics.length; i += 1) {
         name: catname,
         alias: alias,
         path: route.path,
+        type: 'category',
       })
       categoriesRoutes.push(route)
       if (chapters.length > 0) {
@@ -672,6 +673,7 @@ for (let i = 0; i < rubrics.length; i += 1) {
             name: chapname,
             alias: chapalias,
             path: chapterRoute.path,
+            type: 'chapter',
           })
           chaptersRoutes.push(chapterRoute)
         }
@@ -686,6 +688,8 @@ const rubricsList = rubrics.map((rubric) => {
     name: rubname,
     alias: alias,
     path: route.path,
+    type: 'rubric',
+    active: false,
   }
 })
 

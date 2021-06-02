@@ -8,6 +8,7 @@ const StyledAsideGrid = styled(Grid)(() => ({
   height: '3rem',
 }))
 const StyledAsideTitle = styled(StyledTitle)(({ bgcolor }) => ({
+  marginTop: '0px',
   textAlign: 'center',
   width: '100%',
   background: `linear-gradient(to bottom , ${bgcolor.main}, ${bgcolor.ligth})`,
