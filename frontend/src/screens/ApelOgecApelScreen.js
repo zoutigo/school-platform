@@ -11,8 +11,8 @@ function ApelOgecApelScreen() {
     items: APELTEAM.map((member) => {
       const { role, gender, firstname, lastname } = member
       return {
-        subtitle: String(<AsideSubTitle subtitle={role} />),
-        text: String(
+        subtitle: <AsideSubTitle subtitle={role} />,
+        text: (
           <AsideUser
             gender={gender}
             firstname={firstname}

@@ -54,6 +54,8 @@ function Wrapper({ main, aside = null }) {
   const { palette } = useTheme()
   const entries = Object.entries(palette)
 
+  console.log(typeof aside.items[0])
+
   useEffect(() => {
     const routesDatas = Routes.filter((route) => route.path === pathname)
     if (rubric.rubname !== 'home') {
@@ -100,15 +102,7 @@ function Wrapper({ main, aside = null }) {
   )
 }
 Wrapper.defaultProps = {
-  aside: {
-    title: 'essai',
-    items: [
-      {
-        subtitle: 'essai',
-        text: 'essai',
-      },
-    ],
-  },
+  aside: null,
 }
 Wrapper.propTypes = {
   main: PropTypes.element.isRequired,
@@ -116,8 +110,8 @@ Wrapper.propTypes = {
     title: PropTypes.string,
     items: PropTypes.arrayOf(
       PropTypes.shape({
-        subtitle: PropTypes.string,
-        text: PropTypes.string,
+        subtitle: PropTypes.element,
+        text: PropTypes.element,
       })
     ),
   }),

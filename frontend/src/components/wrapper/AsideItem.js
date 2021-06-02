@@ -45,8 +45,8 @@ function AsideItem({ item, rubriccolors }) {
 
 AsideItem.propTypes = {
   item: PropTypes.shape({
-    subtitle: PropTypes.string,
-    text: PropTypes.string,
+    subtitle: PropTypes.element,
+    text: PropTypes.element,
     icon: PropTypes.string,
   }).isRequired,
   rubriccolors: PropTypes.shape({
