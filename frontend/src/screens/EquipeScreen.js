@@ -1,8 +1,8 @@
+import { Grid } from '@material-ui/core'
 import React from 'react'
-import { StyledCentralScreen } from '../components/elements/styled'
 
 function EquipeScreen() {
-  return <StyledCentralScreen>Equipe Screen</StyledCentralScreen>
+  return <Grid container> Ecole</Grid>
 }
 
 export default EquipeScreen

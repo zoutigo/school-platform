@@ -1,13 +1,8 @@
+import { Grid } from '@material-ui/core'
 import React from 'react'
-import { useSelector } from 'react-redux'
-import Wrapper from '../components/wrapper/Wrapper'
 
 function InformationsScreen() {
-  const { ActiveRubric: rubric } = useSelector((state) => state.settings)
-
-  const Body = () => <div>Je appelle {rubric.rubname}</div>
-
-  return <Wrapper main={<Body />} />
+  return <Grid container> Informations</Grid>
 }
 
 export default InformationsScreen

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Grid, styled, useTheme } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import { StyledTitle } from '../elements/styled'
-import Title from '../elements/Title'
+import { StyledTitle } from '../../elements/styled'
+import Title from '../../elements/Title'
 
 const StyledAsideGrid = styled(Grid)(() => ({
   height: '3rem',
@@ -19,11 +19,13 @@ function AsideTitle({ rubriccolors, title }) {
   return (
     <StyledAsideGrid data-testid="wrapper-aside-title">
       <StyledAsideTitle bgcolor={rubriccolors}>
-        <Title title={title} textcolor={theme.palette.secondary.main} />
+        <Title title={title || ''} textcolor={theme.palette.secondary.main} />
       </StyledAsideTitle>
     </StyledAsideGrid>
   )
 }
+
+AsideTitle.defaultProps = null
 
 AsideTitle.propTypes = {
   rubriccolors: PropTypes.shape({
@@ -31,7 +33,7 @@ AsideTitle.propTypes = {
     main: PropTypes.string,
     dark: PropTypes.string,
   }).isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
 }
 
 export default AsideTitle

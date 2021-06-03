@@ -4,11 +4,15 @@ import { useSelector } from 'react-redux'
 
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
-import { StyledNavLink, StyledTitle } from '../elements/styled'
-import Title from '../elements/Title'
+import { StyledNavLink, StyledTitle } from '../../elements/styled'
+import Title from '../../elements/Title'
+import asideApel from '../../../constants/asideapel'
+import asideOgec from '../../../constants/ogecAside'
 
 const StyledTitleBloc = styled(Grid)(() => ({
   background: 'whitesmoke',
+  height: '3.1rem',
+  overflow: 'hidden',
 }))
 const StyledLine = styled('div')(({ bgcolor }) => ({
   minWidth: '100%',
@@ -41,14 +45,32 @@ const StyledLargeScreenTitleBloc = styled(Grid)(({ theme }) => ({
   },
 }))
 
-function TitleBloc({ rubriccolors }) {
+function TitleBloc({ rubriccolors, setAside }) {
   const { palette } = useTheme()
   const { pathname } = useLocation()
   const { Routes } = useSelector((state) => state.settings)
   const [categoryDatas, setCategoryDatas] = useState(null)
   const [chapters, setChapters] = useState(null)
+  const [currentRoute, setCurrentRoute] = useState(null)
 
-  const currentRoute = Routes.find((route) => pathname === route.path)
+  useEffect(() => {
+    const asides = [
+      ['/apelogec/apel', asideApel],
+      ['/apelogec/ogec', asideOgec],
+    ]
+    const categoryAside = asides.find(([path, aside]) =>
+      pathname.includes(path)
+    )
+    if (categoryAside) setAside(categoryAside[1])
+
+    return () => {
+      setAside(null)
+    }
+  }, [pathname])
+
+  useEffect(() => {
+    setCurrentRoute(Routes.find((route) => pathname === route.path))
+  }, [pathname])
 
   useEffect(() => {
     if (currentRoute && currentRoute.type === 'category') {
@@ -62,19 +84,27 @@ function TitleBloc({ rubriccolors }) {
     } else if (currentRoute && currentRoute.type === 'rubric') {
       setCategoryDatas(null)
     } else {
-      const categoryAlias = pathname.split('/')[1]
-      const datas = Routes.find(
+      const categoryAlias = pathname.split('/')[2]
+      const categoryInfos = Routes.find(
         (route) => route.alias === categoryAlias && route.type === 'category'
       )
-      setCategoryDatas(datas)
-
-      setChapters(
-        Routes.filter(
-          (route) => route.type === 'chapter' && route.path.includes(datas.path)
+      if (categoryInfos) {
+        setCategoryDatas(categoryInfos)
+        setChapters(
+          Routes.filter(
+            (route) =>
+              route.type === 'chapter' &&
+              route.path.includes(categoryInfos.path)
+          )
         )
-      )
+      }
     }
-  }, [])
+
+    return () => {
+      setChapters(null)
+      setCategoryDatas(null)
+    }
+  }, [currentRoute])
 
   const TitleTab = ({
     rubriccolors: tabcolors,
@@ -131,7 +161,10 @@ function TitleBloc({ rubriccolors }) {
           ))}
       </StyledLargeScreenTitleBloc>
       <StyledSmallScreenTitleBloc container>
-        <TitleTab rubriccolors={rubriccolors} tabtitle={currentRoute.name} />
+        <TitleTab
+          rubriccolors={rubriccolors}
+          tabtitle={currentRoute ? currentRoute.name : ''}
+        />
       </StyledSmallScreenTitleBloc>
       <Grid item container>
         <StyledLine bgcolor={rubriccolors.dark} />
@@ -146,6 +179,7 @@ TitleBloc.propTypes = {
     dark: PropTypes.string,
     ligth: PropTypes.string,
   }).isRequired,
+  setAside: PropTypes.func.isRequired,
 }
 
 export default TitleBloc

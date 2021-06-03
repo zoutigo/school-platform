@@ -1,22 +1,14 @@
 import { Grid } from '@material-ui/core'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import Header from './components/header/Header'
-import HomeScreen from './screens/HomeScreen'
-import {
-  categoriesList,
-  categoriesRoutes,
-  chaptersList,
-  chaptersRoutes,
-  rubricsList,
-  rubricsRoutes,
-} from './constants/rubrics'
+import { categoriesList, chaptersList, rubricsList } from './constants/rubrics'
 import SmallScreenNav from './components/smallscreennav/SmallScreenNav'
 import Footer from './components/footer/Footer'
-import { StyledMainApp } from './components/elements/styled'
 import { setRoutes } from './redux/settings/SettingsActions'
+import Main from './components/main/Main'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,18 +40,7 @@ function App() {
         <Grid container>
           <Header />
           <SmallScreenNav />
-          <StyledMainApp>
-            {chaptersRoutes.map((chapterRoute) => (
-              <Route {...chapterRoute} key={chapterRoute.path} />
-            ))}
-            {categoriesRoutes.map((categoryRoute) => (
-              <Route {...categoryRoute} key={categoryRoute.path} />
-            ))}
-            {rubricsRoutes.map((rubricRoute) => (
-              <Route {...rubricRoute} key={rubricRoute.path} />
-            ))}
-            <Route path="/" component={HomeScreen} exact />
-          </StyledMainApp>
+          <Main />
           <Footer />
         </Grid>
       </BrowserRouter>

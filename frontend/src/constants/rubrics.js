@@ -14,6 +14,14 @@ import InformationsScreen from '../screens/InformationsScreen'
 import ApelOgecScreen from '../screens/ApelOgecScreen'
 import EcoleHistoireScreen from '../screens/EcoleHistoireScreen'
 import ApelOgecApelScreen from '../screens/ApelOgecApelScreen'
+import ApelOgecApelActivitesScreen from '../screens/ApelOgecApelActivitesScreen'
+import EcoleProjetsScreen from '../screens/EcoleProjetsScreen'
+import EcoleProjetsEducatifScreen from '../screens/EcoleProjetsEducatifScreen'
+import EcoleProjetsPedagogiqueScreen from '../screens/EcoleProjetsPedagogiqueScreen'
+import EcoleProjetsPastoralScreen from '../screens/EcoleProjetsPastoralScreen'
+import EcoleInfrastructuresScreen from '../screens/EcoleInfrastructuresScreen'
+import EcoleInfrasrtucturesBatiments from '../screens/EcoleInfrasrtucturesBatiments'
+import EcoleInfrastructuresVisiteVirtuelleScreen from '../screens/EcoleInfrastructuresVisiteVirtuelleScreen'
 
 const rubrics = [
   {
@@ -53,7 +61,7 @@ const rubrics = [
         route: {
           path: '/ecole/projets',
           exact: true,
-          component: FakeScreen,
+          component: EcoleProjetsScreen,
         },
         chapters: [
           {
@@ -62,16 +70,16 @@ const rubrics = [
             route: {
               path: '/ecole/projets/projet-educatif',
               exact: true,
-              component: FakeScreen,
+              component: EcoleProjetsEducatifScreen,
             },
           },
           {
             chapname: 'Pédagogique',
-            alias: 'projet-pedagogique',
+            alias: 'projetpedagogique',
             route: {
               path: '/ecole/projets/projet-pedagogique',
               exact: true,
-              component: FakeScreen,
+              component: EcoleProjetsPedagogiqueScreen,
             },
           },
           {
@@ -80,7 +88,7 @@ const rubrics = [
             route: {
               path: '/ecole/projets/projet-pastoral',
               exact: true,
-              component: FakeScreen,
+              component: EcoleProjetsPastoralScreen,
             },
           },
         ],
@@ -91,7 +99,7 @@ const rubrics = [
         route: {
           path: '/ecole/infrastructures',
           exact: true,
-          component: FakeScreen,
+          component: EcoleInfrastructuresScreen,
         },
         chapters: [
           {
@@ -100,7 +108,7 @@ const rubrics = [
             route: {
               path: '/ecole/infrastructures/batiments',
               exact: true,
-              component: FakeScreen,
+              component: EcoleInfrasrtucturesBatiments,
             },
           },
           {
@@ -109,7 +117,7 @@ const rubrics = [
             route: {
               path: '/ecole/infrastructures/visite-virtuelle',
               exact: true,
-              component: FakeScreen,
+              component: EcoleInfrastructuresVisiteVirtuelleScreen,
             },
           },
         ],
@@ -122,7 +130,7 @@ const rubrics = [
     icon: <DirectionsRunIcon />,
     alias: 'viescolaire',
     route: {
-      path: '/vie-scolaire',
+      path: '/viescolaire',
       exact: true,
       component: VieScolaireScreen,
     },
@@ -132,7 +140,7 @@ const rubrics = [
         catname: 'Cantine',
         alias: 'cantine',
         route: {
-          path: '/vie-scolaire/cantine',
+          path: '/viescolaire/cantine',
           exact: true,
           component: FakeScreen,
         },
@@ -141,7 +149,7 @@ const rubrics = [
             chapname: 'Menus',
             alias: 'menus',
             route: {
-              path: '/vie-scolaire/cantine/menus',
+              path: '/viescolaire/cantine/menus',
               exact: true,
               component: FakeScreen,
             },
@@ -150,7 +158,7 @@ const rubrics = [
             chapname: 'Brèves',
             alias: 'breves',
             route: {
-              path: '/vie-scolaire/cantine/breves',
+              path: '/viescolaire/cantine/breves',
               exact: true,
               component: FakeScreen,
             },
@@ -161,7 +169,7 @@ const rubrics = [
         catname: 'Garderie',
         alias: 'garderie',
         route: {
-          path: '/vie-scolaire/garderie',
+          path: '/viescolaire/garderie',
           exact: true,
           component: FakeScreen,
         },
@@ -170,7 +178,7 @@ const rubrics = [
             chapname: 'Presentation',
             alias: 'presentation-garderie',
             route: {
-              path: '/vie-scolaire/garderie/presentation',
+              path: '/viescolaire/garderie/presentation',
               exact: true,
               component: FakeScreen,
             },
@@ -179,7 +187,7 @@ const rubrics = [
             chapname: 'Etude',
             alias: 'etude-garderie',
             route: {
-              path: '/vie-scolaire/garderie/etude',
+              path: '/viescolaire/garderie/etude',
               exact: true,
               component: FakeScreen,
             },
@@ -190,7 +198,7 @@ const rubrics = [
         catname: 'Horaires',
         alias: 'horaires',
         route: {
-          path: '/vie-scolaire/horaires',
+          path: '/viescolaire/horaires',
           exact: true,
           component: FakeScreen,
         },
@@ -577,37 +585,36 @@ const rubrics = [
     icon: <EcoSharpIcon />,
     alias: 'apelogec',
     route: {
-      path: '/apel-ogec',
+      path: '/apelogec',
       exact: true,
       component: ApelOgecScreen,
     },
     categories: [
       {
         catname: 'APEL',
-
-        alias: 'ap',
+        alias: 'apel',
         route: {
-          path: '/apel-ogec/apel',
-          exact: false,
+          path: '/apelogec/apel',
+          exact: true,
           component: ApelOgecApelScreen,
         },
         chapters: [
           {
             chapname: 'Presentation',
-            alias: 'apel',
+            alias: 'presentationapel',
             route: {
-              path: '/apel-ogec/apel/presentation',
+              path: '/apelogec/apel/presentation',
               exact: true,
               component: FakeScreen,
             },
           },
           {
             chapname: 'Activités',
-            alias: 'activites-apel',
+            alias: 'activitesapel',
             route: {
-              path: '/apel-ogec/apel/activites',
+              path: '/apelogec/apel/activites',
               exact: true,
-              component: FakeScreen,
+              component: ApelOgecApelActivitesScreen,
             },
           },
         ],
@@ -616,25 +623,25 @@ const rubrics = [
         catname: 'OGEC',
         alias: 'ogec',
         route: {
-          path: '/apel-ogec/ogec',
+          path: '/apelogec/ogec',
           exact: true,
           component: FakeScreen,
         },
         chapters: [
           {
             chapname: 'Presentation',
-            alias: 'ogec',
+            alias: 'presentationogec',
             route: {
-              path: '/apel-ogec/ogec/presentation',
+              path: '/apelogec/ogec/presentation',
               exact: true,
               component: FakeScreen,
             },
           },
           {
             chapname: 'Activités',
-            alias: 'activites-ogec',
+            alias: 'activitesogec',
             route: {
-              path: '/apel-ogec/ogec/activites',
+              path: '/apelogec/ogec/activites',
               exact: true,
               component: FakeScreen,
             },

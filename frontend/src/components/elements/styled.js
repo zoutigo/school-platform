@@ -49,7 +49,7 @@ const StyledScreen = styled('section')(({ theme }) => ({
 export const StyledCentralScreen = withTheme(
   styled(({ location, ...rest }) => <StyledScreen {...rest} />)({
     margin: ({ location }) =>
-      location === 'home' ? '5.9rem 0rem 1rem 0rem' : '5.9rem 11rem 1rem 11rem',
+      location === '/' ? '5.9rem 0rem 1rem 0rem' : '11rem 11rem 1rem 11rem',
   })
 )
 
@@ -68,7 +68,7 @@ export const StyledBaseButton = styled(Button)(() => ({
 
 export const StyledTitle = withTheme(
   styled(({ bgcolor, ...rest }) => <div {...rest} />)({
-    width: '11rem',
+    minWidth: '11rem',
     height: '3rem',
     marginTop: '1rem',
     marginBottom: '1rem',
