@@ -8,6 +8,7 @@ import { StyledNavLink, StyledTitle } from '../../elements/styled'
 import Title from '../../elements/Title'
 import asideApel from '../../../constants/asideapel'
 import asideOgec from '../../../constants/ogecAside'
+import asideContacts from '../../../constants/asidecontacts'
 
 const StyledTitleBloc = styled(Grid)(() => ({
   background: 'whitesmoke',
@@ -57,6 +58,7 @@ function TitleBloc({ rubriccolors, setAside }) {
     const asides = [
       ['/apelogec/apel', asideApel],
       ['/apelogec/ogec', asideOgec],
+      ['/informations/contacts', asideContacts],
     ]
     const categoryAside = asides.find(([path, aside]) =>
       pathname.includes(path)
