@@ -4,6 +4,8 @@ const initialState = {
   SmallScreenNavIsOpened: false,
   ActiveRubric: { rubname: 'home', rubalias: 'home' },
   Routes: [],
+  Asides: [],
+  MutationError: null,
 }
 
 /* eslint-disable */
@@ -23,6 +25,24 @@ const settingsReducers = createReducer(initialState, {
       newRoutes.push(action.payload)
     }
     state.Routes = newRoutes
+  },
+  SET_CATEGORY_ASIDE: (state, action) => {
+    const [path, datas] = action.payload
+    let newAsides = state.Asides
+    const verify = newAsides.find(
+      ([asidePath, asideDatas]) => path === asidePath
+    )
+    if (!verify) {
+      newAsides.push(action.payload)
+    } else {
+      newAsides.map((aside) => {
+        return aside[0] === path ? action.payload : aside
+      })
+    }
+    state.Asides = newAsides
+  },
+  SET_MUTATION_ERROR: (state, action) => {
+    state.MutationError = action.payload
   },
 })
 

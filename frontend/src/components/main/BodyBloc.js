@@ -1,3 +1,4 @@
+import { Grid } from '@material-ui/core'
 import React from 'react'
 import { Route } from 'react-router-dom'
 import {
@@ -8,7 +9,7 @@ import {
 
 function BodyBloc() {
   return (
-    <div>
+    <Grid container>
       {chaptersRoutes.map((chapterRoute) => (
         <Route {...chapterRoute} key={chapterRoute.path} />
       ))}
@@ -18,7 +19,7 @@ function BodyBloc() {
       {rubricsRoutes.map((rubricRoute) => (
         <Route {...rubricRoute} key={rubricRoute.path} />
       ))}
-    </div>
+    </Grid>
   )
 }
 
