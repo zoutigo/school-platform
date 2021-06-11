@@ -1,18 +1,19 @@
 import { Grid } from '@material-ui/core'
-import { styled } from '@material-ui/styles'
 import React, { useState } from 'react'
 import ReactHtmlParser from 'react-html-parser'
 
 import { useQuery } from 'react-query'
+import { useDispatch } from 'react-redux'
 import PageForm from '../components/elements/PageForm'
+import APELTEAM from '../constants/apelteam'
+import { setCategoryAside } from '../redux/settings/SettingsActions'
 
 import { apiFecthPage } from '../utils/api'
-
-const StyledPageDiv = styled('div')(() => ({
-  width: '100%',
-}))
+import { useCurrentCategory } from '../utils/hooks'
 
 function ApelOgecApelScreen() {
+  const dispatch = useDispatch()
+  const { path: categoryPath } = useCurrentCategory()
   const [showform, setShowform] = useState(false)
   const pageName = 'apel'
   const queryKey = [pageName, { alias: pageName }]
@@ -43,12 +44,28 @@ function ApelOgecApelScreen() {
   const { _id: id, text } = page
   const textcontent = ReactHtmlParser(text) || "il n'y a pas plus de détails"
 
+  // build apel aside
+  const asideApel = {
+    title: 'Bureau Apel',
+    items: APELTEAM.map((teamer) => {
+      const { role, gender, firstname, lastname } = teamer
+      return {
+        subtitle: role,
+        user: { gender, firstname, lastname },
+      }
+    }),
+  }
+  dispatch(setCategoryAside([categoryPath, asideApel]))
+
   return (
     <Grid container>
       {showform ? (
         <PageForm id={id} text={text} setShowform={setShowform} />
       ) : (
-        <StyledPageDiv>{textcontent}</StyledPageDiv>
+        <Grid item container>
+          {' '}
+          {textcontent}{' '}
+        </Grid>
       )}
     </Grid>
   )

@@ -1,6 +1,9 @@
 import React from 'react'
 import { Grid, styled } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import AsideSubTitle from './AsideSubTitle'
+import AsideUser from './AsideUser'
+import AsideItemText from './AsideItemText'
 
 export const StyledAsideItem = styled(Grid)(({ rubriccolors }) => ({
   textAlign: 'center',
@@ -17,7 +20,7 @@ const StyledAsideItemAction = styled(Grid)(({ rubriccolors }) => ({
 }))
 
 function AsideItem({ item, rubriccolors }) {
-  const { subtitle, text, icon } = item
+  const { subtitle, text, icon, user } = item
 
   if (icon) {
     return (
@@ -34,10 +37,17 @@ function AsideItem({ item, rubriccolors }) {
   return (
     <StyledAsideItem rubriccolors={rubriccolors} container>
       <Grid item container>
-        {subtitle}
+        <AsideSubTitle subtitle={subtitle} />
       </Grid>
       <Grid item container>
-        {text}
+        {user && (
+          <AsideUser
+            gender={user.gender}
+            firstname={user.firstname}
+            lastname={user.lastname}
+          />
+        )}
+        {text && <AsideItemText text={text} />}
       </Grid>
     </StyledAsideItem>
   )
@@ -45,9 +55,14 @@ function AsideItem({ item, rubriccolors }) {
 
 AsideItem.propTypes = {
   item: PropTypes.shape({
-    subtitle: PropTypes.element,
-    text: PropTypes.element,
+    subtitle: PropTypes.string,
+    text: PropTypes.string,
     icon: PropTypes.string,
+    user: PropTypes.shape({
+      gender: PropTypes.string,
+      lastname: PropTypes.string,
+      firstname: PropTypes.string,
+    }),
   }).isRequired,
   rubriccolors: PropTypes.shape({
     main: PropTypes.string,

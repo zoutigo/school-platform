@@ -10,7 +10,7 @@ const StyledUserCardGrid = styled(Grid)(() => ({
   },
 }))
 
-const StyledIcon = styled(Icon)(({ bgcolor, theme }) => ({
+const StyledIcon = styled(Icon)(({ bgcolor }) => ({
   fontSize: '0.7rem',
   marginBottom: '0.5rem',
   color: bgcolor,

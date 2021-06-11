@@ -1,4 +1,5 @@
 import React from 'react'
+import { Alert } from '@material-ui/lab'
 import { Box, Button, Grid, styled } from '@material-ui/core'
 import { withTheme } from '@material-ui/styles'
 import { NavLink } from 'react-router-dom'
@@ -63,7 +64,7 @@ export const StyledHomeGrid = styled(Grid)(({ theme }) => ({
 export const StyledBaseButton = styled(Button)(() => ({
   width: '11rem',
   height: '3rem',
-  marginTop: '1rem',
+  margin: '0.3rem',
 }))
 
 export const StyledTitle = withTheme(
@@ -75,3 +76,35 @@ export const StyledTitle = withTheme(
     background: ({ bgcolor }) => bgcolor,
   })
 )
+
+export const StyledAlert = styled(Alert)(({ theme }) => ({
+  width: '100%',
+  '& > * + *': {
+    marginTop: theme.spacing(2),
+  },
+}))
+
+export const StyledEditorGrid = styled(Grid)(() => ({
+  background: 'whitesmoke',
+  '& .mce-fullscreen': {
+    zIndex: '10',
+  },
+}))
+
+export const StyledForm = styled('form')(({ theme }) => ({
+  background: theme.palette.primary.light,
+  [theme.breakpoints.up('md')]: {
+    width: '50%',
+  },
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  '& >div': {
+    marginBottom: '1rem',
+  },
+  '& .field': {
+    paddingLeft: '4rem',
+    height: '3rem',
+  },
+}))

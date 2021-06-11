@@ -1,8 +1,10 @@
 import { Grid, useTheme } from '@material-ui/core'
 import { styled } from '@material-ui/styles'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import HomeScreen from '../../screens/HomeScreen'
+import { useCurrentCategory } from '../../utils/hooks'
 import { StyledCentralScreen, StyledMainApp } from '../elements/styled'
 
 import Aside from './Aside'
@@ -14,12 +16,14 @@ const StyledCentralBloc = styled(Grid)(() => ({}))
 function Main() {
   const { pathname } = useLocation()
   const { palette } = useTheme()
+  const { path: catePath } = useCurrentCategory()
+  const { Asides } = useSelector((state) => state.settings)
   const [rubriccolors, setRubriccolors] = useState({
     main: 'white',
     light: 'white',
     dark: 'white',
   })
-  const [aside, setAside] = useState(null)
+  const [hasAside, setHasAside] = useState(false)
   const entries = Object.entries(palette)
   const rubricAlias = pathname.split('/')[1]
 
@@ -33,6 +37,20 @@ function Main() {
     }
   }, [pathname])
 
+  useEffect(() => {
+    const categoryAside = Asides.find(
+      // eslint-disable-next-line no-unused-vars
+      ([categoryPath, ...rest]) => categoryPath === catePath
+    )
+
+    if (categoryAside) {
+      setHasAside(true)
+    }
+    return () => {
+      setHasAside(false)
+    }
+  }, [useCurrentCategory()])
+
   return (
     <StyledMainApp>
       <StyledCentralScreen location={pathname}>
@@ -43,11 +61,14 @@ function Main() {
             )}
             {pathname !== '/' && (
               <StyledCentralBloc container>
-                <Grid item container xs={12} md={aside ? 9 : 12}>
-                  <TitleBloc rubriccolors={rubriccolors} setAside={setAside} />
+                <Grid item container xs={12} md={hasAside ? 9 : 12}>
+                  <TitleBloc
+                    rubriccolors={rubriccolors}
+                    setHasAside={setHasAside}
+                  />
                   <BodyBloc />
                 </Grid>
-                {aside && <Aside rubriccolors={rubriccolors} aside={aside} />}
+                {hasAside && <Aside rubriccolors={rubriccolors} />}
               </StyledCentralBloc>
             )}
           </>
