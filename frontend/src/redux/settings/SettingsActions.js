@@ -1,7 +1,6 @@
 import {
   SET_ACTIVE_RUBRIC,
   SET_CATEGORY_ASIDE,
-  SET_MUTATION_ERROR,
   SET_OPEN_SMALL_SCREEN_NAV,
   SET_ROUTES,
 } from './SettingsActionsTypes'
@@ -22,9 +21,5 @@ export const setRoutes = (value = null) => ({
 })
 export const setCategoryAside = (value = null) => ({
   type: SET_CATEGORY_ASIDE,
-  payload: value,
-})
-export const setMutationError = (value = null) => ({
-  type: SET_MUTATION_ERROR,
   payload: value,
 })

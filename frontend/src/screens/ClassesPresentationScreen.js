@@ -1,8 +1,5 @@
-import { Button, ButtonGroup, Grid, styled, useTheme } from '@material-ui/core'
+import { Button, ButtonGroup, Grid, styled } from '@material-ui/core'
 import React, { useState } from 'react'
-import ReactHtmlParser from 'react-html-parser'
-import { Alert, AlertTitle } from '@material-ui/lab'
-
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useQuery } from 'react-query'
@@ -11,17 +8,16 @@ import Classrooms from '../constants/classrooms'
 import { setCategoryAside } from '../redux/settings/SettingsActions'
 import { useCurrentCategory } from '../utils/hooks'
 import ClassroomSummary from '../components/main/classes/ClassroomSummary'
-import ClassroomImageForm from '../components/main/classes/ClassroomImageForm'
 import { StyledAlert } from '../components/elements/styled'
 import ClassroomSummaryForm from '../components/main/classes/ClassroomSummaryForm'
 import ApiAlert from '../components/elements/ApiAlert'
-import CustomButton from '../components/elements/CustomButton'
+import ClassroomImageForm from '../components/main/classes/ClassroomImageForm'
 
-const StyledButtonGroup = styled(ButtonGroup)(({ theme, bgcolor }) => ({
+const StyledButtonGroup = styled(ButtonGroup)(() => ({
   height: '3rem',
   marginTop: '1em',
 }))
-const StyledButton = styled(Button)(({ theme, bgcolor }) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
   height: '3em',
   background: theme.palette.primary.main,
   padding: '0.5em 1em',
@@ -56,7 +52,6 @@ function ClassesPresentationScreen() {
     _id: classroomId,
     summary,
     image,
-    teacher,
     email,
     alias: classroomAlias,
   } = data

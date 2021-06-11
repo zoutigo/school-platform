@@ -1,13 +1,11 @@
 import { Grid, styled, useTheme } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Controller, useForm } from 'react-hook-form'
-import { ErrorMessage } from '@hookform/error-message'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Alert } from '@material-ui/lab'
 import PropTypes from 'prop-types'
-import { useMutation, useQuery } from 'react-query'
-import { apiFecthClassroom, apiUpdateClassroom } from '../../../utils/api'
+import { useMutation } from 'react-query'
+import { apiUpdateClassroom } from '../../../utils/api'
 import { useUpdateMutationOptions } from '../../../utils/hooks'
 import classroomSummarySchema from '../../../schemas/classroomSummarySchema'
 import TinyTextEditor from '../../elements/TinyTextEditor'
@@ -32,7 +30,6 @@ function ClassroomSummaryForm({
 }) {
   const theme = useTheme()
   const token = useSelector((state) => state.user.Token.token)
-  const { MutationError } = useSelector((state) => state.settings)
   const [showApiFailureAlert, setShowApiFailureAlert] = useState(false)
   const [apiFailureMessage, setApiFailureMessage] = useState('')
 
@@ -54,7 +51,6 @@ function ClassroomSummaryForm({
   })
 
   const onSubmit = async (datas) => {
-    console.log('datas', datas)
     const { summary } = datas
     const options = {
       headers: { 'x-access-token': token || 'hello' },
@@ -135,7 +131,7 @@ function ClassroomSummaryForm({
               />
               <AlertCollapse
                 openAlert={errors.summary}
-                alertText={errors.summary?.message}
+                alertText={errors.image ? errors.image.message : ''}
               />
             </Grid>
             <Grid item container justify="center">

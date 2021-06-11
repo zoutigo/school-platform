@@ -1,12 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Collapse, Grid, IconButton, styled, useTheme } from '@material-ui/core'
-import * as yup from 'yup'
+import { Grid, useTheme } from '@material-ui/core'
+
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { ToastContainer } from 'react-toastify'
 
 import Resizer from 'react-image-file-resizer'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useSelector } from 'react-redux'
 import { StyledForm } from '../../elements/styled'
@@ -64,7 +63,6 @@ function ClassroomImageForm({
   })
 
   const onSubmit = async (datas) => {
-    console.log('datas', datas)
     const { image } = datas
     const options = {
       headers: { 'x-access-token': token },
@@ -128,7 +126,7 @@ function ClassroomImageForm({
           <Grid item container>
             <AlertCollapse
               openAlert={errors.image}
-              alertText={errors.image?.message}
+              alertText={errors.image ? errors.image.message : ''}
             />
             <AlertCollapse
               openAlert={showApiFailureAlert}

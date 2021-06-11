@@ -2,7 +2,6 @@ import { Grid, styled } from '@material-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
 import ReactHtmlParser from 'react-html-parser'
-import ClassroomImageForm from './ClassroomImageForm'
 
 const StyledClassroomContainer = styled(Grid)(() => ({
   padding: '0.1em !important',

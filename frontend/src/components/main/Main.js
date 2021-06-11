@@ -39,6 +39,7 @@ function Main() {
 
   useEffect(() => {
     const categoryAside = Asides.find(
+      // eslint-disable-next-line no-unused-vars
       ([categoryPath, ...rest]) => categoryPath === catePath
     )
 

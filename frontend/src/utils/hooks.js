@@ -1,8 +1,8 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react'
 import { useQueryClient } from 'react-query'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { setMutationError } from '../redux/settings/SettingsActions'
 
 export const useCurrentCategory = () => {
   const { pathname } = useLocation()
@@ -59,9 +59,6 @@ export const useCurrentCategory = () => {
 }
 
 export const useUpdateMutationOptions = (queryKey) => {
-  // prepare the error dispatch
-  const dispatch = useDispatch()
-
   const queryClient = useQueryClient()
   return {
     onMutate: (newData) => {
@@ -69,6 +66,7 @@ export const useUpdateMutationOptions = (queryKey) => {
 
       const current = queryClient.getQueryData(queryKey)
 
+      // eslint-disable-next-line no-unused-vars
       queryClient.setQueryData(queryKey, (prev) => newData)
 
       // in case there is no id , for post, it could be
@@ -76,8 +74,10 @@ export const useUpdateMutationOptions = (queryKey) => {
       return current
     },
     onSuccess: (newData) => {
+      // eslint-disable-next-line no-unused-vars
       queryClient.setQueryData(queryKey, (prev) => newData)
     },
+    // eslint-disable-next-line no-unused-vars
     onError: (error, variables, context, newData, rollback) => {
       // dispatch(setMutationError(error.message))
       // rollback()

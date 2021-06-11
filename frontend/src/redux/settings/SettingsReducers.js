@@ -5,7 +5,6 @@ const initialState = {
   ActiveRubric: { rubname: 'home', rubalias: 'home' },
   Routes: [],
   Asides: [],
-  MutationError: null,
 }
 
 /* eslint-disable */
@@ -40,9 +39,6 @@ const settingsReducers = createReducer(initialState, {
       })
     }
     state.Asides = newAsides
-  },
-  SET_MUTATION_ERROR: (state, action) => {
-    state.MutationError = action.payload
   },
 })
 
