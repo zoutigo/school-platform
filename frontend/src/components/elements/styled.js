@@ -1,6 +1,6 @@
 import React from 'react'
 import { Alert } from '@material-ui/lab'
-import { Box, Button, Grid, styled } from '@material-ui/core'
+import { Box, Button, Grid, IconButton, styled } from '@material-ui/core'
 import { withTheme } from '@material-ui/styles'
 import { NavLink } from 'react-router-dom'
 // import theme from '../../constants/theme'
@@ -67,6 +67,12 @@ export const StyledBaseButton = styled(Button)(() => ({
   margin: '0.3rem',
 }))
 
+export const StyledIconButton = styled(IconButton)(({ bgcolor }) => ({
+  color: bgcolor,
+  fontSize: '3rem',
+  marginLeft: '2rem !important',
+}))
+
 export const StyledTitle = withTheme(
   styled(({ bgcolor, ...rest }) => <div {...rest} />)({
     minWidth: '11rem',
@@ -107,4 +113,18 @@ export const StyledForm = styled('form')(({ theme }) => ({
     paddingLeft: '4rem',
     height: '3rem',
   },
+}))
+
+export const StyledPaperHeader = styled(Grid)(() => ({
+  padding: '0px 1rem ',
+  background: 'whitesmoke',
+  cursor: 'pointer',
+}))
+
+export const StyledPaperBody = styled(Grid)(() => ({
+  padding: '1rem ',
+}))
+
+export const StyledPaperFooter = styled(Grid)(() => ({
+  padding: '0px 1rem !important',
 }))

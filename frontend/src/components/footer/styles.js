@@ -1,4 +1,4 @@
-import { Box, styled } from '@material-ui/core'
+import { Box, Grid, styled } from '@material-ui/core'
 
 export const StyledFooterElementTitle = styled(Box)(() => ({}))
 export const StyledFooterElement = styled(Box)(() => ({
@@ -29,4 +29,10 @@ export const StyledAdressBox = styled(Box)(() => ({
   '& div': {
     marginLeft: '0.3rem',
   },
+}))
+
+export const StyledPaperHeader = styled(Grid)(() => ({
+  padding: '0px 1rem',
+  background: 'whitesmoke',
+  cursor: 'pointer',
 }))
