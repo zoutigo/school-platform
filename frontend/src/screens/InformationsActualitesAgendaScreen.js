@@ -1,6 +1,6 @@
 import { Grid } from '@material-ui/core'
 import { useQuery } from 'react-query'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { apiFetchEvents } from '../utils/api'
 import ApiAlert from '../components/elements/ApiAlert'
 import AgendaList from '../components/actualites/agenda/AgendaList'
@@ -10,6 +10,7 @@ import AlertCollapse from '../components/elements/AlertCollapse'
 function InformationsActualitesAgendaScreen() {
   const [showEventForm, setShowEventForm] = useState(false)
   const [showEventList, setShowEventList] = useState(true)
+  const [currentEventId, setCurrentEventId] = useState(null)
   const [topAlert, setTopAlert] = useState({
     severity: '',
     alertText: '',
@@ -53,9 +54,12 @@ function InformationsActualitesAgendaScreen() {
           setShowEventList={setShowEventList}
           queryKey={queryKey}
           setTopAlert={setTopAlert}
+          setCurrentEventId={setCurrentEventId}
         />
       )}
-      {showEventForm && <AgendaForm />}
+      {showEventForm && (
+        <AgendaForm events={data} currentEventId={currentEventId} />
+      )}
     </Grid>
   )
 }

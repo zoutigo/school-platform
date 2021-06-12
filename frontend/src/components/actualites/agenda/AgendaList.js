@@ -10,6 +10,7 @@ function AgendaList({
   data,
   setShowEventForm,
   setShowEventList,
+  setCurrentEventId,
   queryKey,
   setTopAlert,
 }) {
@@ -56,6 +57,7 @@ function AgendaList({
                     setShowEventList={setShowEventList}
                     queryKey={queryKey}
                     setTopAlert={setTopAlert}
+                    setCurrentEventId={setCurrentEventId}
                   />
                 </Collapse>
               </Grid>
@@ -79,6 +81,7 @@ AgendaList.propTypes = {
   ).isRequired,
   setShowEventForm: PropTypes.func.isRequired,
   setShowEventList: PropTypes.func.isRequired,
+  setCurrentEventId: PropTypes.func.isRequired,
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
   setTopAlert: PropTypes.func.isRequired,
 }

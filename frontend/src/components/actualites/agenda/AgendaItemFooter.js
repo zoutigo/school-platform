@@ -15,6 +15,7 @@ function AgendaItemFooter({
   event,
   setShowEventForm,
   setShowEventList,
+  setCurrentEventId,
   queryKey,
   setTopAlert,
 }) {
@@ -29,12 +30,10 @@ function AgendaItemFooter({
   const token = useSelector((state) => state.user.Token.token)
   useSelector((state) => state.settings)
 
-  const {
-    mutate,
-    mutateAsync,
-    error: mutationError,
-    isError: isMutationError,
-  } = useMutation(apiPostEvents, useUpdateMutationOptions(queryKey))
+  const { mutateAsync } = useMutation(
+    apiPostEvents,
+    useUpdateMutationOptions(queryKey)
+  )
 
   const mutatePaper = async () => {
     const options = {
@@ -56,6 +55,7 @@ function AgendaItemFooter({
   }
 
   const handleUpdate = () => {
+    setCurrentEventId(eventId)
     setShowEventList(false)
     setShowEventForm(true)
   }
@@ -114,6 +114,7 @@ AgendaItemFooter.propTypes = {
   }).isRequired,
   setShowEventList: PropTypes.func.isRequired,
   setShowEventForm: PropTypes.func.isRequired,
+  setCurrentEventId: PropTypes.func.isRequired,
   setTopAlert: PropTypes.func.isRequired,
 
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
