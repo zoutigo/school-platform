@@ -33,6 +33,10 @@ function CustomButton({ text, width, bgcolor, action, ...rest }) {
         return 'fa fa-arrow-circle-left'
       case 'post':
         return 'fa fa-paper-plane'
+      case 'cancel':
+        return 'fa fa-times'
+      case 'confirm':
+        return 'fa fa-check-circle'
 
       default:
         return 'fa fa-bell'

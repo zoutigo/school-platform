@@ -6,7 +6,13 @@ import ReactHtmlParser from 'react-html-parser'
 import { StyledPaperHeader, StyledPaperBody } from '../../elements/styled'
 import AgendaItemFooter from './AgendaItemFooter'
 
-function AgendaList({ data, setShowEventForm }) {
+function AgendaList({
+  data,
+  setShowEventForm,
+  setShowEventList,
+  queryKey,
+  setTopAlert,
+}) {
   const [openedItemId, setOpenedItemId] = useState(null)
   // const dateString = moment(date).format('DD/MM/YYYY')
   return (
@@ -47,6 +53,9 @@ function AgendaList({ data, setShowEventForm }) {
                   <AgendaItemFooter
                     event={event}
                     setShowEventForm={setShowEventForm}
+                    setShowEventList={setShowEventList}
+                    queryKey={queryKey}
+                    setTopAlert={setTopAlert}
                   />
                 </Collapse>
               </Grid>
@@ -69,6 +78,9 @@ AgendaList.propTypes = {
     })
   ).isRequired,
   setShowEventForm: PropTypes.func.isRequired,
+  setShowEventList: PropTypes.func.isRequired,
+  queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
+  setTopAlert: PropTypes.func.isRequired,
 }
 
 export default AgendaList
