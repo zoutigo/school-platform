@@ -1,6 +1,13 @@
 import React from 'react'
 import { Alert } from '@material-ui/lab'
-import { Box, Button, Grid, IconButton, styled } from '@material-ui/core'
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  styled,
+  TextField,
+} from '@material-ui/core'
 import { withTheme } from '@material-ui/styles'
 import { NavLink } from 'react-router-dom'
 // import theme from '../../constants/theme'
@@ -127,4 +134,11 @@ export const StyledPaperBody = styled(Grid)(() => ({
 
 export const StyledPaperFooter = styled(Grid)(() => ({
   padding: '0px 1rem !important',
+}))
+
+export const StyledInputTextFieldControl = styled(TextField)(({ width }) => ({
+  margin: '8px',
+  minHeight: '3rem',
+  background: 'yellow',
+  width: width,
 }))

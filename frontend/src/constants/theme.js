@@ -91,7 +91,7 @@ const initialTheme = createMuiTheme({
     },
     body1: {
       fontFamily: "Comfortaa',cursive",
-      fontSize: '1.5rem',
+      fontSize: '1rem',
       lineHeight: 1.1,
       letterSpacing: 2,
     },
