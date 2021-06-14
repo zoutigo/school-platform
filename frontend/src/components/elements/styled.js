@@ -144,3 +144,31 @@ export const StyledInputTextFieldControl = styled(TextField)(({ width }) => ({
   background: 'yellow',
   width: width,
 }))
+
+export const StyledStandardForm = styled('form')(({ theme }) => ({
+  width: '100%',
+  margin: '1rem auto',
+
+  [theme.breakpoints.up('md')]: {
+    width: '60%',
+  },
+  '& .form-header': {
+    background: 'gray',
+  },
+  '& .form-body': {
+    background: 'whitesmoke',
+    padding: '0.5rem 0.2rem',
+    '& .field': {
+      margin: '0.6rem 0px',
+    },
+  },
+  '& .form-footer': {
+    marginTop: '2rem',
+    '& .form-footer-button': {
+      height: '4rem',
+    },
+    '& .form-footer-mentions': {
+      minHeight: '3rem',
+    },
+  },
+}))

@@ -62,6 +62,7 @@ function InputTextControl({ control, name, width, initialValue, ...rest }) {
       container
       width={width}
       bgcolor={invalid && isTouched ? theme.palette.error.light : 'whitesmoke'}
+      className="field"
     >
       <Grid item container>
         <TextField {...inputProps} inputRef={ref} {...rest} />
@@ -76,7 +77,7 @@ function InputTextControl({ control, name, width, initialValue, ...rest }) {
 }
 
 InputTextControl.defaultProps = {
-  // initialValue: null,
+  initialValue: null,
   width: '100%',
 }
 InputTextControl.propTypes = {
@@ -85,7 +86,7 @@ InputTextControl.propTypes = {
   control: PropTypes.shape({
     updateIsValid: PropTypes.func,
   }).isRequired,
-  initialValue: PropTypes.string.isRequired,
+  initialValue: PropTypes.string,
   width: PropTypes.string,
 }
 

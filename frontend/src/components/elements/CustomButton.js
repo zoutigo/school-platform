@@ -6,25 +6,25 @@ import { StyledBaseButton } from './styled'
 
 const StyledCustomButton = withTheme(
   styled(({ width, bgcolor, ...rest }) => <StyledBaseButton {...rest} />)({
-    width: ({ width }) => width || '11rem',
+    width: ({ width }) => (width === '100%' ? '99%' : width || '11rem'),
     background: ({ bgcolor }) => bgcolor || 'red',
     radius: '5px',
-    // '& *': {
-    //   marginLeft: '2rem',
-    // },
-    // '& >svg': {
-    //   fontSize: '3em',
-    // },
+    display: 'flex',
   })
 )
 const StyledIconDiv = withTheme(
   styled(({ text, bgcolor, ...rest }) => <div {...rest} />)({
-    width: ({ text }) => (text ? '20%' : '100%'),
+    width: ({ text }) => (text ? '20%' : '90%'),
+    flex: 1,
     '& >svg': {
       fontSize: '3rem',
     },
   })
 )
+
+const StyledTextDiv = styled('div')(() => ({
+  flex: 8,
+}))
 
 function CustomButton({ text, width, bgcolor, action, ...rest }) {
   const faicon = (type) => {
@@ -54,9 +54,11 @@ function CustomButton({ text, width, bgcolor, action, ...rest }) {
       <StyledIconDiv text={text}>
         <Icon className={faicon(action)} aria-hidden="true" />
       </StyledIconDiv>
-      <Typography variant="button" component="span">
-        {text}
-      </Typography>
+      <StyledTextDiv>
+        <Typography variant="button" component="span">
+          {text}
+        </Typography>
+      </StyledTextDiv>
     </StyledCustomButton>
   )
 }

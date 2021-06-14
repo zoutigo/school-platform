@@ -21,10 +21,10 @@ const StyledPaperForm = styled('form')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     width: '60%',
   },
-  '& >:nth-child(2)': {
+  '& .form-fields-container': {
     background: 'whitesmoke',
     padding: '0.5rem 0.2rem',
-    '& >div': {
+    '& .field': {
       margin: '0.6rem 0px',
     },
   },
@@ -114,7 +114,7 @@ function AgendaForm({
         <Grid item container justify="center">
           <Title title={agendaTitle} textcolor="whitesmoke" />
         </Grid>
-        <Grid container>
+        <Grid container className="form-fields-container">
           <InputTextControl
             name="title"
             control={control}

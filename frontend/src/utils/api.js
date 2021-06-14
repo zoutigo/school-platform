@@ -15,24 +15,14 @@ export const apiCheckEmail = async (value) => {
 }
 
 export const apiRegister = async (datas) => {
-  const url = 'https://ecole-saint-augustin.herokuapp.com/users'
-
-  try {
-    const req = await axios.post(url, datas)
-    return req
-  } catch (err) {
-    return err
-  }
+  const URL = `${process.env.REACT_APP_ENDPOINT}/users`
+  const response = await axios.post(URL, datas)
+  return response
 }
 export const apiLogin = async (datas) => {
-  const url = 'https://ecole-saint-augustin.herokuapp.com/users/login'
-
-  try {
-    const req = await axios.post(url, datas)
-    return req
-  } catch (err) {
-    return err
-  }
+  const URL = `${process.env.REACT_APP_ENDPOINT}/users/login`
+  const response = await axios.post(URL, datas)
+  return response
 }
 
 export const apiFecthUserDatas = async (id) => {
