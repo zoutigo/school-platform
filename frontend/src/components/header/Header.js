@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom'
 import { styled, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import './headerStyle.css'
 import Logo from './Logo'
-import { StyledIconBox } from '../elements/styled'
+import { StyledIconBox, StyledNavLink } from '../elements/styled'
 import rubrics from '../../constants/rubrics'
 import NavBloc from './NavBloc'
 import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
@@ -44,14 +44,19 @@ function Header() {
             )
             const [rubcolors] = sortedcolors
             const rubcolor = rubcolors ? rubcolors[1].main : ''
-
+            if (rubric.route.path === '/register' && pathname !== '/register') {
+              return null
+            }
+            if (rubric.route.path === '/login' && pathname === '/register') {
+              return null
+            }
             return (
               <NavBloc key={rubric.alias} rubric={rubric} rubcolor={rubcolor} />
             )
           })}
         </ul>
       )}
-      {!isSmallScreen && (
+      {/* {!isSmallScreen && (
         <ul
           className="private"
           style={{
@@ -74,7 +79,9 @@ function Header() {
             }}
           >
             <div className="dropdown" style={{ marginTop: '0.8rem' }}>
-              <Typography varian="h6">Login</Typography>
+              <StyledNavLink to="/login">
+                <Typography varian="h6">Login</Typography>
+              </StyledNavLink>
               <ul className="dropdown-content">
                 <li>Mon compte</li>
               </ul>
@@ -89,7 +96,7 @@ function Header() {
             </div>
           </li>
         </ul>
-      )}
+      )} */}
       {isSmallScreen && (
         <div className="mr-1 ml-1">
           <StyledIconBox

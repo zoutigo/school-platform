@@ -55,6 +55,16 @@ const initialTheme = createMuiTheme({
       main: red[500],
       dark: red[900],
     },
+    login: {
+      ligth: red[50],
+      main: red[500],
+      dark: red[900],
+    },
+    register: {
+      ligth: red[50],
+      main: red[500],
+      dark: red[900],
+    },
   },
   typography: {
     h1: {

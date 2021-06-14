@@ -1,6 +1,8 @@
 import React from 'react'
 
 import SchoolIcon from '@material-ui/icons/School'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import EcoSharpIcon from '@material-ui/icons/EcoSharp'
@@ -44,6 +46,8 @@ import ApelOgecOgecScreen from '../screens/ApelOgecOgecScreen'
 import ApelOgecOgecActivitesScreen from '../screens/ApelOgecOgecActivitesScreen'
 import InformationsInscriptionsScreen from '../screens/InformationsInscriptionsScreen'
 import InformationsInscriptionsInfosSupplementairesScreen from '../screens/InformationsInscriptionsInfosSupplementairesScreen'
+import LoginScreen from '../screens/LoginScreen'
+import RegisterScreen from '../screens/RegisterScreen'
 
 const rubrics = [
   {
@@ -573,6 +577,28 @@ const rubrics = [
       },
     ],
   },
+  {
+    rubname: 'Login',
+    icon: <AccountCircleIcon />,
+    alias: 'login',
+    route: {
+      path: '/login',
+      exact: true,
+      component: LoginScreen,
+    },
+    categories: [],
+  },
+  {
+    rubname: 'Inscription',
+    icon: <AccountCircleIcon />,
+    alias: 'register',
+    route: {
+      path: '/register',
+      exact: true,
+      component: RegisterScreen,
+    },
+    categories: [],
+  },
 ]
 
 const categoriesRoutes = []
@@ -582,7 +608,7 @@ const chaptersList = []
 
 for (let i = 0; i < rubrics.length; i += 1) {
   const { categories } = rubrics[i]
-  if (categories.length > 0) {
+  if (categories && categories.length > 0) {
     for (let j = 0; j < categories.length; j += 1) {
       const { catname, alias, route, chapters } = categories[j]
       categoriesList.push({

@@ -96,20 +96,24 @@ function NavBloc({ rubric, rubcolor }) {
 
   useEffect(() => {
     const matchRubric = pathname === route.path
-    const matchCategory =
-      categories.filter((category) => category.route.path === pathname).length >
-      0
-
     const chaptersRouteList = []
-    for (let i = 0; i < categories.length; i += 1) {
-      const listchapters = categories[i].chapters
-      for (let j = 0; j < listchapters.length; j += 1) {
-        const { route: chapterroute } = listchapters[j]
-        chaptersRouteList.push(chapterroute)
+    let matchCategory
+    let matchChapter = ''
+    if (categories && categories.length) {
+      matchCategory =
+        categories.filter((category) => category.route.path === pathname)
+          .length > 0
+
+      for (let i = 0; i < categories.length; i += 1) {
+        const listchapters = categories[i].chapters
+        for (let j = 0; j < listchapters.length; j += 1) {
+          const { route: chapterroute } = listchapters[j]
+          chaptersRouteList.push(chapterroute)
+        }
       }
     }
 
-    const matchChapter =
+    matchChapter =
       chaptersRouteList.filter((chaproute) => chaproute.path === pathname)
         .length > 0
 
