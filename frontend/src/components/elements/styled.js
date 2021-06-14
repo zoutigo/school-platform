@@ -1,9 +1,15 @@
 import React from 'react'
 import { Alert } from '@material-ui/lab'
-import { Box, Button, Grid, styled } from '@material-ui/core'
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  styled,
+  TextField,
+} from '@material-ui/core'
 import { withTheme } from '@material-ui/styles'
 import { NavLink } from 'react-router-dom'
-// import theme from '../../constants/theme'
 
 /* eslint-disable */
 
@@ -67,6 +73,12 @@ export const StyledBaseButton = styled(Button)(() => ({
   margin: '0.3rem',
 }))
 
+export const StyledIconButton = styled(IconButton)(({ bgcolor }) => ({
+  color: bgcolor,
+  fontSize: '3rem',
+  marginLeft: '2rem !important',
+}))
+
 export const StyledTitle = withTheme(
   styled(({ bgcolor, ...rest }) => <div {...rest} />)({
     minWidth: '11rem',
@@ -107,4 +119,28 @@ export const StyledForm = styled('form')(({ theme }) => ({
     paddingLeft: '4rem',
     height: '3rem',
   },
+}))
+
+export const StyledPaperHeader = styled(Grid)(() => ({
+  padding: '0px 1rem ',
+  background: 'whitesmoke',
+  cursor: 'pointer',
+  '& >:first-child': {
+    padding: '0.5rem 0',
+  },
+}))
+
+export const StyledPaperBody = styled(Grid)(() => ({
+  padding: '1rem ',
+}))
+
+export const StyledPaperFooter = styled(Grid)(() => ({
+  padding: '0px 1rem !important',
+}))
+
+export const StyledInputTextFieldControl = styled(TextField)(({ width }) => ({
+  margin: '8px',
+  minHeight: '3rem',
+  background: 'yellow',
+  width: width,
 }))

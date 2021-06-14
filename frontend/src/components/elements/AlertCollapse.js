@@ -8,7 +8,7 @@ const StyledSection = styled('section')(() => ({
   width: '100%',
 }))
 
-function AlertCollapse({ openAlert, alertText }) {
+function AlertCollapse({ openAlert, alertText, severity, callback }) {
   const [open, setOpen] = useState(false)
   const [text, setText] = useState('')
 
@@ -24,14 +24,22 @@ function AlertCollapse({ openAlert, alertText }) {
     <StyledSection>
       <Collapse in={open}>
         <ApiAlert
-          severity="error"
+          severity={severity}
           action={
             <IconButton
               aria-label="close"
               color="inherit"
               size="small"
               onClick={() => {
-                setOpen(false)
+                if (callback) {
+                  callback({
+                    openAlert: false,
+                    alertText: '',
+                    severity: '',
+                  })
+                } else {
+                  setOpen(false)
+                }
               }}
             >
               <CloseIcon fontSize="inherit" />
@@ -44,10 +52,17 @@ function AlertCollapse({ openAlert, alertText }) {
     </StyledSection>
   )
 }
+AlertCollapse.defaultProps = {
+  severity: 'error',
+  openAlert: false,
+  callback: null,
+}
 
 AlertCollapse.propTypes = {
-  openAlert: PropTypes.bool.isRequired,
+  openAlert: PropTypes.bool,
   alertText: PropTypes.string.isRequired,
+  severity: PropTypes.string,
+  callback: PropTypes.func,
 }
 
 export default AlertCollapse
