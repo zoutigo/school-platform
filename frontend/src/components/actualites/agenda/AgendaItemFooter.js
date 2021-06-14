@@ -16,6 +16,7 @@ function AgendaItemFooter({
   setShowEventForm,
   setShowEventList,
   setCurrentEventId,
+  setFormAction,
   queryKey,
   setTopAlert,
 }) {
@@ -58,6 +59,7 @@ function AgendaItemFooter({
     setCurrentEventId(eventId)
     setShowEventList(false)
     setShowEventForm(true)
+    setFormAction('update')
   }
 
   return (
@@ -116,6 +118,7 @@ AgendaItemFooter.propTypes = {
   setShowEventForm: PropTypes.func.isRequired,
   setCurrentEventId: PropTypes.func.isRequired,
   setTopAlert: PropTypes.func.isRequired,
+  setFormAction: PropTypes.func.isRequired,
 
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
 }

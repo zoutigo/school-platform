@@ -76,13 +76,16 @@ function InputTextControl({ control, name, width, initialValue, ...rest }) {
 }
 
 InputTextControl.defaultProps = {
-  initialValue: null,
+  // initialValue: null,
   width: '100%',
 }
 InputTextControl.propTypes = {
   name: PropTypes.string.isRequired,
-  control: PropTypes.func.isRequired,
-  initialValue: PropTypes.string,
+  /* eslint-disable-line*/
+  control: PropTypes.shape({
+    updateIsValid: PropTypes.func,
+  }).isRequired,
+  initialValue: PropTypes.string.isRequired,
   width: PropTypes.string,
 }
 

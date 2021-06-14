@@ -35,6 +35,8 @@ function AgendaForm({
   queryKey,
   setTopAlert,
   setShowTooltip,
+  setFormAction,
+  formAction,
 }) {
   const theme = useTheme()
   const [event, setEvent] = useState(null)
@@ -68,7 +70,7 @@ function AgendaForm({
     try {
       await mutateAsync({
         id: currentEventId || '',
-        action: currentEventId ? 'update' : 'create',
+        action: formAction,
         options: options,
         body: finalDatas,
       })
@@ -91,17 +93,21 @@ function AgendaForm({
     return () => {
       setEvent(null)
       setShowTooltip(true)
+      setFormAction(null)
       setTopAlert({
         severity: 'error',
         alertText: '',
         openAlert: false,
       })
     }
-  }, [])
+  }, [currentEventId])
 
-  const agendaTitle = event
-    ? `Modification d'un évènement`
-    : `Ajout d'un évènement à l'agenda`
+  const agendaTitle =
+    event && formAction === 'update'
+      ? `Modification d'un évènement`
+      : `Ajout d'un évènement à l'agenda`
+
+  if (!event) return null
   return (
     <Grid item container justify="center">
       <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
@@ -112,7 +118,7 @@ function AgendaForm({
           <InputTextControl
             name="title"
             control={control}
-            initialValue={event ? event.title : ''}
+            initialValue={formAction === 'update' ? event.title : ''}
             helperText="au moins 10 caractères"
             label="Titre"
             width="100%"
@@ -121,7 +127,11 @@ function AgendaForm({
           <InputTextControl
             name="place"
             control={control}
-            initialValue={event ? event.place : 'Ecole Saint Augustin'}
+            initialValue={
+              event && formAction === 'update'
+                ? event.place
+                : 'Ecole Saint Augustin'
+            }
             helperText="au moins 10 caractères"
             label="Lieu de l'évènement"
             width="100%"
@@ -132,14 +142,16 @@ function AgendaForm({
             name="date"
             label="Date de l'évènement"
             format="dddd Do MMMM yyyy"
-            initialDate={event ? new Date(event.date) : new Date()}
+            initialDate={
+              formAction === 'update' ? new Date(event.date) : new Date()
+            }
           />
 
           <Grid item container>
             <Controller
               name="text"
               control={control}
-              defaultValue={event ? event.text : ''}
+              defaultValue={formAction === 'update' ? event.text : ''}
               render={({ field: { onChange, value } }) => (
                 <TinyTextEditor onChange={onChange} value={value} />
               )}
@@ -148,7 +160,11 @@ function AgendaForm({
         </Grid>
         <Grid item container alignItems="center" justify="flex-end">
           <CostumButton
-            text="Je poste mon evenement"
+            text={
+              formAction === 'update'
+                ? 'Je modifie mon evvènement '
+                : 'Je poste mon évènement'
+            }
             bgcolor={theme.palette.success.main}
             action="post"
             width="300px"
@@ -164,6 +180,7 @@ function AgendaForm({
 AgendaForm.defaultProps = {
   currentEventId: null,
   events: [],
+  formAction: null,
 }
 
 AgendaForm.propTypes = {
@@ -171,6 +188,8 @@ AgendaForm.propTypes = {
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
   setTopAlert: PropTypes.func.isRequired,
   setShowTooltip: PropTypes.func.isRequired,
+  setFormAction: PropTypes.func.isRequired,
+  formAction: PropTypes.string,
   events: PropTypes.arrayOf(
     PropTypes.shape({
       place: PropTypes.string,

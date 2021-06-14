@@ -19,6 +19,7 @@ function InformationsActualitesAgendaScreen() {
   const [showEventList, setShowEventList] = useState(true)
   const [showTooltip, setShowTooltip] = useState(true)
   const [currentEventId, setCurrentEventId] = useState(null)
+  const [formAction, setFormAction] = useState(null)
   const [topAlert, setTopAlert] = useState({
     severity: '',
     alertText: '',
@@ -63,6 +64,7 @@ function InformationsActualitesAgendaScreen() {
           queryKey={queryKey}
           setTopAlert={setTopAlert}
           setCurrentEventId={setCurrentEventId}
+          setFormAction={setFormAction}
         />
       )}
       {showEventForm && (
@@ -72,6 +74,8 @@ function InformationsActualitesAgendaScreen() {
           queryKey={queryKey}
           setTopAlert={setTopAlert}
           setShowTooltip={setShowTooltip}
+          setFormAction={setFormAction}
+          formAction={formAction}
         />
       )}
       {showTooltip && (
@@ -81,6 +85,7 @@ function InformationsActualitesAgendaScreen() {
             onClick={() => {
               setShowEventForm(true)
               setShowEventList(false)
+              setFormAction('create')
             }}
           >
             <AddIcon />

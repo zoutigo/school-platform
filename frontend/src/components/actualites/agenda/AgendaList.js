@@ -13,6 +13,7 @@ function AgendaList({
   setCurrentEventId,
   queryKey,
   setTopAlert,
+  setFormAction,
 }) {
   const [openedItemId, setOpenedItemId] = useState(null)
   // const dateString = moment(date).format('DD/MM/YYYY')
@@ -58,6 +59,7 @@ function AgendaList({
                     queryKey={queryKey}
                     setTopAlert={setTopAlert}
                     setCurrentEventId={setCurrentEventId}
+                    setFormAction={setFormAction}
                   />
                 </Collapse>
               </Grid>
@@ -84,6 +86,7 @@ AgendaList.propTypes = {
   setCurrentEventId: PropTypes.func.isRequired,
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
   setTopAlert: PropTypes.func.isRequired,
+  setFormAction: PropTypes.func.isRequired,
 }
 
 export default AgendaList
