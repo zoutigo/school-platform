@@ -107,7 +107,7 @@ function AgendaForm({
       ? `Modification d'un évènement`
       : `Ajout d'un évènement à l'agenda`
 
-  if (!event) return null
+  if (!event && formAction === 'update') return null
   return (
     <Grid item container justify="center">
       <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>

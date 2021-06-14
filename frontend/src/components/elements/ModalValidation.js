@@ -8,17 +8,14 @@ import {
   Icon,
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
-import CancelIcon from '@material-ui/icons/Cancel'
+
 import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import React from 'react'
 import CustomButton from './CustomButton'
 import { StyledIconBox } from './styled'
-// import ButtonComponent from './ButtonComponent'
-// import FontAwesomeIcon from './FontAwesomeIcon'
 
-const StyledPaper = styled(Paper)(({ theme, bgcolor }) => ({
+const StyledPaper = styled(Paper)(({ theme }) => ({
   boxSizing: 'border-box',
   overflow: 'hidden',
   padding: theme.spacing(2, 4, 3),
@@ -117,29 +114,23 @@ function ModalValidation({ open, setOpen, callback, modaltype }) {
       <Fade in={open}>
         <StyledPaper bgcolor={modalcolor}>
           <StyledModalHeader>
-            <StyledIconBox bgcolor={theme.palette.error.main} fontsize="2rem">
+            <StyledIconBox
+              bgcolor={
+                modaltype === 'delete'
+                  ? theme.palette.error.main
+                  : theme.palette.warning.main
+              }
+              fontsize="3rem"
+            >
               <Icon className="fa fa-exclamation-circle" />
             </StyledIconBox>
-            {/* <Icon className="fa fa-exclamation-circle" /> */}
-            {/* <FontAwesomeIcon faclass="fa fa-exclamation-circle" /> */}
+
             <StyledHeaderTypo variant="body2">{title}</StyledHeaderTypo>
           </StyledModalHeader>
           <StyledModalBody>
             <Typography variant="body2">{question}</Typography>
           </StyledModalBody>
           <StyledModalFooter>
-            {/* <ButtonComponent
-              text="Oups Désolé"
-              background={theme.palette.warning.main}
-              icon={<CancelIcon />}
-              onClick={() => setOpen(false)}
-            />
-            <ButtonComponent
-              text={actiontext}
-              background={modalcolor}
-              icon={<DeleteForeverIcon />}
-              onClick={handleConfirm}
-            /> */}
             <CustomButton
               text="Oups...."
               bgcolor={theme.palette.warning.light}

@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core'
 import { withTheme } from '@material-ui/styles'
 import { NavLink } from 'react-router-dom'
-// import theme from '../../constants/theme'
 
 /* eslint-disable */
 
@@ -126,6 +125,9 @@ export const StyledPaperHeader = styled(Grid)(() => ({
   padding: '0px 1rem ',
   background: 'whitesmoke',
   cursor: 'pointer',
+  '& >:first-child': {
+    padding: '0.5rem 0',
+  },
 }))
 
 export const StyledPaperBody = styled(Grid)(() => ({

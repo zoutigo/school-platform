@@ -68,7 +68,7 @@ function InputTextControl({ control, name, width, initialValue, ...rest }) {
       </Grid>
       <Collapse in={invalid}>
         <Grid item container>
-          <StyledAlert severity="error">{error?.message}</StyledAlert>
+          <StyledAlert severity="error">{error && error.message}</StyledAlert>
         </Grid>
       </Collapse>
     </StyledGrid>

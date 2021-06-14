@@ -12,6 +12,7 @@ const StyledFab = styled(Fab)(({ theme }) => ({
   position: 'absolute',
   bottom: theme.spacing(2),
   right: theme.spacing(3),
+  background: theme.palette.success.main,
 }))
 
 function InformationsActualitesAgendaScreen() {
@@ -79,9 +80,12 @@ function InformationsActualitesAgendaScreen() {
         />
       )}
       {showTooltip && (
-        <Tooltip title="Add" placement="bottom-end" aria-label="add">
+        <Tooltip
+          title="Ajouter un évènement"
+          placement="bottom-end"
+          aria-label="Ajouter un évènement"
+        >
           <StyledFab
-            color="primary"
             onClick={() => {
               setShowEventForm(true)
               setShowEventList(false)

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-query'
 import { ButtonGroup, Tooltip, useTheme } from '@material-ui/core'
@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux'
 import { StyledPaperFooter, StyledIconButton } from '../../elements/styled'
 import { apiPostEvents } from '../../../utils/api'
 import { useUpdateMutationOptions } from '../../../utils/hooks'
-import AlertCollapse from '../../elements/AlertCollapse'
 import ModalValidation from '../../elements/ModalValidation'
 
 function AgendaItemFooter({
@@ -22,11 +21,8 @@ function AgendaItemFooter({
 }) {
   const { _id: eventId } = event
   const theme = useTheme()
-  const [open, setOpen] = React.useState(false)
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false)
   const [openUpdateModal, setOpenUpdateModal] = React.useState(false)
-  const [openAlert, setOpenAlert] = React.useState(false)
-  const [alertMessage, setAlertMessage] = React.useState('')
 
   const token = useSelector((state) => state.user.Token.token)
   useSelector((state) => state.settings)
@@ -64,11 +60,6 @@ function AgendaItemFooter({
 
   return (
     <StyledPaperFooter item container>
-      <AlertCollapse
-        severiry="error"
-        openalert={openAlert}
-        alertText={alertMessage}
-      />
       <ModalValidation
         modaltype="delete"
         open={openDeleteModal}
@@ -84,7 +75,7 @@ function AgendaItemFooter({
       <ButtonGroup>
         <Tooltip title="Modifier" placement="bottom">
           <StyledIconButton
-            color={theme.palette.warning.main}
+            bgcolor={theme.palette.warning.main}
             onClick={() => setOpenUpdateModal(true)}
           >
             <UpdateIcon style={{ fontSize: 'inherit', color: 'inherit' }} />
@@ -92,7 +83,7 @@ function AgendaItemFooter({
         </Tooltip>
         <Tooltip title="Supprimer" placement="bottom">
           <StyledIconButton
-            color={theme.palette.error.main}
+            bgcolor={theme.palette.error.main}
             onClick={() => setOpenDeleteModal(true)}
           >
             <HighlightOffIcon
