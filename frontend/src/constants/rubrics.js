@@ -48,6 +48,10 @@ import InformationsInscriptionsScreen from '../screens/InformationsInscriptionsS
 import InformationsInscriptionsInfosSupplementairesScreen from '../screens/InformationsInscriptionsInfosSupplementairesScreen'
 import LoginScreen from '../screens/LoginScreen'
 import RegisterScreen from '../screens/RegisterScreen'
+import PrivateScreen from '../screens/PrivateScreen'
+import PrivateAccountScreen from '../screens/PrivateAccountScreen'
+import PrivateAdminScreen from '../screens/PrivateAdminScreen'
+import PrivateLoggoutScreen from '../screens/PrivateLoggoutScreen'
 
 const rubrics = [
   {
@@ -598,6 +602,48 @@ const rubrics = [
       component: RegisterScreen,
     },
     categories: [],
+  },
+  {
+    rubname: 'Espace-Privé',
+    icon: <AccountCircleIcon />,
+    alias: 'private',
+    route: {
+      path: '/private',
+      exact: true,
+      component: PrivateScreen,
+    },
+    categories: [
+      {
+        catname: 'Mon Compte',
+        alias: 'account',
+        route: {
+          path: '/private/account',
+          exact: true,
+          component: PrivateAccountScreen,
+        },
+        chapters: [],
+      },
+      {
+        catname: 'Admin',
+        alias: 'admin',
+        route: {
+          path: '/private/admin',
+          exact: true,
+          component: PrivateAdminScreen,
+        },
+        chapters: [],
+      },
+      {
+        catname: 'Deconnecter',
+        alias: 'loggout',
+        route: {
+          path: '/private/loggout',
+          exact: true,
+          component: PrivateLoggoutScreen,
+        },
+        chapters: [],
+      },
+    ],
   },
 ]
 
