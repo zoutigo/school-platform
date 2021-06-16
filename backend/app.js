@@ -19,7 +19,7 @@ const usersRouter = require('./routes/users')
 // const imagesRouter = require('./routes/images')
 // const datasRouter = require("./routes/datas");
 
-// const eventsRouter = require('./routes/events')
+const eventsRouter = require('./routes/events')
 // const filesRouter = require('./routes/files')
 // const studentsRouter = require("./routes/students");
 // const commentsRouter = require("./routes/comments");
@@ -86,7 +86,7 @@ app.use('/users', usersRouter)
 // app.use('/classrooms', classroomsRouter)
 // app.use('/pages', pagesRouter)
 // app.use('/images', imagesRouter)
-// app.use('/events', eventsRouter)
+app.use('/events', eventsRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)

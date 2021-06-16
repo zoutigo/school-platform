@@ -37,10 +37,12 @@ function AgendaForm({
   setShowTooltip,
   setFormAction,
   formAction,
+  setShowEventList,
+  setShowEventForm,
 }) {
   const theme = useTheme()
   const [event, setEvent] = useState(null)
-  const token = useSelector((state) => state.user.Token.token)
+  const { Token } = useSelector((state) => state.user)
   const { mutateAsync } = useMutation(
     apiPostEvents,
     useUpdateMutationOptions(queryKey)
@@ -57,7 +59,7 @@ function AgendaForm({
   const onSubmit = async (datas) => {
     const { title, description, date, place, text } = datas
     const options = {
-      headers: { 'x-access-token': token },
+      headers: { 'x-access-token': Token },
     }
     const finalDatas = {
       title,
@@ -73,6 +75,15 @@ function AgendaForm({
         action: formAction,
         options: options,
         body: finalDatas,
+      }).then((response) => {
+        setTopAlert({
+          severity: 'success',
+          alertText: response.message,
+          openAlert: true,
+        })
+        setShowTooltip(true)
+        setShowEventList(true)
+        setShowEventForm(false)
       })
     } catch (err) {
       setTopAlert({
@@ -189,6 +200,8 @@ AgendaForm.propTypes = {
   setTopAlert: PropTypes.func.isRequired,
   setShowTooltip: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
+  setShowEventForm: PropTypes.func.isRequired,
+  setShowEventList: PropTypes.func.isRequired,
   formAction: PropTypes.string,
   events: PropTypes.arrayOf(
     PropTypes.shape({

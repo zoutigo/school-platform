@@ -5,7 +5,6 @@ import moment from 'moment'
 import ReactHtmlParser from 'react-html-parser'
 import { StyledPaperHeader, StyledPaperBody } from '../../elements/styled'
 import AgendaItemFooter from './AgendaItemFooter'
-import { useTeacherRigths } from '../../../utils/hooks'
 
 const StyledGrid = styled(Grid)(() => ({
   padding: '0.5rem 0',
@@ -28,7 +27,7 @@ function AgendaList({
   setFormAction,
 }) {
   const [openedItemId, setOpenedItemId] = useState(null)
-  const { teacherIsAllowed } = useTeacherRigths()
+  window.scrollTo(0, 0)
   return (
     <StyledGrid item container>
       {data.length > 0 &&

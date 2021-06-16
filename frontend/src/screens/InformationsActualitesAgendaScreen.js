@@ -80,6 +80,8 @@ function InformationsActualitesAgendaScreen() {
           setShowTooltip={setShowTooltip}
           setFormAction={setFormAction}
           formAction={formAction}
+          setShowEventList={setShowEventList}
+          setShowEventForm={setShowEventForm}
         />
       )}
       {showTooltip && teacherLevel && (

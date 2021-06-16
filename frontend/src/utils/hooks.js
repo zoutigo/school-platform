@@ -99,15 +99,6 @@ export const useIsTokenValid = () => {
   return { tokenIsValid }
 }
 
-export const useTeacherRigths = () => {
-  const {
-    User: { isAdmin, isModerator, isManager, isTeacher },
-  } = useSelector((state) => state.user)
-
-  const teacherIsAllowed = isAdmin || isManager || isModerator || isTeacher
-
-  return { teacherIsAllowed }
-}
 export const useRigths = () => {
   const {
     User: { isAdmin, isModerator, isManager, isTeacher },

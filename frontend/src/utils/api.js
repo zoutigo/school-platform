@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+const LOCALHOST = 'http://localhost:3500'
+
 export const apiCheckEmail = async (value) => {
   const data = { email: value }
   // const url = 'https://ecole-saint-augustin.herokuapp.com/users/checkemail'
@@ -78,14 +80,16 @@ export const apiFetchPaper = async (param) => {
 }
 
 export const apiFetchEvents = async (param) => {
-  const URL = `${process.env.REACT_APP_ENDPOINT}/events?${param}`
+  // const URL = `${process.env.REACT_APP_ENDPOINT}/events?${param}`
+  const URL = `${LOCALHOST}/events?${param}`
   const { data } = await axios.get(URL)
 
   return data
 }
 
 export const apiPostEvents = async ({ id, action, body, options }) => {
-  const URL = `${process.env.REACT_APP_ENDPOINT}/events?action=${action}&id=${id}`
+  // const URL = `${process.env.REACT_APP_ENDPOINT}/events?action=${action}&id=${id}`
+  const URL = `${LOCALHOST}/events?action=${action}&id=${id}`
   const { data } = await axios.post(URL, body, options)
   return data
 }

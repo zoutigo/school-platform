@@ -24,7 +24,7 @@ function AgendaItemFooter({
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false)
   const [openUpdateModal, setOpenUpdateModal] = React.useState(false)
   const { teacherLevel } = useRigths()
-  const token = useSelector((state) => state.user.Token.token)
+  const { Token } = useSelector((state) => state.user)
   useSelector((state) => state.settings)
 
   const { mutateAsync } = useMutation(
@@ -34,7 +34,7 @@ function AgendaItemFooter({
 
   const mutatePaper = async () => {
     const options = {
-      headers: { 'x-access-token': token },
+      headers: { 'x-access-token': Token },
     }
     try {
       await mutateAsync({
