@@ -7,6 +7,7 @@ import ApiAlert from '../components/elements/ApiAlert'
 import AgendaList from '../components/actualites/agenda/AgendaList'
 import AgendaForm from '../components/actualites/agenda/AgendaForm'
 import AlertCollapse from '../components/elements/AlertCollapse'
+import { useRigths } from '../utils/hooks'
 
 const StyledFab = styled(Fab)(({ theme }) => ({
   position: 'absolute',
@@ -16,6 +17,8 @@ const StyledFab = styled(Fab)(({ theme }) => ({
 }))
 
 function InformationsActualitesAgendaScreen() {
+  const { teacherLevel } = useRigths()
+
   const [showEventForm, setShowEventForm] = useState(false)
   const [showEventList, setShowEventList] = useState(true)
   const [showTooltip, setShowTooltip] = useState(true)
@@ -68,7 +71,7 @@ function InformationsActualitesAgendaScreen() {
           setFormAction={setFormAction}
         />
       )}
-      {showEventForm && (
+      {showEventForm && teacherLevel && (
         <AgendaForm
           events={data}
           currentEventId={currentEventId}
@@ -79,7 +82,7 @@ function InformationsActualitesAgendaScreen() {
           formAction={formAction}
         />
       )}
-      {showTooltip && (
+      {showTooltip && teacherLevel && (
         <Tooltip
           title="Ajouter un évènement"
           placement="bottom-end"

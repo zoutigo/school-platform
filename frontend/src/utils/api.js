@@ -2,9 +2,11 @@ import axios from 'axios'
 
 export const apiCheckEmail = async (value) => {
   const data = { email: value }
-  const url = 'https://ecole-saint-augustin.herokuapp.com/users/checkemail'
+  // const url = 'https://ecole-saint-augustin.herokuapp.com/users/checkemail'
+
+  const URL = 'http://localhost:3500/users/checkemail'
   try {
-    const response = await axios.post(url, data)
+    const response = await axios.post(URL, data)
     if (response.status === 200) {
       return false
     }
@@ -15,12 +17,16 @@ export const apiCheckEmail = async (value) => {
 }
 
 export const apiRegister = async (datas) => {
-  const URL = `${process.env.REACT_APP_ENDPOINT}/users`
+  // const URL = `${process.env.REACT_APP_ENDPOINT}/users`
+  const URL = ' http://localhost:3500/users/register'
+
   const response = await axios.post(URL, datas)
   return response
 }
 export const apiLogin = async (datas) => {
-  const URL = `${process.env.REACT_APP_ENDPOINT}/users/login`
+  // const URL = `${process.env.REACT_APP_ENDPOINT}/users/login`
+  const URL = ' http://localhost:3500/users/login'
+
   const response = await axios.post(URL, datas)
   return response
 }

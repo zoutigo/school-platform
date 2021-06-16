@@ -7,7 +7,7 @@ import UpdateIcon from '@material-ui/icons/Update'
 import { useSelector } from 'react-redux'
 import { StyledPaperFooter, StyledIconButton } from '../../elements/styled'
 import { apiPostEvents } from '../../../utils/api'
-import { useUpdateMutationOptions } from '../../../utils/hooks'
+import { useRigths, useUpdateMutationOptions } from '../../../utils/hooks'
 import ModalValidation from '../../elements/ModalValidation'
 
 function AgendaItemFooter({
@@ -23,7 +23,7 @@ function AgendaItemFooter({
   const theme = useTheme()
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false)
   const [openUpdateModal, setOpenUpdateModal] = React.useState(false)
-
+  const { teacherLevel } = useRigths()
   const token = useSelector((state) => state.user.Token.token)
   useSelector((state) => state.settings)
 
@@ -72,26 +72,28 @@ function AgendaItemFooter({
         setOpen={setOpenUpdateModal}
         callback={handleUpdate}
       />
-      <ButtonGroup>
-        <Tooltip title="Modifier" placement="bottom">
-          <StyledIconButton
-            bgcolor={theme.palette.warning.main}
-            onClick={() => setOpenUpdateModal(true)}
-          >
-            <UpdateIcon style={{ fontSize: 'inherit', color: 'inherit' }} />
-          </StyledIconButton>
-        </Tooltip>
-        <Tooltip title="Supprimer" placement="bottom">
-          <StyledIconButton
-            bgcolor={theme.palette.error.main}
-            onClick={() => setOpenDeleteModal(true)}
-          >
-            <HighlightOffIcon
-              style={{ fontSize: 'inherit', color: 'inherit' }}
-            />
-          </StyledIconButton>
-        </Tooltip>
-      </ButtonGroup>
+      {teacherLevel && (
+        <ButtonGroup>
+          <Tooltip title="Modifier" placement="bottom">
+            <StyledIconButton
+              bgcolor={theme.palette.warning.main}
+              onClick={() => setOpenUpdateModal(true)}
+            >
+              <UpdateIcon style={{ fontSize: 'inherit', color: 'inherit' }} />
+            </StyledIconButton>
+          </Tooltip>
+          <Tooltip title="Supprimer" placement="bottom">
+            <StyledIconButton
+              bgcolor={theme.palette.error.main}
+              onClick={() => setOpenDeleteModal(true)}
+            >
+              <HighlightOffIcon
+                style={{ fontSize: 'inherit', color: 'inherit' }}
+              />
+            </StyledIconButton>
+          </Tooltip>
+        </ButtonGroup>
+      )}
     </StyledPaperFooter>
   )
 }

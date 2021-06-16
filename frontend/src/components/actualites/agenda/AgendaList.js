@@ -5,6 +5,7 @@ import moment from 'moment'
 import ReactHtmlParser from 'react-html-parser'
 import { StyledPaperHeader, StyledPaperBody } from '../../elements/styled'
 import AgendaItemFooter from './AgendaItemFooter'
+import { useTeacherRigths } from '../../../utils/hooks'
 
 const StyledGrid = styled(Grid)(() => ({
   padding: '0.5rem 0',
@@ -27,7 +28,7 @@ function AgendaList({
   setFormAction,
 }) {
   const [openedItemId, setOpenedItemId] = useState(null)
-  // const dateString = moment(date).format('DD/MM/YYYY')
+  const { teacherIsAllowed } = useTeacherRigths()
   return (
     <StyledGrid item container>
       {data.length > 0 &&

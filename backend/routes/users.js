@@ -11,12 +11,6 @@ const {
 const router = express.Router()
 const { tokenVerify } = require('../utils/tokenverify')
 
-// get the team
-
-router.get('/team', (req, res) => {
-  res.send('here is the team')
-})
-
 // check email
 router.post('/checkemail', userEmail)
 

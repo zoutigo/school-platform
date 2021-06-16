@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
+import { useDispatch } from 'react-redux'
 import InputTextControl from '../components/elements/InputTextControl'
 import loginSchema from '../schemas/loginSchema'
 import {
@@ -16,13 +17,14 @@ import Title from '../components/elements/Title'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { useUpdateMutationOptions } from '../utils/hooks'
 import { apiLogin } from '../utils/api'
-import registerSchema from '../schemas/registerSchema'
+import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
 }))
 function LoginScreen() {
   const history = useHistory()
+  const dispatch = useDispatch()
   const theme = useTheme()
   const [topAlert, setTopAlert] = useState({
     severity: 'error',
@@ -31,11 +33,10 @@ function LoginScreen() {
   })
   const formTitle = `Connexion à lécole`
 
-  const {
-    mutateAsync,
-    isSuccess,
-    data: serverdata,
-  } = useMutation(apiLogin, useUpdateMutationOptions(['login']))
+  const { mutateAsync } = useMutation(
+    apiLogin,
+    useUpdateMutationOptions(['login'])
+  )
   const {
     control,
     handleSubmit,
@@ -52,6 +53,8 @@ function LoginScreen() {
           const Token = response.headers['x-access-token']
           const splittedToken = Token.split('.')
           const tokenDatas = JSON.parse(atob(splittedToken[1]))
+          dispatch(setUserInfos(tokenDatas))
+          dispatch(setUserToken(Token))
           history.push('/informations/actualites/infosparents')
         }
       })
@@ -65,11 +68,17 @@ function LoginScreen() {
     }
   }
 
-  useEffect(() => {
-    if (isSuccess) {
-      console.log('success:', serverdata.Headers)
-    }
-  }, [isSuccess])
+  useEffect(
+    () =>
+      setTopAlert({
+        severity: 'error',
+        alertText: '',
+        openAlert: false,
+      }),
+
+    []
+  )
+
   return (
     <StyledGrid container>
       {topAlert.openAlert && (

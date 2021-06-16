@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 const Joi = require('joi')
 const { toArray } = require('../utils/toArray')

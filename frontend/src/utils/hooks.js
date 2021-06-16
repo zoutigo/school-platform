@@ -88,3 +88,35 @@ export const useUpdateMutationOptions = (queryKey) => {
     },
   }
 }
+
+export const useIsTokenValid = () => {
+  const {
+    User: { exp },
+  } = useSelector((state) => state.user)
+
+  const tokenIsValid = !exp ? false : exp > new Date().getTime() / 1000
+
+  return { tokenIsValid }
+}
+
+export const useTeacherRigths = () => {
+  const {
+    User: { isAdmin, isModerator, isManager, isTeacher },
+  } = useSelector((state) => state.user)
+
+  const teacherIsAllowed = isAdmin || isManager || isModerator || isTeacher
+
+  return { teacherIsAllowed }
+}
+export const useRigths = () => {
+  const {
+    User: { isAdmin, isModerator, isManager, isTeacher },
+  } = useSelector((state) => state.user)
+
+  const teacherLevel = isAdmin || isManager || isModerator || isTeacher
+  const managerLevel = isAdmin || isManager
+  const adminLevel = isAdmin
+  const moderatorLevel = isAdmin || isManager || isModerator
+
+  return { teacherLevel, managerLevel, adminLevel, moderatorLevel }
+}

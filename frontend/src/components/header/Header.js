@@ -21,6 +21,11 @@ function Header() {
   const theme = useTheme()
   const isSmallScreen = !useMediaQuery(theme.breakpoints.up('lg'))
   const { SmallScreenNavIsOpened } = useSelector((state) => state.settings)
+  const {
+    User: { exp },
+  } = useSelector((state) => state.user)
+
+  const tokenIsValid = !exp ? false : exp > new Date().getTime() / 1000
 
   const dispatch = useDispatch()
   const { pathname } = useLocation()
@@ -44,6 +49,14 @@ function Header() {
             )
             const [rubcolors] = sortedcolors
             const rubcolor = rubcolors ? rubcolors[1].main : ''
+
+            if (
+              (rubric.route.path === '/register' ||
+                rubric.route.path === '/login') &&
+              tokenIsValid
+            )
+              return null
+            if (rubric.route.path === '/private' && !tokenIsValid) return null
             if (rubric.route.path === '/register' && pathname !== '/register') {
               return null
             }

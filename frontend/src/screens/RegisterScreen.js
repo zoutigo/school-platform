@@ -5,8 +5,8 @@ import { useHistory } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
+import { useDispatch } from 'react-redux'
 import InputTextControl from '../components/elements/InputTextControl'
-import loginSchema from '../schemas/loginSchema'
 import {
   StyledNavLink,
   StyledStandardForm,
@@ -17,6 +17,7 @@ import AlertCollapse from '../components/elements/AlertCollapse'
 import { useUpdateMutationOptions } from '../utils/hooks'
 import { apiRegister } from '../utils/api'
 import registerSchema from '../schemas/registerSchema'
+import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
@@ -25,6 +26,7 @@ const StyledGrid = styled(Grid)(() => ({
 function RegisterScreen() {
   const history = useHistory()
   const theme = useTheme()
+  const dispatch = useDispatch()
   const [topAlert, setTopAlert] = useState({
     severity: 'error',
     alertText: '',
@@ -32,11 +34,10 @@ function RegisterScreen() {
   })
   const formTitle = `Inscription à lécole`
 
-  const {
-    mutateAsync,
-    isSuccess,
-    data: serverdata,
-  } = useMutation(apiRegister, useUpdateMutationOptions(['register']))
+  const { mutateAsync } = useMutation(
+    apiRegister,
+    useUpdateMutationOptions(['register'])
+  )
   const {
     control,
     handleSubmit,
@@ -53,7 +54,8 @@ function RegisterScreen() {
           const Token = response.headers['x-access-token']
           const splittedToken = Token.split('.')
           const tokenDatas = JSON.parse(atob(splittedToken[1]))
-          console.log('token:', Token)
+          dispatch(setUserInfos(tokenDatas))
+          dispatch(setUserToken(Token))
           history.push('/private/account')
         }
       })
@@ -67,11 +69,16 @@ function RegisterScreen() {
     }
   }
 
-  useEffect(() => {
-    if (isSuccess) {
-      console.log('success:', serverdata.Headers)
-    }
-  }, [isSuccess])
+  useEffect(
+    () =>
+      setTopAlert({
+        severity: 'error',
+        alertText: '',
+        openAlert: false,
+      }),
+
+    []
+  )
 
   return (
     <StyledGrid container>
