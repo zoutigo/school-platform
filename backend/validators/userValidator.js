@@ -12,6 +12,11 @@ module.exports.userValidator = (datas) => {
           _id: Joi.objectId(),
         }).validate(data)
 
+      case 'role':
+        return Joi.object({
+          role: Joi.objectId(),
+        }).validate(data)
+
       case 'email':
         return Joi.object({
           email: Joi.string().required().email(),
@@ -89,8 +94,10 @@ module.exports.userValidator = (datas) => {
 
   const errorsList = toArray(datas).map((data) => {
     if (data) {
-      const { error } = validator(data)
-      if (error) return error.details[0].message
+      if (validator(data)) {
+        const { error } = validator(data)
+        if (error) return error.details[0].message
+      } else return `'${Object.keys(data)}' n'est pas un champ attendu`
     }
   })
   const errors = errorsList.filter((error) => error !== undefined)

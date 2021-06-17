@@ -1,10 +1,26 @@
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 const Joi = require('joi')
-const { toArray } = require('../utils/toArray')
+const SanitizeHtml = require('sanitize-html')
 Joi.objectId = require('joi-objectid')(Joi)
+const { toArray } = require('../utils/toArray')
 
-module.exports.eventValidator = (datas) => {
+const htmlJoi = Joi.extend((joi) => {
+  const result = {
+    type: 'string',
+    base: joi.string(),
+    rules: {
+      htmlStrip: {
+        validate(value) {
+          return SanitizeHtml(value)
+        },
+      },
+    },
+  }
+  return result
+})
+
+module.exports.entityValidator = (datas) => {
   const validator = (data) => {
     switch (Object.keys(data)[0]) {
       case '_id':
@@ -12,29 +28,29 @@ module.exports.eventValidator = (datas) => {
           _id: Joi.objectId(),
         }).validate(data)
 
-      case 'title':
+      case 'name':
         return Joi.object({
-          title: Joi.string().required().min(3).max(100),
+          name: Joi.string().required().min(3).max(50),
         }).validate(data)
 
-      case 'place':
+      case 'alias':
         return Joi.object({
-          place: Joi.string().required().min(3).max(100),
+          alias: Joi.string().required().min(2).max(50),
         }).validate(data)
 
-      case 'text':
+      case 'email':
         return Joi.object({
-          text: Joi.string().required().min(3).max(500),
+          email: Joi.string().required().email(),
         }).validate(data)
 
-      case 'date':
+      case 'summary':
         return Joi.object({
-          date: Joi.number().integer(),
+          summary: htmlJoi.string().required().htmlStrip().min(10).max(500),
         }).validate(data)
 
-      case 'author':
+      case 'image':
         return Joi.object({
-          author: Joi.objectId(),
+          image: Joi.objectId(),
         }).validate(data)
 
       default:

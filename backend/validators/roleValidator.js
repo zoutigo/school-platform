@@ -1,10 +1,10 @@
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 const Joi = require('joi')
-const { toArray } = require('../utils/toArray')
 Joi.objectId = require('joi-objectid')(Joi)
+const { toArray } = require('../utils/toArray')
 
-module.exports.eventValidator = (datas) => {
+module.exports.roleValidator = (datas) => {
   const validator = (data) => {
     switch (Object.keys(data)[0]) {
       case '_id':
@@ -12,29 +12,19 @@ module.exports.eventValidator = (datas) => {
           _id: Joi.objectId(),
         }).validate(data)
 
-      case 'title':
+      case 'entity':
         return Joi.object({
-          title: Joi.string().required().min(3).max(100),
+          entity: Joi.objectId(),
         }).validate(data)
 
-      case 'place':
+      case 'name':
         return Joi.object({
-          place: Joi.string().required().min(3).max(100),
+          name: Joi.string().required().min(3).max(50),
         }).validate(data)
 
-      case 'text':
+      case 'mission':
         return Joi.object({
-          text: Joi.string().required().min(3).max(500),
-        }).validate(data)
-
-      case 'date':
-        return Joi.object({
-          date: Joi.number().integer(),
-        }).validate(data)
-
-      case 'author':
-        return Joi.object({
-          author: Joi.objectId(),
+          mission: Joi.string().required().min(2).max(100),
         }).validate(data)
 
       default:

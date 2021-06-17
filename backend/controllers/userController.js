@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const User = require('../models/User')
 const { Unauthorized, BadRequest } = require('../utils/errors')
 const { generateToken } = require('../utils/generatetoken')
+const { updateArray } = require('../utils/updateArray')
 
 const { userValidator } = require('../validators/userValidator')
 
@@ -43,6 +44,7 @@ module.exports.registerUser = async (req, res, next) => {
 
   try {
     const newUser = await user.save()
+
     if (newUser) {
       return res
         .status(201)
@@ -66,7 +68,7 @@ module.exports.loginUser = async (req, res, next) => {
   }
 
   // check if email exists
-  const userVerified = await User.findOne({ email: email })
+  const userVerified = await User.findOne({ email: email }).populate('roles')
   if (!userVerified) return next(new BadRequest('invalid email or password'))
 
   // check password
@@ -80,7 +82,7 @@ module.exports.loginUser = async (req, res, next) => {
     .send('successful login')
 }
 module.exports.updateUser = async (req, res, next) => {
-  const { id: toUpdateId } = req.params
+  const { id: toUpdateId, roleAction } = req.params
   const {
     _id: requesterId,
     isAdmin: requesterIsAdmin,
@@ -112,6 +114,7 @@ module.exports.updateUser = async (req, res, next) => {
     isTeacher,
     password,
     passwordConfirm,
+    role,
   } = req.body
 
   if (lastname) {
@@ -195,9 +198,17 @@ module.exports.updateUser = async (req, res, next) => {
         newUserDatas.isTeacher = isTeacher
       }
     } else {
-      return next(
-        new Unauthorized('only manager or admin can define moderator')
-      )
+      return next(new Unauthorized('only manager or admin can define teacher'))
+    }
+  }
+
+  if (role) {
+    if (requesterIsAdmin || requesterIsManager || requesterIsModerator) {
+      if (!roleAction) return next(new BadRequest('missing roleAction'))
+
+      newUserDatas.roles = updateArray(toUpdateuser.roles, roleAction, role)
+    } else {
+      return next(new Unauthorized('only manager or admin can define teacher'))
     }
   }
 
@@ -220,9 +231,9 @@ module.exports.updateUser = async (req, res, next) => {
 
 module.exports.listUsers = async (req, res, next) => {
   try {
-    const users = await User.find().select(
-      '_id email lastname firstname gender'
-    )
+    const users = await User.find()
+      .select('_id email lastname firstname gender')
+      .populate('roles')
     if (!users) return res.status(204).send('no user found')
     return res.status(200).send(users)
   } catch (err) {
@@ -235,9 +246,11 @@ module.exports.viewUser = async (req, res, next) => {
   const errors = userValidator({ _id: id })
   if (errors.length > 0) return next(new BadRequest(errors))
 
-  const user = await User.findOne({ _id: id }).select(
-    '_id firstname lastname gender isAdmin isManager isTeacher childrenClasses roles email'
-  )
+  const user = await User.findOne({ _id: id })
+    .select(
+      '_id firstname lastname gender isAdmin isManager isTeacher childrenClasses roles email'
+    )
+    .populate('roles')
   if (!user) return next(new BadRequest('no user found with that id'))
 
   return res.status(200).send(user)

@@ -11,18 +11,16 @@ const handleErrors = require('./middlewares/handleErrors')
 
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
-// const rubricsRouter = require('./routes/rubrics')
-// const papersRouter = require('./routes/papers')
-// const rolesRouter = require('./routes/roles')
-// const classroomsRouter = require('./routes/classrooms')
+const papersRouter = require('./routes/papers')
+const eventsRouter = require('./routes/events')
+const entitiesRouter = require('./routes/entities')
+const rolesRouter = require('./routes/roles')
+
 // const pagesRouter = require('./routes/pages')
 // const imagesRouter = require('./routes/images')
 // const datasRouter = require("./routes/datas");
 
-const eventsRouter = require('./routes/events')
 // const filesRouter = require('./routes/files')
-// const studentsRouter = require("./routes/students");
-// const commentsRouter = require("./routes/comments");
 
 dotenv.config()
 
@@ -80,13 +78,12 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
-// app.use('/rubrics', rubricsRouter)
-// app.use('/papers', papersRouter)
-// app.use('/roles', rolesRouter)
-// app.use('/classrooms', classroomsRouter)
-// app.use('/pages', pagesRouter)
-// app.use('/images', imagesRouter)
 app.use('/events', eventsRouter)
+app.use('/papers', papersRouter)
+app.use('/entities', entitiesRouter)
+app.use('/roles', rolesRouter)
+
+// app.use('/images', imagesRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)

@@ -4,17 +4,31 @@ const Joi = require('joi')
 const { toArray } = require('../utils/toArray')
 Joi.objectId = require('joi-objectid')(Joi)
 
-module.exports.eventValidator = (datas) => {
+module.exports.paperValidator = (datas) => {
   const validator = (data) => {
     switch (Object.keys(data)[0]) {
       case '_id':
         return Joi.object({
           _id: Joi.objectId(),
         }).validate(data)
-
-      case 'title':
+      case 'id':
         return Joi.object({
-          title: Joi.string().required().min(3).max(100),
+          id: Joi.objectId(),
+        }).validate(data)
+
+      case 'type':
+        return Joi.object({
+          type: Joi.string()
+            .required()
+            .valid(
+              'article',
+              'activite',
+              'parent-info',
+              'newsletter',
+              'menu',
+              'breve',
+              'info'
+            ),
         }).validate(data)
 
       case 'place':
@@ -22,14 +36,24 @@ module.exports.eventValidator = (datas) => {
           place: Joi.string().required().min(3).max(100),
         }).validate(data)
 
-      case 'text':
+      case 'file':
         return Joi.object({
-          text: Joi.string().required().min(3).max(500),
+          file: Joi.string().required(),
         }).validate(data)
 
-      case 'date':
+      case 'title':
         return Joi.object({
-          date: Joi.number().integer(),
+          title: Joi.string().required().min(3).max(100),
+        }).validate(data)
+
+      case 'text':
+        return Joi.object({
+          text: Joi.string().required().min(3).max(200000),
+        }).validate(data)
+
+      case 'entity':
+        return Joi.object({
+          entity: Joi.objectId(),
         }).validate(data)
 
       case 'author':
