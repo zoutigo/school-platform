@@ -20,7 +20,7 @@ const htmlJoi = Joi.extend((joi) => {
   return result
 })
 
-module.exports.paperValidator = (datas) => {
+module.exports.pageValidator = (datas) => {
   const validator = (data) => {
     switch (Object.keys(data)[0]) {
       case '_id':
@@ -32,49 +32,19 @@ module.exports.paperValidator = (datas) => {
           id: Joi.objectId(),
         }).validate(data)
 
-      case 'type':
-        return Joi.object({
-          type: Joi.string()
-            .required()
-            .valid(
-              'article',
-              'activite',
-              'parent-info',
-              'newsletter',
-              'menu',
-              'breve',
-              'info'
-            ),
-        }).validate(data)
-
-      case 'place':
-        return Joi.object({
-          place: Joi.string().required().min(3).max(100),
-        }).validate(data)
-
-      case 'file':
-        return Joi.object({
-          file: Joi.string().required(),
-        }).validate(data)
-
       case 'title':
         return Joi.object({
           title: Joi.string().required().min(3).max(100),
         }).validate(data)
 
+      case 'alias':
+        return Joi.object({
+          alias: Joi.string().required().min(3).max(30),
+        }).validate(data)
+
       case 'text':
         return Joi.object({
-          text: htmlJoi.string().required().htmlStrip().min(3).max(200000),
-        }).validate(data)
-
-      case 'entity':
-        return Joi.object({
-          entity: Joi.objectId(),
-        }).validate(data)
-
-      case 'author':
-        return Joi.object({
-          author: Joi.objectId(),
+          text: htmlJoi.string().required().htmlStrip().min(3).max(50000),
         }).validate(data)
 
       default:

@@ -11,6 +11,11 @@ module.exports.getPapers = async (req, res, next) => {
     return next(new BadRequest(errors))
   }
 
+  if (req.query.id) {
+    req.query._id = req.query.id
+    delete req.query.id
+  }
+
   try {
     const papers = await Paper.find(req.query).sort({ date: -1 })
     if (papers.length < 1) return next(new NotFound('paper not found'))

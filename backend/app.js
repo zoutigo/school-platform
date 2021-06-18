@@ -16,8 +16,7 @@ const eventsRouter = require('./routes/events')
 const entitiesRouter = require('./routes/entities')
 const rolesRouter = require('./routes/roles')
 const imagesRouter = require('./routes/images')
-
-// const pagesRouter = require('./routes/pages')
+const pagesRouter = require('./routes/pages')
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
@@ -83,6 +82,7 @@ app.use('/papers', papersRouter)
 app.use('/entities', entitiesRouter)
 app.use('/roles', rolesRouter)
 app.use('/images', imagesRouter)
+app.use('/pages', pagesRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)
