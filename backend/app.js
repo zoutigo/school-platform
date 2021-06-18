@@ -1,4 +1,4 @@
-const createError = require('http-errors')
+/* eslint-disable no-nested-ternary */
 const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser')
@@ -15,9 +15,9 @@ const papersRouter = require('./routes/papers')
 const eventsRouter = require('./routes/events')
 const entitiesRouter = require('./routes/entities')
 const rolesRouter = require('./routes/roles')
+const imagesRouter = require('./routes/images')
 
 // const pagesRouter = require('./routes/pages')
-// const imagesRouter = require('./routes/images')
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
@@ -82,8 +82,7 @@ app.use('/events', eventsRouter)
 app.use('/papers', papersRouter)
 app.use('/entities', entitiesRouter)
 app.use('/roles', rolesRouter)
-
-// app.use('/images', imagesRouter)
+app.use('/images', imagesRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)

@@ -4,6 +4,8 @@ import { Editor } from '@tinymce/tinymce-react'
 import tinyMceColors from '../../constants/tinyMceColors'
 import { StyledEditorGrid } from './styled'
 
+const URL = 'http://localhost:3500/images/page'
+
 function TinyPageEditor({ onChange, value }) {
   const handleEditorChange = (editor) => onChange(editor)
   return (
@@ -21,8 +23,7 @@ function TinyPageEditor({ onChange, value }) {
           textcolor_cols: '5',
           textcolor_rows: '4',
           textcolor_map: tinyMceColors,
-          images_upload_url:
-            'https://ecole-saint-augustin.herokuapp.com/images/page',
+          images_upload_url: URL,
           height: 800,
           plugins:
             'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap  emoticons',
