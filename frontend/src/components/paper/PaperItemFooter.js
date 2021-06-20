@@ -4,6 +4,7 @@ import { useTheme, ButtonGroup, Tooltip } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 import { useMutation } from 'react-query'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
+import GetAppIcon from '@material-ui/icons/GetApp'
 import EditIcon from '@material-ui/icons/Edit'
 import { StyledPaperFooter, StyledIconButton } from '../elements/styled'
 import { apiPostPaper } from '../../utils/api'
@@ -19,7 +20,7 @@ function PaperItemFooter({
   setFormAction,
   setShowSearch,
 }) {
-  const { _id: paperId } = paperItem
+  const { _id: paperId, file } = paperItem
   const { isAllowedToChange, queryKey } = paper
   const theme = useTheme()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -72,8 +73,18 @@ function PaperItemFooter({
         setOpen={setOpenUpdateModal}
         callback={handleUpdate}
       />
-      {isAllowedToChange && (
-        <ButtonGroup>
+
+      <ButtonGroup>
+        {file && (
+          <Tooltip title="Telecharger" placement="bottom">
+            <StyledIconButton bgcolor={theme.palette.secondary.main}>
+              <a href={file} download style={{ color: 'inherit' }}>
+                <GetAppIcon style={{ fontSize: 'inherit', color: 'inherit' }} />
+              </a>
+            </StyledIconButton>
+          </Tooltip>
+        )}
+        {isAllowedToChange && (
           <Tooltip title="Modifier" placement="bottom">
             <StyledIconButton
               bgcolor={theme.palette.warning.main}
@@ -82,6 +93,8 @@ function PaperItemFooter({
               <EditIcon style={{ fontSize: 'inherit', color: 'inherit' }} />
             </StyledIconButton>
           </Tooltip>
+        )}
+        {isAllowedToChange && (
           <Tooltip title="Supprimer" placement="bottom">
             <StyledIconButton
               bgcolor={theme.palette.error.main}
@@ -92,8 +105,8 @@ function PaperItemFooter({
               />
             </StyledIconButton>
           </Tooltip>
-        </ButtonGroup>
-      )}
+        )}
+      </ButtonGroup>
     </StyledPaperFooter>
   )
 }
@@ -120,6 +133,7 @@ PaperItemFooter.propTypes = {
     title: PropTypes.string,
     entity: PropTypes.string,
     createdat: PropTypes.number,
+    file: PropTypes.string,
   }).isRequired,
 }
 export default PaperItemFooter

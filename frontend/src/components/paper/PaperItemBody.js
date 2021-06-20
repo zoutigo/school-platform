@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import ReactHtmlParser from 'react-html-parser'
 
 import { StyledPaperBody } from '../elements/styled'
-import PdfDocument from '../elements/PdfDocument'
 import PaperPdfHandler from './PaperPdfHandler'
 
 function PaperItemBody({ text, file, paper: { paperFormat } }) {

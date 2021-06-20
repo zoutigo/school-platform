@@ -9,11 +9,6 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
       display: 'none',
     },
   },
-  '& >last-child': {
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
 }))
 
 function PaperPdfHandler({ file }) {
@@ -21,11 +16,6 @@ function PaperPdfHandler({ file }) {
     <StyledGrid item container>
       <Grid item container>
         <PdfDocument file={file} />
-      </Grid>
-      <Grid item container style={{ background: 'yellow' }}>
-        <a href={file} download>
-          Telecharger...
-        </a>
       </Grid>
     </StyledGrid>
   )
