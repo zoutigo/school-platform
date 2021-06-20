@@ -16,7 +16,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 function InputFileControl({ control, name, initialValue, ...rest }) {
   const {
     field: { ref, ...inputProps },
-    fieldState: { invalid, error, isTouched },
+    fieldState: { invalid, error },
   } = useController({
     name,
     control,

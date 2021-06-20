@@ -1,11 +1,4 @@
-import {
-  styled,
-  Grid,
-  useTheme,
-  Button,
-  InputLabel,
-  Input,
-} from '@material-ui/core'
+import { styled, Grid, useTheme } from '@material-ui/core'
 import moment from 'moment'
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
@@ -17,12 +10,13 @@ import Title from '../elements/Title'
 import InputTextControl from '../elements/InputTextControl'
 import { apiPostPaper } from '../../utils/api'
 import { useUpdateMutationOptions } from '../../utils/hooks'
-import paperActiviteSchema from '../../schemas/paperActiviteSchema'
-import TinyPageEditor from '../elements/TinyPageEditor'
 import CostumButton from '../elements/CustomButton'
 import DatePickerControl from '../elements/DatePickerControl'
 import InputFileControl from '../elements/InputFileControl'
 import convertBase64 from '../../utils/convertBase64'
+import newsletterSchema from '../../schemas/newsletterSchema'
+import menuSchema from '../../schemas/menuSchema'
+import breveSchema from '../../schemas/breveSchema'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -57,14 +51,30 @@ function PaperFormPDF({
     apiPostPaper,
     useUpdateMutationOptions(paper.queryKey)
   )
+
+  const schema = (mypapertype) => {
+    switch (mypapertype) {
+      case 'newsletter':
+        return newsletterSchema
+
+      case 'menu':
+        return menuSchema
+
+      case 'breve':
+        return breveSchema
+
+      default:
+        return null
+    }
+  }
   const {
     control,
     register,
     handleSubmit,
     formState: { isSubmitting, isValid },
   } = useForm({
-    // mode: 'onChange',
-    // resolver: yupResolver(paperActiviteSchema),
+    mode: 'onChange',
+    resolver: yupResolver(schema(paper.paperType)),
   })
 
   const onSubmit = async (datas) => {
@@ -72,6 +82,7 @@ function PaperFormPDF({
     const options = {
       headers: { 'x-access-token': Token },
     }
+    console.log('datas:', datas)
 
     const finalDatas = async (type) => {
       switch (type) {
@@ -159,6 +170,7 @@ function PaperFormPDF({
           name="startdate"
           label="Date de début"
           format="dddd Do MMMM yyyy"
+          helperText="Les dates passées ne sont pas autorisées"
           initialDate={
             formAction === 'update'
               ? new Date(currentDocument.date)
@@ -171,6 +183,7 @@ function PaperFormPDF({
             name="enddate"
             label="Date de fin"
             format="dddd Do MMMM yyyy"
+            helperText="Supérieure à la date de début"
             initialDate={
               formAction === 'update'
                 ? new Date(currentDocument.date)
@@ -183,7 +196,7 @@ function PaperFormPDF({
           container
           style={{ margin: '1rem 0px', padding: '0px 1rem' }}
         >
-          <input type="file" {...register('file')} />
+          <input type="file" {...register('file')} accept="application/pdf" />
         </Grid>
         {/* <InputFileControl control={control} name="file" type="file" /> */}
       </Grid>
@@ -198,11 +211,15 @@ function PaperFormPDF({
           action="post"
           width="300px"
           type="submit"
-          //   disabled={!isValid || isSubmitting}
+          disabled={!isValid || isSubmitting}
         />
       </Grid>
     </StyledPaperForm>
   )
+}
+PaperFormPDF.defaultProps = {
+  currentDocument: null,
+  paperItem: null,
 }
 
 PaperFormPDF.propTypes = {
@@ -218,7 +235,7 @@ PaperFormPDF.propTypes = {
   setShowPaperForm: PropTypes.func.isRequired,
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
-  currentDocument: PropTypes.string.isRequired,
+  currentDocument: PropTypes.string,
   setTopAlert: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
   setShowTooltip: PropTypes.func.isRequired,
@@ -229,7 +246,7 @@ PaperFormPDF.propTypes = {
     title: PropTypes.string,
     entity: PropTypes.string,
     createdat: PropTypes.number,
-  }).isRequired,
+  }),
 }
 
 export default PaperFormPDF
