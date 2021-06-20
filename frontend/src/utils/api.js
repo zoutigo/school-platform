@@ -72,6 +72,19 @@ export const apiFecthClassroom = async (param) => {
 
   return data
 }
+export const apiFecthEntity = async (param) => {
+  // const URL = `${process.env.REACT_APP_ENDPOINT}/classrooms/${param}`
+  const URL = `${LOCALHOST}/entities?${param}`
+  const { data } = await axios.get(URL)
+
+  return data
+}
+export const apiPostEntity = async ({ id, action, body, options }) => {
+  // const URL = `${process.env.REACT_APP_ENDPOINT}/events?action=${action}&id=${id}`
+  const URL = `${LOCALHOST}/entities?action=${action}&id=${id}`
+  const { data } = await axios.post(URL, body, options)
+  return data
+}
 
 export const apiFetchEvents = async (param) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/events?${param}`

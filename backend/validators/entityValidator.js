@@ -45,12 +45,12 @@ module.exports.entityValidator = (datas) => {
 
       case 'summary':
         return Joi.object({
-          summary: htmlJoi.string().required().htmlStrip().min(10).max(500),
+          summary: htmlJoi.string().required().htmlStrip().min(10).max(1000),
         }).validate(data)
 
       case 'image':
         return Joi.object({
-          image: Joi.objectId(),
+          image: Joi.string().required().max(2000000),
         }).validate(data)
 
       default:

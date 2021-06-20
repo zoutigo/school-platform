@@ -3,53 +3,34 @@ import { Grid, useTheme } from '@material-ui/core'
 
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-
-import Resizer from 'react-image-file-resizer'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useSelector } from 'react-redux'
 import { StyledForm } from '../../elements/styled'
-import { apiUpdateClassroom } from '../../../utils/api'
+import { apiPostEntity } from '../../../utils/api'
 import { useUpdateMutationOptions } from '../../../utils/hooks'
 import classroomImageSchema from '../../../schemas/classroomImageSchema'
 import AlertCollapse from '../../elements/AlertCollapse'
 import CustomButton from '../../elements/CustomButton'
 import Title from '../../elements/Title'
-
-const resizeFile = (file) =>
-  new Promise((resolve) => {
-    Resizer.imageFileResizer(
-      file,
-      1200,
-      500,
-      'JPEG',
-      100,
-      0,
-      (uri) => {
-        resolve(uri)
-      },
-      'base64'
-    )
-  })
+import ResizeFile from '../../../utils/resizefile'
 
 function ClassroomImageForm({
   id: classroomId,
-  alias,
   setShowButtonGroup,
   setShowImageForm,
   setShowSummary,
   setShowAlert,
   setAlertMessage,
+  queryKey,
 }) {
   const theme = useTheme()
-  const token = useSelector((state) => state.user.Token.token)
+  const { Token } = useSelector((state) => state.user)
   const [showApiFailureAlert, setShowApiFailureAlert] = useState(false)
   const [apiFailureMessage, setApiFailureMessage] = useState('')
-  const queryName = `classroom-${alias}`
-  const queryKey = [queryName, classroomId]
 
-  const { mutateAsync, isSuccess: isMutationSuccess } = useMutation(
-    apiUpdateClassroom,
+  const { mutateAsync } = useMutation(
+    apiPostEntity,
     useUpdateMutationOptions(queryKey)
   )
 
@@ -65,20 +46,27 @@ function ClassroomImageForm({
   const onSubmit = async (datas) => {
     const { image } = datas
     const options = {
-      headers: { 'x-access-token': token },
+      headers: { 'x-access-token': Token },
       maxContentLength: 100000000,
       maxBodyLength: 1000000000,
     }
 
-    const imageResized = await resizeFile(image[0])
+    const imageResized = await ResizeFile(image[0])
 
     try {
       await mutateAsync({
         id: classroomId,
+        action: 'update',
         options: options,
         body: {
           image: imageResized,
         },
+      }).then(() => {
+        setAlertMessage('image correctement modifiée')
+        setShowAlert(true)
+        setShowImageForm(false)
+        setShowButtonGroup(true)
+        setShowSummary(true)
       })
     } catch (err) {
       // notifyApiFailure(err)
@@ -86,17 +74,6 @@ function ClassroomImageForm({
       setApiFailureMessage(err.message)
     }
   }
-
-  // close the form
-  React.useEffect(() => {
-    if (isMutationSuccess) {
-      setAlertMessage('image correctement modifiée')
-      setShowAlert(true)
-      setShowImageForm(false)
-      setShowButtonGroup(true)
-      setShowSummary(true)
-    }
-  }, [isMutationSuccess])
 
   return (
     <Grid item container>
@@ -121,7 +98,11 @@ function ClassroomImageForm({
             <Title title="moficication de l image" />
           </Grid>
           <Grid container className="field">
-            <input type="file" {...register('image')} />
+            <input
+              type="file"
+              {...register('image')}
+              accept="image/jpg,image/jpeg,image/gif,image/png "
+            />
           </Grid>
           <Grid item container>
             <AlertCollapse
@@ -150,12 +131,12 @@ function ClassroomImageForm({
 }
 ClassroomImageForm.propTypes = {
   id: PropTypes.string.isRequired,
-  alias: PropTypes.string.isRequired,
   setShowButtonGroup: PropTypes.func.isRequired,
   setShowImageForm: PropTypes.func.isRequired,
   setShowSummary: PropTypes.func.isRequired,
   setShowAlert: PropTypes.func.isRequired,
   setAlertMessage: PropTypes.func.isRequired,
+  queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
 }
 
 export default ClassroomImageForm

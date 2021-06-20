@@ -1,17 +1,18 @@
 import { Button, ButtonGroup, Grid, styled } from '@material-ui/core'
 import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useQuery } from 'react-query'
-import { apiFecthClassroom } from '../utils/api'
+import { apiFecthEntity } from '../utils/api'
 import Classrooms from '../constants/classrooms'
 import { setCategoryAside } from '../redux/settings/SettingsActions'
-import { useCurrentCategory } from '../utils/hooks'
+import { useCurrentCategory, useRigths } from '../utils/hooks'
 import ClassroomSummary from '../components/main/classes/ClassroomSummary'
 import { StyledAlert } from '../components/elements/styled'
 import ClassroomSummaryForm from '../components/main/classes/ClassroomSummaryForm'
 import ApiAlert from '../components/elements/ApiAlert'
 import ClassroomImageForm from '../components/main/classes/ClassroomImageForm'
+import useRoles from '../utils/roles'
 
 const StyledButtonGroup = styled(ButtonGroup)(() => ({
   height: '3rem',
@@ -26,8 +27,6 @@ function ClassesPresentationScreen() {
   const dispatch = useDispatch()
   const { path: categoryPath } = useCurrentCategory()
   const { pathname } = useLocation()
-  const { Routes } = useSelector((state) => state.settings)
-  const { alias } = Routes.find((route) => route.path === pathname)
   const [showImageForm, setShowImageForm] = useState(false)
   const [showSummaryForm, setShowSummaryForm] = useState(false)
   const [showButtonGroup, setShowButtonGroup] = useState(true)
@@ -35,30 +34,77 @@ function ClassesPresentationScreen() {
   const [showAlert, setShowAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
 
-  const queryName = `classroom-${alias}`
+  const prealias = pathname.split('/')[2]
 
-  const { isLoading, isError, data, error } = useQuery([queryName, alias], () =>
-    apiFecthClassroom(alias)
-  )
-  if (isLoading) {
-    return <ApiAlert severity="warning">Chargement ...</ApiAlert>
+  const defineAlias = (extract) => {
+    switch (extract) {
+      case 'petite-section':
+        return 'ps'
+      case 'moyenne-section':
+        return 'ms'
+      case 'grande-section':
+        return 'gs'
+
+      default:
+        return extract
+    }
   }
+  const alias = defineAlias(prealias)
 
-  if (isError) {
-    return <ApiAlert severity="error">{error.message}</ApiAlert>
-  }
-
+  const { moderatorLevel } = useRigths()
   const {
-    _id: classroomId,
-    summary,
-    image,
-    email,
-    alias: classroomAlias,
-  } = data
+    psEnseignant,
+    msEnseignant,
+    gsEnseignant,
+    cpEnseignant,
+    ce1Enseignant,
+    ce2Enseignant,
+    cm1Enseignant,
+    cm2Enseignant,
+  } = useRoles()
+
+  const defineRole = (aliasName) => {
+    switch (aliasName) {
+      case 'ps':
+        return psEnseignant
+      case 'ms':
+        return msEnseignant
+      case 'gs':
+        return gsEnseignant
+      case 'cp':
+        return cpEnseignant
+      case 'ce1':
+        return ce1Enseignant
+      case 'ce2':
+        return ce2Enseignant
+      case 'cm1':
+        return cm1Enseignant
+      case 'cm2':
+        return cm2Enseignant
+
+      default:
+        return false
+    }
+  }
+
+  const isAllowedToChange = moderatorLevel || defineRole(alias)
+
+  const queryName = `classroom-${alias}`
+  const queryParams = `alias=${alias}`
+  const queryKey = [queryName]
+  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
+    apiFecthEntity(queryParams)
+  )
+
+  if (isLoading) return <ApiAlert severity="warning">Chargement ...</ApiAlert>
+  if (isError) return <ApiAlert severity="error">{error.message}</ApiAlert>
+  if (!Array.isArray(data)) return null
+
+  const [result] = data
 
   // aside creation
   const { enseignants: classroomTeachers } = Classrooms.find(
-    (classroom) => classroom.name === classroomAlias
+    (classroom) => result && classroom.name === result?.alias
   )
 
   const asideItems = classroomTeachers.map((enseignant) => {
@@ -75,7 +121,7 @@ function ClassesPresentationScreen() {
 
   const contacts = {
     subtitle: 'contacts',
-    text: email,
+    text: result?.email,
   }
   asideItems.push(contacts)
   const asideClassroom = {
@@ -86,16 +132,17 @@ function ClassesPresentationScreen() {
   dispatch(setCategoryAside([categoryPath, asideClassroom]))
 
   return (
-    <Grid container direction="column">
+    <Grid container>
       {showAlert && (
         <StyledAlert severity="success">{alertMessage}</StyledAlert>
       )}
+
       {showSummary && (
         <ClassroomSummary
-          text={summary}
-          image={image}
-          alias={classroomAlias}
-          id={classroomId}
+          text={result?.summary}
+          image={result?.image}
+          alias={result?.alias}
+          id={result._id || null}
         />
       )}
       {showImageForm && (
@@ -106,27 +153,27 @@ function ClassesPresentationScreen() {
             setShowAlert={setShowAlert}
             setAlertMessage={setAlertMessage}
             setShowSummary={setShowSummary}
-            id={classroomId}
-            alias={classroomAlias}
+            queryKey={queryKey}
+            id={result?._id}
           />
         </Grid>
       )}
-      {showSummaryForm && (
+      {showSummaryForm && isAllowedToChange && (
         <Grid item container justify="center">
           <ClassroomSummaryForm
-            classroomId={classroomId}
-            classroomAlias={alias}
+            classroomId={result?._id}
             setShowButtonGroup={setShowButtonGroup}
             setShowSummaryForm={setShowSummaryForm}
             setShowSummary={setShowSummary}
             setShowAlert={setShowAlert}
             setAlertMessage={setAlertMessage}
-            classroomSummary={summary}
+            classroomSummary={result?.summary}
+            queryKey={queryKey}
           />
         </Grid>
       )}
       <Grid item container>
-        {showButtonGroup && (
+        {showButtonGroup && isAllowedToChange && (
           <StyledButtonGroup>
             <StyledButton
               onClick={() => {

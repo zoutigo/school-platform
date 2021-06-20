@@ -82,7 +82,6 @@ function PaperFormPDF({
     const options = {
       headers: { 'x-access-token': Token },
     }
-    console.log('datas:', datas)
 
     const finalDatas = async (type) => {
       switch (type) {

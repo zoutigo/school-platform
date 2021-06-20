@@ -9,6 +9,7 @@ const StyledClassroomContainer = styled(Grid)(() => ({
 const StyledImageContainer = styled(Grid)(() => ({
   '& img': {
     width: '100%',
+    maxHeight: '70vh',
     objectFit: 'cover',
   },
   padding: '0.5em !important',
@@ -22,7 +23,7 @@ function ClassroomSummary({ image, text, alias }) {
   return (
     <StyledClassroomContainer item container>
       <StyledImageContainer item container>
-        {image && <img src={image.path} alt={alias} />}
+        {image && <img src={image} alt={alias} />}
       </StyledImageContainer>
 
       <Grid item>

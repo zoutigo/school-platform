@@ -19,12 +19,12 @@ const entitySchema = new Schema(
     summary: {
       type: String,
       minlength: 10,
-      maxlength: 500,
+      maxlength: 1000,
       default: '',
     },
     image: {
-      type: Schema.ObjectId,
-      ref: 'Image',
+      type: String,
+      max: 2000000,
     },
     email: {
       type: String,

@@ -1,12 +1,6 @@
 import * as yup from 'yup'
 
-const IMAGE_MAX_SIZE = 1024 * 1024 * 2
-const IMAGE_SUPPORTED_FORMATS = [
-  'image/jpg',
-  'image/jpeg',
-  'image/gif',
-  'image/png',
-]
+const IMAGE_MAX_SIZE = 1024 * 1024 * 4
 
 const classroomImageSchema = yup.object().shape({
   image: yup
@@ -18,11 +12,6 @@ const classroomImageSchema = yup.object().shape({
         if (!value.length) return false
         return value[0].size <= IMAGE_MAX_SIZE
       }
-    )
-    .test(
-      'fileFormat',
-      'Format non pris en charge',
-      (value) => value && IMAGE_SUPPORTED_FORMATS.includes(value[0].type)
     ),
 })
 

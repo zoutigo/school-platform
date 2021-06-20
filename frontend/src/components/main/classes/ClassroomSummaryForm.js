@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-query'
-import { apiUpdateClassroom } from '../../../utils/api'
+import { apiPostEntity } from '../../../utils/api'
 import { useUpdateMutationOptions } from '../../../utils/hooks'
 import classroomSummarySchema from '../../../schemas/classroomSummarySchema'
 import TinyTextEditor from '../../elements/TinyTextEditor'
@@ -15,28 +15,26 @@ import AlertCollapse from '../../elements/AlertCollapse'
 import Title from '../../elements/Title'
 
 const StyledEditorForm = styled(StyledForm)(() => ({
-  width: '100% !important',
+  width: '100%',
 }))
 
 function ClassroomSummaryForm({
   classroomId,
-  classroomAlias,
   setShowSummaryForm,
   setShowSummary,
   setShowButtonGroup,
   setShowAlert,
   setAlertMessage,
   classroomSummary,
+  queryKey,
 }) {
   const theme = useTheme()
-  const token = useSelector((state) => state.user.Token.token)
+  const { Token } = useSelector((state) => state.user)
   const [showApiFailureAlert, setShowApiFailureAlert] = useState(false)
   const [apiFailureMessage, setApiFailureMessage] = useState('')
 
-  const queryName = `classroom-${classroomAlias}`
-  const queryKey = [queryName, classroomId]
-  const { mutateAsync, isSuccess: isMutationSuccess } = useMutation(
-    apiUpdateClassroom,
+  const { mutateAsync } = useMutation(
+    apiPostEntity,
     useUpdateMutationOptions(queryKey)
   )
 
@@ -53,32 +51,28 @@ function ClassroomSummaryForm({
   const onSubmit = async (datas) => {
     const { summary } = datas
     const options = {
-      headers: { 'x-access-token': token || 'hello' },
+      headers: { 'x-access-token': Token || 'hello' },
     }
     try {
       await mutateAsync({
         id: classroomId,
+        action: 'update',
         options: options,
         body: {
           summary: summary,
         },
+      }).then(() => {
+        setAlertMessage('Le résumé a bien été modifié')
+        setShowAlert(true)
+        setShowSummaryForm(false)
+        setShowButtonGroup(true)
+        setShowSummary(true)
       })
     } catch (err) {
       setShowApiFailureAlert(true)
-      setApiFailureMessage(err.message)
+      setApiFailureMessage(err.response.statusText)
     }
   }
-
-  // close the form
-  React.useEffect(() => {
-    if (isMutationSuccess) {
-      setAlertMessage('Le résumé a bien été modifié')
-      setShowAlert(true)
-      setShowSummaryForm(false)
-      setShowButtonGroup(true)
-      setShowSummary(true)
-    }
-  }, [isMutationSuccess])
 
   // injection of the initial value in the editor
   React.useEffect(() => {
@@ -123,6 +117,9 @@ function ClassroomSummaryForm({
                   <TinyTextEditor onChange={onChange} value={value} />
                 )}
               />
+              <Grid item container>
+                {errors.summary ? errors.summary.message : null}{' '}
+              </Grid>
             </Grid>
             <Grid item container>
               <AlertCollapse
@@ -154,12 +151,12 @@ function ClassroomSummaryForm({
 ClassroomSummaryForm.propTypes = {
   classroomId: PropTypes.string.isRequired,
   classroomSummary: PropTypes.string.isRequired,
-  classroomAlias: PropTypes.string.isRequired,
   setShowSummary: PropTypes.func.isRequired,
   setShowSummaryForm: PropTypes.func.isRequired,
   setShowButtonGroup: PropTypes.func.isRequired,
   setShowAlert: PropTypes.func.isRequired,
   setAlertMessage: PropTypes.func.isRequired,
+  queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
 }
 
 export default ClassroomSummaryForm
