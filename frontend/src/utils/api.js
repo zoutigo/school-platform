@@ -72,12 +72,6 @@ export const apiFecthClassroom = async (param) => {
 
   return data
 }
-export const apiFetchPaper = async (param) => {
-  const URL = `${process.env.REACT_APP_ENDPOINT}/papers/?${param}`
-  const { data } = await axios.get(URL)
-
-  return data
-}
 
 export const apiFetchEvents = async (param) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/events?${param}`
@@ -102,8 +96,17 @@ export const apiFecthPage = async (param) => {
 }
 
 export const apiPostPaper = async ({ id, body, options, action }) => {
-  const URL = `${process.env.REACT_APP_ENDPOINT}/papers?action=${action}&id=${id}`
-  const { data } = await axios.post(URL, body, options)
+  // const URL = `${process.env.REACT_APP_ENDPOINT}/papers?action=${action}&id=${id}`
+  const URL = `${LOCALHOST}/papers?action=${action}&id=${id}`
+  const result = await axios.post(URL, body, options)
+  return result
+}
+
+export const apiFetchPaper = async (params) => {
+  // const URL = `${process.env.REACT_APP_ENDPOINT}/papers/?${params}`
+  const URL = `${LOCALHOST}/papers/?${params}`
+  const { data } = await axios.get(URL)
+
   return data
 }
 

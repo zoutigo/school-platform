@@ -67,9 +67,24 @@ module.exports.paperValidator = (datas) => {
           text: htmlJoi.string().required().htmlStrip().min(3).max(200000),
         }).validate(data)
 
+      case 'entityAlias':
+        return Joi.object({
+          entityAlias: Joi.string().required().min(2).max(50),
+        }).validate(data)
+
       case 'entity':
         return Joi.object({
           entity: Joi.objectId(),
+        }).validate(data)
+
+      case 'startdate':
+        return Joi.object({
+          startdate: Joi.number().integer(),
+        }).validate(data)
+
+      case 'enddate':
+        return Joi.object({
+          enddate: Joi.number().integer(),
         }).validate(data)
 
       case 'author':

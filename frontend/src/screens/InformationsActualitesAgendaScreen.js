@@ -18,7 +18,6 @@ const StyledFab = styled(Fab)(({ theme }) => ({
 
 function InformationsActualitesAgendaScreen() {
   const { teacherLevel } = useRigths()
-
   const [showEventForm, setShowEventForm] = useState(false)
   const [showEventList, setShowEventList] = useState(true)
   const [showTooltip, setShowTooltip] = useState(true)

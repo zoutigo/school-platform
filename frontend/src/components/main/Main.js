@@ -60,7 +60,7 @@ function Main() {
               <Route path="/" component={HomeScreen} exact />
             )}
             {pathname !== '/' && (
-              <StyledCentralBloc container>
+              <StyledCentralBloc container alignItems="flex-start">
                 <Grid item container xs={12} md={hasAside ? 9 : 12}>
                   <TitleBloc
                     rubriccolors={rubriccolors}

@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 const Paper = require('../models/Paper')
+const Entity = require('../models/Entity')
 
 const { Unauthorized, BadRequest, NotFound } = require('../utils/errors')
 
@@ -14,6 +15,14 @@ module.exports.getPapers = async (req, res, next) => {
   if (req.query.id) {
     req.query._id = req.query.id
     delete req.query.id
+  }
+
+  // check the entity
+  if (req.query.entityAlias) {
+    const checkedEntity = await Entity.findOne({ alias: req.query.entityAlias })
+    if (!checkedEntity) return next(new BadRequest('mauvaise entité'))
+    req.query.entity = checkedEntity._id
+    delete req.query.entityAlias
   }
 
   try {
@@ -45,15 +54,21 @@ module.exports.postPaper = async (req, res, next) => {
 
   if (action === 'create') {
     // case event creation
-    const { type, title, entity, text } = req.body
-    if (!type || !title || !entity || !text)
+    const { type, title, entityAlias } = req.body
+    if (!type || !title || !entityAlias)
       return next(
         new BadRequest(
-          'une ou plusieurs données manquante: type,title,entity,text'
+          'une ou plusieurs données manquante: type,title,entityAlias,text'
         )
       )
+    // check the entity
+    const checkedEntity = await Entity.findOne({ alias: entityAlias })
+    if (!checkedEntity) return next(new BadRequest('mauvaise entité'))
+
     const paper = req.body
     paper.author = userId
+    paper.entity = checkedEntity._id
+    delete paper.entityAlias
     const newPaper = new Paper(paper)
 
     try {

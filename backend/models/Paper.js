@@ -32,12 +32,17 @@ const paperSchema = new Schema(
       type: String,
       maxlength: 200000,
       minlength: 3,
-      required: true,
     },
 
     date: {
       type: Number,
       default: new Date().getTime(),
+    },
+    startdate: {
+      type: Number,
+    },
+    enddate: {
+      type: Number,
     },
     file: {
       type: String,
