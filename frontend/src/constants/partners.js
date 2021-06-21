@@ -4,8 +4,8 @@ const PARTNERS = [
     link: 'https://paroissecremieu.fr/',
   },
   {
-    name: "Le Ministère de l'éducation nationale",
-    link: 'https://www.education.gouv.fr/',
+    name: "Direction Diocésaine de l'Enseignement Catholique ",
+    link: 'https://ec38.org/',
   },
   {
     name: 'Le federation des OGEC',

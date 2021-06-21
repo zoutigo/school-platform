@@ -9,7 +9,7 @@ import { setActiveRubric } from '../../redux/settings/SettingsActions'
 
 const StyledRubricLi = withTheme(
   styled(({ bgcolor, theme, ...rest }) => <li {...rest} />)({
-    background: 'yellow',
+    background: 'transparent',
     textAlign: 'center',
     width: '100%',
     boxSizing: 'border-box',

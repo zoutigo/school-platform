@@ -39,7 +39,7 @@ module.exports.pageValidator = (datas) => {
 
       case 'alias':
         return Joi.object({
-          alias: Joi.string().required().min(3).max(30),
+          alias: Joi.string().required().min(3).max(50),
         }).validate(data)
 
       case 'text':

@@ -1,5 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import MenuBookIcon from '@material-ui/icons/MenuBook'
+import DateRangeIcon from '@material-ui/icons/DateRange'
+import AttachFileIcon from '@material-ui/icons/AttachFile'
 
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
@@ -41,11 +44,31 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
 }))
 
 function NewsCard({ cardTitle, items, recipe }) {
+  const defineIcon = (cardtitle) => {
+    switch (cardtitle) {
+      case "Actualités de l'école":
+        return <MenuBookIcon />
+
+      case 'Agenda à venir':
+        return <DateRangeIcon />
+
+      case 'Documents récents':
+        return <AttachFileIcon />
+
+      default:
+        return null
+    }
+  }
   const Title = (title) => <Typography variant="h4">{title}</Typography>
   return (
     <StyledCard>
       <StyledCardHeader
-        avatar={<StyledAvatar aria-label="recipe">{recipe}</StyledAvatar>}
+        // avatar={<StyledAvatar aria-label="recipe">{recipe}</StyledAvatar>}
+        avatar={
+          <StyledAvatar aria-label="recipe">
+            {defineIcon(cardTitle)}
+          </StyledAvatar>
+        }
         title={Title(cardTitle)}
         // subheader="September 14, 2016"
       />

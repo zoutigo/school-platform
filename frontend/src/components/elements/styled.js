@@ -43,7 +43,7 @@ export const StyledMainApp = styled('main')(({ theme }) => ({
 }))
 
 const StyledScreen = styled('section')(({ theme }) => ({
-  border: 'solid 1px',
+  // border: 'solid 1px',
   // width: '98.8vw',
   minHeight: '80vh',
   overflow: 'hidden',

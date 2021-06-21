@@ -13,7 +13,7 @@ const pageSchema = new Schema(
       required: true,
       unique: true,
       minlength: 3,
-      maxlength: 30,
+      maxlength: 50,
     },
     text: {
       type: String,

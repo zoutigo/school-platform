@@ -64,7 +64,7 @@ function PopularRubrics() {
     ],
     [
       'Cantine',
-      '/vie-scolaire/cantine',
+      '/viescolaire/cantine',
       'Toutes les informations concernant la cantine, les menus et nos prestataires restauration',
       <RestaurantIcon />,
       'fa fa-beer',

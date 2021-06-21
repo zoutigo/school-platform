@@ -5,8 +5,8 @@ import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
 
 function EcoleProjetsPastoralScreen() {
-  const pageName = 'La cantine'
-  const alias = `viescolaire-cantine`
+  const pageName = 'projet pastoral'
+  const alias = `ecole-projets-pastoral`
   const queryKey = [pageName, `page-${alias}`]
   const queryParams = `alias=${alias}`
 
