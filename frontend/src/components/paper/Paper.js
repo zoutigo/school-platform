@@ -8,7 +8,7 @@ import PaperSearchList from './PaperSearchList'
 import PaperForm from './PaperForm'
 
 const StyledFab = styled(Fab)(({ theme }) => ({
-  position: 'absolute',
+  position: 'fixed',
   bottom: theme.spacing(2),
   right: theme.spacing(3),
   background: theme.palette.success.main,

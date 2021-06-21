@@ -101,11 +101,19 @@ export const apiPostEvents = async ({ id, action, body, options }) => {
   return data
 }
 
-export const apiFecthPage = async (param) => {
-  const URL = `${process.env.REACT_APP_ENDPOINT}/pages?${param}`
+export const apiFecthPage = async (params) => {
+  // const URL = `${process.env.REACT_APP_ENDPOINT}/pages?${param}`
+  const URL = `${LOCALHOST}/pages?${params}`
   const { data } = await axios.get(URL)
 
   return data
+}
+
+export const apiPostPage = async ({ id, body, options, action }) => {
+  // const URL = `${process.env.REACT_APP_ENDPOINT}/pages?action=${action}&id=${id}`
+  const URL = `${LOCALHOST}/pages?action=${action}&id=${id}`
+  const result = await axios.post(URL, body, options)
+  return result
 }
 
 export const apiPostPaper = async ({ id, body, options, action }) => {
@@ -121,12 +129,6 @@ export const apiFetchPaper = async (params) => {
   const { data } = await axios.get(URL)
 
   return data
-}
-
-export const apiPostPage = async ({ id, body, options, action }) => {
-  const URL = `${process.env.REACT_APP_ENDPOINT}/pages?action=${action}&id=${id}`
-  const result = await axios.post(URL, body, options)
-  return result
 }
 
 export const apiPostFile = async ({ id, body, options, action }) => {

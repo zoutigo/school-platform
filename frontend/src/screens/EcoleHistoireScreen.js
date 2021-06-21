@@ -1,52 +1,35 @@
-import { Grid, styled } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import React, { useState } from 'react'
-import { useQuery } from 'react-query'
-import ReactHtmlParser from 'react-html-parser'
-import { apiFecthPage } from '../utils/api'
-import PageForm from '../components/elements/PageForm'
-
-const StyledPageDiv = styled('div')(() => ({
-  width: '100%',
-}))
+import Page from '../components/page/Page'
+import AlertCollapse from '../components/elements/AlertCollapse'
 
 function EcoleHistoireScreen() {
-  const [showform, setShowform] = useState(false)
   const pageName = 'histoire'
-  const queryKey = [pageName, { alias: pageName }]
-  const queryParams = `alias=${pageName}`
+  const alias = `ecole-histoire`
+  const queryKey = [pageName, `page-${alias}`]
+  const queryParams = `alias=${alias}`
 
-  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFecthPage(queryParams)
-  )
+  const [topAlert, setTopAlert] = useState({
+    severity: '',
+    alertText: '',
+    openAlert: false,
+  })
 
-  if (isLoading) {
-    return <span>Loading...</span>
-  }
-
-  if (isError) {
-    return (
-      <span>
-        Error:
-        {error.message}
-      </span>
-    )
-  }
-
-  if (!Array.isArray(data)) {
-    return null
-  }
-
-  const [page] = data
-  const { _id: id, text } = page
-  const textcontent = ReactHtmlParser(text) || "il n'y a pas plus de détails"
+  const pageParams = { alias, queryKey, queryParams, pageName, setTopAlert }
 
   return (
     <Grid container>
-      {showform ? (
-        <PageForm id={id} text={text} setShowform={setShowform} />
-      ) : (
-        <StyledPageDiv>{textcontent}</StyledPageDiv>
+      {topAlert.openAlert && (
+        <Grid item container>
+          <AlertCollapse
+            alertText={topAlert.alertText}
+            openAlert
+            severity={topAlert.severity}
+            callback={setTopAlert}
+          />
+        </Grid>
       )}
+      <Page pageParams={pageParams} />
     </Grid>
   )
 }
