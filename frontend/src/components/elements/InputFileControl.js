@@ -14,8 +14,10 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 }))
 
 function InputFileControl({ control, name, initialValue, ...rest }) {
+  const [value, setValue] = React.useState('')
+
   const {
-    field: { ref, ...inputProps },
+    field,
     fieldState: { invalid, error },
   } = useController({
     name,
@@ -23,10 +25,21 @@ function InputFileControl({ control, name, initialValue, ...rest }) {
     rules: { required: true },
     defaultValue: initialValue,
   })
+
+  const { ref, ...inputProps } = field
   return (
     <StyledGrid>
       <Grid item container>
-        <input {...inputProps} inputRef={ref} {...rest} />
+        <input
+          {...inputProps}
+          inputRef={ref}
+          {...rest}
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value)
+            field.onChange(e.target.files)
+          }}
+        />
       </Grid>
       <Collapse in={invalid}>
         <Grid item container>

@@ -190,14 +190,20 @@ function PaperFormPDF({
             }
           />
         )}
-        <Grid
+        {/* <Grid
           item
           container
           style={{ margin: '1rem 0px', padding: '0px 1rem' }}
         >
           <input type="file" {...register('file')} accept="application/pdf" />
-        </Grid>
-        {/* <InputFileControl control={control} name="file" type="file" /> */}
+        </Grid> */}
+        <InputFileControl
+          control={control}
+          name="file"
+          type="file"
+          accept="application/pdf"
+          helperText="maximum 5Mo"
+        />
       </Grid>
       <Grid item container alignItems="center" justify="flex-end">
         <CostumButton
