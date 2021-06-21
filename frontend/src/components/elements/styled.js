@@ -66,6 +66,9 @@ export const StyledHomeGrid = styled(Grid)(({ theme }) => ({
     padding: '2rem 0.6rem',
   },
 }))
+export const StyledPageGrid = styled(Grid)(({ theme }) => ({
+  margin: '1rem 0px ',
+}))
 
 export const StyledBaseButton = styled(Button)(() => ({
   width: '11rem',
@@ -100,6 +103,7 @@ export const StyledEditorGrid = styled(Grid)(() => ({
   background: 'whitesmoke',
   '& .mce-fullscreen': {
     zIndex: '10',
+    border: 'solid red 20px',
   },
 }))
 

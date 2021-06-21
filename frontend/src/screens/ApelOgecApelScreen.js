@@ -1,49 +1,29 @@
 import { Grid } from '@material-ui/core'
 import React, { useState } from 'react'
-import ReactHtmlParser from 'react-html-parser'
-
-import { useQuery } from 'react-query'
 import { useDispatch } from 'react-redux'
-import PageForm from '../components/elements/PageForm'
+
 import APELTEAM from '../constants/apelteam'
 import { setCategoryAside } from '../redux/settings/SettingsActions'
 
-import { apiFecthPage } from '../utils/api'
 import { useCurrentCategory } from '../utils/hooks'
+import Page from '../components/page/Page'
+import AlertCollapse from '../components/elements/AlertCollapse'
+import { StyledPageGrid } from '../components/elements/styled'
 
 function ApelOgecApelScreen() {
   const dispatch = useDispatch()
   const { path: categoryPath } = useCurrentCategory()
-  const [showform, setShowform] = useState(false)
-  const pageName = 'apel'
-  const queryKey = [pageName, { alias: pageName }]
-  const queryParams = `alias=${pageName}`
+  const pageName = 'APEL'
+  const alias = `apel-ogec-apel`
+  const queryKey = [pageName, `page-${alias}`]
+  const queryParams = `alias=${alias}`
 
-  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFecthPage(queryParams)
-  )
-
-  if (isLoading) {
-    return <span>Loading...</span>
-  }
-
-  if (isError) {
-    return (
-      <span>
-        Error:
-        {error.message}
-      </span>
-    )
-  }
-
-  if (!Array.isArray(data)) {
-    return null
-  }
-
-  const [page] = data
-  const { _id: id, text } = page
-  const textcontent = ReactHtmlParser(text) || "il n'y a pas plus de détails"
-
+  const [topAlert, setTopAlert] = useState({
+    severity: '',
+    alertText: '',
+    openAlert: false,
+  })
+  const pageParams = { alias, queryKey, queryParams, pageName, setTopAlert }
   // build apel aside
   const asideApel = {
     title: 'Bureau Apel',
@@ -58,16 +38,19 @@ function ApelOgecApelScreen() {
   dispatch(setCategoryAside([categoryPath, asideApel]))
 
   return (
-    <Grid container>
-      {showform ? (
-        <PageForm id={id} text={text} setShowform={setShowform} />
-      ) : (
+    <StyledPageGrid container>
+      {topAlert.openAlert && (
         <Grid item container>
-          {' '}
-          {textcontent}{' '}
+          <AlertCollapse
+            alertText={topAlert.alertText}
+            openAlert
+            severity={topAlert.severity}
+            callback={setTopAlert}
+          />
         </Grid>
       )}
-    </Grid>
+      <Page pageParams={pageParams} />
+    </StyledPageGrid>
   )
 }
 

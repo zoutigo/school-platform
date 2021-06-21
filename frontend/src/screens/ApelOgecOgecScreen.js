@@ -1,51 +1,30 @@
-import { Grid, styled } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import React, { useState } from 'react'
-import { useQuery } from 'react-query'
+
 import { useDispatch } from 'react-redux'
-import ReactHtmlParser from 'react-html-parser'
-import { apiFecthPage } from '../utils/api'
-import PageForm from '../components/elements/PageForm'
+
 import { useCurrentCategory } from '../utils/hooks'
 import OGECTEAM from '../constants/ogecteam'
-
+import AlertCollapse from '../components/elements/AlertCollapse'
+import { StyledPageGrid } from '../components/elements/styled'
+import Page from '../components/page/Page'
 import { setCategoryAside } from '../redux/settings/SettingsActions'
-
-const StyledPageDiv = styled('div')(() => ({
-  width: '100%',
-}))
 
 function ApelOgecOgecScreen() {
   const dispatch = useDispatch()
   const { path: categoryPath } = useCurrentCategory()
-  const [showform, setShowform] = useState(false)
-  const pageName = 'ogec'
-  const queryKey = [pageName, { alias: pageName }]
-  const queryParams = `alias=${pageName}`
+  const pageName = 'OGEC'
+  const alias = `apel-ogec-ogec`
+  const queryKey = [pageName, `page-${alias}`]
+  const queryParams = `alias=${alias}`
 
-  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFecthPage(queryParams)
-  )
+  const [topAlert, setTopAlert] = useState({
+    severity: '',
+    alertText: '',
+    openAlert: false,
+  })
 
-  if (isLoading) {
-    return <span>Loading...</span>
-  }
-
-  if (isError) {
-    return (
-      <span>
-        Error:
-        {error.message}
-      </span>
-    )
-  }
-
-  if (!Array.isArray(data)) {
-    return null
-  }
-
-  const [page] = data
-  const { _id: id, text } = page
-  const textcontent = ReactHtmlParser(text) || "il n'y a pas plus de détails"
+  const pageParams = { alias, queryKey, queryParams, pageName, setTopAlert }
 
   // build ogecaside
   const asideOgec = {
@@ -61,13 +40,19 @@ function ApelOgecOgecScreen() {
   dispatch(setCategoryAside([categoryPath, asideOgec]))
 
   return (
-    <Grid container>
-      {showform ? (
-        <PageForm id={id} text={text} setShowform={setShowform} />
-      ) : (
-        <StyledPageDiv>{textcontent}</StyledPageDiv>
+    <StyledPageGrid container>
+      {topAlert.openAlert && (
+        <Grid item container>
+          <AlertCollapse
+            alertText={topAlert.alertText}
+            openAlert
+            severity={topAlert.severity}
+            callback={setTopAlert}
+          />
+        </Grid>
       )}
-    </Grid>
+      <Page pageParams={pageParams} />
+    </StyledPageGrid>
   )
 }
 

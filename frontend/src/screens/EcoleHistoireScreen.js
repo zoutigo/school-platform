@@ -2,6 +2,7 @@ import { Grid } from '@material-ui/core'
 import React, { useState } from 'react'
 import Page from '../components/page/Page'
 import AlertCollapse from '../components/elements/AlertCollapse'
+import { StyledPageGrid } from '../components/elements/styled'
 
 function EcoleHistoireScreen() {
   const pageName = 'histoire'
@@ -18,7 +19,7 @@ function EcoleHistoireScreen() {
   const pageParams = { alias, queryKey, queryParams, pageName, setTopAlert }
 
   return (
-    <Grid container>
+    <StyledPageGrid container>
       {topAlert.openAlert && (
         <Grid item container>
           <AlertCollapse
@@ -30,7 +31,7 @@ function EcoleHistoireScreen() {
         </Grid>
       )}
       <Page pageParams={pageParams} />
-    </Grid>
+    </StyledPageGrid>
   )
 }
 
