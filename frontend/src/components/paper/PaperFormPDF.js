@@ -5,9 +5,8 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useMutation } from 'react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import Title from '../elements/Title'
-import InputTextControl from '../elements/InputTextControl'
 import { apiPostPaper } from '../../utils/api'
 import { useUpdateMutationOptions } from '../../utils/hooks'
 import CostumButton from '../elements/CustomButton'
@@ -22,9 +21,6 @@ const StyledPaperForm = styled('form')(() => ({
   width: '100%',
   margin: '1rem auto',
   background: 'gray',
-  //   [theme.breakpoints.up('md')]: {
-  //     width: '60%',
-  //   },
   '& .form-fields-container': {
     background: 'whitesmoke',
     padding: '0.5rem 0.2rem',
@@ -69,7 +65,6 @@ function PaperFormPDF({
   }
   const {
     control,
-    register,
     handleSubmit,
     formState: { isSubmitting, isValid },
   } = useForm({
@@ -190,13 +185,7 @@ function PaperFormPDF({
             }
           />
         )}
-        {/* <Grid
-          item
-          container
-          style={{ margin: '1rem 0px', padding: '0px 1rem' }}
-        >
-          <input type="file" {...register('file')} accept="application/pdf" />
-        </Grid> */}
+
         <InputFileControl
           control={control}
           name="file"

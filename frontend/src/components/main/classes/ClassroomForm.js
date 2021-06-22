@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { styled, Grid, useTheme } from '@material-ui/core'
+import { styled, Grid, useTheme, TextField } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useSelector } from 'react-redux'
@@ -109,7 +109,8 @@ function ClassroomForm({
           control={control}
           name="image"
           type="file"
-          helpertext="maximum 5Mo"
+          label="Image d'acceuil"
+          helperText="maximum 5Mo"
           accept="image/jpg,image/jpeg,image/gif,image/png "
         />
         <Grid item container>

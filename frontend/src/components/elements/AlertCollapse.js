@@ -56,11 +56,12 @@ AlertCollapse.defaultProps = {
   severity: 'error',
   openAlert: false,
   callback: null,
+  alertText: '',
 }
 
 AlertCollapse.propTypes = {
   openAlert: PropTypes.bool,
-  alertText: PropTypes.string.isRequired,
+  alertText: PropTypes.string,
   severity: PropTypes.string,
   callback: PropTypes.func,
 }

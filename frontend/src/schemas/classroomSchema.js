@@ -14,10 +14,7 @@ const classroomSchema = yup.object().shape({
     .test(
       'fileSize',
       'Le fichier est trop large. Maximum autorisé: 2,5Mo',
-      (value) => {
-        console.log('value:', value)
-        return value && value[0].size <= IMAGE_MAX_SIZE
-      }
+      (value) => value && value[0].size <= IMAGE_MAX_SIZE
     ),
 })
 
