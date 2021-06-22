@@ -39,9 +39,7 @@ ClassroomSummary.defaultProps = {
 ClassroomSummary.propTypes = {
   text: PropTypes.string.isRequired,
   alias: PropTypes.string.isRequired,
-  image: PropTypes.shape({
-    path: PropTypes.string,
-  }),
+  image: PropTypes.string,
 }
 
 export default ClassroomSummary

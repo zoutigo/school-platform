@@ -1,25 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery } from 'react-query'
-import { Fab, Grid, styled, Tooltip, useTheme } from '@material-ui/core'
-import EditIcon from '@material-ui/icons/Edit'
-import BackspaceIcon from '@material-ui/icons/Backspace'
+import { Grid } from '@material-ui/core'
 import ReactHtmlParser from 'react-html-parser'
 import { apiFecthPage } from '../../utils/api'
-
+import ToolTipEditPage from '../elements/ToolTipEditPage'
 import PageForms from './PageForms'
 import { useRigths } from '../../utils/hooks'
 import ApiAlert from '../elements/ApiAlert'
 
-const StyledFab = styled(Fab)(({ theme, bgcolor }) => ({
-  position: 'fixed',
-  bottom: theme.spacing(2),
-  right: theme.spacing(3),
-  background: bgcolor,
-}))
-
 function Page({ pageParams }) {
-  const theme = useTheme()
   const [showPageForm, setShowPageForm] = useState(false)
   const [showEditToolTip, setShowEditToolTip] = useState(true)
   const { queryKey, queryParams } = pageParams
@@ -54,26 +44,7 @@ function Page({ pageParams }) {
         />
       )}
       {isAllowedToChange && (
-        <Tooltip
-          title={showEditToolTip ? 'Modifier la page' : 'Revenir sur la page'}
-          placement="bottom-end"
-          aria-label={
-            showEditToolTip ? 'Modifier la page' : 'Revenir sur la page'
-          }
-        >
-          <StyledFab
-            bgcolor={
-              showEditToolTip
-                ? theme.palette.success.main
-                : theme.palette.error.main
-            }
-            onClick={() =>
-              showEditToolTip ? setShowPageForm(true) : setShowPageForm(false)
-            }
-          >
-            {showEditToolTip ? <EditIcon /> : <BackspaceIcon />}
-          </StyledFab>
-        </Tooltip>
+        <ToolTipEditPage show={showEditToolTip} callback={setShowPageForm} />
       )}
     </Grid>
   )

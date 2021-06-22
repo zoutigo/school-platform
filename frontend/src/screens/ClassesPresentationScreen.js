@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Grid, styled } from '@material-ui/core'
+import { Button, ButtonGroup, Grid, styled, useTheme } from '@material-ui/core'
 import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -13,6 +13,9 @@ import ClassroomSummaryForm from '../components/main/classes/ClassroomSummaryFor
 import ApiAlert from '../components/elements/ApiAlert'
 import ClassroomImageForm from '../components/main/classes/ClassroomImageForm'
 import useRoles from '../utils/roles'
+import ToolTipEditPage from '../components/elements/ToolTipEditPage'
+import ClassroomForm from '../components/main/classes/ClassroomForm'
+import AlertCollapse from '../components/elements/AlertCollapse'
 
 const StyledButtonGroup = styled(ButtonGroup)(() => ({
   height: '3rem',
@@ -23,17 +26,24 @@ const StyledButton = styled(Button)(({ theme }) => ({
   background: theme.palette.primary.main,
   padding: '0.5em 1em',
 }))
+
 function ClassesPresentationScreen() {
+  const theme = useTheme()
   const dispatch = useDispatch()
   const { path: categoryPath } = useCurrentCategory()
   const { pathname } = useLocation()
   const [showImageForm, setShowImageForm] = useState(false)
   const [showSummaryForm, setShowSummaryForm] = useState(false)
   const [showButtonGroup, setShowButtonGroup] = useState(true)
-  const [showSummary, setShowSummary] = useState(true)
+  const [showClassroomForm, setShowClassroomForm] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
-
+  const [showEditToolTip, setShowEditToolTip] = useState(true)
+  const [alert, setAlert] = useState({
+    openAlert: false,
+    severity: 'error',
+    alertText: '',
+  })
   const prealias = pathname.split('/')[2]
 
   const defineAlias = (extract) => {
@@ -97,7 +107,14 @@ function ClassesPresentationScreen() {
   )
 
   if (isLoading) return <ApiAlert severity="warning">Chargement ...</ApiAlert>
-  if (isError) return <ApiAlert severity="error">{error.message}</ApiAlert>
+  if (isError)
+    return (
+      <AlertCollapse
+        severity="error"
+        alertText={error.message}
+        openAlert={isError}
+      />
+    )
   if (!Array.isArray(data)) return null
 
   const [result] = data
@@ -133,11 +150,22 @@ function ClassesPresentationScreen() {
 
   return (
     <Grid container>
-      {showAlert && (
-        <StyledAlert severity="success">{alertMessage}</StyledAlert>
+      <AlertCollapse
+        severity={alert.severity}
+        alertText={alert.alertText}
+        openAlert={alert.openAlert}
+      />
+
+      {showClassroomForm && isAllowedToChange && (
+        <ClassroomForm
+          setShowClassroomForm={setShowClassroomForm}
+          queryKey={queryKey}
+          setAlert={setAlert}
+          classroomData={result}
+        />
       )}
 
-      {showSummary && (
+      {!showClassroomForm && (
         <ClassroomSummary
           text={result?.summary}
           image={result?.image}
@@ -145,41 +173,47 @@ function ClassesPresentationScreen() {
           id={result._id || null}
         />
       )}
-      {showImageForm && (
+      {isAllowedToChange && (
+        <ToolTipEditPage
+          show={!showClassroomForm}
+          callback={setShowClassroomForm}
+        />
+      )}
+      {/* {showImageForm && (
         <Grid item container justify="center">
           <ClassroomImageForm
             setShowImageForm={setShowImageForm}
             setShowButtonGroup={setShowButtonGroup}
             setShowAlert={setShowAlert}
             setAlertMessage={setAlertMessage}
-            setShowSummary={setShowSummary}
+            setShowClassroomForm={setShowClassroomForm}
             queryKey={queryKey}
             id={result?._id}
           />
         </Grid>
-      )}
-      {showSummaryForm && isAllowedToChange && (
+      )} */}
+      {/* {showSummaryForm && isAllowedToChange && (
         <Grid item container justify="center">
           <ClassroomSummaryForm
             classroomId={result?._id}
             setShowButtonGroup={setShowButtonGroup}
             setShowSummaryForm={setShowSummaryForm}
-            setShowSummary={setShowSummary}
+            setShowClassroomForm={setShowClassroomForm}
             setShowAlert={setShowAlert}
             setAlertMessage={setAlertMessage}
             classroomSummary={result?.summary}
             queryKey={queryKey}
           />
         </Grid>
-      )}
-      <Grid item container>
+      )} */}
+      {/* <Grid item container>
         {showButtonGroup && isAllowedToChange && (
           <StyledButtonGroup>
             <StyledButton
               onClick={() => {
                 setShowSummaryForm(true)
                 setShowButtonGroup(false)
-                setShowSummary(false)
+                setShowClassroomForm(false)
               }}
             >
               Modifier le texte
@@ -188,14 +222,14 @@ function ClassesPresentationScreen() {
               onClick={() => {
                 setShowImageForm(true)
                 setShowButtonGroup(false)
-                setShowSummary(false)
+                setShowClassroomForm(false)
               }}
             >
               Modifier image
             </StyledButton>
           </StyledButtonGroup>
         )}
-      </Grid>
+      </Grid> */}
     </Grid>
   )
 }
