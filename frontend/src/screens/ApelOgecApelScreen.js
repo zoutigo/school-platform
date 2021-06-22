@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import APELTEAM from '../constants/apelteam'
 import { setCategoryAside } from '../redux/settings/SettingsActions'
 
-import { useCurrentCategory } from '../utils/hooks'
+import { useCurrentCategory, useRigths } from '../utils/hooks'
 import Page from '../components/page/Page'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
@@ -23,7 +23,17 @@ function ApelOgecApelScreen() {
     alertText: '',
     openAlert: false,
   })
-  const pageParams = { alias, queryKey, queryParams, pageName, setTopAlert }
+  const { moderatorLevel } = useRigths()
+  const isAllowedToChange = moderatorLevel
+
+  const pageParams = {
+    isAllowedToChange,
+    alias,
+    queryKey,
+    queryParams,
+    pageName,
+    setTopAlert,
+  }
   // build apel aside
   const asideApel = {
     title: 'Bureau Apel',

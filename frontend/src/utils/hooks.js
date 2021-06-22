@@ -101,13 +101,16 @@ export const useIsTokenValid = () => {
 
 export const useRigths = () => {
   const {
-    User: { isAdmin, isModerator, isManager, isTeacher },
+    User: { isAdmin, isModerator, isManager, isTeacher, exp },
   } = useSelector((state) => state.user)
 
-  const teacherLevel = isAdmin || isManager || isModerator || isTeacher
-  const managerLevel = isAdmin || isManager
-  const adminLevel = isAdmin
-  const moderatorLevel = isAdmin || isManager || isModerator
+  const TokenIsValid = new Date().getTime() / 1000 < exp
+
+  const teacherLevel =
+    (isAdmin || isManager || isModerator || isTeacher) && TokenIsValid
+  const managerLevel = (isAdmin || isManager) && TokenIsValid
+  const adminLevel = isAdmin && TokenIsValid
+  const moderatorLevel = (isAdmin || isManager || isModerator) && TokenIsValid
 
   return { teacherLevel, managerLevel, adminLevel, moderatorLevel }
 }

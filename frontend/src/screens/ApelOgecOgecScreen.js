@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import { useDispatch } from 'react-redux'
 
-import { useCurrentCategory } from '../utils/hooks'
+import { useCurrentCategory, useRigths } from '../utils/hooks'
 import OGECTEAM from '../constants/ogecteam'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
@@ -24,7 +24,17 @@ function ApelOgecOgecScreen() {
     openAlert: false,
   })
 
-  const pageParams = { alias, queryKey, queryParams, pageName, setTopAlert }
+  const { moderatorLevel } = useRigths()
+  const isAllowedToChange = moderatorLevel
+
+  const pageParams = {
+    isAllowedToChange,
+    alias,
+    queryKey,
+    queryParams,
+    pageName,
+    setTopAlert,
+  }
 
   // build ogecaside
   const asideOgec = {

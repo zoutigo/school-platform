@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { styled, Grid, useTheme, TextField } from '@material-ui/core'
+import { styled, Grid, useTheme } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useSelector } from 'react-redux'
@@ -36,7 +36,7 @@ function ClassroomForm({
   setAlert,
   classroomData,
 }) {
-  const { _id, name, summary } = classroomData
+  const { _id, name } = classroomData
   const theme = useTheme()
   const { Token } = useSelector((state) => state.user)
   const formTitle = `Modification de classe ${name}`
@@ -88,17 +88,6 @@ function ClassroomForm({
     }
   }
 
-  //   useEffect(() => {
-  //     setShowClassroomForm(false)
-  //     return () => {
-  //       setShowClassroomForm(true)
-  //       setAlert({
-  //         severity: 'error',
-  //         alertText: '',
-  //         openAlert: false,
-  //       })
-  //     }
-  //   }, [])
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
       <Grid item container justify="center">

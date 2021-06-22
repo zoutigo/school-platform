@@ -11,6 +11,7 @@ import { StyledIconBox } from '../elements/styled'
 import rubrics from '../../constants/rubrics'
 import NavBloc from './NavBloc'
 import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
+import { useIsTokenValid } from '../../utils/hooks'
 
 const StyledHeader = styled('header')(() => ({
   zIndex: 10,
@@ -20,11 +21,7 @@ function Header() {
   const theme = useTheme()
   const isSmallScreen = !useMediaQuery(theme.breakpoints.up('lg'))
   const { SmallScreenNavIsOpened } = useSelector((state) => state.settings)
-  const {
-    User: { exp },
-  } = useSelector((state) => state.user)
-
-  const tokenIsValid = !exp ? false : exp > new Date().getTime() / 1000
+  const { tokenIsValid } = useIsTokenValid()
 
   const dispatch = useDispatch()
   const { pathname } = useLocation()

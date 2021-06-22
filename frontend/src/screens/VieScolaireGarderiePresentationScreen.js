@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Page from '../components/page/Page'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
+import { useRigths } from '../utils/hooks'
 
 function VieScolaireGarderiePresentationScreen() {
   const pageName = 'presentation garderie'
@@ -15,8 +16,17 @@ function VieScolaireGarderiePresentationScreen() {
     alertText: '',
     openAlert: false,
   })
+  const { moderatorLevel } = useRigths()
+  const isAllowedToChange = moderatorLevel
 
-  const pageParams = { alias, queryKey, queryParams, pageName, setTopAlert }
+  const pageParams = {
+    isAllowedToChange,
+    alias,
+    queryKey,
+    queryParams,
+    pageName,
+    setTopAlert,
+  }
 
   return (
     <StyledPageGrid container>

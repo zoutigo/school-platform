@@ -6,15 +6,14 @@ import ReactHtmlParser from 'react-html-parser'
 import { apiFecthPage } from '../../utils/api'
 import ToolTipEditPage from '../elements/ToolTipEditPage'
 import PageForms from './PageForms'
-import { useRigths } from '../../utils/hooks'
 import ApiAlert from '../elements/ApiAlert'
 
 function Page({ pageParams }) {
   const [showPageForm, setShowPageForm] = useState(false)
   const [showEditToolTip, setShowEditToolTip] = useState(true)
-  const { queryKey, queryParams } = pageParams
-  const { moderatorLevel } = useRigths()
-  const isAllowedToChange = moderatorLevel
+  const { queryKey, queryParams, isAllowedToChange } = pageParams
+
+  console.log('isAllowed:', isAllowedToChange)
 
   const { isLoading, isError, data, error } = useQuery(queryKey, () =>
     apiFecthPage(queryParams)
@@ -57,6 +56,7 @@ Page.propTypes = {
     queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
     queryParams: PropTypes.string.isRequired,
     setTopAlert: PropTypes.func.isRequired,
+    isAllowedToChange: PropTypes.bool.isRequired,
   }).isRequired,
 }
 

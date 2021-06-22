@@ -4,6 +4,7 @@ import { useQuery } from 'react-query'
 import ReactHtmlParser from 'react-html-parser'
 import { apiFecthPage } from '../../../utils/api'
 import PageForm from '../../elements/PageForm'
+import { useRigths } from '../../../utils/hooks'
 
 const StyledPageDiv = styled('div')(() => ({
   width: '100%',
@@ -14,6 +15,9 @@ function Histoire() {
   const pageName = 'histoire'
   const queryKey = [pageName, { alias: pageName }]
   const queryParams = `alias=${pageName}`
+
+  const { moderatorLevel } = useRigths()
+  const isAllowedToChange = moderatorLevel
 
   const { isLoading, isError, data, error } = useQuery(queryKey, () =>
     apiFecthPage(queryParams)
