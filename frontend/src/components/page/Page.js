@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 import { Grid } from '@material-ui/core'
 import ReactHtmlParser from 'react-html-parser'
 import { apiFecthPage } from '../../utils/api'
-import ToolTipEditPage from '../elements/ToolTipEditPage'
+
 import PageForms from './PageForms'
 import ApiAlert from '../elements/ApiAlert'
 import ToggleToolTip from '../elements/ToggleToolTip'
@@ -41,9 +41,6 @@ function Page({ pageParams }) {
           pageParams={pageParams}
         />
       )}
-      {/* {isAllowedToChange && (
-        <ToolTipEditPage show={showEditToolTip} callback={setShowPageForm} />
-      )} */}
 
       {isAllowedToChange && (
         <ToggleToolTip

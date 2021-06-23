@@ -13,6 +13,7 @@ import EquipeScreen from '../screens/EquipeScreen'
 import VieScolaireScreen from '../screens/VieScolaireScreen'
 import VieScolaireCantineScreen from '../screens/VieScolaireCantineScreen'
 import VieScolaireCantineMenusScreen from '../screens/VieScolaireCantineMenusScreen'
+import VieScolaireCantineActivitesScreen from '../screens/VieScolaireCantineActivitesScreen'
 import VieScolaireGarderieEtudeScreen from '../screens/VieScolaireGarderieEtudeScreen'
 import VieScolaireGarderiePresentationScreen from '../screens/VieScolaireGarderiePresentationScreen'
 import VieScolaireGarderieScreen from '../screens/VieScolaireGarderieScreen'
@@ -33,6 +34,7 @@ import EcoleInfrastructuresScreen from '../screens/EcoleInfrastructuresScreen'
 import EcoleInfrasrtucturesBatiments from '../screens/EcoleInfrasrtucturesBatiments'
 import EcoleInfrastructuresVisiteVirtuelleScreen from '../screens/EcoleInfrastructuresVisiteVirtuelleScreen'
 import ClassesPresentationScreen from '../screens/ClassesPresentationScreen'
+
 import ClassesActivitesScreen from '../screens/ClassesActivitesScreen'
 import InformationsActualitesAgendaScreen from '../screens/InformationsActualitesAgendaScreen'
 import InformationsActualitesNewsletterScreen from '../screens/InformationsActualitesNewsletterScreen'
@@ -192,6 +194,15 @@ const rubrics = [
               path: '/viescolaire/cantine/breves',
               exact: true,
               component: VieScolaireCantineBrevesScreen,
+            },
+          },
+          {
+            chapname: 'Activités',
+            alias: 'viescolaire-cantine-activites',
+            route: {
+              path: '/viescolaire/cantine/activites',
+              exact: true,
+              component: VieScolaireCantineActivitesScreen,
             },
           },
           {

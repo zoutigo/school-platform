@@ -7,7 +7,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import EditIcon from '@material-ui/icons/Edit'
 import { StyledPaperFooter, StyledIconButton } from '../elements/styled'
-import { apiPostPaper } from '../../utils/api'
+
 import { useUpdateMutationOptions } from '../../utils/hooks'
 import ModalValidation from '../elements/ModalValidation'
 
