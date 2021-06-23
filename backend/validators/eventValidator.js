@@ -37,6 +37,11 @@ module.exports.eventValidator = (datas) => {
           author: Joi.objectId(),
         }).validate(data)
 
+      case 'entityAlias':
+        return Joi.object({
+          entityAlias: Joi.string().required().min(2).max(50),
+        }).validate(data)
+
       default:
         return null
     }

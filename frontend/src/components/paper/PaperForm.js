@@ -3,6 +3,7 @@ import { Grid } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import PaperFormActivite from './PaperFormActivite'
 import PaperFormPDF from './PaperFormPDF'
+import PaperFormEvent from './PaperFormEvent'
 
 function PaperForm({
   currentDocument,
@@ -35,6 +36,19 @@ function PaperForm({
         paperType === 'breve' ||
         paperType === 'newsletter') && (
         <PaperFormPDF
+          setCurrentDocument={setCurrentDocument}
+          currentDocument={currentDocument}
+          setTopAlert={setTopAlert}
+          setShowTooltip={setShowTooltip}
+          setFormAction={setFormAction}
+          formAction={formAction}
+          setShowPaperList={setShowPaperList}
+          setShowPaperForm={setShowPaperForm}
+          paper={paper}
+        />
+      )}
+      {paperType === 'event' && (
+        <PaperFormEvent
           setCurrentDocument={setCurrentDocument}
           currentDocument={currentDocument}
           setTopAlert={setTopAlert}

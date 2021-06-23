@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom'
 import useRoles from '../utils/roles'
 import { useRigths } from '../utils/hooks'
 import Paper from '../components/paper/Paper'
+import { apiFetchPaper, apiPostPaper } from '../utils/api'
 
 function ClassesActivitesScreen() {
   const { pathname } = useLocation()
@@ -68,6 +69,8 @@ function ClassesActivitesScreen() {
   const entityAlias = alias
   const queryKey = [paperName]
   const queryParams = `type=${paperType}&entityAlias=${entityAlias}`
+  const fetcher = apiFetchPaper
+  const poster = apiPostPaper
 
   const paper = {
     queryKey,
@@ -77,6 +80,8 @@ function ClassesActivitesScreen() {
     paperType,
     entityAlias,
     isAllowedToChange,
+    fetcher,
+    poster,
   }
 
   return <Paper paper={paper} />

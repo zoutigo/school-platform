@@ -17,6 +17,7 @@ import VieScolaireGarderieEtudeScreen from '../screens/VieScolaireGarderieEtudeS
 import VieScolaireGarderiePresentationScreen from '../screens/VieScolaireGarderiePresentationScreen'
 import VieScolaireGarderieScreen from '../screens/VieScolaireGarderieScreen'
 import VieScolaireCantineBrevesScreen from '../screens/VieScolaireCantineBrevesScreen'
+import VieScolaireCantineAgendaScreen from '../screens/VieScolaireCantineAgendaScreen'
 import VieScolaireHorairesScreen from '../screens/VieScolaireHorairesScreen'
 import ClassesScreen from '../screens/ClassesScreen'
 import InformationsScreen from '../screens/InformationsScreen'
@@ -191,6 +192,15 @@ const rubrics = [
               path: '/viescolaire/cantine/breves',
               exact: true,
               component: VieScolaireCantineBrevesScreen,
+            },
+          },
+          {
+            chapname: 'Agenda',
+            alias: 'viescolaire-cantine-agenda',
+            route: {
+              path: '/viescolaire/cantine/agenda',
+              exact: true,
+              component: VieScolaireCantineAgendaScreen,
             },
           },
         ],

@@ -21,7 +21,7 @@ function PaperItemFooter({
   setShowSearch,
 }) {
   const { _id: paperId, file } = paperItem
-  const { isAllowedToChange, queryKey } = paper
+  const { isAllowedToChange, queryKey, poster } = paper
   const theme = useTheme()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openUpdateModal, setOpenUpdateModal] = useState(false)
@@ -30,7 +30,7 @@ function PaperItemFooter({
   useSelector((state) => state.settings)
 
   const { mutateAsync } = useMutation(
-    apiPostPaper,
+    poster,
     useUpdateMutationOptions(queryKey)
   )
 
@@ -118,7 +118,10 @@ PaperItemFooter.propTypes = {
     paperName: PropTypes.string.isRequired,
     paperFormat: PropTypes.string.isRequired,
     paperType: PropTypes.string.isRequired,
-    entityAlias: PropTypes.string.isRequired,
+    entityAlias: PropTypes.shape({
+      _id: PropTypes.string,
+    }),
+    poster: PropTypes.func,
     isAllowedToChange: PropTypes.bool.isRequired,
   }).isRequired,
   setShowPaperForm: PropTypes.func.isRequired,
@@ -131,7 +134,9 @@ PaperItemFooter.propTypes = {
     _id: PropTypes.string,
     text: PropTypes.string,
     title: PropTypes.string,
-    entity: PropTypes.string,
+    entity: PropTypes.shape({
+      _id: PropTypes.string,
+    }),
     createdat: PropTypes.number,
     file: PropTypes.string,
   }).isRequired,

@@ -101,13 +101,15 @@ function Paper({ paper }) {
 
 Paper.propTypes = {
   paper: PropTypes.shape({
-    queryKey: PropTypes.string.isRequired,
-    queryParams: PropTypes.arrayOf(PropTypes.string),
+    queryKey: PropTypes.arrayOf(PropTypes.string),
+    queryParams: PropTypes.string,
     paperName: PropTypes.string.isRequired,
     paperFormat: PropTypes.string.isRequired,
     paperType: PropTypes.string.isRequired,
     entityAlias: PropTypes.string.isRequired,
     isAllowedToChange: PropTypes.bool.isRequired,
+    fetcher: PropTypes.func.isRequired,
+    poster: PropTypes.func.isRequired,
   }).isRequired,
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import Paper from '../components/paper/Paper'
+import { apiFetchPaper, apiPostPaper } from '../utils/api'
 import { useRigths } from '../utils/hooks'
 
 function InformationsActualitesNewsletterScreen() {
@@ -12,6 +13,8 @@ function InformationsActualitesNewsletterScreen() {
   const entityAlias = 'direction'
   const queryKey = [paperName]
   const queryParams = `type=${paperType}&entityAlias=${entityAlias}`
+  const fetcher = apiFetchPaper
+  const poster = apiPostPaper
 
   const paper = {
     queryKey,
@@ -21,6 +24,8 @@ function InformationsActualitesNewsletterScreen() {
     paperType,
     entityAlias,
     isAllowedToChange,
+    poster,
+    fetcher,
   }
   return <Paper paper={paper} />
 }

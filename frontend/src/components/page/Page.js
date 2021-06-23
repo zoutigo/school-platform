@@ -7,13 +7,12 @@ import { apiFecthPage } from '../../utils/api'
 import ToolTipEditPage from '../elements/ToolTipEditPage'
 import PageForms from './PageForms'
 import ApiAlert from '../elements/ApiAlert'
+import ToggleToolTip from '../elements/ToggleToolTip'
 
 function Page({ pageParams }) {
   const [showPageForm, setShowPageForm] = useState(false)
   const [showEditToolTip, setShowEditToolTip] = useState(true)
   const { queryKey, queryParams, isAllowedToChange } = pageParams
-
-  console.log('isAllowed:', isAllowedToChange)
 
   const { isLoading, isError, data, error } = useQuery(queryKey, () =>
     apiFecthPage(queryParams)
@@ -42,8 +41,19 @@ function Page({ pageParams }) {
           pageParams={pageParams}
         />
       )}
-      {isAllowedToChange && (
+      {/* {isAllowedToChange && (
         <ToolTipEditPage show={showEditToolTip} callback={setShowPageForm} />
+      )} */}
+
+      {isAllowedToChange && (
+        <ToggleToolTip
+          init={showEditToolTip}
+          staticText="Editer la page"
+          activeText="Annuler"
+          action="edit"
+          callback={setShowPageForm}
+          toggleValue={showPageForm}
+        />
       )}
     </Grid>
   )

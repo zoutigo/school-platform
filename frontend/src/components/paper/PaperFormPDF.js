@@ -213,7 +213,6 @@ function PaperFormPDF({
 }
 PaperFormPDF.defaultProps = {
   currentDocument: null,
-  paperItem: null,
 }
 
 PaperFormPDF.propTypes = {
@@ -225,21 +224,23 @@ PaperFormPDF.propTypes = {
     paperType: PropTypes.string.isRequired,
     entityAlias: PropTypes.string.isRequired,
     isAllowedToChange: PropTypes.bool.isRequired,
+    fetcher: PropTypes.func.isRequired,
+    poster: PropTypes.func.isRequired,
   }).isRequired,
   setShowPaperForm: PropTypes.func.isRequired,
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
-  currentDocument: PropTypes.string,
   setTopAlert: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
   setShowTooltip: PropTypes.func.isRequired,
   formAction: PropTypes.string.isRequired,
-  paperItem: PropTypes.shape({
+  currentDocument: PropTypes.shape({
     _id: PropTypes.string,
     text: PropTypes.string,
     title: PropTypes.string,
     entity: PropTypes.string,
     createdat: PropTypes.number,
+    date: PropTypes.number,
   }),
 }
 

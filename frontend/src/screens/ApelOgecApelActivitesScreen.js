@@ -1,5 +1,6 @@
 import React from 'react'
 import Paper from '../components/paper/Paper'
+import { apiFetchPaper, apiPostPaper } from '../utils/api'
 import { useRigths } from '../utils/hooks'
 // eslint-disable-next-line import/no-named-as-default
 // eslint-disable-next-line import/no-named-as-default-member
@@ -16,6 +17,8 @@ function ApelOgecApelActivitesScreen() {
   const entityAlias = 'apel'
   const queryKey = [paperName]
   const queryParams = `type=${paperType}&entityAlias=${entityAlias}`
+  const fetcher = apiFetchPaper
+  const poster = apiPostPaper
 
   const paper = {
     queryKey,
@@ -25,6 +28,8 @@ function ApelOgecApelActivitesScreen() {
     paperType,
     entityAlias,
     isAllowedToChange,
+    fetcher,
+    poster,
   }
   return <Paper paper={paper} />
 }

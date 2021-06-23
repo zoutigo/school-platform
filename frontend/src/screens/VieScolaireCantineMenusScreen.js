@@ -1,10 +1,10 @@
 import React from 'react'
 import Paper from '../components/paper/Paper'
+import { apiFetchPaper, apiPostPaper } from '../utils/api'
 import { useRigths } from '../utils/hooks'
 
 function VieScolaireCantineMenusScreen() {
   const { moderatorLevel } = useRigths()
-
   const isAllowedToChange = moderatorLevel
   const paperType = 'menu'
   const paperFormat = 'pdf'
@@ -12,6 +12,8 @@ function VieScolaireCantineMenusScreen() {
   const entityAlias = 'cantine'
   const queryKey = [paperName]
   const queryParams = `type=${paperType}&entityAlias=${entityAlias}`
+  const fetcher = apiFetchPaper
+  const poster = apiPostPaper
 
   const paper = {
     queryKey,
@@ -21,6 +23,8 @@ function VieScolaireCantineMenusScreen() {
     paperType,
     entityAlias,
     isAllowedToChange,
+    fetcher,
+    poster,
   }
   return <Paper paper={paper} />
 }

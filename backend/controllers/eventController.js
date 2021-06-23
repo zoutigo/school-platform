@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+const Entity = require('../models/Entity')
 const Event = require('../models/Event')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { eventValidator } = require('../validators/eventValidator')
@@ -19,12 +20,18 @@ module.exports.postEvent = async (req, res, next) => {
 
   const errors = eventValidator(req.body)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   if (action === 'create') {
-    // case event creation
+    const { entityAlias } = req.body
+    // check the entity
+    const checkedEntity = await Entity.findOne({ alias: entityAlias })
+    if (!checkedEntity) return next(new BadRequest('mauvaise entité'))
+
     const event = req.body
+    event.entity = checkedEntity._id
+    delete event.entityAlias
     event.author = userId
     const newEvent = new Event(event)
     try {
@@ -74,18 +81,28 @@ module.exports.getEvents = async (req, res, next) => {
 
   const errors = eventValidator(req.query)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
+  }
+
+  if (req.query.id) {
+    req.query._id = req.query.id
+    delete req.query.id
+  }
+
+  // check the entity
+  if (req.query.entityAlias) {
+    const checkedEntity = await Entity.findOne({ alias: req.query.entityAlias })
+    if (!checkedEntity) return next(new BadRequest('mauvaise entité'))
+    req.query.entity = checkedEntity._id
+    delete req.query.entityAlias
   }
 
   try {
-    if (req.query.id) {
-      req.query._id = req.query.id
-      delete req.query.id
-    }
     const events = await Event.find(req.query)
       .where('date')
       .gt(today)
       .sort({ date: 1 })
+      .populate('entity')
 
     if (events.length < 1) return next(new NotFound('event not found'))
     return res.status(200).send(events)

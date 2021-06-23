@@ -13,6 +13,7 @@ const StyledFab = styled(Fab)(({ theme, bgcolor }) => ({
 
 function ToolTipEditPage({ show, callback }) {
   const theme = useTheme()
+
   return (
     <Tooltip
       title={show ? 'Modifier la page' : 'Revenir sur la page'}
@@ -21,7 +22,7 @@ function ToolTipEditPage({ show, callback }) {
     >
       <StyledFab
         bgcolor={show ? theme.palette.success.main : theme.palette.error.main}
-        onClick={() => (show ? callback(true) : callback(false))}
+        onClick={() => callback(!show)}
       >
         {show ? <EditIcon /> : <BackspaceIcon />}
       </StyledFab>

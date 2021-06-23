@@ -9,7 +9,7 @@ const { paperValidator } = require('../validators/paperValidator')
 module.exports.getPapers = async (req, res, next) => {
   const errors = paperValidator(req.body)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   if (req.query.id) {

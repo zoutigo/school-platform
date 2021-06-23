@@ -12,6 +12,7 @@ import { useUpdateMutationOptions } from '../../utils/hooks'
 import paperActiviteSchema from '../../schemas/paperActiviteSchema'
 import TinyPageEditor from '../elements/TinyPageEditor'
 import CostumButton from '../elements/CustomButton'
+import DatePickerControl from '../elements/DatePickerControl'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -29,7 +30,7 @@ const StyledPaperForm = styled('form')(() => ({
   },
 }))
 
-function PaperFormActivite({
+function PaperFormEvent({
   currentDocument,
   setCurrentDocument,
   setTopAlert,
@@ -43,7 +44,7 @@ function PaperFormActivite({
   const theme = useTheme()
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync } = useMutation(
-    apiPostPaper,
+    paper.poster,
     useUpdateMutationOptions(paper.queryKey)
   )
   const {
@@ -56,14 +57,15 @@ function PaperFormActivite({
   })
 
   const onSubmit = async (datas) => {
-    const { title, text } = datas
+    const { title, text, date, place } = datas
     const options = {
       headers: { 'x-access-token': Token },
     }
     const finalDatas = {
       title,
+      date: date.valueOf(),
+      place,
       text,
-      type: paper.paperType,
       entityAlias: paper.entityAlias,
     }
 
@@ -123,17 +125,49 @@ function PaperFormActivite({
         <InputTextControl
           name="title"
           control={control}
-          initialValue={formAction === 'update' ? currentDocument.title : ''}
+          initialValue={
+            currentDocument && formAction === 'update'
+              ? currentDocument.title
+              : 'Ecole Saint Augustin'
+          }
           helperText="au moins 10 caractères"
           label="Titre"
           width="100%"
         />
 
+        <InputTextControl
+          name="place"
+          control={control}
+          initialValue={
+            currentDocument && formAction === 'update'
+              ? currentDocument.place
+              : 'Ecole Saint Augustin'
+          }
+          helperText="au moins 10 caractères"
+          label="Lieu de l'évènement"
+          width="100%"
+        />
+
+        <DatePickerControl
+          control={control}
+          name="date"
+          label="Date de l'évènement"
+          format="dddd Do MMMM yyyy"
+          initialDate={
+            currentDocument && formAction === 'update'
+              ? new Date(currentDocument.date)
+              : new Date()
+          }
+        />
         <Grid item container>
           <Controller
             name="text"
             control={control}
-            defaultValue={formAction === 'update' ? currentDocument.text : ''}
+            defaultValue={
+              currentDocument && formAction === 'update'
+                ? currentDocument.place
+                : 'Ecole Saint Augustin'
+            }
             render={({ field: { onChange, value } }) => (
               <TinyPageEditor onChange={onChange} value={value} />
             )}
@@ -158,7 +192,7 @@ function PaperFormActivite({
   )
 }
 
-PaperFormActivite.propTypes = {
+PaperFormEvent.propTypes = {
   paper: PropTypes.shape({
     queryParams: PropTypes.string.isRequired,
     queryKey: PropTypes.arrayOf(PropTypes.string),
@@ -187,4 +221,4 @@ PaperFormActivite.propTypes = {
   }).isRequired,
 }
 
-export default PaperFormActivite
+export default PaperFormEvent

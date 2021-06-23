@@ -3,7 +3,7 @@ import { apiFetchEvents, apiPostEvents } from '../utils/api'
 import { useRigths } from '../utils/hooks'
 import Paper from '../components/paper/Paper'
 
-function InformationsActualitesAgendaScreen() {
+function VieScolaireCantineAgendaScreen() {
   const { moderatorLevel } = useRigths()
   const isAllowedToChange = moderatorLevel
   const paperType = 'event'
@@ -30,4 +30,4 @@ function InformationsActualitesAgendaScreen() {
   return <Paper paper={paper} />
 }
 
-export default InformationsActualitesAgendaScreen
+export default VieScolaireCantineAgendaScreen

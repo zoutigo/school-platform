@@ -1,6 +1,6 @@
-import { Grid } from '@material-ui/core'
 import React from 'react'
 import Paper from '../components/paper/Paper'
+import { apiFetchPaper, apiPostPaper } from '../utils/api'
 import { useRigths } from '../utils/hooks'
 import useRoles from '../utils/roles'
 
@@ -15,6 +15,8 @@ function ApelOgecOgecActivitesScreen() {
   const entityAlias = 'ogec'
   const queryKey = [paperName]
   const queryParams = `type=${paperType}&entityAlias=${entityAlias}`
+  const fetcher = apiFetchPaper
+  const poster = apiPostPaper
 
   const paper = {
     queryKey,
@@ -24,6 +26,8 @@ function ApelOgecOgecActivitesScreen() {
     paperType,
     entityAlias,
     isAllowedToChange,
+    fetcher,
+    poster,
   }
 
   return <Paper paper={paper} />

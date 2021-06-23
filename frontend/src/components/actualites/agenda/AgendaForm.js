@@ -57,13 +57,12 @@ function AgendaForm({
   })
 
   const onSubmit = async (datas) => {
-    const { title, description, date, place, text } = datas
+    const { title, date, place, text } = datas
     const options = {
       headers: { 'x-access-token': Token },
     }
     const finalDatas = {
       title,
-      description,
       date: date.valueOf(),
       place,
       text,

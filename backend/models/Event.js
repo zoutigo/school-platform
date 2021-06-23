@@ -23,7 +23,11 @@ const eventSchema = new Schema(
       type: Number,
       required: true,
     },
-
+    entity: {
+      type: Schema.Types.ObjectId,
+      ref: 'Entity',
+      required: true,
+    },
     author: {
       type: Schema.Types.ObjectId,
     },

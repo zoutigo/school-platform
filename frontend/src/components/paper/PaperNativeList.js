@@ -20,9 +20,9 @@ function PaperNativeList({
   setFormAction,
   setShowSearch,
 }) {
-  const { queryKey, queryParams } = paper
+  const { queryKey, queryParams, fetcher } = paper
   const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFetchPaper(queryParams)
+    fetcher(queryParams)
   )
 
   return (
@@ -70,6 +70,7 @@ PaperNativeList.propTypes = {
     paperType: PropTypes.string.isRequired,
     entityAlias: PropTypes.string.isRequired,
     isAllowedToChange: PropTypes.bool.isRequired,
+    fetcher: PropTypes.func.isRequired,
   }).isRequired,
   setShowPaperForm: PropTypes.func.isRequired,
   setShowPaperList: PropTypes.func.isRequired,
