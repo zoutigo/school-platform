@@ -26,7 +26,9 @@ module.exports.getPapers = async (req, res, next) => {
   }
 
   try {
-    const papers = await Paper.find(req.query).sort({ date: -1 })
+    const papers = await Paper.find(req.query)
+      .populate('entity')
+      .sort({ date: -1 })
     if (papers.length < 1) return next(new NotFound('paper not found'))
     return res.status(200).send(papers)
   } catch (err) {

@@ -516,10 +516,10 @@ const rubrics = [
             },
           },
           {
-            chapname: 'Evenements',
-            alias: 'evenements',
+            chapname: 'Agenda',
+            alias: 'agenda',
             route: {
-              path: '/informations/actualites/evenements',
+              path: '/informations/actualites/agenda',
               exact: true,
               component: InformationsActualitesAgendaScreen,
             },

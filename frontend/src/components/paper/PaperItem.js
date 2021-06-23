@@ -23,16 +23,12 @@ function PaperItem({
   setFormAction,
   setShowSearch,
 }) {
-  const { _id, title, createdat, entity, text, file } = paperItem
+  const { _id, text, file } = paperItem
 
   return (
     <StyledPaperItemGrid item container>
       <PaperItemHeader
         setCurrentDocument={setCurrentDocument}
-        _id={_id}
-        title={title}
-        entity={entity}
-        createdat={createdat}
         paperItem={paperItem}
       />
       <Grid item container>
@@ -55,10 +51,12 @@ function PaperItem({
   )
 }
 
+PaperItem.defaultProps = null
+
 PaperItem.propTypes = {
   paper: PropTypes.shape({
-    queryKey: PropTypes.string.isRequired,
-    queryParams: PropTypes.arrayOf(PropTypes.string),
+    queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
+    queryParams: PropTypes.string,
     paperName: PropTypes.string.isRequired,
     paperFormat: PropTypes.string.isRequired,
     paperType: PropTypes.string.isRequired,
@@ -68,16 +66,20 @@ PaperItem.propTypes = {
   setShowPaperForm: PropTypes.func.isRequired,
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
-  currentDocument: PropTypes.string.isRequired,
+  currentDocument: PropTypes.shape({
+    _id: PropTypes.string,
+  }),
   setTopAlert: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
-  setShowSearch: PropTypes.bool.isRequired,
+  setShowSearch: PropTypes.func.isRequired,
   paperItem: PropTypes.shape({
     _id: PropTypes.string,
     text: PropTypes.string,
     title: PropTypes.string,
     file: PropTypes.string,
-    entity: PropTypes.string,
+    entity: PropTypes.shape({
+      name: PropTypes.string,
+    }),
     createdat: PropTypes.number,
   }).isRequired,
 }
