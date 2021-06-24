@@ -20,21 +20,21 @@ export const apiCheckEmail = async (value) => {
 
 export const apiRegister = async (datas) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/users`
-  const URL = ' http://localhost:3500/users/register'
+  const URL = '/users/register'
 
   const response = await axios.post(URL, datas)
   return response
 }
 export const apiLogin = async (datas) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/users/login`
-  const URL = ' http://localhost:3500/users/login'
+  const URL = '/users/login'
 
   const response = await axios.post(URL, datas)
   return response
 }
 
 export const apiFecthUserDatas = async (id) => {
-  const url = `http://localhost:3500/users/${id}`
+  const url = `/users/${id}`
 
   const result = await fetch(url).then((res) => res)
 
@@ -74,21 +74,21 @@ export const apiFecthClassroom = async (param) => {
 }
 export const apiFecthEntity = async (param) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/classrooms/${param}`
-  const URL = `${LOCALHOST}/entities?${param}`
+  const URL = `/entities?${param}`
   const { data } = await axios.get(URL)
 
   return data
 }
 export const apiPostEntity = async ({ id, action, body, options }) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/events?action=${action}&id=${id}`
-  const URL = `${LOCALHOST}/entities?action=${action}&id=${id}`
+  const URL = `/entities?action=${action}&id=${id}`
   const { data } = await axios.post(URL, body, options)
   return data
 }
 
 export const apiFetchEvents = async (param) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/events?${param}`
-  const URL = `${LOCALHOST}/events?${param}`
+  const URL = `/events?${param}`
   const { data } = await axios.get(URL)
 
   return data
@@ -96,14 +96,14 @@ export const apiFetchEvents = async (param) => {
 
 export const apiPostEvents = async ({ id, action, body, options }) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/events?action=${action}&id=${id}`
-  const URL = `${LOCALHOST}/events?action=${action}&id=${id}`
+  const URL = `/events?action=${action}&id=${id}`
   const { data } = await axios.post(URL, body, options)
   return data
 }
 
 export const apiFecthPage = async (params) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/pages?${param}`
-  const URL = `${LOCALHOST}/pages?${params}`
+  const URL = `/pages?${params}`
   const { data } = await axios.get(URL)
 
   return data
@@ -111,21 +111,21 @@ export const apiFecthPage = async (params) => {
 
 export const apiPostPage = async ({ id, body, options, action }) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/pages?action=${action}&id=${id}`
-  const URL = `${LOCALHOST}/pages?action=${action}&id=${id}`
+  const URL = `/pages?action=${action}&id=${id}`
   const result = await axios.post(URL, body, options)
   return result
 }
 
 export const apiPostPaper = async ({ id, body, options, action }) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/papers?action=${action}&id=${id}`
-  const URL = `${LOCALHOST}/papers?action=${action}&id=${id}`
+  const URL = `/papers?action=${action}&id=${id}`
   const result = await axios.post(URL, body, options)
   return result
 }
 
 export const apiFetchPaper = async (params) => {
   // const URL = `${process.env.REACT_APP_ENDPOINT}/papers/?${params}`
-  const URL = `${LOCALHOST}/papers/?${params}`
+  const URL = `/papers/?${params}`
   const { data } = await axios.get(URL)
 
   return data

@@ -4,7 +4,7 @@ import { Editor } from '@tinymce/tinymce-react'
 import tinyMceColors from '../../constants/tinyMceColors'
 import { StyledEditorGrid } from './styled'
 
-const URL = 'http://localhost:3500/images/page'
+const URL = '/images/page'
 
 function TinyPageEditor({ onChange, value, height }) {
   const handleEditorChange = (editor) => onChange(editor)

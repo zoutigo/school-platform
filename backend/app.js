@@ -32,7 +32,7 @@ const DB_URL =
     ? process.env.DEV_MODE === 'test'
       ? process.env.DB_TEST
       : process.env.DB_DEV
-    : process.env.DB_DEV
+    : process.env.DB_PROD
 
 mongoose
   .connect(process.env.MONGO_URI || DB_URL, {
@@ -43,6 +43,8 @@ mongoose
   })
   .then(() => console.log('Connexion établie à la base de donnée'))
   .catch((err) => console.log(err))
+
+app.use(express.static(path.join(__dirname, '..', 'public')))
 
 app.use(
   cors({
@@ -72,7 +74,7 @@ app.use(
   express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 })
 )
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'public')))
+// app.use(express.static(path.join(__dirname, 'public')))
 // app.use(express.static(process.env.PWD + "/public"));
 
 app.use('/', indexRouter)
@@ -86,5 +88,9 @@ app.use('/pages', pagesRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)
+app.get('*', (req, res) => {
+  // res.send(express.static(path.join(__dirname, '../public/index.html')))
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
+})
 
 module.exports = app
