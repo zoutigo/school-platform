@@ -4,3 +4,5 @@ deployment:
     - export DEPLOYPATH=/home/bdeh8989/augustineprod/
     - /bin/cp -R backend $DEPLOYPATH
     - /bin/cp -R public $DEPLOYPATH
+    - /bin/cp package.json $DEPLOYPATH
+    - /bin/cp package-lock.json $DEPLOYPATH
