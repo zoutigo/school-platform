@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/bdeh8989/augustineprod/
+    - /bin/cp -R backend $DEPLOYPATH
+    - /bin/cp -R public $DEPLOYPATH
