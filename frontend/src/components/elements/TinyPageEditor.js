@@ -1,19 +1,52 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Grid } from '@material-ui/core'
+import { useQuery } from 'react-query'
 import { Editor } from '@tinymce/tinymce-react'
 import tinyMceColors from '../../constants/tinyMceColors'
 import { StyledEditorGrid } from './styled'
+import { apiFetchVariables } from '../../utils/api'
+import AlertCollapse from './AlertCollapse'
 
-const URL = '/images/page'
+const LOCALHOST = 'http://localhost:3500'
+
+const PREFIX = process.env.NODE_ENV === 'production' ? '' : LOCALHOST
+const URL = `${PREFIX}/images/page`
 
 function TinyPageEditor({ onChange, value, height }) {
   const handleEditorChange = (editor) => onChange(editor)
+
+  const { isLoading, isError, data, error } = useQuery(['TinyPageKey'], () =>
+    apiFetchVariables()
+  )
+
+  if (isError)
+    return (
+      <Grid item container>
+        <AlertCollapse
+          alertText={error.response.message}
+          openAlert
+          severity="error"
+        />
+      </Grid>
+    )
+  if (isLoading)
+    return (
+      <Grid item container>
+        <AlertCollapse
+          alertText="Telechargement ..."
+          openAlert
+          severity="warning"
+        />
+      </Grid>
+    )
+
   return (
     <StyledEditorGrid item container>
       <Editor
         value={value}
         onEditorChange={handleEditorChange}
-        apiKey={process.env.REACT_APP_TINYMCE_KEY}
+        apiKey={data ? data.TINYMCE_KEY : null}
         cloudChannel="dev"
         init={{
           branding: false,

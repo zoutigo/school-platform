@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "cross-env NODE_ENV=development  DEBUG=express nodemon ./bin/www"
+    "start": "node ./backend/bin/www",
+    "dev": "cross-env NODE_ENV=development  DEBUG=express nodemon ./backend/bin/www"
   },
   "repository": {
     "type": "git",

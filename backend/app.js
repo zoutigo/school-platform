@@ -17,6 +17,7 @@ const entitiesRouter = require('./routes/entities')
 const rolesRouter = require('./routes/roles')
 const imagesRouter = require('./routes/images')
 const pagesRouter = require('./routes/pages')
+const variablesRouter = require('./routes/variables')
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
@@ -44,7 +45,9 @@ mongoose
   .then(() => console.log('Connexion établie à la base de donnée'))
   .catch((err) => console.log(err))
 
-app.use(express.static(path.join(__dirname, '..', 'public')))
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '..', 'public')))
+}
 
 app.use(
   cors({
@@ -85,12 +88,15 @@ app.use('/entities', entitiesRouter)
 app.use('/roles', rolesRouter)
 app.use('/images', imagesRouter)
 app.use('/pages', pagesRouter)
+app.use('/variables', variablesRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)
-app.get('*', (req, res) => {
-  // res.send(express.static(path.join(__dirname, '../public/index.html')))
-  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
-})
+
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
+  })
+}
 
 module.exports = app
