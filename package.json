@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./backend/bin/www",
-    "dev": "cross-env NODE_ENV=development  DEBUG=express nodemon ./backend/bin/www"
+    "dev": "cross-env NODE_ENV=development  DEBUG=express nodemon ./backend/bin/www",
+    "frontdev": "cd ./frontend cross-env NODE_ENV=development npm start "
   },
   "repository": {
     "type": "git",
