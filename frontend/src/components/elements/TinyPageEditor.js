@@ -11,7 +11,7 @@ import AlertCollapse from './AlertCollapse'
 const LOCALHOST = 'http://localhost:3500'
 
 const PREFIX = process.env.NODE_ENV === 'production' ? '' : LOCALHOST
-const URL = `${PREFIX}/images/page`
+const URL = `${PREFIX}/images/tinymce`
 
 function TinyPageEditor({ onChange, value, height }) {
   const handleEditorChange = (editor) => onChange(editor)

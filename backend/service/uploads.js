@@ -1,5 +1,8 @@
 const AWS = require('aws-sdk')
 const dotenv = require('dotenv')
+const multer = require('multer')
+const fs = require('fs')
+const { BadRequest } = require('../utils/errors')
 
 dotenv.config()
 
@@ -31,6 +34,48 @@ async function uploadFileToAws(file) {
   return { fileUrl: res.Location, filename: file.name }
 }
 
+const upLoadTinymceImage = () => {
+  const productionStorage = multer.diskStorage({
+    destination: function (req, file, callback) {
+      const dir = './images'
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir)
+      }
+
+      callback(null, dir)
+    },
+    filename: function (req, file, callback) {
+      const fileName = `${Date.now()}_${file.originalname
+        .toLocaleLowerCase()
+        .split(' ')
+        .join('-')}_tinymce`
+      callback(null, fileName)
+    },
+  })
+  const ImageFilterProd = (req, file, cb) => {
+    if (
+      file.mimetype === 'image/png' ||
+      file.mimetype === 'image/jpg' ||
+      file.mimetype === 'image/jpeg' ||
+      file.mimetype === 'image/gif'
+    ) {
+      cb(null, true)
+    } else {
+      cb(null, false)
+      return cb(new BadRequest('Allowed only .png, .jpg, .jpeg and .gif'))
+    }
+  }
+
+  return multer({
+    storage: productionStorage,
+    limits: {
+      fileSize: 4000000,
+    },
+    fileFilter: ImageFilterProd,
+  }).single('file')
+}
+
 module.exports = {
   uploadFileToAws,
+  upLoadTinymceImage,
 }

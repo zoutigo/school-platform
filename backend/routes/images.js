@@ -1,13 +1,6 @@
 const router = require('express').Router()
 const multer = require('multer')
-const fileUpload = require('express-fileupload')
-// const fs = require('fs')
-
-router.use(
-  fileUpload({
-    limits: { fileSize: 5 * 1024 * 1024 },
-  })
-)
+const { upLoadTinymceImage } = require('../service/uploads')
 
 const {
   createPageImage,
@@ -16,23 +9,8 @@ const {
   updateImage,
   deleteImage,
   createImages,
+  createImage,
 } = require('../controllers/imageController')
-
-// var storage = multer.diskStorage({
-//   destination: function (req, file, callback) {
-//     const dir =
-//       process.env.NODE_ENV === "development" ? "./private" : "./public";
-
-//     if (!fs.existsSync(dir)) {
-//       fs.mkdirSync(dir);
-//     }
-
-//     callback(null, dir);
-//   },
-//   filename: function (req, file, callback) {
-//     callback(null, Date.now() + "_" + file.originalname);
-//   },
-// });
 
 const storage = multer.memoryStorage({
   destination: function (req, file, callback) {
@@ -40,20 +18,16 @@ const storage = multer.memoryStorage({
   },
 })
 
-// const fileFilter = (req, file, cb) => {
-//   if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
-//     cb(null, true);
-//   } else {
-//     cb(null, false);
-//   }
-// };
 const upload = multer({
   storage: storage,
   // fileFilter: fileFilter,
 }) // Field name and max count
 
-// create one image
+// create one image in dev mode with AWS
 router.post('/page', createPageImage)
+
+// create one image in production mode
+router.post('/tinymce', upLoadTinymceImage(), createImage)
 
 // creta many images
 router.post('/multiple', upload.array('images', 15), createImages)

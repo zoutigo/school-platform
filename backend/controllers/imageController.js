@@ -1,3 +1,4 @@
+const multer = require('multer')
 const Image = require('../models/Image')
 const { BadRequest } = require('../utils/errors')
 const fileUploadService = require('../service/uploads')
@@ -46,6 +47,42 @@ module.exports.createImages = async (req, res) => {
   }
   res.status(201).send(locations)
 }
+module.exports.createImage = async (req, res, next) => {
+  if (!req.file) return next(new BadRequest('Please select an image to upload'))
+  const { filename, path } = req.file
+  if (!path || !filename)
+    return next(
+      new BadRequest(
+        "une ereeur s'est produite à la creation multer de l'image"
+      )
+    )
+  console.log('path', path)
+  const newImage = new Image({
+    filename: filename,
+    path: path,
+  })
+
+  try {
+    const savedImage = await newImage.save()
+    if (savedImage) {
+      const location =
+        process.env.NODE_ENV === 'production'
+          ? `${process.env.SERVER_ADRESS}/${path}`
+          : `http://localhost:3500/${path}`
+
+      console.log('location:', location)
+      return res.status(201).send({ location: location })
+    }
+  } catch (err) {
+    return next(err)
+  }
+}
+
+// console.log('req', req.file)
+// const { filename, path } = req.files.image
+// if (!path || filename) return next(new BadRequest('no file uploaded'))
+// res.status(201).send({ message: 'file uploaded', path: path })
+
 module.exports.listImages = () => {}
 module.exports.getImage = () => {}
 module.exports.updateImage = () => {}
