@@ -55,6 +55,8 @@ import PrivateScreen from '../screens/PrivateScreen'
 import PrivateAccountScreen from '../screens/PrivateAccountScreen'
 import PrivateAdminScreen from '../screens/PrivateAdminScreen'
 import PrivateLoggoutScreen from '../screens/PrivateLoggoutScreen'
+import ApelOgecOgecAgendaScreen from '../screens/ApelOgecOgecAgendaScreen'
+import ApelOgecApelAgendaScreen from '../screens/ApelOgecApelAgendaScreen'
 
 const rubrics = [
   {
@@ -578,6 +580,15 @@ const rubrics = [
               component: ApelOgecApelActivitesScreen,
             },
           },
+          {
+            chapname: 'Agenda',
+            alias: 'agendaapel',
+            route: {
+              path: '/apelogec/apel/agenda',
+              exact: true,
+              component: ApelOgecApelAgendaScreen,
+            },
+          },
         ],
       },
       {
@@ -596,6 +607,15 @@ const rubrics = [
               path: '/apelogec/ogec/activites',
               exact: true,
               component: ApelOgecOgecActivitesScreen,
+            },
+          },
+          {
+            chapname: 'Agenda',
+            alias: 'agendaogec',
+            route: {
+              path: '/apelogec/ogec/agenda',
+              exact: true,
+              component: ApelOgecOgecAgendaScreen,
             },
           },
         ],
