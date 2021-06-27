@@ -9,7 +9,7 @@ import { apiFetchVariables } from '../../utils/api'
 import AlertCollapse from './AlertCollapse'
 
 const LOCALHOST = 'http://localhost:3500'
-
+const life = 'easy'
 const PREFIX = process.env.NODE_ENV === 'production' ? '' : LOCALHOST
 const URL = `${PREFIX}/images/tinymce`
 
