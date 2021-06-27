@@ -10,9 +10,9 @@ import { useCurrentCategory, useRigths } from '../utils/hooks'
 import ClassroomSummary from '../components/main/classes/ClassroomSummary'
 import ApiAlert from '../components/elements/ApiAlert'
 import useRoles from '../utils/roles'
-import ToolTipEditPage from '../components/elements/ToolTipEditPage'
 import ClassroomForm from '../components/main/classes/ClassroomForm'
 import AlertCollapse from '../components/elements/AlertCollapse'
+import ToggleToolTip from '../components/elements/ToggleToolTip'
 
 function ClassesPresentationScreen() {
   const dispatch = useDispatch()
@@ -157,8 +157,12 @@ function ClassesPresentationScreen() {
         />
       )}
       {isAllowedToChange && (
-        <ToolTipEditPage
-          show={!showClassroomForm}
+        <ToggleToolTip
+          init={!showClassroomForm}
+          toggleValue={showClassroomForm}
+          staticText="Modifier la page"
+          activeText="Retour à la presentation"
+          action="update"
           callback={setShowClassroomForm}
         />
       )}

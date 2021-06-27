@@ -5,6 +5,7 @@ import moment from 'moment'
 import CardItem from './card/CardItem'
 import NewsCard from './card/NewsCard'
 import { apiFetchPaper } from '../../../../utils/api'
+import capitilize from '../../../../utils/capitilize'
 
 function NewsActivites() {
   const cardTitle = "Actualités de l'école"
@@ -43,7 +44,7 @@ function NewsActivites() {
         items.push(
           <CardItem
             title={title}
-            detail={`${entity} - ${dateString}`}
+            detail={`${capitilize(entity.name)} - ${dateString}`}
             link="/informations/actualites/activites"
           />
         )

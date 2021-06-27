@@ -5,7 +5,7 @@ import { Grid, Box, Typography } from '@material-ui/core'
 
 import { StyledPaperHeader } from '../elements/styled'
 
-function PaperItemHeader({ setCurrentDocument, paperItem }) {
+function PaperItemHeader({ setCurrentDocument, paperItem, paper }) {
   return (
     <StyledPaperHeader
       item
@@ -19,12 +19,17 @@ function PaperItemHeader({ setCurrentDocument, paperItem }) {
       </Grid>
       <Grid item container justify="space-between">
         <Box>
-          <Typography variant="caption">
-            Date:
-            {moment(paperItem ? paperItem.createdat : null).format(
-              'DD/MM/YYYY'
-            )}
-          </Typography>
+          {paper.paperType === 'event' && (
+            <Typography variant="caption">
+              Aura lieu le: &nbsp;&nbsp;
+              {moment(paperItem ? paperItem.date : null).format('DD/MM/YYYY')}
+            </Typography>
+          )}
+          {paper.paperType === 'activite' && (
+            <Typography variant="caption">
+              {moment(paperItem ? paperItem.date : null).format('DD/MM/YYYY')}
+            </Typography>
+          )}
         </Box>
         <Box>
           <Typography variant="caption">
@@ -38,11 +43,15 @@ function PaperItemHeader({ setCurrentDocument, paperItem }) {
 
 PaperItemHeader.propTypes = {
   setCurrentDocument: PropTypes.func.isRequired,
+  paper: PropTypes.shape({
+    paperType: PropTypes.string,
+  }).isRequired,
   paperItem: PropTypes.shape({
     _id: PropTypes.string,
     text: PropTypes.string,
     name: PropTypes.string,
     title: PropTypes.string,
+    date: PropTypes.number,
     entity: PropTypes.shape({
       name: PropTypes.string,
     }),

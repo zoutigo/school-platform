@@ -30,6 +30,7 @@ function PaperItem({
       <PaperItemHeader
         setCurrentDocument={setCurrentDocument}
         paperItem={paperItem}
+        paper={paper}
       />
       <Grid item container>
         <Collapse in={currentDocument ? currentDocument._id === _id : false}>
