@@ -1,13 +1,14 @@
-import { Grid } from '@material-ui/core'
 import React, { useState } from 'react'
+import { Grid } from '@material-ui/core'
+import { useRigths } from '../utils/hooks'
+import useRoles from '../utils/roles'
 import Page from '../components/page/Page'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
-import { useRigths } from '../utils/hooks'
 
-function EcoleHistoireScreen() {
-  const pageName = 'histoire'
-  const alias = `ecole-histoire`
+function VieScolairePastoraleScreen() {
+  const pageName = 'PASTORALE'
+  const alias = `viescolaire-pastorale`
   const queryKey = [pageName, `page-${alias}`]
   const queryParams = `alias=${alias}`
 
@@ -16,16 +17,18 @@ function EcoleHistoireScreen() {
     alertText: '',
     openAlert: false,
   })
+
   const { moderatorLevel } = useRigths()
-  const isAllowedToChange = moderatorLevel
+  const { catechiste } = useRoles()
+  const isAllowedToChange = moderatorLevel || catechiste
 
   const pageParams = {
+    isAllowedToChange,
     alias,
     queryKey,
     queryParams,
     pageName,
     setTopAlert,
-    isAllowedToChange,
   }
 
   return (
@@ -45,4 +48,4 @@ function EcoleHistoireScreen() {
   )
 }
 
-export default EcoleHistoireScreen
+export default VieScolairePastoraleScreen

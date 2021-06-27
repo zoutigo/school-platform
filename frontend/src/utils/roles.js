@@ -9,6 +9,9 @@ const useRoles = () => {
 
   const apelMembre = roles?.find((role) => role.entity.alias === 'apel')
   const ogecMembre = roles?.find((role) => role.entity.alias === 'ogec')
+  const catechiste = roles?.find((role) => role.entity.alias === 'pastorale')
+  const aesh = roles?.find((role) => role.entity.alias === 'aesh')
+
   const psEnseignant = roles?.find(
     (role) =>
       role.entity.alias === 'ps' && role.name === 'enseignant' && TokenIsValid

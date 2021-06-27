@@ -57,6 +57,9 @@ import PrivateAdminScreen from '../screens/PrivateAdminScreen'
 import PrivateLoggoutScreen from '../screens/PrivateLoggoutScreen'
 import ApelOgecOgecAgendaScreen from '../screens/ApelOgecOgecAgendaScreen'
 import ApelOgecApelAgendaScreen from '../screens/ApelOgecApelAgendaScreen'
+import VieScolairePastoraleScreen from '../screens/VieScolairePastoraleScreen'
+import VieScolairePastoraleActivitesScreen from '../screens/VieScolairePastoraleActivitesScreen'
+import VieScolairePastoraleAgendaScreen from '../screens/VieScolairePastoraleAgendaScreen'
 
 const rubrics = [
   {
@@ -248,6 +251,35 @@ const rubrics = [
         ],
       },
       {
+        catname: 'La pastorale',
+        alias: 'pastorale',
+        route: {
+          path: '/viescolaire/pastorale',
+          exact: true,
+          component: VieScolairePastoraleScreen,
+        },
+        chapters: [
+          {
+            chapname: 'Activités',
+            alias: 'pastorale-activités',
+            route: {
+              path: '/viescolaire/pastorale/activites',
+              exact: true,
+              component: VieScolairePastoraleActivitesScreen,
+            },
+          },
+          {
+            chapname: 'Agenda',
+            alias: 'agenda-pastorale',
+            route: {
+              path: '/viescolaire/pastorale/agenda',
+              exact: true,
+              component: VieScolairePastoraleAgendaScreen,
+            },
+          },
+        ],
+      },
+      {
         catname: 'Horaires',
         alias: 'horaires',
         route: {
@@ -425,6 +457,27 @@ const rubrics = [
             alias: 'activites-cm2',
             route: {
               path: '/classes/cm2/activites',
+              exact: true,
+              component: ClassesActivitesScreen,
+            },
+          },
+        ],
+      },
+      {
+        catname: 'Handicap',
+        link: '/classes/aesh',
+        alias: 'aesh',
+        route: {
+          path: '/classes/aesh',
+          exact: true,
+          component: ClassesPresentationScreen,
+        },
+        chapters: [
+          {
+            chapname: 'Activités',
+            alias: 'activites-aesh',
+            route: {
+              path: '/classes/aesh/activites',
               exact: true,
               component: ClassesActivitesScreen,
             },

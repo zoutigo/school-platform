@@ -2,7 +2,7 @@
 import Equipe from './equipe'
 
 const classroomsDefinition = [
-  '++',
+  'aesh',
   'cm2',
   'cm1',
   'ce2',

@@ -51,6 +51,7 @@ function ClassesPresentationScreen() {
     ce2Enseignant,
     cm1Enseignant,
     cm2Enseignant,
+    aesh,
   } = useRoles()
 
   const defineRole = (aliasName) => {
@@ -71,6 +72,8 @@ function ClassesPresentationScreen() {
         return cm1Enseignant
       case 'cm2':
         return cm2Enseignant
+      case 'aesh':
+        return aesh
 
       default:
         return false
