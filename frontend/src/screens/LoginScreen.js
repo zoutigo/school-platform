@@ -15,7 +15,7 @@ import {
 import CostumButton from '../components/elements/CustomButton'
 import Title from '../components/elements/Title'
 import AlertCollapse from '../components/elements/AlertCollapse'
-import { useUpdateMutationOptions } from '../utils/hooks'
+import { useRouteParams, useUpdateMutationOptions } from '../utils/hooks'
 import { apiLogin } from '../utils/api'
 import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 
@@ -24,6 +24,9 @@ const StyledGrid = styled(Grid)(() => ({
 }))
 function LoginScreen() {
   const history = useHistory()
+  const message = useRouteParams('message')
+  const status = useRouteParams('status')
+
   const dispatch = useDispatch()
   const theme = useTheme()
   const [topAlert, setTopAlert] = useState({
@@ -68,29 +71,34 @@ function LoginScreen() {
     }
   }
 
-  useEffect(
-    () =>
+  useEffect(() => {
+    if (status && message) {
+      setTopAlert({
+        severity: status,
+        alertText: message,
+        openAlert: true,
+      })
+    }
+    return () => {
       setTopAlert({
         severity: 'error',
         alertText: '',
         openAlert: false,
-      }),
-
-    []
-  )
+      })
+    }
+  }, [])
 
   return (
     <StyledGrid container>
-      {topAlert.openAlert && (
-        <Grid item container>
-          <AlertCollapse
-            alertText={topAlert.alertText}
-            openAlert
-            severity={topAlert.severity}
-            callback={setTopAlert}
-          />
-        </Grid>
-      )}
+      <Grid item container>
+        <AlertCollapse
+          alertText={topAlert.alertText}
+          openAlert={topAlert.openAlert}
+          severity={topAlert.severity}
+          callback={setTopAlert}
+        />
+      </Grid>
+
       <StyledStandardForm onSubmit={handleSubmit(onSubmit)}>
         <Grid item container justify="center" className="form-header">
           <Title title={formTitle} textcolor="whitesmoke" />

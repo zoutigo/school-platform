@@ -114,3 +114,10 @@ export const useRigths = () => {
 
   return { teacherLevel, managerLevel, adminLevel, moderatorLevel }
 }
+
+export const useRouteParams = (arg) => {
+  const useQuery = () => new URLSearchParams(useLocation().search)
+  const query = useQuery()
+
+  return query.get(arg)
+}

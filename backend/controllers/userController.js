@@ -1,7 +1,9 @@
 /* eslint-disable consistent-return */
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 
 const User = require('../models/User')
+const { emailConfirmMail } = require('../service/mailer')
 const { Unauthorized, BadRequest } = require('../utils/errors')
 const { generateToken } = require('../utils/generatetoken')
 const { updateArray } = require('../utils/updateArray')
@@ -37,20 +39,31 @@ module.exports.registerUser = async (req, res, next) => {
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(password, salt)
 
+  // email token
+
   const user = new User({
     email,
     password: hashedPassword,
+    emailToken: crypto.randomBytes(64).toString('hex'),
   })
 
   try {
     const newUser = await user.save()
+    if (!newUser) return next(new BadRequest('une erreur est survenue'))
 
-    if (newUser) {
+    const { transporter, options } = emailConfirmMail(newUser)
+
+    await transporter.sendMail(options, (error, info) => {
+      if (error) {
+        console.log(error)
+        return next(error)
+      }
       return res
         .status(201)
-        .header('x-access-token', generateToken(newUser))
-        .send('user succesfully created')
-    }
+        .send(
+          'Votre compte est correctement crée. Un mail de validation vous a été adressé'
+        )
+    })
   } catch (err) {
     return next(err)
   }
@@ -270,5 +283,23 @@ module.exports.userEmail = async (req, res, next) => {
     return res.status(200).send('user exist')
   } catch (err) {
     return next(err)
+  }
+}
+
+module.exports.verifyEmail = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ emailToken: req.query.token })
+    if (!user) {
+      const errorMessage = `Le jeton n'est plus valide. Contactez le support technique`
+      return res.redirect(`/register?status=error&message=${errorMessage}`)
+    }
+
+    user.emailToken = null
+    user.isverified = true
+    await user.save()
+    const successMessage = `Votre email a bien été validé . vous pouvez desormais vous connecter et profiter des actulités de l'école saint augustin`
+    return res.redirect(`/login?status=success&message=${successMessage}`)
+  } catch (err) {
+    return next(new BadRequest(err))
   }
 }

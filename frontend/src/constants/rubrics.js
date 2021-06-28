@@ -697,6 +697,7 @@ const rubrics = [
     },
     categories: [],
   },
+
   {
     rubname: 'Espace-Privé',
     icon: <AccountCircleIcon />,

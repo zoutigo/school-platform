@@ -101,6 +101,13 @@ export const apiFetchVariables = async () => {
   return data
 }
 
+export const apiVerifyEmail = async (params) => {
+  const URL = `${PREFIX}/users/verification-email?${params}`
+  const { data } = await axios.get(URL)
+
+  return data
+}
+
 export const apiPostFile = async ({ id, body, options, action }) => {
   const URL = `${process.env.REACT_APP_ENDPOINT}/files?action=${action}&id=${id}`
   const formdata = new FormData()

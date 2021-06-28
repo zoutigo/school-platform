@@ -6,13 +6,17 @@ const {
   listUsers,
   viewUser,
   userEmail,
+  verifyEmail,
 } = require('../controllers/userController')
 
 const router = express.Router()
 const { tokenVerify } = require('../utils/tokenverify')
 
-// check email
+// check email availability
 router.post('/checkemail', userEmail)
+
+// verify the user mailbox
+router.get('/verification-email', verifyEmail)
 
 /* GET users listing. */
 router.get('/', listUsers)

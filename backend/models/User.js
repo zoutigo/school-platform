@@ -50,6 +50,14 @@ const userSchema = new Schema(
         ref: 'Role',
       },
     ],
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailToken: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 )

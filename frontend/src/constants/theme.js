@@ -65,6 +65,11 @@ const initialTheme = createMuiTheme({
       main: red[500],
       dark: red[900],
     },
+    validationmail: {
+      ligth: red[50],
+      main: red[500],
+      dark: red[900],
+    },
   },
   typography: {
     h1: {
