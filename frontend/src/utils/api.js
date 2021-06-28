@@ -6,9 +6,8 @@ const PREFIX = process.env.NODE_ENV === 'production' ? '' : LOCALHOST
 
 export const apiCheckEmail = async (value) => {
   const data = { email: value }
-  // const url = 'https://ecole-saint-augustin.herokuapp.com/users/checkemail'
 
-  const URL = 'http://localhost:3500/users/checkemail'
+  const URL = `${PREFIX}/users/checkemail`
   try {
     const response = await axios.post(URL, data)
     if (response.status === 200) {
