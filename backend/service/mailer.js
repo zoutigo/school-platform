@@ -18,6 +18,13 @@ const transporter = nodemailer.createTransport({
   },
 })
 
+const SERVER_ONLINE_ADRESS = 'http://www.ecole-st-augustin.fr'
+
+const URL =
+  process.env.NODE_ENV === 'production'
+    ? SERVER_ONLINE_ADRESS
+    : process.env.SERVER_ADRESS
+
 module.exports.emailConfirmMail = (user) => {
   const options = {
     from: ` "Fred Foo 👻" <${process.env.MAILER_USER}>`,
@@ -25,13 +32,13 @@ module.exports.emailConfirmMail = (user) => {
     subject: "Confirmation de l'adresse mail",
     text: `Bonjour.L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.
     Afin de confirmer votre adresse mail et pour des raisons de sécurité , merci de bien vouloir coller ce lien sur votre navigateur
-    ${process.env.SERVER_ADRESS}/users/verification-email?token=${user.emailToken}
+    ${URL}/users/verification-email?token=${user.emailToken}
     `,
     html: `
     <h1>Bonjour</h1>
     <p>L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.</p>
     <p>Afin de confirmer votre adresse mail et pour des raisons de sécurité , merci de bien vouloir coller ce lien sur votre navigateur </p>
-    <a href="${process.env.SERVER_ADRESS}/users/verification-email?token=${user.emailToken}">Verifiez dejà votre compte </a>
+    <a href="${URL}/users/verification-email?token=${user.emailToken}">Verifiez dejà votre compte </a>
     `,
   }
 
