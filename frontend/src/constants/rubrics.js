@@ -70,6 +70,7 @@ const rubrics = [
       path: '/ecole',
       exact: true,
       component: EcoleScreen,
+      access: 'public',
     },
 
     categories: [
@@ -80,6 +81,7 @@ const rubrics = [
           path: '/ecole/equipe-pedagogique',
           exact: true,
           component: EquipeScreen,
+          access: '',
         },
         chapters: [],
       },
@@ -90,6 +92,7 @@ const rubrics = [
           path: '/ecole/histoire',
           exact: true,
           component: EcoleHistoireScreen,
+          access: '',
         },
         chapters: [],
       },
@@ -100,6 +103,7 @@ const rubrics = [
           path: '/ecole/projets',
           exact: true,
           component: EcoleProjetsScreen,
+          access: '',
         },
         chapters: [
           {
@@ -109,6 +113,7 @@ const rubrics = [
               path: '/ecole/projets/projet-educatif',
               exact: true,
               component: EcoleProjetsEducatifScreen,
+              access: '',
             },
           },
           {
@@ -118,6 +123,7 @@ const rubrics = [
               path: '/ecole/projets/projet-pedagogique',
               exact: true,
               component: EcoleProjetsPedagogiqueScreen,
+              access: '',
             },
           },
           {
@@ -127,6 +133,7 @@ const rubrics = [
               path: '/ecole/projets/projet-pastoral',
               exact: true,
               component: EcoleProjetsPastoralScreen,
+              access: '',
             },
           },
         ],
@@ -138,6 +145,7 @@ const rubrics = [
           path: '/ecole/infrastructures',
           exact: true,
           component: EcoleInfrastructuresScreen,
+          access: '',
         },
         chapters: [
           {
@@ -147,6 +155,7 @@ const rubrics = [
               path: '/ecole/infrastructures/batiments',
               exact: true,
               component: EcoleInfrasrtucturesBatiments,
+              access: '',
             },
           },
           {
@@ -156,6 +165,7 @@ const rubrics = [
               path: '/ecole/infrastructures/visite-virtuelle',
               exact: true,
               component: EcoleInfrastructuresVisiteVirtuelleScreen,
+              access: '',
             },
           },
         ],
@@ -171,6 +181,7 @@ const rubrics = [
       path: '/viescolaire',
       exact: true,
       component: VieScolaireScreen,
+      access: '',
     },
 
     categories: [
@@ -181,6 +192,7 @@ const rubrics = [
           path: '/viescolaire/cantine',
           exact: true,
           component: VieScolaireCantineScreen,
+          access: '',
         },
         chapters: [
           {
@@ -190,6 +202,7 @@ const rubrics = [
               path: '/viescolaire/cantine/menus',
               exact: true,
               component: VieScolaireCantineMenusScreen,
+              access: '',
             },
           },
           {
@@ -199,6 +212,7 @@ const rubrics = [
               path: '/viescolaire/cantine/breves',
               exact: true,
               component: VieScolaireCantineBrevesScreen,
+              access: '',
             },
           },
           {
@@ -208,6 +222,7 @@ const rubrics = [
               path: '/viescolaire/cantine/activites',
               exact: true,
               component: VieScolaireCantineActivitesScreen,
+              access: '',
             },
           },
           {
@@ -217,6 +232,7 @@ const rubrics = [
               path: '/viescolaire/cantine/agenda',
               exact: true,
               component: VieScolaireCantineAgendaScreen,
+              access: '',
             },
           },
         ],
@@ -228,6 +244,7 @@ const rubrics = [
           path: '/viescolaire/garderie',
           exact: true,
           component: VieScolaireGarderieScreen,
+          access: '',
         },
         chapters: [
           {
@@ -237,6 +254,7 @@ const rubrics = [
               path: '/viescolaire/garderie/presentation',
               exact: true,
               component: VieScolaireGarderiePresentationScreen,
+              access: '',
             },
           },
           {
@@ -246,6 +264,7 @@ const rubrics = [
               path: '/viescolaire/garderie/etude',
               exact: true,
               component: VieScolaireGarderieEtudeScreen,
+              access: '',
             },
           },
         ],
@@ -257,6 +276,7 @@ const rubrics = [
           path: '/viescolaire/pastorale',
           exact: true,
           component: VieScolairePastoraleScreen,
+          access: '',
         },
         chapters: [
           {
@@ -266,6 +286,7 @@ const rubrics = [
               path: '/viescolaire/pastorale/activites',
               exact: true,
               component: VieScolairePastoraleActivitesScreen,
+              access: '',
             },
           },
           {
@@ -275,6 +296,7 @@ const rubrics = [
               path: '/viescolaire/pastorale/agenda',
               exact: true,
               component: VieScolairePastoraleAgendaScreen,
+              access: '',
             },
           },
         ],
@@ -286,6 +308,7 @@ const rubrics = [
           path: '/viescolaire/horaires',
           exact: true,
           component: VieScolaireHorairesScreen,
+          access: '',
         },
         chapters: [],
       },
@@ -300,6 +323,7 @@ const rubrics = [
       path: '/classes',
       exact: true,
       component: ClassesScreen,
+      access: '',
     },
     categories: [
       {
@@ -309,6 +333,7 @@ const rubrics = [
           path: '/classes/petite-section',
           exact: true,
           component: ClassesPresentationScreen,
+          access: '',
         },
         chapters: [
           {
@@ -318,6 +343,7 @@ const rubrics = [
               path: '/classes/petite-section/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
             },
           },
         ],
@@ -329,6 +355,7 @@ const rubrics = [
           path: '/classes/moyenne-section',
           exact: true,
           component: ClassesPresentationScreen,
+          access: '',
         },
         chapters: [
           {
@@ -338,6 +365,7 @@ const rubrics = [
               path: '/classes/moyenne-section/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
             },
           },
         ],
@@ -349,6 +377,7 @@ const rubrics = [
           path: '/classes/grande-section',
           exact: true,
           component: ClassesPresentationScreen,
+          access: '',
         },
         chapters: [
           {
@@ -358,6 +387,7 @@ const rubrics = [
               path: '/classes/grande-section/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
             },
           },
         ],
@@ -369,6 +399,7 @@ const rubrics = [
           path: '/classes/cp',
           exact: true,
           component: ClassesPresentationScreen,
+          access: '',
         },
         chapters: [
           {
@@ -378,6 +409,7 @@ const rubrics = [
               path: '/classes/cp/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
             },
           },
         ],
@@ -389,6 +421,7 @@ const rubrics = [
           path: '/classes/ce1',
           exact: true,
           component: ClassesPresentationScreen,
+          access: '',
         },
         chapters: [
           {
@@ -398,6 +431,7 @@ const rubrics = [
               path: '/classes/ce1/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
             },
           },
         ],
@@ -409,6 +443,7 @@ const rubrics = [
           path: '/classes/ce2',
           exact: true,
           component: ClassesPresentationScreen,
+          access: '',
         },
         chapters: [
           {
@@ -418,6 +453,7 @@ const rubrics = [
               path: '/classes/ce2/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
             },
           },
         ],
@@ -429,6 +465,7 @@ const rubrics = [
           path: '/classes/cm1',
           exact: true,
           component: ClassesPresentationScreen,
+          access: '',
         },
         chapters: [
           {
@@ -438,6 +475,7 @@ const rubrics = [
               path: '/classes/cm1/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
             },
           },
         ],
@@ -450,6 +488,7 @@ const rubrics = [
           path: '/classes/cm2',
           exact: true,
           component: ClassesPresentationScreen,
+          access: '',
         },
         chapters: [
           {
@@ -459,6 +498,7 @@ const rubrics = [
               path: '/classes/cm2/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
             },
           },
         ],
@@ -471,6 +511,7 @@ const rubrics = [
           path: '/classes/aesh',
           exact: true,
           component: ClassesPresentationScreen,
+          access: '',
         },
         chapters: [
           {
@@ -480,6 +521,7 @@ const rubrics = [
               path: '/classes/aesh/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
             },
           },
         ],
@@ -495,6 +537,7 @@ const rubrics = [
       path: '/informations',
       exact: true,
       component: InformationsScreen,
+      access: '',
     },
     categories: [
       {
@@ -504,6 +547,7 @@ const rubrics = [
           path: '/informations/inscriptions',
           exact: true,
           component: InformationsInscriptionsScreen,
+          access: '',
         },
         chapters: [
           {
@@ -513,6 +557,7 @@ const rubrics = [
               path: '/informations/inscriptions/infossupplementaires',
               exact: true,
               component: InformationsInscriptionsInfosSupplementairesScreen,
+              access: '',
             },
           },
           {
@@ -522,6 +567,7 @@ const rubrics = [
               path: '/informations/inscriptions/formulaires',
               exact: true,
               component: InformationsInscriptionsFormulairesScreen,
+              access: '',
             },
           },
         ],
@@ -533,6 +579,7 @@ const rubrics = [
           path: '/informations/contacts',
           exact: true,
           component: InformationsContactsScreen,
+          access: '',
         },
         chapters: [
           {
@@ -542,6 +589,7 @@ const rubrics = [
               path: '/informations/contacts/localisation',
               exact: true,
               component: InformationsContactsLocalisationScreen,
+              access: '',
             },
           },
           {
@@ -551,6 +599,7 @@ const rubrics = [
               path: '/informations/contacts/ecrire',
               exact: true,
               component: InformationContactsEcrireScreen,
+              access: '',
             },
           },
         ],
@@ -562,6 +611,7 @@ const rubrics = [
           path: '/informations/actualites',
           exact: true,
           component: InformationsActualitesScreen,
+          access: '',
         },
         chapters: [
           {
@@ -571,6 +621,7 @@ const rubrics = [
               path: '/informations/actualites/infosparents',
               exact: true,
               component: InformationsActualitesInfoParentsScreen,
+              access: '',
             },
           },
           {
@@ -580,6 +631,7 @@ const rubrics = [
               path: '/informations/actualites/activites',
               exact: true,
               component: InformationsActualitesActivitesScreen,
+              access: '',
             },
           },
           {
@@ -589,6 +641,7 @@ const rubrics = [
               path: '/informations/actualites/newsletter',
               exact: true,
               component: InformationsActualitesNewsletterScreen,
+              access: '',
             },
           },
           {
@@ -598,6 +651,7 @@ const rubrics = [
               path: '/informations/actualites/agenda',
               exact: true,
               component: InformationsActualitesAgendaScreen,
+              access: '',
             },
           },
         ],
@@ -613,6 +667,7 @@ const rubrics = [
       path: '/apelogec',
       exact: true,
       component: ApelOgecScreen,
+      access: '',
     },
     categories: [
       {
@@ -622,6 +677,7 @@ const rubrics = [
           path: '/apelogec/apel',
           exact: true,
           component: ApelOgecApelScreen,
+          access: '',
         },
         chapters: [
           {
@@ -631,6 +687,7 @@ const rubrics = [
               path: '/apelogec/apel/activites',
               exact: true,
               component: ApelOgecApelActivitesScreen,
+              access: '',
             },
           },
           {
@@ -640,6 +697,7 @@ const rubrics = [
               path: '/apelogec/apel/agenda',
               exact: true,
               component: ApelOgecApelAgendaScreen,
+              access: '',
             },
           },
         ],
@@ -651,6 +709,7 @@ const rubrics = [
           path: '/apelogec/ogec',
           exact: true,
           component: ApelOgecOgecScreen,
+          access: '',
         },
         chapters: [
           {
@@ -660,6 +719,7 @@ const rubrics = [
               path: '/apelogec/ogec/activites',
               exact: true,
               component: ApelOgecOgecActivitesScreen,
+              access: '',
             },
           },
           {
@@ -669,6 +729,7 @@ const rubrics = [
               path: '/apelogec/ogec/agenda',
               exact: true,
               component: ApelOgecOgecAgendaScreen,
+              access: '',
             },
           },
         ],
@@ -683,6 +744,7 @@ const rubrics = [
       path: '/login',
       exact: true,
       component: LoginScreen,
+      access: '',
     },
     categories: [],
   },
@@ -694,6 +756,7 @@ const rubrics = [
       path: '/register',
       exact: true,
       component: RegisterScreen,
+      access: '',
     },
     categories: [],
   },
@@ -706,6 +769,7 @@ const rubrics = [
       path: '/private',
       exact: true,
       component: PrivateScreen,
+      access: 'user',
     },
     categories: [
       {
@@ -715,6 +779,7 @@ const rubrics = [
           path: '/private/account',
           exact: true,
           component: PrivateAccountScreen,
+          access: 'user',
         },
         chapters: [],
       },
@@ -725,6 +790,7 @@ const rubrics = [
           path: '/private/admin',
           exact: true,
           component: PrivateAdminScreen,
+          access: 'manager',
         },
         chapters: [],
       },
@@ -735,6 +801,7 @@ const rubrics = [
           path: '/private/loggout',
           exact: true,
           component: PrivateLoggoutScreen,
+          access: '',
         },
         chapters: [],
       },

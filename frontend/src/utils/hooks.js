@@ -91,10 +91,10 @@ export const useUpdateMutationOptions = (queryKey) => {
 
 export const useIsTokenValid = () => {
   const {
-    User: { exp },
+    User: { exp, _id },
   } = useSelector((state) => state.user)
 
-  const tokenIsValid = !exp ? false : exp > new Date().getTime() / 1000
+  const tokenIsValid = (!exp ? false : exp > new Date().getTime() / 1000) && _id
 
   return { tokenIsValid }
 }
@@ -106,13 +106,14 @@ export const useRigths = () => {
 
   const TokenIsValid = new Date().getTime() / 1000 < exp
 
+  const userLevel = TokenIsValid
   const teacherLevel =
     (isAdmin || isManager || isModerator || isTeacher) && TokenIsValid
   const managerLevel = (isAdmin || isManager) && TokenIsValid
   const adminLevel = isAdmin && TokenIsValid
   const moderatorLevel = (isAdmin || isManager || isModerator) && TokenIsValid
 
-  return { teacherLevel, managerLevel, adminLevel, moderatorLevel }
+  return { userLevel, teacherLevel, managerLevel, adminLevel, moderatorLevel }
 }
 
 export const useRouteParams = (arg) => {
