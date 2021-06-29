@@ -44,7 +44,7 @@ function NewsAgenda() {
           <CardItem
             title={title}
             detail={`${place} - ${dateString}`}
-            link="/informations/actualites/evenements"
+            link="/informations/actualites/agenda"
           />
         )
       }

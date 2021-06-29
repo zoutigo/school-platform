@@ -577,7 +577,7 @@ const rubrics = [
             chapname: 'Activités',
             alias: 'activites-actualites',
             route: {
-              path: '/informations/actualites/activités',
+              path: '/informations/actualites/activites',
               exact: true,
               component: InformationsActualitesActivitesScreen,
             },

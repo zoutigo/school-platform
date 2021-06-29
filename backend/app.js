@@ -48,8 +48,6 @@ mongoose
 app.use(express.static(path.join(__dirname, '..', 'public')))
 app.use('/images', express.static(path.join(__dirname, '..', '/images')))
 
-console.log('path', path.join(__dirname, '..', 'public', 'index.html'))
-
 app.use(
   cors({
     // exposedHeaders: ["x-access-token"],
