@@ -7,7 +7,7 @@ import Header from './components/header/Header'
 import { categoriesList, chaptersList, rubricsList } from './constants/rubrics'
 import SmallScreenNav from './components/smallscreennav/SmallScreenNav'
 import Footer from './components/footer/Footer'
-import { setRoutes } from './redux/settings/SettingsActions'
+import { setRoutes, setUrlPrefix } from './redux/settings/SettingsActions'
 import Main from './components/main/Main'
 
 const queryClient = new QueryClient({
@@ -33,6 +33,9 @@ function App() {
     for (let i = 0; i < chaptersList.length; i += 1) {
       dispatch(setRoutes(chaptersList[i]))
     }
+    const PREFIX =
+      process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3500'
+    dispatch(setUrlPrefix(PREFIX))
   }, [])
   return (
     <QueryClientProvider client={queryClient}>

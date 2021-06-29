@@ -5,6 +5,7 @@ const initialState = {
   ActiveRubric: { rubname: 'home', rubalias: 'home' },
   Routes: [],
   Asides: [],
+  URL_PREFIX: '',
 }
 
 /* eslint-disable */
@@ -39,6 +40,9 @@ const settingsReducers = createReducer(initialState, {
       })
     }
     state.Asides = newAsides
+  },
+  SET_URL_PREFIX: (state, action) => {
+    state.URL_PREFIX = action.payload
   },
 })
 

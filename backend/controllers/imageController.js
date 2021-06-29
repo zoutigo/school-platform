@@ -56,7 +56,7 @@ module.exports.createImage = async (req, res, next) => {
         "une ereeur s'est produite à la creation multer de l'image"
       )
     )
-  console.log('path', path)
+
   const newImage = new Image({
     filename: filename,
     path: path,
@@ -76,11 +76,6 @@ module.exports.createImage = async (req, res, next) => {
     return next(err)
   }
 }
-
-// console.log('req', req.file)
-// const { filename, path } = req.files.image
-// if (!path || filename) return next(new BadRequest('no file uploaded'))
-// res.status(201).send({ message: 'file uploaded', path: path })
 
 module.exports.listImages = () => {}
 module.exports.getImage = () => {}

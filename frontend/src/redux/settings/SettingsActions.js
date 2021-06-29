@@ -3,6 +3,7 @@ import {
   SET_CATEGORY_ASIDE,
   SET_OPEN_SMALL_SCREEN_NAV,
   SET_ROUTES,
+  SET_URL_PREFIX,
 } from './SettingsActionsTypes'
 
 /* eslint-disable */
@@ -21,5 +22,9 @@ export const setRoutes = (value = null) => ({
 })
 export const setCategoryAside = (value = null) => ({
   type: SET_CATEGORY_ASIDE,
+  payload: value,
+})
+export const setUrlPrefix = (value = null) => ({
+  type: SET_URL_PREFIX,
   payload: value,
 })

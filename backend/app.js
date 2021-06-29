@@ -18,6 +18,7 @@ const rolesRouter = require('./routes/roles')
 const imagesRouter = require('./routes/images')
 const pagesRouter = require('./routes/pages')
 const variablesRouter = require('./routes/variables')
+const cheminsRouter = require('./routes/chemins')
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
@@ -88,6 +89,7 @@ app.use('/roles', rolesRouter)
 app.use('/images', imagesRouter)
 app.use('/pages', pagesRouter)
 app.use('/variables', variablesRouter)
+app.use('/chemins', cheminsRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)

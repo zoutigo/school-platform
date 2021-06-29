@@ -8,7 +8,6 @@ module.exports.postEntity = async (req, res, next) => {
   const { id: entityId, action } = req.query
   const userIsAllowed = isAdmin
 
-  console.log('data:', req.body)
   if (Object.keys(req.body).length < 1 && action !== 'delete') {
     return next(new BadRequest('datas missing'))
   }

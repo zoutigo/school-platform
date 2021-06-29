@@ -60,6 +60,7 @@ import ApelOgecApelAgendaScreen from '../screens/ApelOgecApelAgendaScreen'
 import VieScolairePastoraleScreen from '../screens/VieScolairePastoraleScreen'
 import VieScolairePastoraleActivitesScreen from '../screens/VieScolairePastoraleActivitesScreen'
 import VieScolairePastoraleAgendaScreen from '../screens/VieScolairePastoraleAgendaScreen'
+import PrivateAdminCheminsScreen from '../screens/PrivateAdminCheminsScreen'
 
 const rubrics = [
   {
@@ -790,9 +791,20 @@ const rubrics = [
           path: '/private/admin',
           exact: true,
           component: PrivateAdminScreen,
-          access: 'manager',
+          access: 'admin',
         },
-        chapters: [],
+        chapters: [
+          {
+            chapname: 'Chemins',
+            alias: 'adminchemins',
+            route: {
+              path: '/private/admin/chemins',
+              exact: true,
+              component: PrivateAdminCheminsScreen,
+              access: 'admin',
+            },
+          },
+        ],
       },
       {
         catname: 'Deconnecter',

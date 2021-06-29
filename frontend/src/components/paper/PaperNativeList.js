@@ -2,7 +2,6 @@ import React from 'react'
 import { Grid, styled } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useQuery } from 'react-query'
-import { apiFetchPaper } from '../../utils/api'
 import ApiAlert from '../elements/ApiAlert'
 import PaperItem from './PaperItem'
 

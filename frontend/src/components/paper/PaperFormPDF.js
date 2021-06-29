@@ -188,6 +188,7 @@ function PaperFormPDF({
 
         <InputFileControl
           control={control}
+          label="Image"
           name="file"
           type="file"
           accept="application/pdf"

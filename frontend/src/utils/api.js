@@ -138,3 +138,36 @@ export const apiFecthFile = async (param) => {
 
   return data
 }
+
+export const apiPostChemin = async ({ id, body, options, action, token }) => {
+  const URL = `${PREFIX}/chemins?action=${action}&id=${id}`
+  const formdata = new FormData()
+
+  if (body && body.alias) {
+    formdata.append('alias', body.alias)
+  }
+  if (body && body.path) {
+    formdata.append('path', body.path)
+  }
+  if (body && body.description) {
+    formdata.append('description', body.description)
+  }
+  if (body && body.file) {
+    formdata.append('file', body.file)
+  }
+
+  const result = await fetch(URL, {
+    method: 'POST',
+    headers: new Headers(options.headers),
+    body: formdata,
+  })
+
+  return result
+}
+
+export const apiFetchChemin = async () => {
+  const URL = `${PREFIX}/chemins`
+  const { data } = await axios.get(URL)
+
+  return data
+}

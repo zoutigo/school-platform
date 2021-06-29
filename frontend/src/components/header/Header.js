@@ -11,7 +11,7 @@ import { StyledIconBox } from '../elements/styled'
 import rubrics from '../../constants/rubrics'
 import NavBloc from './NavBloc'
 import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
-import { useIsTokenValid } from '../../utils/hooks'
+import { useIsTokenValid, useRigths } from '../../utils/hooks'
 
 const StyledHeader = styled('header')(() => ({
   zIndex: 10,
@@ -22,7 +22,7 @@ function Header() {
   const isSmallScreen = !useMediaQuery(theme.breakpoints.up('lg'))
   const { SmallScreenNavIsOpened } = useSelector((state) => state.settings)
   const { tokenIsValid } = useIsTokenValid()
-
+  const { userLevel, adminLevel } = useRigths()
   const dispatch = useDispatch()
   const { pathname } = useLocation()
 
@@ -49,16 +49,17 @@ function Header() {
             if (
               (rubric.route.path === '/register' ||
                 rubric.route.path === '/login') &&
-              tokenIsValid
+              userLevel
             )
               return null
-            if (rubric.route.path === '/private' && !tokenIsValid) return null
+            if (rubric.route.path === '/private' && !userLevel) return null
             if (rubric.route.path === '/register' && pathname !== '/register') {
               return null
             }
             if (rubric.route.path === '/login' && pathname === '/register') {
               return null
             }
+
             return (
               <NavBloc key={rubric.alias} rubric={rubric} rubcolor={rubcolor} />
             )

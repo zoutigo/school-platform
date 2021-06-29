@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom'
 import { withTheme } from '@material-ui/styles'
 import { StyledIconBox, StyledNavLink } from '../elements/styled'
 import { setActiveRubric } from '../../redux/settings/SettingsActions'
+import { useRigths } from '../../utils/hooks'
 
 const StyledRubricLi = withTheme(
   styled(({ bgcolor, theme, ...rest }) => <li {...rest} />)({
@@ -69,7 +70,7 @@ function NavBloc({ rubric, rubcolor }) {
   const { rubname, alias: rubalias, icon, categories, route } = rubric
   const { pathname } = useLocation()
   const dispatch = useDispatch()
-
+  const { adminLevel, userLevel, managerLevel, moderatorLevel } = useRigths()
   const [showDropDown, setShowDropdown] = useState(true)
   const [active, setActive] = useState(false)
 
@@ -146,43 +147,53 @@ function NavBloc({ rubric, rubcolor }) {
           {showDropDown && (
             <ul className="dropdown-content btn-width bg-transparent">
               {categories &&
-                categories.map((category) => (
-                  <StyledCategoryLi
-                    key={category.alias}
-                    bgcolor={rubcolor}
-                    className="btn-size dropdown"
-                    onClick={() => setShowDropdown(false)}
-                    role="presentation"
-                  >
-                    <StyledNavLink to={category.route.path}>
-                      <Typography variant="h4">{category.catname}</Typography>
-                    </StyledNavLink>{' '}
-                    {category.chapters && (
-                      <StyledChapterUl
-                        bgcolor={rubcolor}
-                        className="dropdown-content"
-                      >
-                        {
-                          // eslint-disable-next-line
-                          category.chapters.map((chapter) => (
-                            <li
-                              key={chapter.alias}
-                              className="btn-size"
-                              onClick={() => setShowDropdown(false)}
-                              role="presentation"
-                            >
-                              <StyledNavLink to={chapter.route.path}>
-                                <Typography variant="h4">
-                                  {chapter.chapname || 'hello'}{' '}
-                                </Typography>{' '}
-                              </StyledNavLink>
-                            </li>
-                          ))
-                        }
-                      </StyledChapterUl>
-                    )}
-                  </StyledCategoryLi>
-                ))}
+                categories.map((category) => {
+                  if (category.route.access === 'admin' && !adminLevel)
+                    return null
+                  if (category.route.access === 'manager' && !managerLevel)
+                    return null
+                  if (category.route.access === 'moderator' && !moderatorLevel)
+                    return null
+                  if (category.route.access === 'user' && !userLevel)
+                    return null
+                  return (
+                    <StyledCategoryLi
+                      key={category.alias}
+                      bgcolor={rubcolor}
+                      className="btn-size dropdown"
+                      onClick={() => setShowDropdown(false)}
+                      role="presentation"
+                    >
+                      <StyledNavLink to={category.route.path}>
+                        <Typography variant="h4">{category.catname}</Typography>
+                      </StyledNavLink>{' '}
+                      {category.chapters && (
+                        <StyledChapterUl
+                          bgcolor={rubcolor}
+                          className="dropdown-content"
+                        >
+                          {
+                            // eslint-disable-next-line
+                            category.chapters.map((chapter) => (
+                              <li
+                                key={chapter.alias}
+                                className="btn-size"
+                                onClick={() => setShowDropdown(false)}
+                                role="presentation"
+                              >
+                                <StyledNavLink to={chapter.route.path}>
+                                  <Typography variant="h4">
+                                    {chapter.chapname || 'hello'}{' '}
+                                  </Typography>{' '}
+                                </StyledNavLink>
+                              </li>
+                            ))
+                          }
+                        </StyledChapterUl>
+                      )}
+                    </StyledCategoryLi>
+                  )
+                })}
             </ul>
           )}
         </StyledRubricLi>
