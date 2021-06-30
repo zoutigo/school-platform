@@ -30,7 +30,7 @@ module.exports.cheminValidator = (datas) => {
 
       case 'alias':
         return Joi.object({
-          alias: Joi.string().required().min(3).max(100),
+          alias: Joi.string().required().min(2).max(100),
         }).validate(data)
 
       case 'path':

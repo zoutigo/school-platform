@@ -6,7 +6,7 @@ const cheminSchema = yup.object().shape({
   alias: yup
     .string()
     .required('Veillez donner une description de évènement')
-    .min(3, 'au moins 20 caractères')
+    .min(2, 'au moins 20 caractères')
     .max(10000, '10000 caractères maximum'),
   path: yup
     .string()
