@@ -176,3 +176,8 @@ export const StyledStandardForm = styled('form')(({ theme }) => ({
     },
   },
 }))
+
+export const StyledCardPageGrid = styled(Grid)(() => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+}))

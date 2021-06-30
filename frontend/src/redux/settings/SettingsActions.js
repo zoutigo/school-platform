@@ -3,6 +3,7 @@ import {
   SET_CATEGORY_ASIDE,
   SET_OPEN_SMALL_SCREEN_NAV,
   SET_ROUTES,
+  SET_ALL_ROUTES,
   SET_URL_PREFIX,
 } from './SettingsActionsTypes'
 
@@ -18,6 +19,10 @@ export const setActiveRubric = (value) => ({
 })
 export const setRoutes = (value = null) => ({
   type: SET_ROUTES,
+  payload: value,
+})
+export const setAllRoutes = (value = null) => ({
+  type: SET_ALL_ROUTES,
   payload: value,
 })
 export const setCategoryAside = (value = null) => ({

@@ -17,7 +17,7 @@ const cheminSchema = yup.object().shape({
     .string()
     .required('Veillez indiquer un titre')
     .min(3, 'au moins 5 caractères')
-    .max(50, '50 caracètes mximum'),
+    .max(300, '50 caracètes mximum'),
   // file: yup
   //   .mixed()
   //   .test(

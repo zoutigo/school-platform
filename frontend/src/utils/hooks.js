@@ -122,3 +122,24 @@ export const useRouteParams = (arg) => {
 
   return query.get(arg)
 }
+
+export const useRouteDatas = () => {
+  const { pathname } = useLocation()
+  const { Routes } = useSelector((state) => state.settings)
+
+  const rubric = Routes.find(
+    (route) => pathname.includes(route.path) && route.type === 'rubric'
+  )
+
+  const categories = Routes.filter(
+    (route) =>
+      route.path?.includes(pathname) &&
+      route?.path !== pathname &&
+      route.type === 'category'
+  )
+  const chapters = Routes.filter(
+    (route) => route.path?.includes(pathname) && route.type === 'chapter'
+  )
+
+  return { categories, chapters, rubric }
+}

@@ -26,6 +26,9 @@ const settingsReducers = createReducer(initialState, {
     }
     state.Routes = newRoutes
   },
+  SET_ALL_ROUTES: (state, action) => {
+    state.Routes = action.payload
+  },
   SET_CATEGORY_ASIDE: (state, action) => {
     const [path, datas] = action.payload
     let newAsides = state.Asides

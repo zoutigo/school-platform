@@ -151,7 +151,7 @@ Chemin.propTypes = {
     description: PropTypes.string,
     path: PropTypes.string,
   }).isRequired,
-  queryKey: PropTypes.string.isRequired,
+  queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
   setShowAddForm: PropTypes.func.isRequired,
   setTopAlert: PropTypes.func.isRequired,
 }

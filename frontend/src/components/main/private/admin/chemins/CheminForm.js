@@ -140,7 +140,7 @@ function CheminForm({
         </Grid>
         <Grid item container alignItems="center" justify="flex-end">
           <CustomButton
-            text="je poste ma suggestion"
+            text="je poste mon chemin"
             bgcolor={theme.palette.success.main}
             action="post"
             width="300px"
