@@ -1,8 +1,16 @@
-import { Grid } from '@material-ui/core'
 import React from 'react'
+import ResumeCard from '../components/elements/ResumeCard'
+import { StyledCardPageGrid } from '../components/elements/styled'
+import { useRouteDatas } from '../utils/hooks'
 
 function ApelOgecScreen() {
-  return <Grid container> Apel Ogec</Grid>
+  const { categories } = useRouteDatas()
+  return (
+    <StyledCardPageGrid container>
+      {categories &&
+        categories.map((data) => <ResumeCard element={data} key={data.path} />)}
+    </StyledCardPageGrid>
+  )
 }
 
 export default ApelOgecScreen

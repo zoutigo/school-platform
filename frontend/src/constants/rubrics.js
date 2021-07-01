@@ -61,6 +61,7 @@ import VieScolairePastoraleScreen from '../screens/VieScolairePastoraleScreen'
 import VieScolairePastoraleActivitesScreen from '../screens/VieScolairePastoraleActivitesScreen'
 import VieScolairePastoraleAgendaScreen from '../screens/VieScolairePastoraleAgendaScreen'
 import PrivateAdminCheminsScreen from '../screens/PrivateAdminCheminsScreen'
+import InformationsFournituresScreen from '../screens/InformationsFournituresScreen'
 
 const rubrics = [
   {
@@ -505,11 +506,11 @@ const rubrics = [
         ],
       },
       {
-        catname: 'Handicap',
-        link: '/classes/aesh',
-        alias: 'aesh',
+        catname: 'Adaptation',
+        link: '/classes/adaptation',
+        alias: 'adapdation',
         route: {
-          path: '/classes/aesh',
+          path: '/classes/adaptation',
           exact: true,
           component: ClassesPresentationScreen,
           access: '',
@@ -574,6 +575,17 @@ const rubrics = [
         ],
       },
       {
+        catname: 'Fournitures',
+        alias: 'fournitures',
+        route: {
+          path: '/informations/fournitures',
+          exact: true,
+          component: InformationsFournituresScreen,
+          access: '',
+        },
+        chapters: [],
+      },
+      {
         catname: 'Nous contacter',
         alias: 'contacts',
         route: {
@@ -594,7 +606,7 @@ const rubrics = [
             },
           },
           {
-            chapname: 'ecrire',
+            chapname: 'Ecrire',
             alias: 'ecrire',
             route: {
               path: '/informations/contacts/ecrire',

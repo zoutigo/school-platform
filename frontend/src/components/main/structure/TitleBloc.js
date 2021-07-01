@@ -19,6 +19,7 @@ const StyledLine = styled('div')(({ bgcolor }) => ({
 }))
 
 const StyledMainTitle = styled(StyledTitle)(({ bordercolor }) => ({
+  // minWidth: '5rem !important',
   textAlign: 'center',
   cursor: 'pointer',
   marginTop: '0px',

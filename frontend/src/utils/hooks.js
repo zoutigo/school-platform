@@ -141,5 +141,7 @@ export const useRouteDatas = () => {
     (route) => route.path?.includes(pathname) && route.type === 'chapter'
   )
 
-  return { categories, chapters, rubric }
+  const current = Routes.find((route) => route.path === pathname)
+
+  return { categories, chapters, rubric, current }
 }

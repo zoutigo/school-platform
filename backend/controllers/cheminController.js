@@ -78,7 +78,7 @@ module.exports.postChemin = async (req, res, next) => {
         {
           alias: req.body.alias || currentChemin.alias,
           path: req.body.path || currentChemin.path,
-          description: req.body.path || currentChemin.description,
+          description: req.body.description || currentChemin.description,
           filename: req.file ? req.file.filename : currentChemin.filename,
           filepath: req.file ? req.file.path : currentChemin.filepath,
         },

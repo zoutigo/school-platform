@@ -81,7 +81,6 @@ function CheminForm({
         setShowAddForm(false)
       })
     } catch (err) {
-      console.log('err', err.response)
       setTopAlert({
         openAlert: true,
         severity: 'error',
@@ -126,7 +125,7 @@ function CheminForm({
               name="description"
               control={control}
               defaultValue={
-                chemin && formAction === 'update' ? chemin.path : ''
+                chemin && formAction === 'update' ? chemin.description : ''
               }
               render={({ field: { onChange, value } }) => (
                 <TinyPageEditor
