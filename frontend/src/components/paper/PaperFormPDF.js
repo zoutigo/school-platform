@@ -16,6 +16,8 @@ import convertBase64 from '../../utils/convertBase64'
 import newsletterSchema from '../../schemas/newsletterSchema'
 import menuSchema from '../../schemas/menuSchema'
 import breveSchema from '../../schemas/breveSchema'
+import fournitureSchema from '../../schemas/fournitureSchema'
+import InputSelectControl from '../elements/InputSelectControl'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -41,6 +43,7 @@ function PaperFormPDF({
   setShowPaperForm,
   paper,
 }) {
+  console.log('current document', currentDocument)
   const theme = useTheme()
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync } = useMutation(
@@ -59,6 +62,9 @@ function PaperFormPDF({
       case 'breve':
         return breveSchema
 
+      case 'fourniture':
+        return fournitureSchema
+
       default:
         return null
     }
@@ -68,8 +74,8 @@ function PaperFormPDF({
     handleSubmit,
     formState: { isSubmitting, isValid },
   } = useForm({
-    mode: 'onChange',
-    resolver: yupResolver(schema(paper.paperType)),
+    // mode: 'onChange',
+    // resolver: yupResolver(schema(paper.paperType)),
   })
 
   const onSubmit = async (datas) => {
@@ -91,6 +97,18 @@ function PaperFormPDF({
             type: paper.paperType,
             file: await convertBase64(file[0]),
             entityAlias: paper.entityAlias,
+          }
+        case 'fourniture':
+          return {
+            title: `Du ${moment(startdate).format(
+              'dddd DD/MM/YYYY'
+            )} au ${moment(enddate).format('dddd DD/MM/YYYY')}`,
+            startdate: startdate.valueOf(),
+            enddate: enddate.valueOf(),
+            type: paper.paperType,
+            file: await convertBase64(file[0]),
+            entityAlias: paper.entityAlias,
+            clientEntityAlias: datas.clientEntityAlias,
           }
         case 'newsletter':
           return {
@@ -126,7 +144,7 @@ function PaperFormPDF({
     } catch (err) {
       setTopAlert({
         severity: 'error',
-        alertText: err.response.statusText,
+        alertText: err.response.data.message,
         openAlert: true,
       })
       window.scrollTo(0, 0)
@@ -153,12 +171,34 @@ function PaperFormPDF({
 
   if (!currentDocument && formAction === 'update') return null
 
+  const selectOptions = [
+    ['petite section', 'ps'],
+    ['moyenne section', 'ms'],
+    ['grande section', 'gs'],
+  ]
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
       <Grid item container justify="center">
         <Title title={formTitle} textcolor="whitesmoke" />
       </Grid>
       <Grid container className="form-fields-container">
+        {paper.paperType === 'fourniture' && (
+          <InputSelectControl
+            control={control}
+            options={selectOptions}
+            name="clientEntityAlias"
+            label="Choisir la classe"
+            helperText="Les fournitures sont pour quelle classe ?"
+            initialValue={
+              currentDocument
+                ? [
+                    currentDocument.clientEntity.name,
+                    currentDocument.clientEntity.alias,
+                  ]
+                : null
+            }
+          />
+        )}
         <DatePickerControl
           control={control}
           name="startdate"
@@ -167,7 +207,7 @@ function PaperFormPDF({
           helperText="Les dates passées ne sont pas autorisées"
           initialDate={
             formAction === 'update'
-              ? new Date(currentDocument.date)
+              ? new Date(currentDocument.startdate)
               : new Date()
           }
         />
@@ -180,7 +220,7 @@ function PaperFormPDF({
             helperText="Supérieure à la date de début"
             initialDate={
               formAction === 'update'
-                ? new Date(currentDocument.date)
+                ? new Date(currentDocument.enddate)
                 : new Date()
             }
           />
@@ -206,7 +246,7 @@ function PaperFormPDF({
           action="post"
           width="300px"
           type="submit"
-          disabled={!isValid || isSubmitting}
+          // disabled={!isValid || isSubmitting}
         />
       </Grid>
     </StyledPaperForm>
@@ -242,6 +282,12 @@ PaperFormPDF.propTypes = {
     entity: PropTypes.string,
     createdat: PropTypes.number,
     date: PropTypes.number,
+    startdate: PropTypes.number,
+    enddate: PropTypes.number,
+    clientEntity: PropTypes.shape({
+      name: PropTypes.string,
+      alias: PropTypes.string,
+    }),
   }),
 }
 

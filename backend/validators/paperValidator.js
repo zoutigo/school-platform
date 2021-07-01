@@ -43,7 +43,25 @@ module.exports.paperValidator = (datas) => {
               'newsletter',
               'menu',
               'breve',
-              'info'
+              'info',
+              'fourniture'
+            ),
+        }).validate(data)
+
+      case 'clientEntityAlias':
+        return Joi.object({
+          clientEntityAlias: Joi.string()
+            .required()
+            .valid(
+              'ps',
+              'ms',
+              'gs',
+              'cp',
+              'ce1',
+              'ce2',
+              'cm1',
+              'cm2',
+              'adaptation'
             ),
         }).validate(data)
 

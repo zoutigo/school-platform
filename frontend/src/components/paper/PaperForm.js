@@ -33,6 +33,7 @@ function PaperForm({
         />
       )}
       {(paperType === 'menu' ||
+        paperType === 'fourniture' ||
         paperType === 'breve' ||
         paperType === 'newsletter') && (
         <PaperFormPDF
@@ -47,6 +48,7 @@ function PaperForm({
           paper={paper}
         />
       )}
+
       {paperType === 'event' && (
         <PaperFormEvent
           setCurrentDocument={setCurrentDocument}

@@ -28,6 +28,7 @@ module.exports.getPapers = async (req, res, next) => {
   try {
     const papers = await Paper.find(req.query)
       .populate('entity')
+      .populate('clientEntity')
       .sort({ date: -1 })
     if (papers.length < 1) return next(new NotFound('paper not found'))
     return res.status(200).send(papers)
@@ -55,22 +56,34 @@ module.exports.postPaper = async (req, res, next) => {
   }
 
   if (action === 'create') {
+    const paper = { ...req.body }
     // case event creation
-    const { type, title, entityAlias } = req.body
+    const { type, title, entityAlias, clientEntityAlias } = req.body
+
     if (!type || !title || !entityAlias)
       return next(
         new BadRequest(
           'une ou plusieurs données manquante: type,title,entityAlias,text'
         )
       )
+    // check client entity
+    if (clientEntityAlias) {
+      const checkedClientEntity = await Entity.findOne({
+        alias: clientEntityAlias,
+      })
+      if (!checkedClientEntity)
+        return next(new BadRequest('mauvaise entité client'))
+      paper.clientEntity = checkedClientEntity._id
+      delete paper.clientEntityAlias
+    }
     // check the entity
     const checkedEntity = await Entity.findOne({ alias: entityAlias })
     if (!checkedEntity) return next(new BadRequest('mauvaise entité'))
 
-    const paper = req.body
-    paper.author = userId
     paper.entity = checkedEntity._id
     delete paper.entityAlias
+
+    paper.author = userId
     const newPaper = new Paper(paper)
 
     try {

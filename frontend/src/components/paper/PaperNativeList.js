@@ -38,7 +38,11 @@ function PaperNativeList({
       )}
       {Array.isArray(data) &&
         data.map((paperItem, index) => {
-          if (index === 0 && !currentDocument) {
+          if (
+            index === 0 &&
+            !currentDocument &&
+            paper.paperType !== 'fourniture'
+          ) {
             setCurrentDocument(paperItem)
           }
           return (

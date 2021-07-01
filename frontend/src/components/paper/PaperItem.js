@@ -29,6 +29,7 @@ function PaperItem({
     <StyledPaperItemGrid item container>
       <PaperItemHeader
         setCurrentDocument={setCurrentDocument}
+        currentDocumentId={currentDocument?._id}
         paperItem={paperItem}
         paper={paper}
       />

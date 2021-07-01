@@ -12,6 +12,7 @@ const paperSchema = new Schema(
         'menu',
         'breve',
         'info',
+        'fourniture',
       ],
       required: true,
     },
@@ -23,6 +24,11 @@ const paperSchema = new Schema(
       maxlength: 100,
     },
     entity: {
+      type: Schema.Types.ObjectId,
+      ref: 'Entity',
+      required: true,
+    },
+    clientEntity: {
       type: Schema.Types.ObjectId,
       ref: 'Entity',
       required: true,
