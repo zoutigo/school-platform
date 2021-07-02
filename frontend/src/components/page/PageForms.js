@@ -65,7 +65,7 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
       }).then((response) => {
         setTopAlert({
           severity: 'success',
-          alertText: response.message,
+          alertText: response.data.message,
           openAlert: true,
         })
         setShowEditToolTip(true)
@@ -75,7 +75,7 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
     } catch (err) {
       setTopAlert({
         severity: 'error',
-        alertText: err.message,
+        alertText: err.reponse.data.message,
         openAlert: true,
       })
       window.scrollTo(0, 0)

@@ -12,7 +12,6 @@ import AlertCollapse from './AlertCollapse'
 function TinyPageEditor({ onChange, value, height }) {
   const { URL_PREFIX } = useSelector((state) => state.settings)
   const URL = `${URL_PREFIX}/images/tinymce`
-  console.log('url', URL)
 
   const handleEditorChange = (editor) => onChange(editor)
 

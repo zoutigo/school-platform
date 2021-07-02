@@ -29,7 +29,7 @@ router.post('/page', createPageImage)
 // create one image in production mode
 router.post(
   '/tinymce',
-  uploadImage('/images/tinymce', 'tinymce', 4),
+  uploadImage('./images/tinymce', 'tinymce', 4),
   createImage
 )
 
