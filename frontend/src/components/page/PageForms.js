@@ -4,6 +4,7 @@ import { styled, Grid, useTheme } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useSelector } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import { useMutation } from 'react-query'
 import Title from '../elements/Title'
 import pageSchema from '../../schemas/pageSchema'
@@ -29,7 +30,7 @@ const StyledPaperForm = styled('form')(() => ({
 }))
 
 function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
-  const { pageName, setTopAlert, queryKey } = pageParams
+  const { pageName, setTopAlert, queryKey, isAllowedToChange } = pageParams
   const theme = useTheme()
   const { Token } = useSelector((state) => state.user)
   const formTitle = `Modification de la page ${pageName}`
@@ -92,6 +93,8 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
       })
     }
   }, [])
+
+  if (!isAllowedToChange) return <Redirect to="/login" />
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
       <Grid item container justify="center">
@@ -132,6 +135,7 @@ PageForms.propTypes = {
     queryParams: PropTypes.string.isRequired,
     pageName: PropTypes.string.isRequired,
     setTopAlert: PropTypes.func.isRequired,
+    isAllowedToChange: PropTypes.bool.isRequired,
   }).isRequired,
   page: PropTypes.shape({
     _id: PropTypes.string.isRequired,

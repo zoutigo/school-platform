@@ -3,17 +3,17 @@ import PropTypes from 'prop-types'
 import { Grid } from '@material-ui/core'
 import { useQuery } from 'react-query'
 import { Editor } from '@tinymce/tinymce-react'
+import { useSelector } from 'react-redux'
 import tinyMceColors from '../../constants/tinyMceColors'
 import { StyledEditorGrid } from './styled'
 import { apiFetchVariables } from '../../utils/api'
 import AlertCollapse from './AlertCollapse'
 
-const LOCALHOST = 'http://localhost:3500'
-
-const PREFIX = process.env.NODE_ENV === 'production' ? '' : LOCALHOST
-const URL = `${PREFIX}/images/tinymce`
-
 function TinyPageEditor({ onChange, value, height }) {
+  const { URL_PREFIX } = useSelector((state) => state.settings)
+  const URL = `${URL_PREFIX}/images/tinymce`
+  console.log('url', URL)
+
   const handleEditorChange = (editor) => onChange(editor)
 
   const { isLoading, isError, data, error } = useQuery(['TinyPageKey'], () =>
