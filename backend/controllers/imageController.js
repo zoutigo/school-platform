@@ -1,4 +1,3 @@
-const multer = require('multer')
 const Image = require('../models/Image')
 const { BadRequest } = require('../utils/errors')
 const fileUploadService = require('../service/uploads')

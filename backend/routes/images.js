@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const multer = require('multer')
-const { upLoadTinymceImage } = require('../service/uploads')
+const { upLoadTinymceImage, uploadImage } = require('../service/uploads')
 
 const {
   createPageImage,
@@ -27,7 +27,11 @@ const upload = multer({
 router.post('/page', createPageImage)
 
 // create one image in production mode
-router.post('/tinymce', upLoadTinymceImage(), createImage)
+router.post(
+  '/tinymce',
+  uploadImage('/images/tinymce', 'tinymce', 4),
+  createImage
+)
 
 // creta many images
 router.post('/multiple', upload.array('images', 15), createImages)

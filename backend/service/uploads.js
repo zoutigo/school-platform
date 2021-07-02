@@ -37,7 +37,7 @@ async function uploadFileToAws(file) {
 const upLoadTinymceImage = () => {
   const productionStorage = multer.diskStorage({
     destination: function (req, file, callback) {
-      const dir = './images'
+      const dir = './images/tinymce'
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir)
       }
