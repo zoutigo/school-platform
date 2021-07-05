@@ -1,13 +1,19 @@
+import { useSelector } from 'react-redux'
 import { Grid, styled, useTheme } from '@material-ui/core'
-import React from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useMutation } from 'react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useHistory } from 'react-router-dom'
 import Title from '../components/elements/Title'
-import TinyPageEditor from '../components/elements/TinyPageEditor'
 import InputTextControl from '../components/elements/InputTextControl'
-import suggestionSchema from '../schemas/suggestionSchema'
 import CustomButton from '../components/elements/CustomButton'
+import InputFileControl from '../components/elements/InputFileControl'
+import InputSmallEditorControl from '../components/elements/InputSmallEditorControl'
+import preinscriptionSchema from '../schemas/preinscriptionSchema'
+import { useUpdateMutationOptions } from '../utils/hooks'
+import { apiPostPreInscription } from '../utils/api'
+import AlertCollapse from '../components/elements/AlertCollapse'
 
 const StyledPaperForm = styled('form')(({ theme }) => ({
   width: '100%',
@@ -26,39 +32,85 @@ const StyledPaperForm = styled('form')(({ theme }) => ({
 }))
 
 function InformationsInscriptionsFormulairesScreen() {
-  const theme = useTheme()
+  const { Token } = useSelector((state) => state.user)
   const history = useHistory()
+  const theme = useTheme()
+  const queryKey = ['preinsciptions']
+  const [alert, setAlert] = useState({
+    openAlert: false,
+    severity: 'error',
+    alertText: '',
+  })
+  const { mutateAsync } = useMutation(
+    apiPostPreInscription,
+    useUpdateMutationOptions(queryKey)
+  )
   const {
     control,
     handleSubmit,
     formState: { isSubmitting, isValid },
   } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(suggestionSchema),
+    resolver: yupResolver(preinscriptionSchema),
   })
   const formTitle = 'Formulaire de pré-inscription'
 
   const onSubmit = async (datas) => {
-    const { title, text } = datas
+    const {
+      parentFirstname,
+      parentLastname,
+      email,
+      phone,
+      childFirstname,
+      file,
+      message,
+    } = datas
 
     const finalDatas = {
-      title,
-      text,
+      parentFirstname,
+      parentLastname,
+      email,
+      phone,
+      childFirstname,
+      file: file ? file[0] : null,
+      message,
+    }
+    const options = {
+      headers: {
+        'x-access-token': Token,
+      },
     }
 
-    alert('votre pré-inscription a été prise en compte a été pris en compte')
+    try {
+      await mutateAsync({
+        id: null,
+        action: 'create',
+        options: options,
+        body: finalDatas,
+        token: Token,
+      }).then((response) => {
+        history.pushState('/private/account/demandes')
+      })
+    } catch (err) {
+      setAlert({
+        openAlert: true,
+        severity: 'error',
+        alertText: err.data.message,
+      })
 
-    history.push('/')
+      window.scrollTo(0, 0)
+    }
   }
   return (
     <Grid container>
       <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
+        <AlertCollapse {...alert} />
         <Grid item container justify="center">
           <Title title={formTitle} textcolor="whitesmoke" />
         </Grid>
         <Grid container className="form-fields-container">
           <InputTextControl
-            name="firstname"
+            name="parentFirstname"
             control={control}
             initialValue=""
             helperText="au moins 2 caractères"
@@ -66,7 +118,7 @@ function InformationsInscriptionsFormulairesScreen() {
             width="100%"
           />
           <InputTextControl
-            name="lastname"
+            name="parentLastname"
             control={control}
             initialValue=""
             helperText="au moins 2 caractères"
@@ -77,7 +129,7 @@ function InformationsInscriptionsFormulairesScreen() {
             name="phone"
             control={control}
             initialValue=""
-            helperText="10 chiffres"
+            helperText="ex: 0618657934 ou +33178569054"
             label="Telephone"
             width="100%"
           />
@@ -89,15 +141,23 @@ function InformationsInscriptionsFormulairesScreen() {
             label="Email"
             width="100%"
           />
+          <InputFileControl
+            control={control}
+            label="Pièce jointe"
+            name="file"
+            type="file"
+            accept="application/pdf"
+            helperText="maximum 5Mo"
+          />
           <InputTextControl
-            name="childfirstname"
+            name="childFirstname"
             control={control}
             initialValue=""
             helperText="10 chiffres"
             label="Prénom de l'enfant"
             width="100%"
           />
-          <Grid item container>
+          {/* <Grid item container>
             <Controller
               name="text"
               control={control}
@@ -110,7 +170,15 @@ function InformationsInscriptionsFormulairesScreen() {
                 />
               )}
             />
-          </Grid>
+          </Grid> */}
+          <InputSmallEditorControl
+            control={control}
+            name="message"
+            initialValue=""
+            label="Commentaires:"
+            width="100%"
+            height={200}
+          />
         </Grid>
         <Grid item container alignItems="center" justify="flex-end">
           <CustomButton
@@ -119,7 +187,7 @@ function InformationsInscriptionsFormulairesScreen() {
             action="post"
             width="300px"
             type="submit"
-            disabled={!isValid || isSubmitting}
+            // disabled={!isValid || isSubmitting}
           />
         </Grid>
       </StyledPaperForm>

@@ -52,7 +52,7 @@ function InputFileControl({ control, name, accept, initialValue, ...rest }) {
   } = useController({
     name,
     control,
-    rules: { required: true },
+    rules: { required: false },
     defaultValue: initialValue,
   })
 

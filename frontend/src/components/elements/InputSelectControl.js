@@ -54,7 +54,7 @@ function InputSelectControl({
   ...rest
 }) {
   const theme = useTheme()
-  const [value, setValue] = React.useState('')
+  const [value, setValue] = React.useState(null)
 
   const {
     field,
@@ -80,6 +80,7 @@ function InputSelectControl({
         <TextField
           select
           value={value}
+          defaultValue={initialValue ? initialValue[1] : null}
           {...inputProps}
           inputRef={ref}
           {...rest}
@@ -88,8 +89,14 @@ function InputSelectControl({
             field.onChange(e.target.value)
           }}
         >
+          {initialValue && (
+            <option value={initialValue[1]} selected>
+              {initialValue[0]}
+            </option>
+          )}
           {options.map((option) => {
             const [label, optionvalue] = option
+
             return (
               <MenuItem key={optionvalue} value={optionvalue}>
                 {label}
