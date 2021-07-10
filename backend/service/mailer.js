@@ -44,3 +44,110 @@ module.exports.emailConfirmMail = (user) => {
 
   return { transporter, options }
 }
+
+module.exports.emailPreincriptionToUser = (user, datas) => {
+  const options = {
+    from: ` "Fred Foo 👻" <${process.env.MAILER_USER}>`,
+    to: user.email,
+    subject: "Recapitulatif de pé incription à l'Ecole Saint Augustin",
+    html: `
+    <h1>Bonjour</h1>
+    <p>L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.</p>
+    <p>Nous avons bien reçu votre demande de pré incription. Elle sera traitée dans les plus bref délai. </p>
+    <p>Nous allons tres prochainement prendre contact avec vous à travers les informations que vous nous avez communiquées</p>
+    <table>
+    <tr style="bacground:whitesmoke">
+    <th> ...</th>
+    <th> Données </th>
+    </tr>
+    <tr>
+    <td>Prénom du parent</td>
+    <td>${user.firstname}</td>
+    </tr>
+    <tr>
+    <td>Nom du parent</td>
+    <td>${user.lastname}</td>
+    </tr>
+    <tr>
+    <td>Telephone </td>
+    <td>${user.phone}</td>
+    </tr>
+    <tr>
+    <td>Adresse mail </td>
+    <td>${user.email}</td>
+    </tr>
+    <tr>
+    <td>Nom de l'enfant </td>
+    <td>${datas.childFirstname}</td>
+    </tr>
+    <tr>
+    <td>Classe souhaité </td>
+    <td>${datas.classroom}</td>
+    </tr>
+    <tr>
+    <td>Message </td>
+    <td>${datas.message}</td>
+    </tr>
+    </table>
+   
+    <p>En attendant , n'hésitez pas à visiter <a href=${SERVER_ONLINE_ADRESS}> le site de l'école </a> pour vous impréngner un peu plus de la vie scolaire et de l'actualité</p>
+
+    <p> A tres bientot, le secretariat </p>
+    `,
+  }
+
+  return { transporter, options }
+}
+module.exports.emailPreincriptionToManager = (user, datas) => {
+  const options = {
+    from: ` "Fred Foo 👻" <${process.env.MAILER_USER}>`,
+    to: user.email,
+    subject: `Une nouvelle pré-incription en classe de ${datas.classroom}: ${datas.childFirstname}`,
+    html: `
+    <h1>Bonjour</h1>
+    <p>L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.</p>
+    <p>Nous avons bien reçu votre demande de pré incription. Elle sera traitée dans les plus bref délai. </p>
+    <p>Nous allons tres prochainement prendre contact avec vous à travers les informations que vous nous avez communiquées</p>
+    <table>
+    <tr style="bacground:whitesmoke">
+    <th> ...</th>
+    <th> Données </th>
+    </tr>
+    <tr>
+    <td>Prénom du parent</td>
+    <td>${user.firstname}</td>
+    </tr>
+    <tr>
+    <td>Nom du parent</td>
+    <td>${user.lastname}</td>
+    </tr>
+    <tr>
+    <td>Telephone </td>
+    <td>${user.phone}</td>
+    </tr>
+    <tr>
+    <td>Adresse mail </td>
+    <td>${user.email}</td>
+    </tr>
+    <tr>
+    <td>Nom de l'enfant </td>
+    <td>${datas.childFirstname}</td>
+    </tr>
+    <tr>
+    <td>Classe souhaité </td>
+    <td>${datas.classroom}</td>
+    </tr>
+    <tr>
+    <td>Message </td>
+    <td>${datas.message}</td>
+    </tr>
+    </table>
+   
+    <p>En attendant , n'hésitez pas à visiter <a href=${SERVER_ONLINE_ADRESS}> le site de l'école </a> pour vous impréngner un peu plus de la vie scolaire et de l'actualité</p>
+
+    <p> A tres bientot, le secretariat </p>
+    `,
+  }
+
+  return { transporter, options }
+}

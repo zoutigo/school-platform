@@ -8,7 +8,7 @@ import {
   rubricsRoutes,
 } from '../../constants/rubrics'
 
-import { useIsTokenValid, useRigths } from '../../utils/hooks'
+import { useRigths } from '../../utils/hooks'
 
 function BodyBloc() {
   const { userLevel, managerLevel, moderatorLevel, adminLevel } = useRigths()
@@ -22,43 +22,43 @@ function BodyBloc() {
     />
   )
   UserRoute.propTypes = {
-    component: PropTypes.element.isRequired,
+    component: PropTypes.func.isRequired,
   }
 
   const ModeratorRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
       render={(props) =>
-        userLevel ? <Component {...props} /> : <Redirect to="/login" />
+        moderatorLevel ? <Component {...props} /> : <Redirect to="/login" />
       }
     />
   )
   ModeratorRoute.propTypes = {
-    component: PropTypes.element.isRequired,
+    component: PropTypes.func.isRequired,
   }
 
   const ManagerRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
       render={(props) =>
-        userLevel ? <Component {...props} /> : <Redirect to="/login" />
+        managerLevel ? <Component {...props} /> : <Redirect to="/login" />
       }
     />
   )
   ManagerRoute.propTypes = {
-    component: PropTypes.element.isRequired,
+    component: PropTypes.func.isRequired,
   }
 
   const AdminRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
       render={(props) =>
-        userLevel ? <Component {...props} /> : <Redirect to="/login" />
+        adminLevel ? <Component {...props} /> : <Redirect to="/login" />
       }
     />
   )
   AdminRoute.propTypes = {
-    component: PropTypes.element.isRequired,
+    component: PropTypes.func.isRequired,
   }
 
   const Filter = ({ route }) => {

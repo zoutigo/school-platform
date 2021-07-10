@@ -4,6 +4,8 @@ const Joi = require('joi')
 const { toArray } = require('../utils/toArray')
 Joi.objectId = require('joi-objectid')(Joi)
 
+const passwordRegex = new RegExp('^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$')
+
 module.exports.userValidator = (datas) => {
   const validator = (data) => {
     switch (Object.keys(data)[0]) {
@@ -22,24 +24,25 @@ module.exports.userValidator = (datas) => {
           email: Joi.string().required().email(),
         }).validate(data)
 
-      case 'password':
+      case 'phone':
         return Joi.object({
-          password: Joi.string()
-            .required()
-            .pattern(
-              new RegExp('^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$'),
-              'pass'
-            ), // 1 majuscule, 1 minuscule, 1 chiffre, 8 caracteres minimum
+          phone: Joi.string().required().max(14),
         }).validate(data)
 
-      case 'passwordConfirm':
+      case 'password':
         return Joi.object({
-          passwordConfirm: Joi.string()
+          password: Joi.string().required().pattern(passwordRegex, 'pass'), // 1 majuscule, 1 minuscule, 1 chiffre, 8 caracteres minimum
+        }).validate(data)
+
+      case 'newPassword':
+        return Joi.object({
+          newPassword: Joi.string().required().pattern(passwordRegex, 'pass'), // 1 majuscule, 1 minuscule, 1 chiffre, 8 caracteres minimum
+        }).validate(data)
+      case 'newPasswordConfirm':
+        return Joi.object({
+          newPasswordConfirm: Joi.string()
             .required()
-            .pattern(
-              new RegExp('^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$'),
-              'pass'
-            ), // 1 majuscule, 1 minuscule, 1 chiffre, 8 caracteres minimum
+            .pattern(passwordRegex, 'pass'), // 1 majuscule, 1 minuscule, 1 chiffre, 8 caracteres minimum
         }).validate(data)
 
       case 'gender':
@@ -59,7 +62,7 @@ module.exports.userValidator = (datas) => {
 
       case 'childrenClasses':
         return Joi.object({
-          childrenClasses: Joi.array().items(Joi.objectId()),
+          childrenClasses: Joi.array().items(Joi.string().required()),
         }).validate(data)
 
       case 'roles':

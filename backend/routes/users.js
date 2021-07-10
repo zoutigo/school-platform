@@ -32,6 +32,6 @@ router.post('/register', registerUser)
 router.post('/login', loginUser)
 
 // update user , only when user is already logged
-router.post('/:id&:roleAction', tokenVerify, updateUser)
+router.post('/:id?', tokenVerify, updateUser)
 
 module.exports = router

@@ -38,7 +38,7 @@ const preinscriptionSchema = yup.object().shape({
     .required('le telephone est obligatoire')
     .matches(regex, 'Mot de pass non valide'),
 
-  message: yup.string().max(300, 'maximum 300 caractères'),
+  message: yup.string().max(500, 'maximum 300 caractères'),
 
   //   file: yup
   //     .mixed()

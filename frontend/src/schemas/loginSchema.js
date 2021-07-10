@@ -1,6 +1,5 @@
 import * as yup from 'yup'
-
-const passRegExp = new RegExp('^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$')
+import { passwordRegex } from '../constants/regex'
 
 const loginSchema = yup.object().shape({
   email: yup
@@ -11,7 +10,7 @@ const loginSchema = yup.object().shape({
   password: yup
     .string()
     .required('le mot de pass est obligatoire')
-    .matches(passRegExp, 'Mot de pass non valide'),
+    .matches(passwordRegex, 'Mot de pass non valide'),
 })
 
 export default loginSchema

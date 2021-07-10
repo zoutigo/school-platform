@@ -19,6 +19,7 @@ const imagesRouter = require('./routes/images')
 const pagesRouter = require('./routes/pages')
 const variablesRouter = require('./routes/variables')
 const cheminsRouter = require('./routes/chemins')
+const preinscriptionsRouter = require('./routes/preinscriptions')
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
@@ -48,6 +49,7 @@ mongoose
 
 app.use(express.static(path.join(__dirname, '..', 'public')))
 app.use('/images', express.static(path.join(__dirname, '..', '/images')))
+app.use('/files', express.static(path.join(__dirname, '..', '/files')))
 
 app.use(
   cors({
@@ -90,6 +92,7 @@ app.use('/images', imagesRouter)
 app.use('/pages', pagesRouter)
 app.use('/variables', variablesRouter)
 app.use('/chemins', cheminsRouter)
+app.use('/preinscriptions', preinscriptionsRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)

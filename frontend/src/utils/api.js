@@ -20,16 +20,19 @@ export const apiCheckEmail = async (value) => {
 }
 
 export const apiRegister = async (datas) => {
-  // const URL = `${process.env.REACT_APP_ENDPOINT}/users`
   const URL = `${PREFIX}/users/register`
 
   const response = await axios.post(URL, datas)
   return response
 }
-export const apiLogin = async (datas) => {
-  // const URL = `${process.env.REACT_APP_ENDPOINT}/users/login`
-  const URL = `${PREFIX}/users/login`
+export const apiUpdateUser = async ({ id, action, body, options }) => {
+  const URL = `${PREFIX}/users?action=${action}&id=${id}`
+  const response = await axios.post(URL, body, options)
+  return response
+}
 
+export const apiLogin = async (datas) => {
+  const URL = `${PREFIX}/users/login`
   const response = await axios.post(URL, datas)
   return response
 }

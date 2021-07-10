@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default */
 import React from 'react'
 
 import SchoolIcon from '@material-ui/icons/School'
@@ -7,7 +8,6 @@ import DirectionsRunIcon from '@material-ui/icons/DirectionsRun'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import EcoSharpIcon from '@material-ui/icons/EcoSharp'
 import MenuBookSharpIcon from '@material-ui/icons/MenuBookSharp'
-import FakeScreen from '../screens/FakeScreen'
 import EcoleScreen from '../screens/EcoleScreen'
 import EquipeScreen from '../screens/EquipeScreen'
 import VieScolaireScreen from '../screens/VieScolaireScreen'
@@ -33,6 +33,8 @@ import EcoleProjetsPastoralScreen from '../screens/EcoleProjetsPastoralScreen'
 import EcoleInfrastructuresScreen from '../screens/EcoleInfrastructuresScreen'
 import EcoleInfrasrtucturesBatiments from '../screens/EcoleInfrasrtucturesBatiments'
 import EcoleInfrastructuresVisiteVirtuelleScreen from '../screens/EcoleInfrastructuresVisiteVirtuelleScreen'
+// eslint-disable-next-line import/no-named-as-default
+// eslint-disable-next-line import/no-named-as-default-member
 import ClassesPresentationScreen from '../screens/ClassesPresentationScreen'
 
 import ClassesActivitesScreen from '../screens/ClassesActivitesScreen'
@@ -62,6 +64,7 @@ import VieScolairePastoraleActivitesScreen from '../screens/VieScolairePastorale
 import VieScolairePastoraleAgendaScreen from '../screens/VieScolairePastoraleAgendaScreen'
 import PrivateAdminCheminsScreen from '../screens/PrivateAdminCheminsScreen'
 import InformationsFournituresScreen from '../screens/InformationsFournituresScreen'
+import PrivateAccountDonneesScreen from '../screens/PrivateAccountDonneesScreen'
 
 const rubrics = [
   {
@@ -794,7 +797,18 @@ const rubrics = [
           component: PrivateAccountScreen,
           access: 'user',
         },
-        chapters: [],
+        chapters: [
+          {
+            chapname: 'Mes Données',
+            alias: 'private-account-mesdonnees',
+            route: {
+              path: '/private/account/donnees-personelles',
+              exact: true,
+              component: PrivateAccountDonneesScreen,
+              access: 'user',
+            },
+          },
+        ],
       },
       {
         catname: 'Admin',

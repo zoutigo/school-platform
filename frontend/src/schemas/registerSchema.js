@@ -1,7 +1,6 @@
 import * as yup from 'yup'
+import { passwordRegex } from '../constants/regex'
 import { apiCheckEmail } from '../utils/api'
-
-const passRegExp = new RegExp('^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$')
 
 const registerSchema = yup.object().shape({
   email: yup
@@ -16,7 +15,7 @@ const registerSchema = yup.object().shape({
   password: yup
     .string()
     .required('le mot de pass est obligatoire')
-    .matches(passRegExp, 'Mot de pass non valide'),
+    .matches(passwordRegex, 'Mot de pass non valide'),
 
   passwordConfirm: yup
     .string()

@@ -17,6 +17,10 @@ const userSchema = new Schema(
       unique: true,
       required: true,
     },
+    phone: {
+      type: String,
+      max: 14,
+    },
     isAdmin: {
       type: Boolean,
       default: false,
@@ -36,7 +40,7 @@ const userSchema = new Schema(
     childrenClasses: [
       {
         type: Schema.ObjectId,
-        ref: 'Classes',
+        ref: 'Entity',
       },
     ],
     password: {

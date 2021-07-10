@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
-
+const Entity = require('../models/Entity')
 const User = require('../models/User')
 const { emailConfirmMail } = require('../service/mailer')
 const { Unauthorized, BadRequest } = require('../utils/errors')
@@ -14,7 +14,7 @@ module.exports.registerUser = async (req, res, next) => {
   if (Object.keys(req.body).length < 1)
     return next(new BadRequest('Some fields are missing'))
 
-  const mandatorydFields = ['email', 'password', 'passwordConfirm']
+  const mandatorydFields = ['email', 'password', 'newPasswordConfirm']
 
   const submittedFields = mandatorydFields.filter(
     (field) => Object.keys(req.body).includes(field) === true
@@ -22,8 +22,8 @@ module.exports.registerUser = async (req, res, next) => {
   if (!(submittedFields.length === mandatorydFields.length))
     return next(new BadRequest('One or more expected field is missing'))
 
-  const { password, passwordConfirm, email } = req.body
-  if (!(password === passwordConfirm))
+  const { password, newPasswordConfirm, email } = req.body
+  if (!(password === newPasswordConfirm))
     return next(new BadRequest('Passwords submitted are different'))
 
   const errors = userValidator(req.body)
@@ -55,7 +55,6 @@ module.exports.registerUser = async (req, res, next) => {
 
     await transporter.sendMail(options, (error, info) => {
       if (error) {
-        console.log(error)
         return next(error)
       }
       return res
@@ -95,7 +94,7 @@ module.exports.loginUser = async (req, res, next) => {
     .send('successful login')
 }
 module.exports.updateUser = async (req, res, next) => {
-  const { id: toUpdateId, roleAction } = req.params
+  const { id: toUpdateId, roleAction } = req.query
   const {
     _id: requesterId,
     isAdmin: requesterIsAdmin,
@@ -126,9 +125,33 @@ module.exports.updateUser = async (req, res, next) => {
     isModerator,
     isTeacher,
     password,
-    passwordConfirm,
+    newPassword,
+    newPasswordConfirm,
     role,
+    phone,
+    childrenClasses,
   } = req.body
+
+  if (childrenClasses) {
+    if (isOwner) {
+      if (
+        JSON.stringify(childrenClasses) !==
+        JSON.stringify(toUpdateuser.childrenClasses)
+      ) {
+        // fetch entities
+
+        const classrooms = await Promise.all(
+          childrenClasses.map(async (classroom) => {
+            const entity = await Entity.findOne({ alias: classroom })
+            return entity._id
+          })
+        )
+        newUserDatas.childrenClasses = classrooms
+      }
+    } else {
+      return next(new Unauthorized('only the owner can modify its lastname'))
+    }
+  }
 
   if (lastname) {
     if (isOwner) {
@@ -140,7 +163,7 @@ module.exports.updateUser = async (req, res, next) => {
     }
   }
 
-  // childrenClasses and roles cases still to be done
+  //  roles cases still to be done
   if (firstname) {
     if (isOwner) {
       if (!(firstname === toUpdateuser.firstname)) {
@@ -160,23 +183,36 @@ module.exports.updateUser = async (req, res, next) => {
       return next(new Unauthorized('only the owner can modify its lastname'))
     }
   }
+  if (phone) {
+    if (isOwner) {
+      if (!(phone === toUpdateuser.phone)) {
+        newUserDatas.phone = phone
+      }
+    } else {
+      return next(new Unauthorized('only the owner can modify its lastname'))
+    }
+  }
 
   if (password) {
     if (isOwner) {
       const { password: initialPassword } = toUpdateuser
+      if (!password || !newPasswordConfirm || !newPassword)
+        return next(new BadRequest('Veillez saisir les mots de pass demandés'))
+
+      if (newPassword !== newPasswordConfirm)
+        return next(
+          new BadRequest('Les mots de pass saisis ne sont pas identiques')
+        )
 
       const passwordVerified = await bcrypt.compare(password, initialPassword)
-      if (!passwordVerified) return next(new BadRequest('wrong password'))
-
-      if (!password || !passwordConfirm)
-        return next(new BadRequest('new passwords missing'))
-
-      if (!(password === passwordConfirm))
-        return next(new BadRequest('passwords not matching'))
+      if (!passwordVerified)
+        return next(
+          new BadRequest("Votre mot de pass initial n'est pas correct")
+        )
 
       // pass should be crypted
       const salt = await bcrypt.genSalt(10)
-      const hashedPassword = await bcrypt.hash(password, salt)
+      const hashedPassword = await bcrypt.hash(newPassword, salt)
       newUserDatas.password = hashedPassword
     } else {
       return next(new Unauthorized('only the owner can modify'))
@@ -236,7 +272,17 @@ module.exports.updateUser = async (req, res, next) => {
       { returnOriginal: false }
     )
     if (!savedModifiedUser) return next()
-    return res.status(200).send(savedModifiedUser)
+    const message = { message: 'Modification correctement effectuée' }
+    if (isOwner)
+      return res
+        .status(200)
+        .header('x-access-token', generateToken(savedModifiedUser))
+        .send(message)
+
+    return res
+      .status(200)
+      .header('x-access-token', generateToken(req.user))
+      .send(message)
   } catch (err) {
     return next(err)
   }
@@ -261,9 +307,10 @@ module.exports.viewUser = async (req, res, next) => {
 
   const user = await User.findOne({ _id: id })
     .select(
-      '_id firstname lastname gender isAdmin isManager isTeacher childrenClasses roles email'
+      '_id firstname lastname gender isAdmin isManager isTeacher childrenClasses roles email phone'
     )
     .populate('roles')
+    .populate('childrenClasses')
   if (!user) return next(new BadRequest('no user found with that id'))
 
   return res.status(200).send(user)

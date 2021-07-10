@@ -1,132 +1,105 @@
 import React from 'react'
-import MenuItem from '@material-ui/core/MenuItem'
-import { useController } from 'react-hook-form'
+import { Grid, styled, Collapse } from '@material-ui/core'
+import { useController, Controller } from 'react-hook-form'
+import Select from 'react-select'
 import PropTypes from 'prop-types'
-import { Collapse, Grid, TextField } from '@material-ui/core'
-import { styled, useTheme } from '@material-ui/styles'
-import Alert from '@material-ui/lab/Alert'
-
-const StyledGrid = styled(Grid)(({ theme, width, bgcolor }) => ({
-  margin: '1rem 0px',
-  padding: '0px 1rem',
-  '& >:first-child': {
-    background: bgcolor,
-    '& .MuiFormControl-root ': {
-      background: 'transparent',
-      width: width,
-      '& .MuiInput-root': {
-        height: '2.2rem',
-        width: '85%',
-        paddingTop: '0.6rem',
-        fontSize: '1rem',
-      },
-      '& .MuiInputLabel-root': {
-        color: theme.palette.secondary.main,
-        fontSize: '0.8rem',
-      },
-      '& label.Mui-focused ': {
-        color: 'green',
-        textTransform: 'uppercase',
-      },
-      '& .MuiInput-underline:after': {
-        borderBottomColor: theme.palette.info.dark,
-      },
-      '& .MuiFormHelperText-root': {
-        color: theme.palette.info.dark,
-        fontSize: '0.6rem',
-        fontStyle: 'italic',
-      },
-    },
-  },
-}))
+import { Alert } from '@material-ui/lab'
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
   minWidth: '100%',
   color: theme.palette.error.main,
 }))
 
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    borderBottom: '1px dotted pink',
+    color: state.isSelected ? 'red' : 'blue',
+    padding: 20,
+  }),
+  control: () => ({
+    // none of react-select's styles are passed to <Control />
+    width: 400,
+  }),
+  singleValue: (provided, state) => {
+    const opacity = state.isDisabled ? 0.5 : 1
+    const transition = 'opacity 300ms'
+
+    return { ...provided, opacity, transition }
+  },
+}
+
 function InputSelectControl({
   control,
+  label,
   name,
   width,
   initialValue,
   options,
   ...rest
 }) {
-  const theme = useTheme()
-  const [value, setValue] = React.useState(null)
-
   const {
     field,
-    fieldState: { invalid, error, isTouched },
+    fieldState: { invalid, error },
   } = useController({
     name,
     control,
-    rules: { required: true },
-    defaultValue: initialValue,
   })
 
-  const { ref, ...inputProps } = field
-
   return (
-    <StyledGrid
-      item
-      container
-      width={width}
-      bgcolor={invalid && isTouched ? theme.palette.error.light : 'whitesmoke'}
-      className="field"
-    >
+    <Grid item container className="field">
+      <Grid item container className="label">
+        {' '}
+        {label}
+      </Grid>
       <Grid item container>
-        <TextField
-          select
-          value={value}
-          defaultValue={initialValue ? initialValue[1] : null}
-          {...inputProps}
-          inputRef={ref}
+        <Controller
+          control={control}
           {...rest}
-          onChange={(e) => {
-            setValue(e.target.value)
-            field.onChange(e.target.value)
-          }}
-        >
-          {initialValue && (
-            <option value={initialValue[1]} selected>
-              {initialValue[0]}
-            </option>
+          render={({ field: { ref } }) => (
+            <Select
+              {...field}
+              inputRef={ref}
+              options={options}
+              styles={customStyles}
+              defaultValue={initialValue}
+            />
           )}
-          {options.map((option) => {
-            const [label, optionvalue] = option
-
-            return (
-              <MenuItem key={optionvalue} value={optionvalue}>
-                {label}
-              </MenuItem>
-            )
-          })}
-        </TextField>
+        />
       </Grid>
       <Collapse in={invalid}>
         <Grid item container>
           <StyledAlert severity="error">{error && error.message}</StyledAlert>
         </Grid>
       </Collapse>
-    </StyledGrid>
+    </Grid>
   )
 }
 
 InputSelectControl.defaultProps = {
-  initialValue: null,
+  initialValue: [{ label: '', value: '' }],
   width: '100%',
 }
+
 InputSelectControl.propTypes = {
-  name: PropTypes.string.isRequired,
-  /* eslint-disable-line*/
   control: PropTypes.shape({
     updateIsValid: PropTypes.func,
   }).isRequired,
-  initialValue: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.string,
+    })
+  ).isRequired,
+  initialValue: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.string,
+    })
+  ),
   width: PropTypes.string,
-  options: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+  label: PropTypes.string.isRequired,
 }
 
 export default InputSelectControl

@@ -1,8 +1,9 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react'
 import { useQueryClient } from 'react-query'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
+import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 
 export const useCurrentCategory = () => {
   const { pathname } = useLocation()
