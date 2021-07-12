@@ -9,7 +9,7 @@ const StyledGrid = styled(Grid)(({ colors }) => ({
   border: `solid 1px ${colors.light}`,
   '& div': {
     '& p': {
-      margin: '1rem',
+      margin: '1rem ',
     },
   },
 }))

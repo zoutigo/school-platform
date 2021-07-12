@@ -20,6 +20,7 @@ const pagesRouter = require('./routes/pages')
 const variablesRouter = require('./routes/variables')
 const cheminsRouter = require('./routes/chemins')
 const preinscriptionsRouter = require('./routes/preinscriptions')
+const albumsRouter = require('./routes/albums')
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
@@ -93,6 +94,7 @@ app.use('/pages', pagesRouter)
 app.use('/variables', variablesRouter)
 app.use('/chemins', cheminsRouter)
 app.use('/preinscriptions', preinscriptionsRouter)
+app.use('/albums', albumsRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)
