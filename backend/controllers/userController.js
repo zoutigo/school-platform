@@ -14,7 +14,7 @@ module.exports.registerUser = async (req, res, next) => {
   if (Object.keys(req.body).length < 1)
     return next(new BadRequest('Some fields are missing'))
 
-  const mandatorydFields = ['email', 'password', 'newPasswordConfirm']
+  const mandatorydFields = ['email', 'password', 'passwordConfirm']
 
   const submittedFields = mandatorydFields.filter(
     (field) => Object.keys(req.body).includes(field) === true
@@ -22,8 +22,8 @@ module.exports.registerUser = async (req, res, next) => {
   if (!(submittedFields.length === mandatorydFields.length))
     return next(new BadRequest('One or more expected field is missing'))
 
-  const { password, newPasswordConfirm, email } = req.body
-  if (!(password === newPasswordConfirm))
+  const { password, passwordConfirm, email } = req.body
+  if (!(password === passwordConfirm))
     return next(new BadRequest('Passwords submitted are different'))
 
   const errors = userValidator(req.body)

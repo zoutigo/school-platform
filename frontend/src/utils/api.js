@@ -179,24 +179,17 @@ export const apiPostPreInscription = async ({ id, body, options, action }) => {
   const URL = `${PREFIX}/preinscriptions?action=${action}&id=${id}`
   const formdata = new FormData()
 
-  if (body && body.parentFirstname) {
-    formdata.append('parentFirstname', body.parentFirstname)
-  }
-  if (body && body.parentLastname) {
-    formdata.append('parentLastname', body.parentLastname)
-  }
   if (body && body.childFirstname) {
     formdata.append('childFirstname', body.childFirstname)
   }
-  if (body && body.email) {
-    formdata.append('email', body.email)
+  if (body && body.classroomAlias) {
+    formdata.append('classroomAlias', body.classroomAlias)
   }
+
   if (body && body.message) {
     formdata.append('message', body.message)
   }
-  if (body && body.phone) {
-    formdata.append('phone', body.phone)
-  }
+
   if (body && body.file) {
     formdata.append('file', body.file)
   }

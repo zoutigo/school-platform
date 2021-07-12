@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Collapse, styled } from '@material-ui/core'
@@ -41,6 +42,8 @@ function Chemin({ chemin, queryKey, setTopAlert, setShowAddForm }) {
     severity: 'error',
     alertText: '',
   })
+
+  console.log('chemin', chemin)
   const { URL_PREFIX } = useSelector((state) => state.settings)
 
   const { Token } = useSelector((state) => state.user)
@@ -61,7 +64,6 @@ function Chemin({ chemin, queryKey, setTopAlert, setShowAddForm }) {
         action: 'delete',
         options: options,
       }).then((response) => {
-        console.log('response', response)
         setAlert({
           severity: 'success',
           alertText: response.message,
@@ -69,7 +71,6 @@ function Chemin({ chemin, queryKey, setTopAlert, setShowAddForm }) {
         })
       })
     } catch (err) {
-      console.log('err:', err)
       setAlert({
         openAlert: true,
         severity: 'error',

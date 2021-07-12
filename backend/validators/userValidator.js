@@ -44,6 +44,12 @@ module.exports.userValidator = (datas) => {
             .required()
             .pattern(passwordRegex, 'pass'), // 1 majuscule, 1 minuscule, 1 chiffre, 8 caracteres minimum
         }).validate(data)
+      case 'passwordConfirm':
+        return Joi.object({
+          passwordConfirm: Joi.string()
+            .required()
+            .pattern(passwordRegex, 'pass'), // 1 majuscule, 1 minuscule, 1 chiffre, 8 caracteres minimum
+        }).validate(data)
 
       case 'gender':
         return Joi.object({

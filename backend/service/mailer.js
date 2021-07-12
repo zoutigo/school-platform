@@ -1,13 +1,13 @@
 const nodemailer = require('nodemailer')
+const HTMLParser = require('node-html-parser')
 require('dotenv').config()
-const { BadRequest } = require('../utils/errors')
 
 const transporter = nodemailer.createTransport({
   host: process.env.MAILER_HOST,
   port: process.env.MAILER_PORT,
   secure: false, // true for 465, false for other ports
   logger: true,
-  debug: true,
+  debug: false,
   auth: {
     user: process.env.MAILER_USER, // generated ethereal user
     pass: process.env.MAILER_PASS, // generated ethereal password
@@ -19,7 +19,6 @@ const transporter = nodemailer.createTransport({
 })
 
 const SERVER_ONLINE_ADRESS = 'http://www.ecole-st-augustin.fr'
-
 const URL =
   process.env.NODE_ENV === 'production'
     ? SERVER_ONLINE_ADRESS
@@ -45,11 +44,11 @@ module.exports.emailConfirmMail = (user) => {
   return { transporter, options }
 }
 
-module.exports.emailPreincriptionToUser = (user, datas) => {
+module.exports.emailPreincriptionToUser = (datas) => {
   const options = {
     from: ` "Fred Foo 👻" <${process.env.MAILER_USER}>`,
-    to: user.email,
-    subject: "Recapitulatif de pé incription à l'Ecole Saint Augustin",
+    to: datas.parent.email,
+    subject: "Recapitulatif de pré-inscription à l'Ecole Saint Augustin",
     html: `
     <h1>Bonjour</h1>
     <p>L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.</p>
@@ -62,19 +61,19 @@ module.exports.emailPreincriptionToUser = (user, datas) => {
     </tr>
     <tr>
     <td>Prénom du parent</td>
-    <td>${user.firstname}</td>
+    <td>${datas.parent.firstname}</td>
     </tr>
     <tr>
     <td>Nom du parent</td>
-    <td>${user.lastname}</td>
+    <td>${datas.parent.lastname}</td>
     </tr>
     <tr>
     <td>Telephone </td>
-    <td>${user.phone}</td>
+    <td>${datas.parent.phone}</td>
     </tr>
     <tr>
     <td>Adresse mail </td>
-    <td>${user.email}</td>
+    <td>${datas.parent.email}</td>
     </tr>
     <tr>
     <td>Nom de l'enfant </td>
@@ -82,11 +81,68 @@ module.exports.emailPreincriptionToUser = (user, datas) => {
     </tr>
     <tr>
     <td>Classe souhaité </td>
-    <td>${datas.classroom}</td>
+    <td>${datas.classroom.name}</td>
     </tr>
     <tr>
     <td>Message </td>
-    <td>${datas.message}</td>
+    <td>Pas de message</td>
+    </tr>
+    </table>
+   
+    <p>En attendant , n'hésitez pas à visiter <a href=${SERVER_ONLINE_ADRESS}> le site de l'école </a>
+     pour vous impréngner un peu plus de la vie scolaire et de l'actualité</p>
+
+    <p> A tres bientot, le secretariat </p>
+    `,
+  }
+
+  return { transporter, options }
+}
+module.exports.emailPreincriptionToManager = (datas) => {
+  const message = datas.message
+    ? HTMLParser.parse(datas.message)
+    : 'Pas de message'
+  const options = {
+    from: ` "Fred Foo 👻" <${process.env.MAILER_USER}>`,
+    to: 'zoutigo@gmail.com',
+    subject: `Une nouvelle pré-incription en classe de ${datas.classroom.name}: ${datas.childFirstname}`,
+    html: `
+    <h1>Bonjour</h1>
+    <p>L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.</p>
+    <p>Nous avons bien reçu votre demande de pré incription. Elle sera traitée dans les plus bref délai. </p>
+    <p>Nous allons tres prochainement prendre contact avec vous à travers les informations que vous nous avez communiquées</p>
+    <table>
+    <tr style="bacground:whitesmoke">
+    <th> ...</th>
+    <th> Données </th>
+    </tr>
+    <tr>
+    <td>Prénom du parent</td>
+    <td>${datas.parent.firstname}</td>
+    </tr>
+    <tr>
+    <td>Nom du parent</td>
+    <td>${datas.parent.lastname}</td>
+    </tr>
+    <tr>
+    <td>Telephone </td>
+    <td>${datas.parent.phone}</td>
+    </tr>
+    <tr>
+    <td>Adresse mail </td>
+    <td>${datas.parent.email}</td>
+    </tr>
+    <tr>
+    <td>Nom de l'enfant </td>
+    <td>${datas.childFirstname}</td>
+    </tr>
+    <tr>
+    <td>Classe souhaité </td>
+    <td>${datas.classroom.name}</td>
+    </tr>
+    <tr>
+    <td>Message </td>
+    <td>${message}</td>
     </tr>
     </table>
    
@@ -96,57 +152,13 @@ module.exports.emailPreincriptionToUser = (user, datas) => {
     `,
   }
 
-  return { transporter, options }
-}
-module.exports.emailPreincriptionToManager = (user, datas) => {
-  const options = {
-    from: ` "Fred Foo 👻" <${process.env.MAILER_USER}>`,
-    to: user.email,
-    subject: `Une nouvelle pré-incription en classe de ${datas.classroom}: ${datas.childFirstname}`,
-    html: `
-    <h1>Bonjour</h1>
-    <p>L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.</p>
-    <p>Nous avons bien reçu votre demande de pré incription. Elle sera traitée dans les plus bref délai. </p>
-    <p>Nous allons tres prochainement prendre contact avec vous à travers les informations que vous nous avez communiquées</p>
-    <table>
-    <tr style="bacground:whitesmoke">
-    <th> ...</th>
-    <th> Données </th>
-    </tr>
-    <tr>
-    <td>Prénom du parent</td>
-    <td>${user.firstname}</td>
-    </tr>
-    <tr>
-    <td>Nom du parent</td>
-    <td>${user.lastname}</td>
-    </tr>
-    <tr>
-    <td>Telephone </td>
-    <td>${user.phone}</td>
-    </tr>
-    <tr>
-    <td>Adresse mail </td>
-    <td>${user.email}</td>
-    </tr>
-    <tr>
-    <td>Nom de l'enfant </td>
-    <td>${datas.childFirstname}</td>
-    </tr>
-    <tr>
-    <td>Classe souhaité </td>
-    <td>${datas.classroom}</td>
-    </tr>
-    <tr>
-    <td>Message </td>
-    <td>${datas.message}</td>
-    </tr>
-    </table>
-   
-    <p>En attendant , n'hésitez pas à visiter <a href=${SERVER_ONLINE_ADRESS}> le site de l'école </a> pour vous impréngner un peu plus de la vie scolaire et de l'actualité</p>
-
-    <p> A tres bientot, le secretariat </p>
-    `,
+  if (datas.filename) {
+    options.attachments = [
+      {
+        filename: datas.filename,
+        path: `${URL}/${datas.filepath}`,
+      },
+    ]
   }
 
   return { transporter, options }

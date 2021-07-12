@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 const fs = require('fs')
+const Entity = require('../models/Entity')
 const Preinscription = require('../models/Preinscription')
 const User = require('../models/User')
 const {
@@ -10,25 +11,25 @@ const { deleteFile } = require('../utils/deleteFile')
 
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const {
-  preincriptionValidator,
+  preinscriptionValidator,
 } = require('../validators/preinscriptionValidator')
 
 module.exports.postPreinscription = async (req, res, next) => {
   const { isAdmin, _id: userId } = req.user
   const { id: preinscriptionId, action } = req.query
-  const { filename, filepath } = req.file
+  const filename = req.file ? req.file.filename : null
+  const filepath = req.file ? req.file.path : null
   const userIsAllowed = isAdmin || userId
 
   if (Object.keys(req.body).length < 1 && action !== 'delete') {
     return next(deleteFile(filepath, new BadRequest('datas missing')))
   }
-
   if (!userIsAllowed)
     return next(
       deleteFile(filepath, new Unauthorized('only registered are allowed '))
     )
 
-  const errors = preincriptionValidator(req.body)
+  const errors = preinscriptionValidator(req.body)
   if (errors.length > 0) {
     return next(deleteFile(filepath, new BadRequest(errors)))
   }
@@ -40,7 +41,7 @@ module.exports.postPreinscription = async (req, res, next) => {
       deleteFile(filepath, new BadRequest("l'utilisateur n'existe pas"))
     )
 
-  const { childFirstname } = req.body
+  const { childFirstname, classroomAlias } = req.body
 
   if (action === 'create') {
     req.body.parent = userId
@@ -49,33 +50,49 @@ module.exports.postPreinscription = async (req, res, next) => {
       req.body.filename = filename
     }
 
-    if (!childFirstname)
+    if (!childFirstname || !classroomAlias)
       return next(
         deleteFile(
           filepath,
           new BadRequest(
-            'une ou plusieurs données manquantes: path, alias, description'
+            'une ou plusieurs données manquantes: childfirstname, classroomalias,'
           )
         )
       )
 
+    // manage the classroom entity
+    const classroomEntity = await Entity.findOne({ alias: classroomAlias })
+
+    if (!classroomEntity)
+      return next(
+        deleteFile(filepath, new BadRequest('Mauvaie entité de classe'))
+      )
+    req.body.classroom = classroomEntity._id
+    delete req.body.classroomAlias
     const preinscription = req.body
-    const newPreincription = new Preinscription(preinscription)
+    const newPreinscription = new Preinscription(preinscription)
 
     try {
-      const savedPreincription = await newPreincription.save()
-      if (savedPreincription) {
-        const { transporter: tspUser, options: optsUser } =
-          emailPreincriptionToUser(user, savedPreincription)
-        const { transporteur: tspManager, options: optsManager } =
-          emailPreincriptionToManager(savedPreincription)
+      const savedPreinscription = await newPreinscription.save()
 
-        const results = await Promise.all(
-          tspUser.sendMail(optsUser),
-          tspManager.sendMail(optsManager)
-        )
-        if (results) {
-          return res.status(201).send({ message: 'Inscription correctement' })
+      if (savedPreinscription) {
+        const populated = await Preinscription.findOne({
+          _id: savedPreinscription._id,
+        })
+          .populate('parent')
+          .populate('classroom')
+        const { transporter: tspUser, options: optsUser } =
+          emailPreincriptionToUser(populated)
+        const { transporter: tspManager, options: optsManager } =
+          emailPreincriptionToManager(populated)
+        try {
+          const mailToUser = await tspUser.sendMail(optsUser)
+          const mailToManager = await tspManager.sendMail(optsManager)
+          if (mailToUser && mailToManager) {
+            return res.status(201).send('bien inscrit')
+          }
+        } catch (err) {
+          return next(deleteFile(filepath, err))
         }
       }
     } catch (err) {
@@ -140,7 +157,7 @@ module.exports.postPreinscription = async (req, res, next) => {
 }
 
 module.exports.getPreinscriptions = async (req, res, next) => {
-  const errors = preincriptionValidator(req.query)
+  const errors = preinscriptionValidator(req.query)
   if (errors.length > 0) {
     return next(new BadRequest(errors))
   }

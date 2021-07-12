@@ -25,6 +25,10 @@ import {
 } from '../../../../../redux/user/UserActions'
 import tokenDatas from '../../../../../utils/tokenDatas'
 import { setPrivateAccountMutateAlert } from '../../../../../redux/alerts/AlertsActions'
+import {
+  classroomsOptions,
+  genderOptions,
+} from '../../../../../constants/options'
 
 function PersoDataForm({ setForm, setToggle, form, data }) {
   const theme = useTheme()
@@ -162,18 +166,6 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
     ? { label: data.gender, value: data.gender }
     : { label: 'madame', value: 'madame' }
 
-  const classroomOptions = [
-    { value: 'ps', label: 'Petite section' },
-    { value: 'ms', label: 'Moyenne Section' },
-    { value: 'gs', label: 'Grande Section' },
-    { value: 'cp', label: 'CP' },
-    { value: 'ce1', label: 'CE1' },
-    { value: 'ce2', label: 'CE1' },
-    { value: 'cm1', label: 'CM1' },
-    { value: 'cm2', label: 'CM2' },
-    { value: 'adaptation', label: 'adaptation' },
-  ]
-
   return (
     <StyledPersoDataContainer container>
       <StyledPersoDataForm onSubmit={handleSubmit(onSubmit)}>
@@ -184,10 +176,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
               name="gender"
               initialValue={initialGender}
               label="Civilité"
-              options={[
-                { label: 'Madame', value: 'madame' },
-                { label: 'Monsieur', value: 'monsieur' },
-              ]}
+              options={genderOptions}
             />
             <InputTextControl
               name="firstname"
@@ -219,7 +208,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
           <Grid container className="form-fields-container">
             <InputSelectMultiControl
               name="childrenClasses"
-              options={classroomOptions}
+              options={classroomsOptions}
               control={control}
               label="Choisir la classe :"
               initialValue={initialClassrooms}

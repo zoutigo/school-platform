@@ -5,6 +5,12 @@ const PreinscriptionSchema = new Schema(
     parent: {
       type: Schema.ObjectId,
       ref: 'User',
+      required: true,
+    },
+    classroom: {
+      type: Schema.ObjectId,
+      ref: 'Entity',
+      required: true,
     },
     childFirstname: {
       type: String,
@@ -14,17 +20,15 @@ const PreinscriptionSchema = new Schema(
     },
     filepath: {
       type: String,
-      required: true,
       max: 100,
     },
     filename: {
       type: String,
-      required: true,
       max: 100,
     },
     message: {
       type: String,
-      max: 500,
+      max: 1000,
     },
     status: {
       type: String,
