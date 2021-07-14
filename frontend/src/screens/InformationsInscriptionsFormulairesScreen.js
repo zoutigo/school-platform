@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from 'react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Title from '../components/elements/Title'
 import InputTextControl from '../components/elements/InputTextControl'
 import CustomButton from '../components/elements/CustomButton'
@@ -91,6 +91,7 @@ function InformationsInscriptionsFormulairesScreen() {
         body: finalDatas,
         token: Token,
       }).then((response) => {
+        console.log('response', response)
         if (response.status === 201) {
           setAlert({
             openAlert: true,
@@ -100,6 +101,7 @@ function InformationsInscriptionsFormulairesScreen() {
         }
       })
     } catch (err) {
+      console.log('errorrrrr', err)
       setAlert({
         openAlert: true,
         severity: 'error',
@@ -113,9 +115,11 @@ function InformationsInscriptionsFormulairesScreen() {
   const { data } = useQuery(userQueryKey, () => apiFecthUserDatas(_id))
 
   useEffect(() => {
-    const { phone, firstname, lastname } = data
-    if (phone && firstname && lastname) {
-      setUserDataCompleted(true)
+    if (data) {
+      const { phone, firstname, lastname } = data
+      if (phone && firstname && lastname) {
+        setUserDataCompleted(true)
+      }
     }
     return () => {
       setUserDataCompleted(true)
@@ -129,10 +133,10 @@ function InformationsInscriptionsFormulairesScreen() {
         aurons besoin de vos coordonnées.
       </p>
       <p>
-        <Link to="/private/login">Connectez vous.</Link>
+        <Link to="/login">Connectez vous.</Link>
       </p>
       <p>
-        <Link to="/private/register">Créez votre compte :</Link>{' '}
+        <Link to="/register">Créez votre compte :</Link>{' '}
         <strong>Ca ne prend que une minute.</strong>
       </p>
     </div>

@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node ./backend/bin/www",
     "dev": "cross-env NODE_ENV=development  DEBUG=express nodemon ./backend/bin/www",
+    "test": "npm run mocha",
+    "mocha": "cross-env NODE_ENV=test mocha --require babel-register ./backend/test/*.js --exit",
     "frontdev": "cd ./frontend cross-env NODE_ENV=development npm start ",
     "build": "rm -rf ./public/* && cd ./frontend && npm run build",
     "postbuild": "cp -r ./frontend/build/* ./public && rm -rf ./frontend/build"
@@ -25,7 +27,6 @@
     "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
-    "cross-env": "^7.0.3",
     "crypto": "^1.0.1",
     "debug": "~2.6.9",
     "dotenv": "^10.0.0",
@@ -44,10 +45,16 @@
     "node-html-parser": "^4.0.0",
     "nodemailer": "^6.6.2",
     "npm": "^7.19.1",
-    "react-html-parser": "^2.0.2",
     "sanitize-html": "^2.4.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/node": "^7.14.7",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "cross-env": "^7.0.3",
     "eslint": "^7.27.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-node": "^4.1.0",
@@ -58,10 +65,22 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "faker": "^5.5.3",
+    "mocha": "^9.0.2",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.0"
   },
   "eslintConfig": {
     "extends": ".eslintrc"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "docs/*"
+    ],
+    "delay": "2500",
+    "events": {
+      "crash": "sh -c 'lsof -i :${PORT:-3500} -t | xargs kill'"
+    }
   }
 }

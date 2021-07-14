@@ -65,6 +65,7 @@ import VieScolairePastoraleAgendaScreen from '../screens/VieScolairePastoraleAge
 import PrivateAdminCheminsScreen from '../screens/PrivateAdminCheminsScreen'
 import InformationsFournituresScreen from '../screens/InformationsFournituresScreen'
 import PrivateAccountDonneesScreen from '../screens/PrivateAccountDonneesScreen'
+import Album from '../components/elements/album/Album'
 
 const rubrics = [
   {
@@ -240,6 +241,16 @@ const rubrics = [
               access: '',
             },
           },
+          {
+            chapname: 'Albums',
+            alias: 'albums-cantine',
+            route: {
+              path: '/viescolaire/cantine/albums',
+              exact: true,
+              component: Album,
+              access: '',
+            },
+          },
         ],
       },
       {
@@ -351,6 +362,16 @@ const rubrics = [
               access: '',
             },
           },
+          {
+            chapname: 'Albums',
+            alias: 'albums-petite-section',
+            route: {
+              path: '/classes/petite-section/albums',
+              exact: true,
+              component: Album,
+              access: '',
+            },
+          },
         ],
       },
       {
@@ -370,6 +391,16 @@ const rubrics = [
               path: '/classes/moyenne-section/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
+            },
+          },
+          {
+            chapname: 'Albums',
+            alias: 'albums-moyenne-section',
+            route: {
+              path: '/classes/moyenne-section/albums',
+              exact: true,
+              component: Album,
               access: '',
             },
           },
@@ -395,6 +426,16 @@ const rubrics = [
               access: '',
             },
           },
+          {
+            chapname: 'Albums',
+            alias: 'albums-grande-section',
+            route: {
+              path: '/classes/grande-section/albums',
+              exact: true,
+              component: Album,
+              access: '',
+            },
+          },
         ],
       },
       {
@@ -414,6 +455,16 @@ const rubrics = [
               path: '/classes/cp/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
+            },
+          },
+          {
+            chapname: 'Albums',
+            alias: 'albums-cp',
+            route: {
+              path: '/classes/cp/albums',
+              exact: true,
+              component: Album,
               access: '',
             },
           },
@@ -439,6 +490,16 @@ const rubrics = [
               access: '',
             },
           },
+          {
+            chapname: 'Albums',
+            alias: 'albums-ce1',
+            route: {
+              path: '/classes/ce1/albums',
+              exact: true,
+              component: Album,
+              access: '',
+            },
+          },
         ],
       },
       {
@@ -461,6 +522,16 @@ const rubrics = [
               access: '',
             },
           },
+          {
+            chapname: 'Albums',
+            alias: 'albums-ce2',
+            route: {
+              path: '/classes/ce2/albums',
+              exact: true,
+              component: Album,
+              access: '',
+            },
+          },
         ],
       },
       {
@@ -480,6 +551,16 @@ const rubrics = [
               path: '/classes/cm1/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
+            },
+          },
+          {
+            chapname: 'Albums',
+            alias: 'albums-cm1',
+            route: {
+              path: '/classes/cm1/albums',
+              exact: true,
+              component: Album,
               access: '',
             },
           },
@@ -506,6 +587,16 @@ const rubrics = [
               access: '',
             },
           },
+          {
+            chapname: 'Albums',
+            alias: 'albums-cm2',
+            route: {
+              path: '/classes/cm2/albums',
+              exact: true,
+              component: Album,
+              access: '',
+            },
+          },
         ],
       },
       {
@@ -526,6 +617,16 @@ const rubrics = [
               path: '/classes/aesh/activites',
               exact: true,
               component: ClassesActivitesScreen,
+              access: '',
+            },
+          },
+          {
+            chapname: 'Albums',
+            alias: 'albums-adaptation',
+            route: {
+              path: '/classes/adaptation/albums',
+              exact: true,
+              component: Album,
               access: '',
             },
           },
@@ -716,6 +817,16 @@ const rubrics = [
               access: '',
             },
           },
+          {
+            chapname: 'Albums',
+            alias: 'albums-apel',
+            route: {
+              path: '/apelogec/apel/albums',
+              exact: true,
+              component: Album,
+              access: '',
+            },
+          },
         ],
       },
       {
@@ -745,6 +856,16 @@ const rubrics = [
               path: '/apelogec/ogec/agenda',
               exact: true,
               component: ApelOgecOgecAgendaScreen,
+              access: '',
+            },
+          },
+          {
+            chapname: 'Albums',
+            alias: 'albums-ogec',
+            route: {
+              path: '/apelogec/ogec/albums',
+              exact: true,
+              component: Album,
               access: '',
             },
           },

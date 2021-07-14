@@ -43,7 +43,6 @@ function PaperFormPDF({
   setShowPaperForm,
   paper,
 }) {
-  console.log('current document', currentDocument)
   const theme = useTheme()
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync } = useMutation(

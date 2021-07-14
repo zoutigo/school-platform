@@ -15,7 +15,7 @@ const StyledFab = styled(Fab)(({ maincolor }) => ({
   color: 'white',
 }))
 
-function ToolTipPrivateDatas({ title, callback, action }) {
+function ToolTipPrivateDatas({ title, callback, action, ...rest }) {
   const theme = useTheme()
   const color =
     action === 'add'
@@ -41,7 +41,7 @@ function ToolTipPrivateDatas({ title, callback, action }) {
   }
 
   return (
-    <Tooltip title={title} aria-label={title}>
+    <Tooltip title={title} aria-label={title} {...rest}>
       <StyledFab onClick={() => callback()} maincolor={color}>
         <Icon />
       </StyledFab>

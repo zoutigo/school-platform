@@ -53,6 +53,13 @@ module.exports.registerUser = async (req, res, next) => {
 
     const { transporter, options } = emailConfirmMail(newUser)
 
+    if (process.env.NODE_ENV === 'test')
+      return res
+        .status(201)
+        .send(
+          'Votre compte est correctement crée. Un mail de validation vous a été adressé'
+        )
+
     await transporter.sendMail(options, (error, info) => {
       if (error) {
         return next(error)

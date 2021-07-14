@@ -56,7 +56,9 @@ module.exports.postPaper = async (req, res, next) => {
   }
 
   if (action === 'create') {
-    const paper = { ...req.body }
+    // const paper = { ...req.body }
+    // eslint-disable-next-line prefer-object-spread
+    const paper = Object.assign({}, req.body)
     // case event creation
     const { type, title, entityAlias, clientEntityAlias } = req.body
 

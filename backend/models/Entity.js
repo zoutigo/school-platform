@@ -1,6 +1,8 @@
-const { model, Schema } = require('mongoose')
+const mongoose = require('mongoose')
 
-const entitySchema = new Schema(
+mongoose.Promise = global.Promise
+
+const entitySchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -36,4 +38,6 @@ const entitySchema = new Schema(
   { timestamps: true }
 )
 
-module.exports = model('Entity', entitySchema)
+const Entity = mongoose.model('Entity', entitySchema)
+
+module.exports = Entity

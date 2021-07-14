@@ -202,3 +202,53 @@ export const apiPostPreInscription = async ({ id, body, options, action }) => {
 
   return result
 }
+
+export const apiPostAlbum = async ({ id, body, options, action }) => {
+  const URL = `${PREFIX}/albums?action=${action}&id=${id}`
+  const formdata = new FormData()
+
+  if (body && body.file) {
+    formdata.append('file', body.file)
+  }
+  if (body && body.name) {
+    formdata.append('name', body.name)
+  }
+  if (body && body.description) {
+    formdata.append('description', body.description)
+  }
+  if (body && body.alias) {
+    formdata.append('alias', body.alias)
+  }
+
+  const result = await fetch(URL, {
+    method: 'POST',
+    headers: new Headers(options.headers),
+    body: formdata,
+  })
+
+  return result
+}
+
+export const apiFetchAlbum = async (params) => {
+  const URL = `${PREFIX}/albums/?${params}`
+  const { data } = await axios.get(URL)
+
+  return data
+}
+
+export const apiPostAlbumImages = async ({ id, body, options, action }) => {
+  const URL = `${PREFIX}/albums/images?action=${action}&id=${id}`
+  const formdata = new FormData()
+
+  if (body && body.files) {
+    formdata.append('files', body.files)
+  }
+
+  const { data } = await fetch(URL, {
+    method: 'POST',
+    headers: new Headers(options.headers),
+    body: formdata,
+  })
+
+  return data
+}

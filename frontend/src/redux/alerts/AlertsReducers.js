@@ -1,21 +1,16 @@
 import { createReducer } from '@reduxjs/toolkit'
 
+const initialAlert = {
+  severity: 'error',
+  alertText: '',
+  alertOpen: false,
+}
+
 const initialState = {
-  privateAcccountData: {
-    severity: 'error',
-    alertText: '',
-    alertOpen: false,
-  },
-  informationsInscriptions: {
-    severity: 'error',
-    alertText: '',
-    alertOpen: false,
-  },
-  privateAccountDatasMutate: {
-    severity: 'error',
-    alertText: '',
-    alertOpen: false,
-  },
+  privateAcccountData: initialAlert,
+  informationsInscriptions: initialAlert,
+  privateAccountDatasMutate: initialAlert,
+  albumMutate: initialAlert,
 }
 
 /* eslint-disable */
@@ -28,6 +23,9 @@ const actionsReducers = createReducer(initialState, {
   },
   SET_PRIVATE_ACCOUNT_MUTATE_ALERT: (state, action) => {
     state.privateAccountDatasMutate = action.payload
+  },
+  SET_ALBUM_MUTATE_ALERT: (state, action) => {
+    state.albumMutate = action.payload
   },
 })
 

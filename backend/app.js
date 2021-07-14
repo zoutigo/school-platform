@@ -33,11 +33,12 @@ const app = express()
 
 const DB_URL =
   process.env.NODE_ENV === 'development'
-    ? process.env.DEV_MODE === 'test'
+    ? process.env.NODE_ENV === 'test'
       ? process.env.DB_TEST
       : process.env.DB_DEV
     : process.env.DB_PROD
 
+console.log('URL:', DB_URL)
 mongoose
   .connect(process.env.MONGO_URI || DB_URL, {
     useNewUrlParser: true,

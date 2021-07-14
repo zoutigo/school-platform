@@ -10,9 +10,10 @@ import {
 } from '@material-ui/core'
 import { Controller, useController } from 'react-hook-form'
 
-const StyledGrid = styled(Grid)(() => ({
+const StyledGrid = styled(Grid)(({ display }) => ({
   margin: '1rem 0px',
   padding: '0px 1rem',
+  display: display,
 }))
 function InputRadio({
   radioGroupProps,
@@ -22,6 +23,7 @@ function InputRadio({
   control,
   defaultValue,
   name,
+  display,
 }) {
   const [value, setValue] = React.useState(defaultValue)
 
@@ -44,7 +46,7 @@ function InputRadio({
   }
 
   return (
-    <StyledGrid item container alignItems="center">
+    <StyledGrid item container alignItems="center" display={display}>
       <Grid item xs={6}>
         <FormLabel component="legend">{question}</FormLabel>
       </Grid>
@@ -72,30 +74,17 @@ function InputRadio({
             </RadioGroup>
           )}
         />
-        {/* <FormControl>
-          <RadioGroup
-            row
-            aria-label={question}
-            value={value}
-            onChange={handleRadioChange}
-            defaultValue={defaultValue}
-          >
-            {options.map(({ labelOption, optionvalue }) => (
-              <FormControlLabel
-                value={optionvalue}
-                control={<Radio />}
-                label={labelOption}
-                labelPlacement="left"
-              />
-            ))}
-          </RadioGroup>
-        </FormControl> */}
       </Grid>
     </StyledGrid>
   )
 }
 
+InputRadio.defaultProps = {
+  display: 'block',
+}
+
 InputRadio.propTypes = {
+  display: PropTypes.string,
   defaultValue: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   question: PropTypes.string.isRequired,

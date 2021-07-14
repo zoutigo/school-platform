@@ -148,7 +148,10 @@ module.exports.getAlbums = async (req, res, next) => {
     }
     const albums = await Album.find(req.query)
 
-    if (albums.length < 1) return next(new NotFound('Pas de chemin trouvé'))
+    if (albums.length < 1)
+      return next(
+        new NotFound("Il n'y a pas encore d'abum crée dans cette rubrique")
+      )
     return res.status(200).send(albums)
   } catch (err) {
     return next(err)

@@ -21,11 +21,14 @@ app.set('port', port)
 // personal configuration
 if (port === 3500) {
   console.log('Environment:', process.env.NODE_ENV)
-  if (!process.env.DEV_MODE && port === 3500) {
-    process.env.DEV_MODE = 'dev'
-  }
-  console.log('DEV_MODE:', process.env.DEV_MODE)
 }
+// if (port === 3500) {
+//   console.log('Environment:', process.env.NODE_ENV)
+//   if (!process.env.DEV_MODE && port === 3500) {
+//     process.env.DEV_MODE = 'dev'
+//   }
+//   console.log('DEV_MODE:', process.env.DEV_MODE)
+// }
 
 /**
  * Create HTTP server.

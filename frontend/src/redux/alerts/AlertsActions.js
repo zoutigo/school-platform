@@ -2,6 +2,7 @@ import {
   SET_PRIVATE_ACCOUNT_DATA_ALERT,
   SET_INFORMATIONS_INSCRIPTIONS_ALERT,
   SET_PRIVATE_ACCOUNT_MUTATE_ALERT,
+  SET_ALBUM_MUTATE_ALERT,
 } from './AlertsActionsTypes'
 
 export const setPrivateAccountDataAlert = (value = null) => ({
@@ -14,5 +15,9 @@ export const setInformationsInscriptionsAlert = (value = null) => ({
 })
 export const setPrivateAccountMutateAlert = (value = null) => ({
   type: SET_PRIVATE_ACCOUNT_MUTATE_ALERT,
+  payload: value,
+})
+export const setAlbumMutateAlert = (value = null) => ({
+  type: SET_ALBUM_MUTATE_ALERT,
   payload: value,
 })
