@@ -19,7 +19,7 @@ module.exports.postEntity = async (req, res, next) => {
 
   const errors = entityValidator(req.body)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   const { name, alias } = req.body
@@ -86,7 +86,7 @@ module.exports.postEntity = async (req, res, next) => {
 module.exports.getEntities = async (req, res, next) => {
   const errors = entityValidator(req.query)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   try {

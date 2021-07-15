@@ -43,7 +43,14 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
   color: theme.palette.error.main,
 }))
 
-function InputFileControl({ control, name, accept, initialValue, ...rest }) {
+function InputFileControl({
+  control,
+  name,
+  accept,
+  multiple,
+  initialValue,
+  ...rest
+}) {
   const [value, setValue] = React.useState('')
 
   const {
@@ -68,7 +75,7 @@ function InputFileControl({ control, name, accept, initialValue, ...rest }) {
           InputLabelProps={{
             shrink: true,
           }}
-          inputProps={{ accept: accept }}
+          inputProps={{ accept: accept, multiple: multiple }}
           onChange={(e) => {
             setValue(e.target.value)
             field.onChange(e.target.files)
@@ -85,6 +92,7 @@ function InputFileControl({ control, name, accept, initialValue, ...rest }) {
 }
 InputFileControl.defaultProps = {
   initialValue: null,
+  multiple: false,
 }
 InputFileControl.propTypes = {
   name: PropTypes.string.isRequired,
@@ -94,5 +102,6 @@ InputFileControl.propTypes = {
   }).isRequired,
   initialValue: PropTypes.string,
   accept: PropTypes.string.isRequired,
+  multiple: PropTypes.bool,
 }
 export default InputFileControl

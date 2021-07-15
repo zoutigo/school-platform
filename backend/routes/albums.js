@@ -25,7 +25,7 @@ router.get('/:id?', getAlbums)
 router.post(
   '/',
   tokenVerify,
-  uploadImage('./images/albums', 'album-cover', 4),
+  uploadImage('./images/albums', 'album-cover', 5),
   postAlbum
 )
 

@@ -11,6 +11,9 @@ const initialState = {
   informationsInscriptions: initialAlert,
   privateAccountDatasMutate: initialAlert,
   albumMutate: initialAlert,
+  albumFetch: initialAlert,
+  albumPageMutate: initialAlert,
+  albumPageFetch: initialAlert,
 }
 
 /* eslint-disable */
@@ -26,6 +29,15 @@ const actionsReducers = createReducer(initialState, {
   },
   SET_ALBUM_MUTATE_ALERT: (state, action) => {
     state.albumMutate = action.payload
+  },
+  SET_ALBUM_FETCH_ALERT: (state, action) => {
+    state.albumFetch = action.payload
+  },
+  SET_ALBUM_PAGE_MUTATE_ALERT: (state, action) => {
+    state.albumPageMutate = action.payload
+  },
+  SET_ALBUM_PAGE_FETCH_ALERT: (state, action) => {
+    state.albumPageFetch = action.payload
   },
 })
 

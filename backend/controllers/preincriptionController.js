@@ -31,7 +31,7 @@ module.exports.postPreinscription = async (req, res, next) => {
 
   const errors = preinscriptionValidator(req.body)
   if (errors.length > 0) {
-    return next(deleteFile(filepath, new BadRequest(errors)))
+    return next(deleteFile(filepath, new BadRequest(errors.join())))
   }
 
   // check if user exits
@@ -159,7 +159,7 @@ module.exports.postPreinscription = async (req, res, next) => {
 module.exports.getPreinscriptions = async (req, res, next) => {
   const errors = preinscriptionValidator(req.query)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   try {

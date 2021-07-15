@@ -28,7 +28,7 @@ module.exports.registerUser = async (req, res, next) => {
 
   const errors = userValidator(req.body)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   // check if email exist in database
@@ -83,7 +83,7 @@ module.exports.loginUser = async (req, res, next) => {
 
   const errors = userValidator(req.body)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   // check if email exists
@@ -113,7 +113,7 @@ module.exports.updateUser = async (req, res, next) => {
     return next(new BadRequest('No datas to update'))
 
   const errors = userValidator(req.body)
-  if (errors.length > 0) return next(new BadRequest(errors))
+  if (errors.length > 0) return next(new BadRequest(errors.join()))
 
   // check if user exist
   const toUpdateuser = await User.findOne({ _id: toUpdateId })

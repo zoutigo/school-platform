@@ -42,7 +42,7 @@ module.exports.postAlbum = async (req, res, next) => {
 
   const errors = albumValidator(req.body)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   const { name, alias, description } = req.body
@@ -74,6 +74,7 @@ module.exports.postAlbum = async (req, res, next) => {
     const newAlbum = new Album(album)
     newAlbum.coverpath = filepath
     newAlbum.covername = filename
+    newAlbum.entity = entity._id
     try {
       const savedAlbum = await newAlbum.save()
       if (savedAlbum) {
@@ -138,15 +139,24 @@ module.exports.postAlbum = async (req, res, next) => {
 module.exports.getAlbums = async (req, res, next) => {
   const errors = albumValidator(req.query)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
+  }
+
+  if (req.query.id) {
+    req.query._id = req.query.id
+    delete req.query.id
+  }
+  if (req.query.entityAlias) {
+    const entity = await Entity.findOne({ alias: req.query.entityAlias })
+    if (!entity) return next(new BadRequest("cette entité n'existe pas"))
+    req.query.entity = entity._id
+    delete req.query.entityAlias
   }
 
   try {
-    if (req.query.id) {
-      req.query._id = req.query.id
-      delete req.query.id
-    }
     const albums = await Album.find(req.query)
+      .select('_id name alias description entity coverpath covername pictures')
+      .populate('entity')
 
     if (albums.length < 1)
       return next(
@@ -163,13 +173,13 @@ module.exports.postAlbumImages = async (req, res, next) => {
   const { id: albumId, action, entityAlias, filepath } = req.query
 
   const entity = await Entity.findOne({ alias: entityAlias })
-  if (!entity)
-    return next(
-      deleteFile(
-        req.file.path,
-        new BadRequest('une ou plusieurs données manquantes: entité')
-      )
-    )
+  // if (!entity)
+  //   return next(
+  //     deleteFiles(
+  //       req.files,
+  //       new BadRequest('une ou plusieurs données manquantes: entité')
+  //     )
+  //   )
 
   let roleIsAllowed = false
 
@@ -181,9 +191,9 @@ module.exports.postAlbumImages = async (req, res, next) => {
 
   const userIsAllowed = isAdmin || isManager || isModerator || roleIsAllowed
 
-  if (Object.keys(req.body).length < 1 && action !== 'delete' && !req.file) {
-    return next(new BadRequest('datas missing'))
-  }
+  // if (Object.keys(req.body).length < 1 && action !== 'delete' && !req.file) {
+  //   return next(new BadRequest('datas missing'))
+  // }
 
   if (!userIsAllowed)
     return next(
@@ -192,11 +202,12 @@ module.exports.postAlbumImages = async (req, res, next) => {
       )
     )
 
-  if (!req.files || req.files.length < 1)
+  if ((!req.files || req.files.length < 1) && action !== 'delete')
     return next(new BadRequest('les images ne sont pas telechargées'))
 
   // check if album exist
   const album = await Album.findOne({ _id: albumId })
+
   if (!album)
     return next(deleteFiles(req.files, new BadRequest('album non identifié')))
 
@@ -216,13 +227,18 @@ module.exports.postAlbumImages = async (req, res, next) => {
       return next(deleteFiles(req.files, new BadRequest(err)))
     }
   } else if (action === 'delete') {
-    pictures.filter(({ filepath: path }) => path !== filepath)
+    const filteredPictures = pictures.filter(
+      ({ filepath: path }) => path !== filepath
+    )
 
     try {
       fs.unlink(filepath, (err) => {
         if (err) return err
       })
-      const modifiedAlbum = await album.save()
+      const modifiedAlbum = await Album.findOneAndUpdate(
+        { _id: albumId },
+        { pictures: filteredPictures }
+      )
       if (modifiedAlbum)
         return res.status(200).send({ message: 'image supprimée' })
     } catch (err) {

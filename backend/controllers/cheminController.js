@@ -22,7 +22,7 @@ module.exports.postChemin = async (req, res, next) => {
 
   const errors = cheminValidator(req.body)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   const { path: cheminpath, alias, description } = req.body
@@ -119,7 +119,7 @@ module.exports.postChemin = async (req, res, next) => {
 module.exports.getChemins = async (req, res, next) => {
   const errors = cheminValidator(req.query)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   try {

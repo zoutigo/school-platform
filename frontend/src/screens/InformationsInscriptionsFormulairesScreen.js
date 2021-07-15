@@ -49,6 +49,7 @@ function InformationsInscriptionsFormulairesScreen() {
   const [userDataCompleted, setUserDataCompleted] = useState(false)
   const [addFile, setAddFile] = useState(false)
   const [addMessage, setAddMessage] = useState(false)
+  const [showMutateMessage, setShowMutateMessage] = useState(false)
   const [alert, setAlert] = useState({
     openAlert: false,
     severity: 'error',
@@ -168,9 +169,18 @@ function InformationsInscriptionsFormulairesScreen() {
     </div>
   )
 
+  useEffect(() => {
+    if (mutationIsSuccessfull) {
+      setShowMutateMessage(true)
+    }
+    return () => {
+      setShowMutateMessage(false)
+    }
+  }, [mutationIsSuccessfull])
+
   return (
     <Grid container>
-      {mutationIsSuccessfull && (
+      {showMutateMessage && (
         <LazyMessage severity="error">
           <MutationIsSuccessfullMessage />
         </LazyMessage>

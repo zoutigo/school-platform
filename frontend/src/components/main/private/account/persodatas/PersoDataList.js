@@ -1,3 +1,4 @@
+import { useHistory } from 'react-router-dom'
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
@@ -20,6 +21,7 @@ function PersoDataList({
   setFetchAlert,
   setData,
 }) {
+  const history = useHistory()
   const {
     User: { _id },
   } = useSelector((state) => state.user)
@@ -48,12 +50,15 @@ function PersoDataList({
       })
     }
     if (data) {
+      console.log('datas:', data)
       setData(data)
       setFetchAlert({
         openAlert: false,
         severity: 'success',
         alertText: '',
       })
+    } else {
+      history.push('/login')
     }
     return () => {
       setFetchAlert({

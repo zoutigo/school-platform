@@ -133,15 +133,35 @@ export const useRouteDatas = () => {
 
   const categories = Routes.filter(
     (route) =>
-      route.path?.includes(pathname) &&
+      pathname?.includes(route.path) &&
       route?.path !== pathname &&
       route.type === 'category'
   )
   const chapters = Routes.filter(
     (route) => route.path?.includes(pathname) && route.type === 'chapter'
   )
-
   const current = Routes.find((route) => route.path === pathname)
 
-  return { categories, chapters, rubric, current }
+  const [category] = categories
+  const categoryAlias = () => {
+    switch (category.alias) {
+      case 'petite-section':
+        return 'ps'
+      case 'moyenne-section':
+        return 'ms'
+      case 'grande-section':
+        return 'gs'
+
+      default:
+        return category.alias
+    }
+  }
+
+  return {
+    categories,
+    chapters,
+    rubric,
+    current,
+    categoryAlias: categoryAlias(),
+  }
 }

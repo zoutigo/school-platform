@@ -40,7 +40,7 @@ module.exports.albumValidator = (datas) => {
 
       case 'entityAlias':
         return Joi.object({
-          path: Joi.string().required().min(3).max(100),
+          entityAlias: Joi.string().required().min(2).max(100),
         }).validate(data)
 
       case 'description':

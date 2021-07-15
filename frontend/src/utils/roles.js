@@ -44,6 +44,12 @@ const useRoles = () => {
     (role) =>
       role.entity.alias === 'cm2' && role.name === 'enseignant' && TokenIsValid
   )
+  const adaptationEnseignant = roles?.find(
+    (role) =>
+      role.entity.alias === 'adaptation' &&
+      role.name === 'enseignant' &&
+      TokenIsValid
+  )
 
   return {
     apelMembre,
@@ -56,6 +62,7 @@ const useRoles = () => {
     ce2Enseignant,
     cm1Enseignant,
     cm2Enseignant,
+    adaptationEnseignant,
   }
 }
 

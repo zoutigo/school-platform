@@ -22,7 +22,7 @@ module.exports.postPage = async (req, res, next) => {
 
   const errors = pageValidator(req.body)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   if (action === 'create') {

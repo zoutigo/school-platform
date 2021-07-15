@@ -52,7 +52,7 @@ module.exports.postPaper = async (req, res, next) => {
 
   const errors = paperValidator(req.body)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   if (action === 'create') {

@@ -14,7 +14,6 @@ const StyledFab = styled(Fab)(({ theme, bgcolor }) => ({
 function ToolTipEditPage({ show, callback }) {
   const theme = useTheme()
   const handleClick = () => {
-    console.log(callback)
     callback(!show)
   }
   return (

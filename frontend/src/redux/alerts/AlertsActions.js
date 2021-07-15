@@ -3,6 +3,9 @@ import {
   SET_INFORMATIONS_INSCRIPTIONS_ALERT,
   SET_PRIVATE_ACCOUNT_MUTATE_ALERT,
   SET_ALBUM_MUTATE_ALERT,
+  SET_ALBUM_FETCH_ALERT,
+  SET_ALBUM_PAGE_FETCH_ALERT,
+  SET_ALBUM_PAGE_MUTATE_ALERT,
 } from './AlertsActionsTypes'
 
 export const setPrivateAccountDataAlert = (value = null) => ({
@@ -19,5 +22,17 @@ export const setPrivateAccountMutateAlert = (value = null) => ({
 })
 export const setAlbumMutateAlert = (value = null) => ({
   type: SET_ALBUM_MUTATE_ALERT,
+  payload: value,
+})
+export const setAlbumFetchAlert = (value = null) => ({
+  type: SET_ALBUM_FETCH_ALERT,
+  payload: value,
+})
+export const setAlbumPageFetchAlert = (value = null) => ({
+  type: SET_ALBUM_PAGE_FETCH_ALERT,
+  payload: value,
+})
+export const setAlbumPageMutateAlert = (value = null) => ({
+  type: SET_ALBUM_PAGE_MUTATE_ALERT,
   payload: value,
 })

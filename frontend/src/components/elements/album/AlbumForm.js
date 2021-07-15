@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Grid, styled, useTheme } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom'
 import { setAlbumMutateAlert } from '../../../redux/alerts/AlertsActions'
 import albumSchema from '../../../schemas/albumSchema'
 import { apiPostAlbum } from '../../../utils/api'
-import { useUpdateMutationOptions } from '../../../utils/hooks'
+import { useRouteDatas, useUpdateMutationOptions } from '../../../utils/hooks'
 import CostumButton from '../CustomButton'
 import InputFileControl from '../InputFileControl'
 import InputRadio from '../InputRadio'
@@ -30,17 +30,28 @@ const StyledPaperForm = styled('form')(() => ({
   },
 }))
 
-function AlbumForm({ setAlbum, formAction, setFormAction, queryKey, album }) {
+function AlbumForm({
+  setCurrentAlbum,
+  formAction,
+  setShow,
+  setFormAction,
+  queryKey,
+  currentAlbum,
+  entityAlias,
+}) {
   const theme = useTheme()
   const history = useHistory()
   const dispatch = useDispatch()
   const { Token } = useSelector((state) => state.user)
   const [addFile, setAddFile] = useState(true)
 
-  const { mutateAsync, mutate } = useMutation(
-    apiPostAlbum,
-    useUpdateMutationOptions(queryKey)
-  )
+  const {
+    mutateAsync,
+    isSuccess,
+    isError,
+    data: mutationData,
+    error,
+  } = useMutation(apiPostAlbum, useUpdateMutationOptions(queryKey))
   const {
     control,
     handleSubmit,
@@ -57,7 +68,9 @@ function AlbumForm({ setAlbum, formAction, setFormAction, queryKey, album }) {
       description,
       name,
       file: file ? file[0] : null,
-      alias: album ? album.alias : `${(await new Date().getTime()) / 1000}`,
+      alias: currentAlbum
+        ? currentAlbum.alias
+        : `${(await new Date().getTime()) / 1000}`,
     }
 
     const options = {
@@ -72,36 +85,44 @@ function AlbumForm({ setAlbum, formAction, setFormAction, queryKey, album }) {
         action: 'create',
         options: options,
         body: finalDatas,
-      }).then((response) => {
-        console.log('response:', response)
-
-        // setFormAction('create')
-        // setAlbum(null)
-        // dispatch(
-        //   setAlbumMutateAlert({
-        //     openAlert: true,
-        //     severity: 'success',
-        //     alertText: response.data.message,
-        //   })
-        // )
+        Token: Token,
+        entityAlias: entityAlias,
+      }).then(() => {
+        window.scrollTo(0, 0)
       })
     } catch (err) {
-      console.log('errrror:', err)
-      if (err.response.status === 401) {
-        history.push('/login')
-      }
+      window.scrollTo(0, 0)
+    }
+  }
 
+  useEffect(() => {
+    if (isError) {
       dispatch(
         setAlbumMutateAlert({
           openAlert: true,
           severity: 'error',
-          alertText: err.response.data.message,
+          alertText: error.response.data.message,
         })
       )
-
+    }
+    if (mutationData) {
+      setFormAction('create')
+      setCurrentAlbum(null)
+      dispatch(
+        setAlbumMutateAlert({
+          openAlert: true,
+          severity: 'success',
+          alertText: mutationData.message,
+        })
+      )
+      setShow({
+        page: false,
+        form: false,
+        list: true,
+      })
       window.scrollTo(0, 0)
     }
-  }
+  }, [isSuccess, isError, mutationData, error])
 
   const displayRadio = formAction === 'update' ? 'block' : 'none'
 
@@ -118,12 +139,12 @@ function AlbumForm({ setAlbum, formAction, setFormAction, queryKey, album }) {
             control={control}
             name="name"
             label="Nom de l'album"
-            initialvalue={album ? album.name : ''}
+            initialvalue={currentAlbum ? currentAlbum.name : ''}
           />
           <InputSmallEditorControl
             control={control}
             name="description"
-            initialValue={album ? album.description : ''}
+            initialValue={currentAlbum ? currentAlbum.description : ''}
             label="Description de l'album"
             width="100%"
             height={100}
@@ -177,9 +198,11 @@ AlbumForm.defaultProps = null
 AlbumForm.propTypes = {
   formAction: PropTypes.string.isRequired,
   setFormAction: PropTypes.func.isRequired,
+  setShow: PropTypes.func.isRequired,
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
-  setAlbum: PropTypes.func.isRequired,
-  album: PropTypes.shape({
+  setCurrentAlbum: PropTypes.func.isRequired,
+  entityAlias: PropTypes.string.isRequired,
+  currentAlbum: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
     alias: PropTypes.string,

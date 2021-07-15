@@ -19,7 +19,7 @@ module.exports.postRole = async (req, res, next) => {
 
   const errors = roleValidator(req.body)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   const { name, mission, entity } = req.body
@@ -86,7 +86,7 @@ module.exports.postRole = async (req, res, next) => {
 module.exports.getRoles = async (req, res, next) => {
   const errors = roleValidator(req.query)
   if (errors.length > 0) {
-    return next(new BadRequest(errors))
+    return next(new BadRequest(errors.join()))
   }
 
   try {

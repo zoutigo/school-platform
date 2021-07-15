@@ -203,8 +203,14 @@ export const apiPostPreInscription = async ({ id, body, options, action }) => {
   return result
 }
 
-export const apiPostAlbum = async ({ id, body, options, action }) => {
-  const URL = `${PREFIX}/albums?action=${action}&id=${id}`
+export const apiPostAlbum = async ({
+  id,
+  body,
+  action,
+  Token,
+  entityAlias,
+}) => {
+  const URL = `${PREFIX}/albums?action=${action}&id=${id}&entityAlias=${entityAlias}`
   const formdata = new FormData()
 
   if (body && body.file) {
@@ -220,13 +226,17 @@ export const apiPostAlbum = async ({ id, body, options, action }) => {
     formdata.append('alias', body.alias)
   }
 
-  const result = await fetch(URL, {
-    method: 'POST',
-    headers: new Headers(options.headers),
-    body: formdata,
+  const { data } = await axios({
+    method: 'post',
+    url: URL,
+    data: formdata,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-access-token': Token,
+    },
   })
 
-  return result
+  return data
 }
 
 export const apiFetchAlbum = async (params) => {
@@ -236,18 +246,32 @@ export const apiFetchAlbum = async (params) => {
   return data
 }
 
-export const apiPostAlbumImages = async ({ id, body, options, action }) => {
-  const URL = `${PREFIX}/albums/images?action=${action}&id=${id}`
+export const apiPostAlbumImages = async ({
+  id: albumId,
+  body,
+  action,
+  Token,
+  entityAlias,
+  filepath,
+}) => {
+  const URL = `${PREFIX}/albums/images?action=${action}&id=${albumId}&entityAlias=${entityAlias}&filepath=${filepath}`
   const formdata = new FormData()
 
   if (body && body.files) {
-    formdata.append('files', body.files)
+    // formdata.append('files', body.files)
+    for (let i = 0; i < body.files.length; i += 1) {
+      formdata.append('files', body.files[i])
+    }
   }
 
-  const { data } = await fetch(URL, {
-    method: 'POST',
-    headers: new Headers(options.headers),
-    body: formdata,
+  const { data } = await axios({
+    method: 'post',
+    url: URL,
+    data: formdata,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-access-token': Token,
+    },
   })
 
   return data
