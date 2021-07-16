@@ -131,6 +131,12 @@ export const useRouteDatas = () => {
     (route) => pathname.includes(route.path) && route.type === 'rubric'
   )
 
+  const rubricCategories = Routes.filter(
+    (route) =>
+      route.path.includes(pathname) &&
+      route?.path !== pathname &&
+      route.type === 'category'
+  )
   const categories = Routes.filter(
     (route) =>
       pathname?.includes(route.path) &&
@@ -160,6 +166,7 @@ export const useRouteDatas = () => {
   }
 
   return {
+    rubricCategories,
     categories,
     category,
     chapters,
