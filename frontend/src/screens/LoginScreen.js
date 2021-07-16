@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import InputTextControl from '../components/elements/InputTextControl'
 import loginSchema from '../schemas/loginSchema'
 import {
@@ -18,6 +18,8 @@ import AlertCollapse from '../components/elements/AlertCollapse'
 import { useRouteParams, useUpdateMutationOptions } from '../utils/hooks'
 import { apiLogin } from '../utils/api'
 import { setUserInfos, setUserToken } from '../redux/user/UserActions'
+import { setLoginAlert } from '../redux/alerts/AlertsActions'
+import { initialAlertCollapse } from '../constants/alerts'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
@@ -26,7 +28,7 @@ function LoginScreen() {
   const history = useHistory()
   const message = useRouteParams('message')
   const status = useRouteParams('status')
-
+  const { login: loginAlert } = useSelector((state) => state.alerts)
   const dispatch = useDispatch()
   const theme = useTheme()
   const [topAlert, setTopAlert] = useState({
@@ -91,6 +93,10 @@ function LoginScreen() {
   return (
     <StyledGrid container>
       <Grid item container>
+        <AlertCollapse
+          {...loginAlert}
+          callback={() => dispatch(setLoginAlert(initialAlertCollapse))}
+        />
         <AlertCollapse
           alertText={topAlert.alertText}
           openAlert={topAlert.openAlert}

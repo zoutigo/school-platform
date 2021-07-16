@@ -31,7 +31,6 @@ const paperSchema = new Schema(
     clientEntity: {
       type: Schema.Types.ObjectId,
       ref: 'Entity',
-      required: true,
     },
 
     text: {

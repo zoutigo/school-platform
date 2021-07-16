@@ -6,6 +6,8 @@ import {
   SET_ALBUM_FETCH_ALERT,
   SET_ALBUM_PAGE_FETCH_ALERT,
   SET_ALBUM_PAGE_MUTATE_ALERT,
+  SET_LOGIN_ALERT,
+  SET_REGISTER_ALERT,
 } from './AlertsActionsTypes'
 
 export const setPrivateAccountDataAlert = (value = null) => ({
@@ -34,5 +36,13 @@ export const setAlbumPageFetchAlert = (value = null) => ({
 })
 export const setAlbumPageMutateAlert = (value = null) => ({
   type: SET_ALBUM_PAGE_MUTATE_ALERT,
+  payload: value,
+})
+export const setLoginAlert = (value = null) => ({
+  type: SET_LOGIN_ALERT,
+  payload: value,
+})
+export const setRegisterAlert = (value = null) => ({
+  type: SET_REGISTER_ALERT,
   payload: value,
 })

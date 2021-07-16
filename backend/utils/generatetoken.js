@@ -10,6 +10,7 @@ module.exports.generateToken = (user) =>
       isManager: user.isManager,
       isModerator: user.isModerator,
       isTeacher: user.isTeacher,
+      isVerified: user.isVerified,
       childrenClasses: user.childrenClasses,
       firstname: user.firstname,
       gender: user.gender,

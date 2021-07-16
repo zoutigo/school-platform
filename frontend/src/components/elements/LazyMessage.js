@@ -37,7 +37,7 @@ function LazyMessage(props) {
       case 'success':
         return {
           title: 'Bravo',
-          colors: theme.palette.error,
+          colors: theme.palette.success,
         }
 
       default:

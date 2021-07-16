@@ -175,7 +175,7 @@ export const apiFetchChemin = async () => {
   return data
 }
 
-export const apiPostPreInscription = async ({ id, body, options, action }) => {
+export const apiPostPreInscription = async ({ id, body, action, Token }) => {
   const URL = `${PREFIX}/preinscriptions?action=${action}&id=${id}`
   const formdata = new FormData()
 
@@ -194,13 +194,17 @@ export const apiPostPreInscription = async ({ id, body, options, action }) => {
     formdata.append('file', body.file)
   }
 
-  const result = await fetch(URL, {
-    method: 'POST',
-    headers: new Headers(options.headers),
-    body: formdata,
+  const { data } = await axios({
+    method: 'post',
+    url: URL,
+    data: formdata,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-access-token': Token,
+    },
   })
 
-  return result
+  return data
 }
 
 export const apiPostAlbum = async ({

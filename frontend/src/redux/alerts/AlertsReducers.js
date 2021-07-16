@@ -14,6 +14,8 @@ const initialState = {
   albumFetch: initialAlert,
   albumPageMutate: initialAlert,
   albumPageFetch: initialAlert,
+  login: initialAlert,
+  register: initialAlert,
 }
 
 /* eslint-disable */
@@ -38,6 +40,12 @@ const actionsReducers = createReducer(initialState, {
   },
   SET_ALBUM_PAGE_FETCH_ALERT: (state, action) => {
     state.albumPageFetch = action.payload
+  },
+  SET_LOGIN_ALERT: (state, action) => {
+    state.login = action.payload
+  },
+  SET_REGISTER_ALERT: (state, action) => {
+    state.register = action.payload
   },
 })
 

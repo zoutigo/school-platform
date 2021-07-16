@@ -1,11 +1,11 @@
 /* eslint-disable import/named */
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Grid, styled, useTheme } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from 'react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import Title from '../components/elements/Title'
 import InputTextControl from '../components/elements/InputTextControl'
 import CustomButton from '../components/elements/CustomButton'
@@ -19,6 +19,8 @@ import InputSelectControl from '../components/elements/InputSelectControl'
 import { classroomsOptions } from '../constants/options'
 import InputRadio from '../components/elements/InputRadio'
 import LazyMessage from '../components/elements/LazyMessage'
+import { setLoginAlert } from '../redux/alerts/AlertsActions'
+import { initialAlertCollapse } from '../constants/alerts'
 
 const StyledPaperForm = styled('form')(({ theme }) => ({
   width: '100%',
@@ -43,7 +45,9 @@ function InformationsInscriptionsFormulairesScreen() {
   } = useSelector((state) => state.user)
   const { tokenIsValid } = useIsTokenValid()
 
+  const dispatch = useDispatch()
   const theme = useTheme()
+  const history = useHistory()
   const userQueryKey = [`datas-${_id}`]
   const queryKey = ['preinsciptions']
   const [userDataCompleted, setUserDataCompleted] = useState(false)
@@ -78,17 +82,11 @@ function InformationsInscriptionsFormulairesScreen() {
       file: file ? file[0] : null,
       message,
     }
-    const options = {
-      headers: {
-        'x-access-token': Token,
-      },
-    }
 
     try {
       await mutateAsync({
         id: null,
         action: 'create',
-        options: options,
         body: finalDatas,
         token: Token,
       }).then((response) => {
@@ -102,11 +100,21 @@ function InformationsInscriptionsFormulairesScreen() {
         }
       })
     } catch (err) {
-      console.log('errorrrrr', err)
+      if (err.response.status === 498) {
+        dispatch(
+          setLoginAlert({
+            openAlert: true,
+            alertText:
+              'Il semblerait que votre jeton de connexion soit arrivé à expiration',
+            severity: 'error',
+          })
+        )
+        history.push('/login')
+      }
       setAlert({
         openAlert: true,
         severity: 'error',
-        alertText: err.data.message,
+        alertText: err.response.message,
       })
 
       window.scrollTo(0, 0)
@@ -120,10 +128,11 @@ function InformationsInscriptionsFormulairesScreen() {
       const { phone, firstname, lastname } = data
       if (phone && firstname && lastname) {
         setUserDataCompleted(true)
+        dispatch(setLoginAlert(initialAlertCollapse))
       }
     }
     return () => {
-      setUserDataCompleted(true)
+      setUserDataCompleted(false)
     }
   }, [data])
 
@@ -134,7 +143,10 @@ function InformationsInscriptionsFormulairesScreen() {
         aurons besoin de vos coordonnées.
       </p>
       <p>
-        <Link to="/login">Connectez vous.</Link>
+        <Link to="/login">
+          Connectez vous. Ou assurez verifiez le mail de validation qui vous a
+          été adressé.
+        </Link>
       </p>
       <p>
         <Link to="/register">Créez votre compte :</Link>{' '}
@@ -181,7 +193,7 @@ function InformationsInscriptionsFormulairesScreen() {
   return (
     <Grid container>
       {showMutateMessage && (
-        <LazyMessage severity="error">
+        <LazyMessage severity="success">
           <MutationIsSuccessfullMessage />
         </LazyMessage>
       )}

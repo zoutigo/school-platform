@@ -1,29 +1,14 @@
+/* eslint-disable import/named */
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
 import React from 'react'
-import { useLocation } from 'react-router-dom'
 import useRoles from '../utils/roles'
-import { useRigths } from '../utils/hooks'
+import { useRigths, useRouteDatas } from '../utils/hooks'
 import Paper from '../components/paper/Paper'
 import { apiFetchPaper, apiPostPaper } from '../utils/api'
 
 function ClassesActivitesScreen() {
-  const { pathname } = useLocation()
-  const prealias = pathname.split('/')[2]
-
-  const defineAlias = (extract) => {
-    switch (extract) {
-      case 'petite-section':
-        return 'ps'
-      case 'moyenne-section':
-        return 'ms'
-      case 'grande-section':
-        return 'gs'
-
-      default:
-        return extract
-    }
-  }
-
-  const alias = defineAlias(prealias)
+  const { categoryAlias: alias } = useRouteDatas()
 
   const { moderatorLevel } = useRigths()
   const {
