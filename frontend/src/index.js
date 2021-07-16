@@ -17,6 +17,7 @@ import returnStoreAndPersistor from './redux/store'
 moment.locale('fr')
 
 const { store, persistor } = returnStoreAndPersistor()
+persistor.purge()
 
 ReactDOM.render(
   <Provider store={store}>

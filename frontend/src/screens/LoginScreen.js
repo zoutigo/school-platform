@@ -20,6 +20,7 @@ import { apiLogin } from '../utils/api'
 import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 import { setLoginAlert } from '../redux/alerts/AlertsActions'
 import { initialAlertCollapse } from '../constants/alerts'
+import returnStoreAndPersistor from '../redux/store'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
@@ -28,6 +29,7 @@ function LoginScreen() {
   const history = useHistory()
   const message = useRouteParams('message')
   const status = useRouteParams('status')
+  const { persistor } = returnStoreAndPersistor()
   const { login: loginAlert } = useSelector((state) => state.alerts)
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -74,6 +76,7 @@ function LoginScreen() {
   }
 
   useEffect(() => {
+    persistor.purge()
     if (status && message) {
       setTopAlert({
         severity: status,
