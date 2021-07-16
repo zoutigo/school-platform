@@ -137,14 +137,16 @@ export const useRouteDatas = () => {
       route?.path !== pathname &&
       route.type === 'category'
   )
+  const category = Routes.filter(
+    (route) => pathname?.includes(route.path) && route.type === 'category'
+  )
   const chapters = Routes.filter(
     (route) => route.path?.includes(pathname) && route.type === 'chapter'
   )
   const current = Routes.find((route) => route.path === pathname)
 
-  const [category] = categories
-  const categoryAlias = () => {
-    switch (category.alias) {
+  const categoryAlias = (cat = null) => {
+    switch (cat) {
       case 'petite-section':
         return 'ps'
       case 'moyenne-section':
@@ -153,15 +155,16 @@ export const useRouteDatas = () => {
         return 'gs'
 
       default:
-        return category.alias
+        return cat
     }
   }
 
   return {
     categories,
+    category,
     chapters,
     rubric,
     current,
-    categoryAlias: categoryAlias(),
+    categoryAlias: categoryAlias(category[0] ? category[0].alias : null),
   }
 }
