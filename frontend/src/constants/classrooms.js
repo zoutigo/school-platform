@@ -2,7 +2,6 @@
 import Equipe from './equipe'
 
 const classroomsDefinition = [
-  'aesh',
   'cm2',
   'cm1',
   'ce2',
@@ -11,6 +10,7 @@ const classroomsDefinition = [
   'gs',
   'ms',
   'ps',
+  'adaptation',
 ]
 
 const classroomsPreEquiped = classroomsDefinition.map((name) => ({

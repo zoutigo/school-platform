@@ -10,10 +10,11 @@ const ClassroomNameGrid = styled(Grid)(() => ({
   textTransform: 'uppercase',
 }))
 const StyledBlocGrid = styled(Grid)(() => ({
-  padding: '1rem 2rem',
+  padding: '1rem 2rem ',
   '& :nth-child(2)': {
     background: 'whitesmoke',
     paddingLeft: '0.2rem',
+    borderRadius: '5px',
   },
 }))
 
