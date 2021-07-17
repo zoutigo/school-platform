@@ -19,7 +19,6 @@ function PaperItem({
   setShowPaperList,
   setCurrentDocument,
   currentDocument,
-  setTopAlert,
   setFormAction,
   setShowSearch,
 }) {
@@ -43,7 +42,6 @@ function PaperItem({
             setShowPaperList={setShowPaperList}
             setCurrentDocument={setCurrentDocument}
             currentDocument={currentDocument}
-            setTopAlert={setTopAlert}
             setFormAction={setFormAction}
             setShowSearch={setShowSearch}
           />
@@ -71,7 +69,6 @@ PaperItem.propTypes = {
   currentDocument: PropTypes.shape({
     _id: PropTypes.string,
   }),
-  setTopAlert: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.func.isRequired,
   paperItem: PropTypes.shape({

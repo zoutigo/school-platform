@@ -8,6 +8,8 @@ import {
   SET_ALBUM_PAGE_MUTATE_ALERT,
   SET_LOGIN_ALERT,
   SET_REGISTER_ALERT,
+  SET_PAPER_FETCH_ALERT,
+  SET_PAPER_MUTATE_ALERT,
 } from './AlertsActionsTypes'
 
 export const setPrivateAccountDataAlert = (value = null) => ({
@@ -38,6 +40,17 @@ export const setAlbumPageMutateAlert = (value = null) => ({
   type: SET_ALBUM_PAGE_MUTATE_ALERT,
   payload: value,
 })
+export const setPaperFetchAlert = (value = null) => ({
+  type: SET_PAPER_FETCH_ALERT,
+  payload: value,
+})
+export const setPaperMutateAlert = (value = null) => {
+  console.log('called')
+  return {
+    type: SET_PAPER_MUTATE_ALERT,
+    payload: value,
+  }
+}
 export const setLoginAlert = (value = null) => ({
   type: SET_LOGIN_ALERT,
   payload: value,

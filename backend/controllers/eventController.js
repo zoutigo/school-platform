@@ -66,7 +66,7 @@ module.exports.postEvent = async (req, res, next) => {
     try {
       const deletedEvent = await Event.findOneAndDelete({ _id: eventId })
       if (deletedEvent) {
-        return res.status(200).send('event deleted successfully')
+        return res.status(200).send({ message: 'event deleted successfully' })
       }
     } catch (err) {
       return next(err)

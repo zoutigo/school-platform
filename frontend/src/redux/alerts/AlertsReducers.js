@@ -1,10 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { initialAlertCollapse } from '../../constants/alerts'
 
-const initialAlert = {
-  severity: 'error',
-  alertText: '',
-  alertOpen: false,
-}
+const initialAlert = initialAlertCollapse
 
 const initialState = {
   privateAcccountData: initialAlert,
@@ -14,6 +11,8 @@ const initialState = {
   albumFetch: initialAlert,
   albumPageMutate: initialAlert,
   albumPageFetch: initialAlert,
+  paperMutate: initialAlert,
+  paperFetch: initialAlert,
   login: initialAlert,
   register: initialAlert,
 }
@@ -40,6 +39,12 @@ const actionsReducers = createReducer(initialState, {
   },
   SET_ALBUM_PAGE_FETCH_ALERT: (state, action) => {
     state.albumPageFetch = action.payload
+  },
+  SET_PAPER_MUTATE_ALERT: (state, action) => {
+    state.paperMutate = action.payload
+  },
+  SET_PAPER_FETCH_ALERT: (state, action) => {
+    state.paperFetch = action.payload
   },
   SET_LOGIN_ALERT: (state, action) => {
     state.login = action.payload

@@ -131,7 +131,9 @@ module.exports.postPaper = async (req, res, next) => {
     try {
       const deletedPaper = await Paper.findOneAndDelete({ _id: paperId })
       if (deletedPaper) {
-        return res.status(200).send({ message: 'paper deleted successfully' })
+        return res
+          .status(200)
+          .send({ message: 'Document correctement supprimé' })
       }
     } catch (err) {
       return next(err)

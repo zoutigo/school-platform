@@ -1,9 +1,15 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
 import React from 'react'
 import { Grid, styled } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useQuery } from 'react-query'
-import ApiAlert from '../elements/ApiAlert'
+
 import PaperItem from './PaperItem'
+
+import { setPaperFetchAlert } from '../../redux/alerts/AlertsActions'
+import useFetchDispatch from '../elements/useFetchDispatch'
 
 const StyledGrid = styled(Grid)(() => ({
   padding: '0.5rem 0',
@@ -15,7 +21,6 @@ function PaperNativeList({
   setShowPaperList,
   setCurrentDocument,
   currentDocument,
-  setTopAlert,
   setFormAction,
   setShowSearch,
 }) {
@@ -24,18 +29,10 @@ function PaperNativeList({
     fetcher(queryParams)
   )
 
+  useFetchDispatch(isLoading, isError, error, data, setPaperFetchAlert)
+
   return (
     <StyledGrid item container>
-      {isLoading && (
-        <Grid item container>
-          <ApiAlert severity="warning">Chargement ...</ApiAlert>
-        </Grid>
-      )}
-      {isError && (
-        <Grid item container>
-          <ApiAlert severity="error">{error.message}</ApiAlert>{' '}
-        </Grid>
-      )}
       {Array.isArray(data) &&
         data.map((paperItem, index) => {
           if (
@@ -53,7 +50,6 @@ function PaperNativeList({
               setShowPaperList={setShowPaperList}
               setCurrentDocument={setCurrentDocument}
               currentDocument={currentDocument}
-              setTopAlert={setTopAlert}
               setFormAction={setFormAction}
               setShowSearch={setShowSearch}
               paperItem={paperItem}
@@ -79,7 +75,6 @@ PaperNativeList.propTypes = {
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
   currentDocument: PropTypes.string.isRequired,
-  setTopAlert: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.bool.isRequired,
 }

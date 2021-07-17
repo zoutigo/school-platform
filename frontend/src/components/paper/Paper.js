@@ -1,11 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
 import { Fab, Grid, styled, Tooltip } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import AlertCollapse from '../elements/AlertCollapse'
 import PaperNativeList from './PaperNativeList'
 import PaperSearchList from './PaperSearchList'
 import PaperForm from './PaperForm'
+import {
+  setPaperFetchAlert,
+  setPaperMutateAlert,
+} from '../../redux/alerts/AlertsActions'
+import { initialAlertCollapse } from '../../constants/alerts'
 
 const StyledFab = styled(Fab)(({ theme }) => ({
   position: 'fixed',
@@ -15,6 +21,7 @@ const StyledFab = styled(Fab)(({ theme }) => ({
 }))
 
 function Paper({ paper }) {
+  const dispatch = useDispatch()
   const { isAllowedToChange } = paper
   const [showPaperForm, setShowPaperForm] = useState(false)
   const [showPaperList, setShowPaperList] = useState(true)
@@ -27,8 +34,27 @@ function Paper({ paper }) {
     alertText: '',
     openAlert: false,
   })
+
+  const { paperMutate, paperFetch } = useSelector((state) => state.alerts)
+
+  // eslint-disable-next-line arrow-body-style
+  useEffect(() => {
+    return () => {
+      dispatch(setPaperMutateAlert(initialAlertCollapse))
+      dispatch(setPaperFetchAlert(initialAlertCollapse))
+    }
+  }, [])
+
   return (
     <Grid container>
+      <AlertCollapse
+        {...paperMutate}
+        callback={() => dispatch(setPaperMutateAlert(initialAlertCollapse))}
+      />
+      <AlertCollapse
+        {...paperFetch}
+        callback={() => dispatch(setPaperFetchAlert(initialAlertCollapse))}
+      />
       {topAlert.openAlert && (
         <Grid item container>
           <AlertCollapse
@@ -68,7 +94,6 @@ function Paper({ paper }) {
         <PaperForm
           setCurrentDocument={setCurrentDocument}
           currentDocument={currentDocument}
-          setTopAlert={setTopAlert}
           setShowTooltip={setShowTooltip}
           setFormAction={setFormAction}
           formAction={formAction}

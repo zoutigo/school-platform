@@ -90,7 +90,6 @@ function InformationsInscriptionsFormulairesScreen() {
         body: finalDatas,
         Token: Token,
       }).then((response) => {
-        console.log('response', response)
         if (response.status === 201) {
           setAlert({
             openAlert: true,

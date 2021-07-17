@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useTheme, ButtonGroup, Tooltip } from '@material-ui/core'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useMutation } from 'react-query'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import GetAppIcon from '@material-ui/icons/GetApp'
@@ -10,19 +10,25 @@ import { StyledPaperFooter, StyledIconButton } from '../elements/styled'
 
 import { useUpdateMutationOptions } from '../../utils/hooks'
 import ModalValidation from '../elements/ModalValidation'
+import { setPaperMutateAlert } from '../../redux/alerts/AlertsActions'
+import {
+  errorAlertCollapse,
+  successAlertCollapse,
+} from '../../constants/alerts'
 
 function PaperItemFooter({
   paperItem,
   paper,
   setShowPaperForm,
   setShowPaperList,
-  setTopAlert,
+
   setFormAction,
   setShowSearch,
 }) {
   const { _id: paperId, file } = paperItem
   const { isAllowedToChange, queryKey, poster } = paper
   const theme = useTheme()
+  const dispatch = useDispatch()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openUpdateModal, setOpenUpdateModal] = useState(false)
 
@@ -43,13 +49,13 @@ function PaperItemFooter({
         id: paperId,
         action: 'delete',
         options: options,
+      }).then((response) => {
+        dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
       })
     } catch (err) {
-      setTopAlert({
-        openAlert: true,
-        severity: 'error',
-        alertText: err.message,
-      })
+      dispatch(
+        setPaperMutateAlert(errorAlertCollapse(err.response.data.message))
+      )
     }
   }
 
@@ -127,7 +133,6 @@ PaperItemFooter.propTypes = {
   setShowPaperForm: PropTypes.func.isRequired,
   setShowPaperList: PropTypes.func.isRequired,
 
-  setTopAlert: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.func.isRequired,
   paperItem: PropTypes.shape({

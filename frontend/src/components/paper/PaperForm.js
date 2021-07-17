@@ -8,7 +8,6 @@ import PaperFormEvent from './PaperFormEvent'
 function PaperForm({
   currentDocument,
   setCurrentDocument,
-  setTopAlert,
   setShowTooltip,
   setFormAction,
   formAction,
@@ -23,7 +22,6 @@ function PaperForm({
         <PaperFormActivite
           setCurrentDocument={setCurrentDocument}
           currentDocument={currentDocument}
-          setTopAlert={setTopAlert}
           setShowTooltip={setShowTooltip}
           setFormAction={setFormAction}
           formAction={formAction}
@@ -39,7 +37,6 @@ function PaperForm({
         <PaperFormPDF
           setCurrentDocument={setCurrentDocument}
           currentDocument={currentDocument}
-          setTopAlert={setTopAlert}
           setShowTooltip={setShowTooltip}
           setFormAction={setFormAction}
           formAction={formAction}
@@ -53,7 +50,6 @@ function PaperForm({
         <PaperFormEvent
           setCurrentDocument={setCurrentDocument}
           currentDocument={currentDocument}
-          setTopAlert={setTopAlert}
           setShowTooltip={setShowTooltip}
           setFormAction={setFormAction}
           formAction={formAction}
@@ -80,7 +76,6 @@ PaperForm.propTypes = {
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
   currentDocument: PropTypes.string.isRequired,
-  setTopAlert: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
   setShowTooltip: PropTypes.func.isRequired,
   formAction: PropTypes.string.isRequired,

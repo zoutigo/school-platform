@@ -5,7 +5,6 @@ import { Editor } from '@tinymce/tinymce-react'
 import { useController, Controller } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { Grid, styled, Collapse } from '@material-ui/core'
-
 import { apiFetchVariables } from '../../utils/api'
 import tinyMceColors from '../../constants/tinyMceColors'
 import AlertCollapse from './AlertCollapse'

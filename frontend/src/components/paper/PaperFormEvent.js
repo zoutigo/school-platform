@@ -1,7 +1,7 @@
 import { styled, Grid, useTheme } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useMutation } from 'react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
@@ -13,6 +13,15 @@ import paperActiviteSchema from '../../schemas/paperActiviteSchema'
 import TinyPageEditor from '../elements/TinyPageEditor'
 import CostumButton from '../elements/CustomButton'
 import DatePickerControl from '../elements/DatePickerControl'
+import {
+  setPaperFetchAlert,
+  setPaperMutateAlert,
+} from '../../redux/alerts/AlertsActions'
+import {
+  errorAlertCollapse,
+  initialAlertCollapse,
+  successAlertCollapse,
+} from '../../constants/alerts'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -33,7 +42,6 @@ const StyledPaperForm = styled('form')(() => ({
 function PaperFormEvent({
   currentDocument,
   setCurrentDocument,
-  setTopAlert,
   setShowTooltip,
   setFormAction,
   formAction,
@@ -41,6 +49,7 @@ function PaperFormEvent({
   setShowPaperForm,
   paper,
 }) {
+  const dispatch = useDispatch()
   const theme = useTheme()
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync } = useMutation(
@@ -76,22 +85,18 @@ function PaperFormEvent({
         options: options,
         body: finalDatas,
       }).then((response) => {
-        setTopAlert({
-          severity: 'success',
-          alertText: response.message,
-          openAlert: true,
-        })
+        dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
+
         setCurrentDocument(null)
         setShowTooltip(true)
         setShowPaperList(true)
         setShowPaperForm(false)
+        window.scrollTo(0, 0)
       })
     } catch (err) {
-      setTopAlert({
-        severity: 'error',
-        alertText: err.message,
-        openAlert: true,
-      })
+      dispatch(
+        setPaperMutateAlert(errorAlertCollapse(err.response.data.message))
+      )
       window.scrollTo(0, 0)
     }
   }
@@ -101,11 +106,8 @@ function PaperFormEvent({
     return () => {
       setShowTooltip(true)
       setFormAction(null)
-      setTopAlert({
-        severity: 'error',
-        alertText: '',
-        openAlert: false,
-      })
+      dispatch(setPaperMutateAlert(initialAlertCollapse))
+      dispatch(setPaperFetchAlert(initialAlertCollapse))
     }
   }, [currentDocument])
 
@@ -208,7 +210,6 @@ PaperFormEvent.propTypes = {
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
   currentDocument: PropTypes.string.isRequired,
-  setTopAlert: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
   setShowTooltip: PropTypes.func.isRequired,
   formAction: PropTypes.string.isRequired,

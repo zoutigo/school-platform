@@ -2,7 +2,7 @@ import { styled, Grid, useTheme } from '@material-ui/core'
 import moment from 'moment'
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useMutation } from 'react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
@@ -18,6 +18,15 @@ import menuSchema from '../../schemas/menuSchema'
 import breveSchema from '../../schemas/breveSchema'
 import fournitureSchema from '../../schemas/fournitureSchema'
 import InputSelectControl from '../elements/InputSelectControl'
+import {
+  setPaperFetchAlert,
+  setPaperMutateAlert,
+} from '../../redux/alerts/AlertsActions'
+import {
+  errorAlertCollapse,
+  initialAlertCollapse,
+  successAlertCollapse,
+} from '../../constants/alerts'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -35,7 +44,6 @@ const StyledPaperForm = styled('form')(() => ({
 function PaperFormPDF({
   currentDocument,
   setCurrentDocument,
-  setTopAlert,
   setShowTooltip,
   setFormAction,
   formAction,
@@ -44,6 +52,7 @@ function PaperFormPDF({
   paper,
 }) {
   const theme = useTheme()
+  const dispatch = useDispatch()
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync } = useMutation(
     apiPostPaper,
@@ -130,22 +139,16 @@ function PaperFormPDF({
         options: options,
         body: await finalDatas(paper.paperType),
       }).then((response) => {
-        setTopAlert({
-          severity: 'success',
-          alertText: response.message,
-          openAlert: true,
-        })
+        dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
         setCurrentDocument(null)
         setShowTooltip(true)
         setShowPaperList(true)
         setShowPaperForm(false)
       })
+      window.scrollTo(0, 0)
     } catch (err) {
-      setTopAlert({
-        severity: 'error',
-        alertText: err.response.data.message,
-        openAlert: true,
-      })
+      setPaperMutateAlert(errorAlertCollapse(err.response.data.message))
+
       window.scrollTo(0, 0)
     }
   }
@@ -155,11 +158,8 @@ function PaperFormPDF({
     return () => {
       setShowTooltip(true)
       setFormAction(null)
-      setTopAlert({
-        severity: 'error',
-        alertText: '',
-        openAlert: false,
-      })
+      dispatch(setPaperMutateAlert(initialAlertCollapse))
+      dispatch(setPaperFetchAlert(initialAlertCollapse))
     }
   }, [currentDocument])
 
@@ -270,7 +270,6 @@ PaperFormPDF.propTypes = {
   setShowPaperForm: PropTypes.func.isRequired,
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
-  setTopAlert: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
   setShowTooltip: PropTypes.func.isRequired,
   formAction: PropTypes.string.isRequired,
