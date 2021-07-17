@@ -15,7 +15,7 @@ function TinyPageEditor({ onChange, value, height }) {
 
   const handleEditorChange = (editor) => onChange(editor)
 
-  const { isLoading, isError, data, error } = useQuery(['TinyPageKey'], () =>
+  const { isLoading, isError, data, error } = useQuery(['variables'], () =>
     apiFetchVariables()
   )
 

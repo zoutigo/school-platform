@@ -1,5 +1,6 @@
 import { Box, styled } from '@material-ui/core'
 import React from 'react'
+import { useQuery } from 'react-query'
 
 import {
   FacebookShareButton,
@@ -7,6 +8,7 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from 'react-share'
+
 import FooterCard from './card/FooterCard'
 
 const StyledButtonGroup = styled(Box)(() => ({
@@ -17,7 +19,7 @@ const StyledButtonGroup = styled(Box)(() => ({
 }))
 
 function Share() {
-  const url = process.env.REACT_APP_URL
+  const url = 'http://www.ecole-st-augustin.fr'
   const title = 'Partager'
   const shareTitle = 'Ecole Saint Augustin'
   const hashtag = '#ecolesaintaugustincremieu'
