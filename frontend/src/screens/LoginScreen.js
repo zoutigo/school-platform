@@ -57,12 +57,18 @@ function LoginScreen() {
     try {
       await mutateAsync(datas).then((response) => {
         if (response.status === 200) {
-          const Token = response.headers['x-access-token']
-          const splittedToken = Token.split('.')
+          persistor.purge()
+          const token = response.headers['x-access-token']
+          const splittedToken = token.split('.')
           const tokenDatas = JSON.parse(atob(splittedToken[1]))
           dispatch(setUserInfos(tokenDatas))
-          dispatch(setUserToken(Token))
-          history.push('/informations/actualites/infosparents')
+          dispatch(setUserToken(token))
+          const { isAdmin, isVerified } = tokenDatas
+          if (isAdmin) {
+            history.push('/informations')
+          } else {
+            history.push('/')
+          }
         }
       })
     } catch (err) {
@@ -76,7 +82,6 @@ function LoginScreen() {
   }
 
   useEffect(() => {
-    persistor.purge()
     if (status && message) {
       setTopAlert({
         severity: status,
