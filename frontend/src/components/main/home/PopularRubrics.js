@@ -3,11 +3,10 @@ import PropTypes from 'prop-types'
 
 import { Box, Grid, Icon, Typography } from '@material-ui/core'
 import { styled, useTheme } from '@material-ui/styles'
-
+import AvTimerIcon from '@material-ui/icons/AvTimer'
 import LocalMallIcon from '@material-ui/icons/LocalMall'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import RestaurantIcon from '@material-ui/icons/Restaurant'
-import HelpIcon from '@material-ui/icons/Help'
 import randomkey from '../../../utils/randomkey'
 import {
   StyledBaseButton,
@@ -37,9 +36,9 @@ const StyledPopularItemCard = styled(Grid)(({ theme }) => ({
 
 const StyledPopularButton = styled(StyledBaseButton)(({ theme }) => ({
   color: theme.palette.secondary.main,
-  width: '100% !important',
+  width: '100% ',
   '& *': {
-    marginLeft: '2rem',
+    margin: '0.8rem',
   },
   '& >svg': {
     fontSize: '3em',
@@ -49,32 +48,32 @@ const StyledPopularButton = styled(StyledBaseButton)(({ theme }) => ({
 function PopularRubrics() {
   const Populars = [
     [
+      'Horaires',
+      '/viescolaire/horaires',
+      "Retrouvez ici toutes nos créneaux , ainsi que les différentes périodes de fermeture de l'école.",
+      <AvTimerIcon />,
+      'fa fa-calendar',
+    ],
+    [
       'Classes',
       '/classes',
-      'Accédez aux différentes classes et informations les concernant, de la Petite Section au CM2',
+      'Accédez aux différentes classes et informations les concernant, de la Petite Section au CM2.',
       <LocalMallIcon />,
-      'fa fa-thermometer-full',
+      'fa fa-book',
     ],
     [
       'Ecole',
       '/ecole',
-      'Venez vite découvrir l’histoire, les valeurs de notre établissement et les avis des parents',
+      'Venez vite découvrir l’histoire, les valeurs de notre établissement et les avis des parents.',
       <AccountBalanceIcon />,
-      'fa fa-cubes',
+      'fa fa-home',
     ],
     [
       'Cantine',
       '/viescolaire/cantine',
-      'Toutes les informations concernant la cantine, les menus et nos prestataires restauration',
+      'Toutes les informations concernant la cantine, les menus et nos prestataires restauration.',
       <RestaurantIcon />,
       'fa fa-beer',
-    ],
-    [
-      'Contacts',
-      '/informations/contacts',
-      'Retrouvez ici toutes nos coordonnées,le plan pour y acceder, ainsi que le formulaire de contact',
-      <HelpIcon />,
-      'fa fa-map-signs',
     ],
   ]
 

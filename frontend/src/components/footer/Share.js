@@ -4,12 +4,6 @@ import React from 'react'
 import {
   FacebookShareButton,
   FacebookIcon,
-  InstapaperShareButton,
-  InstapaperIcon,
-  PinterestShareButton,
-  PinterestIcon,
-  TwitterShareButton,
-  TwitterIcon,
   WhatsappShareButton,
   WhatsappIcon,
 } from 'react-share'
@@ -43,29 +37,11 @@ function Share() {
       <WhatsappIcon size={36} />
     </WhatsappShareButton>
   )
-  const Twitter = () => (
-    <TwitterShareButton url={url} title={shareTitle} hashtag={hashtag}>
-      <TwitterIcon size={36} />
-    </TwitterShareButton>
-  )
-  const Pinterest = () => (
-    <PinterestShareButton url={url} title={title} hashtag={hashtag}>
-      <PinterestIcon size={36} />
-    </PinterestShareButton>
-  )
-  const Instagram = () => (
-    <InstapaperShareButton url={url} title={shareTitle} hashtag={title}>
-      <InstapaperIcon size={36} />
-    </InstapaperShareButton>
-  )
 
   const items = [
     <StyledButtonGroup key="buttons">
       <Facebook />
       <Whatsapp />
-      <Twitter />
-      <Pinterest />
-      <Instagram />
     </StyledButtonGroup>,
   ]
 

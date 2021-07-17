@@ -14,6 +14,9 @@ import { useTheme, withTheme } from '@material-ui/styles'
 import { StyledHomeGrid } from '../../elements/styled'
 import Title from '../../elements/Title'
 
+const zeroPara = `
+  Bienveillance et entraide. Un projet que l'ensemble de l'équipe éducative installe au coeur de l'école.
+  `
 const firstPara = `
   L'école St Augustin, école catholique sous contrat d'association
   avec l'état, se situe au coeur de Crémieu, cité médiévale iséroise,
@@ -124,6 +127,7 @@ function Introduction() {
       <Collapse in={checked || matches}>
         <StyledParagraphsBloc item container>
           <TextBloc item>
+            <StyledParagraph variant="body1">{zeroPara}</StyledParagraph>
             <StyledParagraph variant="body1">{firstPara}</StyledParagraph>
             <StyledParagraph variant="body1">{secondPara}</StyledParagraph>
             <StyledParagraph variant="body1">{thirdPara}</StyledParagraph>
