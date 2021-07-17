@@ -177,6 +177,7 @@ export const apiFetchChemin = async () => {
 
 export const apiPostPreInscription = async ({ id, body, action, Token }) => {
   const URL = `${PREFIX}/preinscriptions?action=${action}&id=${id}`
+
   const formdata = new FormData()
 
   if (body && body.childFirstname) {
