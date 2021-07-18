@@ -60,6 +60,7 @@ function TinyPageEditor({ onChange, value, height }) {
           force_br_newlines: true,
           force_p_newlines: false,
           image_caption: true,
+          image_advtab: true,
 
           font_formats:
             'Andale Mono=andale mono,times; Arial=arial,helvetica,sans-serif; Arial Black=arial black,avant garde; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Tahoma=tahoma,arial,helvetica,sans-serif',
