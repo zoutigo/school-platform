@@ -15,6 +15,7 @@ const initialState = {
   paperFetch: initialAlert,
   login: initialAlert,
   register: initialAlert,
+  mutate: initialAlert,
 }
 
 /* eslint-disable */
@@ -51,6 +52,9 @@ const actionsReducers = createReducer(initialState, {
   },
   SET_REGISTER_ALERT: (state, action) => {
     state.register = action.payload
+  },
+  SET_MUTATE_ALERT: (state, action) => {
+    state.mutate = action.payload
   },
 })
 

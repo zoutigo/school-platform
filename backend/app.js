@@ -21,6 +21,7 @@ const variablesRouter = require('./routes/variables')
 const cheminsRouter = require('./routes/chemins')
 const preinscriptionsRouter = require('./routes/preinscriptions')
 const albumsRouter = require('./routes/albums')
+const suggestionsRouter = require('./routes/suggestions')
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
@@ -38,7 +39,6 @@ const DB_URL =
       : process.env.DB_DEV
     : process.env.DB_PROD
 
-console.log('URL:', DB_URL)
 mongoose
   .connect(process.env.MONGO_URI || DB_URL, {
     useNewUrlParser: true,
@@ -96,6 +96,7 @@ app.use('/variables', variablesRouter)
 app.use('/chemins', cheminsRouter)
 app.use('/preinscriptions', preinscriptionsRouter)
 app.use('/albums', albumsRouter)
+app.use('/suggestions', suggestionsRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)

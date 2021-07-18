@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 
 const suggestionSchema = yup.object().shape({
-  text: yup
+  message: yup
     .string()
     .required('Veillez donner une description de évènement')
     .min(20, 'au moins 20 caractères')

@@ -281,3 +281,9 @@ export const apiPostAlbumImages = async ({
 
   return data
 }
+
+export const apiPostSuggestion = async ({ id, body, options, action }) => {
+  const URL = `${PREFIX}/suggestions?action=${action}&id=${id}`
+  const { data } = await axios.post(URL, body, options)
+  return data
+}

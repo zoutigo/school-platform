@@ -713,7 +713,7 @@ const rubrics = [
             chapname: 'Ecrire',
             alias: 'ecrire',
             route: {
-              path: '/informations/contacts/ecrire',
+              path: '/informations/contacts/ecrire/:topic',
               exact: true,
               component: InformationContactsEcrireScreen,
               access: '',

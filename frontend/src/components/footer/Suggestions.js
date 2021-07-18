@@ -8,32 +8,26 @@ import { StyledFooterElementText } from './styles'
 function Suggestions() {
   const suggestions = [
     {
-      name: "proposer un idée à l'école",
-      link: '/informations/contacts/ecrire',
-      topic: 'school-idea',
+      name: "Proposer une idée à l'école",
+      link: '/informations/contacts/ecrire/idea',
     },
     {
-      name: 'suggérer une amélioration du site',
-      link: '/informations/contacts/ecrire',
-      topic: 'site-improvment',
+      name: 'Suggérer une amélioration du site',
+      link: '/informations/contacts/ecrire/improvment',
     },
     {
-      name: 'signaler un bug',
-      link: '/informations/contacts/ecrire',
-      topic: 'bug',
+      name: 'Signaler un bug',
+      link: '/informations/contacts/ecrire/bug',
     },
   ]
 
   const items = suggestions.map((partner) => {
-    const { link, name, topic } = partner
+    const { link, name } = partner
     return (
       <StyledFooterElementText key={name}>
         <StyledNavLink
           to={{
             pathname: link,
-            state: {
-              topic: topic,
-            },
           }}
         >
           <Typography variant="body2">{name}</Typography>

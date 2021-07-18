@@ -10,6 +10,7 @@ import {
   SET_REGISTER_ALERT,
   SET_PAPER_FETCH_ALERT,
   SET_PAPER_MUTATE_ALERT,
+  SET_MUTATE_ALERT,
 } from './AlertsActionsTypes'
 
 export const setPrivateAccountDataAlert = (value = null) => ({
@@ -44,18 +45,20 @@ export const setPaperFetchAlert = (value = null) => ({
   type: SET_PAPER_FETCH_ALERT,
   payload: value,
 })
-export const setPaperMutateAlert = (value = null) => {
-  console.log('called')
-  return {
-    type: SET_PAPER_MUTATE_ALERT,
-    payload: value,
-  }
-}
+export const setPaperMutateAlert = (value = null) => ({
+  type: SET_PAPER_MUTATE_ALERT,
+  payload: value,
+})
+
 export const setLoginAlert = (value = null) => ({
   type: SET_LOGIN_ALERT,
   payload: value,
 })
 export const setRegisterAlert = (value = null) => ({
   type: SET_REGISTER_ALERT,
+  payload: value,
+})
+export const setMutateAlert = (value = null) => ({
+  type: SET_MUTATE_ALERT,
   payload: value,
 })

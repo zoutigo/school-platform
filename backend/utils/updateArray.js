@@ -1,6 +1,4 @@
 module.exports.updateArray = (prevArray, arrayAction, value) => {
-  console.log('value', value)
-  console.log('prevarray:', prevArray)
   switch (arrayAction) {
     case 'remove':
       return prevArray.filter((filter) => filter !== value)
