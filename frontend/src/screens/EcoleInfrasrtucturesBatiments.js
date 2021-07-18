@@ -1,8 +1,8 @@
-import { Grid } from '@material-ui/core'
 import React from 'react'
+import Album from '../components/elements/album/Album'
 
 function EcoleInfrasrtucturesBatiments() {
-  return <Grid container> Les batiments</Grid>
+  return <Album />
 }
 
 export default EcoleInfrasrtucturesBatiments

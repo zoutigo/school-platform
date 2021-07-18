@@ -70,8 +70,6 @@ module.exports.createImage = async (req, res, next) => {
           ? `${process.env.SERVER_ADRESS}/${path}`
           : `http://localhost:3500/${path}`
 
-      // console.log('location:', location)
-
       return res.status(201).send({ location: location })
     }
   } catch (err) {
