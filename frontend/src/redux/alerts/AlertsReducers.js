@@ -16,6 +16,7 @@ const initialState = {
   login: initialAlert,
   register: initialAlert,
   mutate: initialAlert,
+  editorFetch: initialAlert,
 }
 
 /* eslint-disable */
@@ -55,6 +56,9 @@ const actionsReducers = createReducer(initialState, {
   },
   SET_MUTATE_ALERT: (state, action) => {
     state.mutate = action.payload
+  },
+  SET_EDITOR_FETCH_ALERT: (state, action) => {
+    state.editorFetch = action.payload
   },
 })
 
