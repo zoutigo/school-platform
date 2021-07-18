@@ -6,6 +6,11 @@ import { useQuery } from 'react-query'
 import { apiFetchAlbum } from '../../../utils/api'
 import { setAlbumFetchAlert } from '../../../redux/alerts/AlertsActions'
 import AlbumCard from './AlbumCard'
+import {
+  errorAlertCollapse,
+  initialAlertCollapse,
+  loadingAlertCollapse,
+} from '../../../constants/alerts'
 
 function AlbumList({
   queryKey,
@@ -22,41 +27,19 @@ function AlbumList({
 
   useEffect(() => {
     if (isLoading) {
-      dispatch(
-        setAlbumFetchAlert({
-          openAlert: true,
-          severity: 'warning',
-          alertText: 'Chargement des albums ...',
-        })
-      )
+      dispatch(setAlbumFetchAlert(loadingAlertCollapse))
     }
     if (isError) {
       dispatch(
-        setAlbumFetchAlert({
-          openAlert: true,
-          severity: 'error',
-          alertText: error.message,
-        })
+        setAlbumFetchAlert(errorAlertCollapse(error.response.data.message))
       )
     }
-    if (data && !Array.isArray(data)) {
-      dispatch(
-        setAlbumFetchAlert({
-          openAlert: true,
-          severity: 'error',
-          alertText: error.response.data.message,
-        })
-      )
+    if (data && Array.isArray(data)) {
+      dispatch(setAlbumFetchAlert(initialAlertCollapse))
     }
 
     return () => {
-      dispatch(
-        setAlbumFetchAlert({
-          openAlert: false,
-          severity: 'error',
-          alertText: '',
-        })
-      )
+      dispatch(setAlbumFetchAlert(initialAlertCollapse))
     }
   }, [isLoading, isError, data])
 

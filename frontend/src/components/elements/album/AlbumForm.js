@@ -5,11 +5,14 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import {
+  errorAlertCollapse,
+  successAlertCollapse,
+} from '../../../constants/alerts'
 import { setAlbumMutateAlert } from '../../../redux/alerts/AlertsActions'
 import albumSchema from '../../../schemas/albumSchema'
 import { apiPostAlbum } from '../../../utils/api'
-import { useRouteDatas, useUpdateMutationOptions } from '../../../utils/hooks'
+import { useUpdateMutationOptions } from '../../../utils/hooks'
 import CostumButton from '../CustomButton'
 import InputFileControl from '../InputFileControl'
 import InputRadio from '../InputRadio'
@@ -40,7 +43,7 @@ function AlbumForm({
   entityAlias,
 }) {
   const theme = useTheme()
-  const history = useHistory()
+
   const dispatch = useDispatch()
   const { Token } = useSelector((state) => state.user)
   const [addFile, setAddFile] = useState(true)
@@ -98,23 +101,13 @@ function AlbumForm({
   useEffect(() => {
     if (isError) {
       dispatch(
-        setAlbumMutateAlert({
-          openAlert: true,
-          severity: 'error',
-          alertText: error.response.data.message,
-        })
+        setAlbumMutateAlert(errorAlertCollapse(error.response.data.message))
       )
     }
     if (mutationData) {
       setFormAction('create')
       setCurrentAlbum(null)
-      dispatch(
-        setAlbumMutateAlert({
-          openAlert: true,
-          severity: 'success',
-          alertText: mutationData.message,
-        })
-      )
+      dispatch(setAlbumMutateAlert(successAlertCollapse(mutationData.message)))
       setShow({
         page: false,
         form: false,

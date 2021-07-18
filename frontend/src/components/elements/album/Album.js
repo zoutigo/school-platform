@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
 /* eslint-disable import/named */
 import { Grid } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
@@ -10,9 +12,10 @@ import AlbumList from './AlbumList'
 import AlbumPage from './AlbumPage'
 import CustomSimpleTooltip from '../CustomSimpleTooltip'
 import useRoles from '../../../utils/roles'
+import { initialAlertCollapse } from '../../../constants/alerts'
 
 function Album() {
-  const { current, categories, categoryAlias } = useRouteDatas()
+  const { current, categoryAlias } = useRouteDatas()
   const dispatch = useDispatch()
   const { albumMutate, albumFetch } = useSelector((state) => state.alerts)
   const [currentAlbum, setCurrentAlbum] = useState('')
@@ -39,20 +42,6 @@ function Album() {
   } = useRoles()
 
   const queryKey = [current.path]
-  const [category] = categories
-  // const categoryAlias = () => {
-  //   switch (category.alias) {
-  //     case 'petite-section':
-  //       return 'ps'
-  //     case 'moyenne-section':
-  //       return 'ms'
-  //     case 'grande-section':
-  //       return 'gs'
-
-  //     default:
-  //       return category.alias
-  //   }
-  // }
 
   const userIsAllowed = () => {
     switch (categoryAlias) {
@@ -74,6 +63,10 @@ function Album() {
         return cm2Enseignant
       case 'adaptation':
         return adaptationEnseignant
+      case 'apel':
+        return apelMembre
+      case 'ogec':
+        return ogecMembre
 
       default:
         return false
@@ -87,14 +80,10 @@ function Album() {
 
   const queryParams = `entityAlias=${categoryAlias}`
 
+  // eslint-disable-next-line arrow-body-style
   useEffect(() => {
-    const initialAlbumAlert = {
-      severity: 'error',
-      alertText: '',
-      alertOpen: false,
-    }
     return () => {
-      dispatch(setAlbumMutateAlert(initialAlbumAlert))
+      dispatch(setAlbumMutateAlert(initialAlertCollapse))
       setCurrentAlbum('')
     }
   }, [])

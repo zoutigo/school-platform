@@ -39,7 +39,7 @@ function EcoleInfrastructuresScreen() {
   // eslint-disable-next-line no-unused-vars
   const [album, ...rest] = data
 
-  return <AlbumPage currentAlbum={album} isAllowed={isAllowed} />
+  return <AlbumPage currentAlbum={album} isAllowed={isAllowed} type="page" />
 }
 
 export default EcoleInfrastructuresScreen

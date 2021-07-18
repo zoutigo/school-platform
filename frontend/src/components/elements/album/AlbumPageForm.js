@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import { Grid, styled, useTheme } from '@material-ui/core'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -12,6 +13,10 @@ import Title from '../Title'
 import InputFileControl from '../InputFileControl'
 import CostumButton from '../CustomButton'
 import { setAlbumPageMutateAlert } from '../../../redux/alerts/AlertsActions'
+import {
+  errorAlertCollapse,
+  successAlertCollapse,
+} from '../../../constants/alerts'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -69,11 +74,7 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
         entityAlias: entityAlias,
       }).then((response) => {
         dispatch(
-          setAlbumPageMutateAlert({
-            severity: 'success',
-            alertText: response.message,
-            openAlert: true,
-          })
+          setAlbumPageMutateAlert(successAlertCollapse(response.message))
         )
         setShowPage({
           imagesForm: false,
@@ -82,13 +83,8 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      console.log(err)
       dispatch(
-        setAlbumPageMutateAlert({
-          severity: 'error',
-          alertText: err.response.message,
-          alertOpen: true,
-        })
+        setAlbumPageMutateAlert(errorAlertCollapse(err.response.data.message))
       )
       window.scrollTo(0, 0)
     }

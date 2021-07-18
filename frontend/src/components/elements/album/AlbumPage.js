@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useQuery } from 'react-query'
 import PropTypes from 'prop-types'
-import { Grid } from '@material-ui/core'
+import { Grid, styled, useTheme } from '@material-ui/core'
 import AlbumPageList from './AlbumPageList'
 import AlbumPageForm from './AlbumPageForm'
 import AlertCollapse from '../AlertCollapse'
@@ -13,12 +13,25 @@ import {
   setAlbumPageFetchAlert,
   setAlbumPageMutateAlert,
 } from '../../../redux/alerts/AlertsActions'
-import { initialAlertCollapse } from '../../../constants/alerts'
+import {
+  errorAlertCollapse,
+  initialAlertCollapse,
+  loadingAlertCollapse,
+} from '../../../constants/alerts'
 import { useRouteDatas } from '../../../utils/hooks'
 import { apiFetchAlbum } from '../../../utils/api'
+import CustomButton from '../CustomButton'
+import Title from '../Title'
 
-function AlbumPage({ currentAlbum, setShow, isAllowed }) {
+const StyledAlbumHeaderGrid = styled(Grid)(() => ({
+  marginLeft: '0.5rem',
+  // marginTop: '0.5rem',
+  // height: '2rem',
+}))
+
+function AlbumPage({ currentAlbum, setShow, isAllowed, type }) {
   const dispatch = useDispatch()
+  const theme = useTheme()
   const { categoryAlias } = useRouteDatas()
   const [album, setAlbum] = useState(currentAlbum)
   const [showPage, setShowPage] = useState({
@@ -38,22 +51,10 @@ function AlbumPage({ currentAlbum, setShow, isAllowed }) {
 
   useEffect(() => {
     if (isLoading) {
-      dispatch(
-        setAlbumFetchAlert({
-          openAlert: true,
-          alertText: 'Chargement des images ...',
-          severity: 'warning',
-        })
-      )
+      dispatch(setAlbumFetchAlert(loadingAlertCollapse))
     }
     if (isError) {
-      dispatch(
-        setAlbumFetchAlert({
-          openAlert: true,
-          alertText: error.message,
-          severity: 'error',
-        })
-      )
+      dispatch(setAlbumFetchAlert(errorAlertCollapse(error.message)))
     }
     if (data) {
       setAlbum(data[0])
@@ -64,9 +65,36 @@ function AlbumPage({ currentAlbum, setShow, isAllowed }) {
       dispatch(setAlbumPageFetchAlert(initialAlertCollapse))
     }
   }, [isLoading, isError, data, album])
+
+  const handleBack = () =>
+    setShow({
+      page: false,
+      list: true,
+      form: false,
+    })
   return (
-    <Grid item container>
-      <h1>{album ? album.name : null}</h1>
+    <Grid item container style={{ marginTop: '0.5rem' }}>
+      {type === 'album' && (
+        <StyledAlbumHeaderGrid
+          item
+          container
+          direction="row"
+          alignItems="center"
+        >
+          <Grid item xs={4}>
+            <CustomButton
+              text="retour"
+              bgcolor={theme.palette.primary.light}
+              action="back"
+              onClick={handleBack}
+              width="100%"
+            />
+          </Grid>
+          <Grid item xs={8} style={{ textAlign: 'center' }}>
+            {album && <Title title={album.name} />}
+          </Grid>
+        </StyledAlbumHeaderGrid>
+      )}
 
       <AlertCollapse
         {...albumPageMutate}
@@ -124,6 +152,7 @@ AlbumPage.defaultProps = {
   currentAlbum: null,
   setShow: null,
   isAllowed: false,
+  type: 'album',
 }
 
 AlbumPage.propTypes = {
@@ -133,6 +162,7 @@ AlbumPage.propTypes = {
   }),
   setShow: PropTypes.func,
   isAllowed: PropTypes.bool,
+  type: PropTypes.string,
 }
 
 export default AlbumPage
