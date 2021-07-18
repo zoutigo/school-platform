@@ -1,6 +1,7 @@
 const Image = require('../models/Image')
 const { BadRequest } = require('../utils/errors')
 const fileUploadService = require('../service/uploads')
+require('dotenv').config()
 
 module.exports.createPageImage = async (req, res, next) => {
   try {
@@ -68,6 +69,8 @@ module.exports.createImage = async (req, res, next) => {
         process.env.NODE_ENV === 'production'
           ? `${process.env.SERVER_ADRESS}/${path}`
           : `http://localhost:3500/${path}`
+
+      // console.log('location:', location)
 
       return res.status(201).send({ location: location })
     }
