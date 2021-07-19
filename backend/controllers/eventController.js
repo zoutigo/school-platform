@@ -4,6 +4,8 @@ const Event = require('../models/Event')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { eventValidator } = require('../validators/eventValidator')
 
+require('dotenv').config()
+
 module.exports.postEvent = async (req, res, next) => {
   const { isAdmin, isManager, isModerator, isTeacher, _id: userId } = req.user
   const { id: eventId, action } = req.query
@@ -55,7 +57,7 @@ module.exports.postEvent = async (req, res, next) => {
       )
       if (updatedEvent) {
         if (process.env.NODE_ENV === 'production') {
-          return res.status(200).send('event successfully updated')
+          return res.status(200).send('Evènement modifié')
         }
         return res.status(200).send(updatedEvent)
       }
@@ -66,7 +68,7 @@ module.exports.postEvent = async (req, res, next) => {
     try {
       const deletedEvent = await Event.findOneAndDelete({ _id: eventId })
       if (deletedEvent) {
-        return res.status(200).send({ message: 'event deleted successfully' })
+        return res.status(200).send({ message: 'Evènement éffacé' })
       }
     } catch (err) {
       return next(err)

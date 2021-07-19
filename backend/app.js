@@ -49,18 +49,22 @@ mongoose
   .then(() => console.log('Connexion établie à la base de donnée'))
   .catch((err) => console.log(err))
 
-app.use(express.static(path.join(__dirname, '..', 'public')))
-app.use('/images', express.static(path.join(__dirname, '..', '/images')))
-app.use('/files', express.static(path.join(__dirname, '..', '/files')))
+const allowedOrigins = ['http://localhost:3000', process.env.SERVER_ADRESS]
 
 app.use(
   cors({
-    // exposedHeaders: ["x-access-token"],
-  })
-)
-app.use(
-  cors({
-    origin: '*',
+    origin: function (origin, callback) {
+      // allow requests with no origin
+      // (like mobile apps or curl requests)
+      if (!origin) return callback(null, true)
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg =
+          'The CORS policy for this site does not ' +
+          'allow access from the specified Origin.'
+        return callback(new Error(msg), false)
+      }
+      return callback(null, true)
+    },
     credentials: true,
     exposedHeaders: ['x-access-token'],
   })
@@ -74,6 +78,10 @@ app.all('', (req, res, next) => {
   )
   next()
 })
+
+app.use(express.static(path.join(__dirname, '..', 'public')))
+app.use('/images', express.static(path.join(__dirname, '..', '/images')))
+app.use('/files', express.static(path.join(__dirname, '..', '/files')))
 
 app.use(logger('dev'))
 app.use(express.json({ limit: '50mb', extended: true }))

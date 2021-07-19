@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux'
 import { styled, Grid, Collapse } from '@material-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -22,7 +23,11 @@ function PaperItem({
   setFormAction,
   setShowSearch,
 }) {
-  const { _id, text, file } = paperItem
+  const { _id, text, filepath } = paperItem
+
+  const { URL_PREFIX } = useSelector((state) => state.settings)
+
+  const file = filepath ? `${URL_PREFIX}/${filepath}` : null
 
   return (
     <StyledPaperItemGrid item container>
@@ -44,6 +49,7 @@ function PaperItem({
             currentDocument={currentDocument}
             setFormAction={setFormAction}
             setShowSearch={setShowSearch}
+            file={file}
           />
         </Collapse>
       </Grid>
@@ -75,7 +81,8 @@ PaperItem.propTypes = {
     _id: PropTypes.string,
     text: PropTypes.string,
     title: PropTypes.string,
-    file: PropTypes.string,
+    filename: PropTypes.string,
+    filepath: PropTypes.string,
     entity: PropTypes.shape({
       name: PropTypes.string,
     }),

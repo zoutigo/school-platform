@@ -66,9 +66,6 @@ function PaperFormActivite({
 
   const onSubmit = async (datas) => {
     const { title, text } = datas
-    const options = {
-      headers: { 'x-access-token': Token },
-    }
     const finalDatas = {
       title,
       text,
@@ -80,8 +77,9 @@ function PaperFormActivite({
       await mutateAsync({
         id: currentDocument ? currentDocument._id : null,
         action: formAction,
-        options: options,
+
         body: finalDatas,
+        Token: Token,
       }).then((response) => {
         dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
 
@@ -102,8 +100,6 @@ function PaperFormActivite({
     return () => {
       setShowTooltip(true)
       setFormAction(null)
-      dispatch(setPaperMutateAlert(initialAlertCollapse))
-      dispatch(setPaperFetchAlert(initialAlertCollapse))
     }
   }, [currentDocument])
 

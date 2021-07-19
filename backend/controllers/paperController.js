@@ -1,10 +1,15 @@
 /* eslint-disable consistent-return */
+const fs = require('fs')
 const Paper = require('../models/Paper')
 const Entity = require('../models/Entity')
 
 const { Unauthorized, BadRequest, NotFound } = require('../utils/errors')
 
 const { paperValidator } = require('../validators/paperValidator')
+const { deleteFile } = require('../utils/deleteFile')
+const User = require('../models/User')
+
+require('dotenv').config()
 
 module.exports.getPapers = async (req, res, next) => {
   const errors = paperValidator(req.body)
@@ -40,6 +45,8 @@ module.exports.getPapers = async (req, res, next) => {
 module.exports.postPaper = async (req, res, next) => {
   const { isAdmin, isManager, isModerator, isTeacher, _id: userId } = req.user
   const { id: paperId, action } = req.query
+  const filename = req.file ? req.file.filename : null
+  const filepath = req.file ? req.file.path : null
 
   if (Object.keys(req.body).length < 1 && action !== 'delete') {
     return next(new BadRequest('datas missing'))
@@ -47,7 +54,9 @@ module.exports.postPaper = async (req, res, next) => {
   const userIsAllowed = isAdmin || isManager || isTeacher || isModerator
   if (!userIsAllowed)
     return next(
-      new Unauthorized('only admin,teacher,manager and moderator are allowed ')
+      new Unauthorized(
+        'seuls admin,teacher,manager et moderator sont authorisés'
+      )
     )
 
   const errors = paperValidator(req.body)
@@ -55,17 +64,32 @@ module.exports.postPaper = async (req, res, next) => {
     return next(new BadRequest(errors.join()))
   }
 
+  // check if user exits
+  const user = await User.findOne({ _id: userId })
+  if (!user)
+    return next(
+      deleteFile(filepath, new BadRequest("l'utilisateur n'existe pas"))
+    )
+
   if (action === 'create') {
     // const paper = { ...req.body }
     // eslint-disable-next-line prefer-object-spread
     const paper = Object.assign({}, req.body)
-    // case event creation
+
+    if (filepath) {
+      paper.filepath = filepath
+      paper.filename = filename
+    }
+
     const { type, title, entityAlias, clientEntityAlias } = req.body
 
     if (!type || !title || !entityAlias)
       return next(
-        new BadRequest(
-          'une ou plusieurs données manquante: type,title,entityAlias,text'
+        deleteFile(
+          filepath,
+          new BadRequest(
+            'une ou plusieurs données manquante: type,title,entityAlias,text'
+          )
         )
       )
     // check client entity
@@ -74,13 +98,16 @@ module.exports.postPaper = async (req, res, next) => {
         alias: clientEntityAlias,
       })
       if (!checkedClientEntity)
-        return next(new BadRequest('mauvaise entité client'))
+        return next(
+          deleteFile(filepath, new BadRequest('mauvaise entité client'))
+        )
       paper.clientEntity = checkedClientEntity._id
       delete paper.clientEntityAlias
     }
     // check the entity
     const checkedEntity = await Entity.findOne({ alias: entityAlias })
-    if (!checkedEntity) return next(new BadRequest('mauvaise entité'))
+    if (!checkedEntity)
+      return next(deleteFile(filepath, new BadRequest('mauvaise entité')))
 
     paper.entity = checkedEntity._id
     delete paper.entityAlias
@@ -94,19 +121,25 @@ module.exports.postPaper = async (req, res, next) => {
         if (process.env.NODE_ENV === 'production') {
           return res.status(201).send({ message: 'Document correctement crée' })
         }
-        return res
-          .status(201)
-          .send({ message: 'Document correctement créee', data: savedPaper })
+        return res.status(201).send({ message: 'Document correctement créee' })
       }
     } catch (err) {
-      return next(err)
+      return next(deleteFile(filepath, err))
     }
   } else if (action === 'update' && paperId) {
     // case update
 
     const currentPaper = await Paper.findOne({ _id: paperId })
-    if (!currentPaper) return next(new BadRequest("L'entité nexiste pas"))
+    if (!currentPaper)
+      return next(deleteFile(filepath, new BadRequest("L'entité nexiste pas")))
 
+    if (req.file) {
+      fs.unlink(currentPaper.filepath, (err) => {
+        if (err) return next(err)
+      })
+      req.body.filename = filename
+      req.body.filepath = filepath
+    }
     try {
       const updatedPaper = await Paper.findOneAndUpdate(
         { _id: paperId },
@@ -125,11 +158,17 @@ module.exports.postPaper = async (req, res, next) => {
         })
       }
     } catch (err) {
-      return next(err)
+      return next(deleteFile(filepath, err))
     }
   } else if (action === 'delete' && paperId) {
     try {
       const deletedPaper = await Paper.findOneAndDelete({ _id: paperId })
+      const { filepath: toDeletePath } = deletedPaper
+      if (toDeletePath) {
+        fs.unlink(toDeletePath, (err) => {
+          if (err) return next(err)
+        })
+      }
       if (deletedPaper) {
         return res
           .status(200)

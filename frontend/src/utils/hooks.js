@@ -75,12 +75,14 @@ export const useUpdateMutationOptions = (queryKey) => {
     },
     onSuccess: (newData) => {
       // eslint-disable-next-line no-unused-vars
+      window.scrollTo(0, 0)
       queryClient.setQueryData(queryKey, (prev) => newData)
     },
     // eslint-disable-next-line no-unused-vars
     onError: (error, variables, context, newData, rollback) => {
       // dispatch(setMutationError(error.message))
       // rollback()
+      window.scrollTo(0, 0)
       queryClient.setQueryData(queryKey, (prev) => prev)
     },
     onSettled: () => {

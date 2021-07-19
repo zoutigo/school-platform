@@ -1,6 +1,7 @@
-import { styled, Grid, useTheme } from '@material-ui/core'
+/* eslint-disable import/named */
+import { styled, Grid, useTheme, Collapse } from '@material-ui/core'
 import moment from 'moment'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMutation } from 'react-query'
@@ -12,21 +13,17 @@ import { useUpdateMutationOptions } from '../../utils/hooks'
 import CostumButton from '../elements/CustomButton'
 import DatePickerControl from '../elements/DatePickerControl'
 import InputFileControl from '../elements/InputFileControl'
-import convertBase64 from '../../utils/convertBase64'
 import newsletterSchema from '../../schemas/newsletterSchema'
 import menuSchema from '../../schemas/menuSchema'
 import breveSchema from '../../schemas/breveSchema'
 import fournitureSchema from '../../schemas/fournitureSchema'
 import InputSelectControl from '../elements/InputSelectControl'
-import {
-  setPaperFetchAlert,
-  setPaperMutateAlert,
-} from '../../redux/alerts/AlertsActions'
+import { setPaperMutateAlert } from '../../redux/alerts/AlertsActions'
 import {
   errorAlertCollapse,
-  initialAlertCollapse,
   successAlertCollapse,
 } from '../../constants/alerts'
+import InputRadio from '../elements/InputRadio'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -53,6 +50,8 @@ function PaperFormPDF({
 }) {
   const theme = useTheme()
   const dispatch = useDispatch()
+  const [addFile, setAddFile] = useState(false)
+
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync } = useMutation(
     apiPostPaper,
@@ -82,15 +81,12 @@ function PaperFormPDF({
     handleSubmit,
     formState: { isSubmitting, isValid },
   } = useForm({
-    // mode: 'onChange',
-    // resolver: yupResolver(schema(paper.paperType)),
+    mode: 'onChange',
+    resolver: yupResolver(schema(paper.paperType)),
   })
 
   const onSubmit = async (datas) => {
     const { startdate, enddate, file } = datas
-    const options = {
-      headers: { 'x-access-token': Token },
-    }
 
     const finalDatas = async (type) => {
       switch (type) {
@@ -103,7 +99,8 @@ function PaperFormPDF({
             startdate: startdate.valueOf(),
             enddate: enddate.valueOf(),
             type: paper.paperType,
-            file: await convertBase64(file[0]),
+            // file: await convertBase64(file[0]),
+            file: file ? file[0] : null,
             entityAlias: paper.entityAlias,
           }
         case 'fourniture':
@@ -114,16 +111,16 @@ function PaperFormPDF({
             startdate: startdate.valueOf(),
             enddate: enddate.valueOf(),
             type: paper.paperType,
-            file: await convertBase64(file[0]),
+            file: file ? file[0] : null,
             entityAlias: paper.entityAlias,
-            clientEntityAlias: datas.clientEntityAlias,
+            clientEntityAlias: datas.clientEntityAlias.value,
           }
         case 'newsletter':
           return {
             title: `Newsletter de ${moment(startdate).format('MM/YYYY')} `,
             startdate: startdate.valueOf(),
             type: paper.paperType,
-            file: await convertBase64(file[0]),
+            file: file ? file[0] : null,
             entityAlias: paper.entityAlias,
           }
 
@@ -136,8 +133,8 @@ function PaperFormPDF({
       await mutateAsync({
         id: currentDocument ? currentDocument._id : null,
         action: formAction,
-        options: options,
         body: await finalDatas(paper.paperType),
+        Token: Token,
       }).then((response) => {
         dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
         setCurrentDocument(null)
@@ -158,8 +155,6 @@ function PaperFormPDF({
     return () => {
       setShowTooltip(true)
       setFormAction(null)
-      dispatch(setPaperMutateAlert(initialAlertCollapse))
-      dispatch(setPaperFetchAlert(initialAlertCollapse))
     }
   }, [currentDocument])
 
@@ -171,9 +166,42 @@ function PaperFormPDF({
   if (!currentDocument && formAction === 'update') return null
 
   const selectOptions = [
-    ['petite section', 'ps'],
-    ['moyenne section', 'ms'],
-    ['grande section', 'gs'],
+    {
+      label: 'petite section',
+      value: 'ps',
+    },
+    {
+      label: 'moyenne section',
+      value: 'ms',
+    },
+    {
+      label: 'grande section',
+      value: 'gs',
+    },
+    {
+      label: 'cp',
+      value: 'cp',
+    },
+    {
+      label: 'ce1',
+      value: 'ce1',
+    },
+    {
+      label: 'ce2',
+      value: 'ce2',
+    },
+    {
+      label: 'cm1',
+      value: 'cm1',
+    },
+    {
+      label: 'cm2',
+      value: 'cm2',
+    },
+    {
+      label: 'adaptation',
+      value: 'adaptation',
+    },
   ]
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
@@ -190,10 +218,10 @@ function PaperFormPDF({
             helperText="Les fournitures sont pour quelle classe ?"
             initialValue={
               currentDocument
-                ? [
-                    currentDocument.clientEntity.name,
-                    currentDocument.clientEntity.alias,
-                  ]
+                ? selectOptions.find(
+                    (option) =>
+                      option.value === currentDocument.clientEntity.alias
+                  )
                 : null
             }
           />
@@ -224,15 +252,31 @@ function PaperFormPDF({
             }
           />
         )}
+        <Collapse in={formAction === 'update'} style={{ width: '100%' }}>
+          <InputRadio
+            question="Modifier le fichier ?"
+            options={[
+              { labelOption: 'Oui', optionvalue: 'oui' },
+              { labelOption: 'Non', optionvalue: 'non' },
+            ]}
+            name="addFile"
+            defaultValue="oui"
+            callback={setAddFile}
+            control={control}
+            radioGroupProps={{ row: true }}
+          />
+        </Collapse>
 
-        <InputFileControl
-          control={control}
-          label="Image"
-          name="file"
-          type="file"
-          accept="application/pdf"
-          helperText="maximum 5Mo"
-        />
+        {(formAction === 'create' || (formAction === 'update' && addFile)) && (
+          <InputFileControl
+            control={control}
+            label="Pièce jointe"
+            name="file"
+            type="file"
+            accept="application/pdf"
+            helperText="Fichier PDF, maximum 5Mo"
+          />
+        )}
       </Grid>
       <Grid item container alignItems="center" justify="flex-end">
         <CostumButton
@@ -245,7 +289,7 @@ function PaperFormPDF({
           action="post"
           width="300px"
           type="submit"
-          // disabled={!isValid || isSubmitting}
+          disabled={!isValid || isSubmitting}
         />
       </Grid>
     </StyledPaperForm>

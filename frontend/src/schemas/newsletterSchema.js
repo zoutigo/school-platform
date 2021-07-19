@@ -1,20 +1,19 @@
 import * as yup from 'yup'
-
-const FILE_MAX_SIZE = 1024 * 1024 * 8
+import { testFileSize } from '../constants/filetests'
 
 const newsletterSchema = yup.object().shape({
   startdate: yup.date().required('Indiquez la date de debut'),
-  file: yup
-    .mixed()
-    .required('Attachez la pièce jointe')
-    .test(
-      'fileSize',
-      'Le fichier est trop large. Maximum autorisé: 2Mo',
-      (value) => {
-        if (!value.length) return false
-        return value[0].size <= FILE_MAX_SIZE
-      }
-    ),
+  addFile: yup.string().nullable(),
+
+  file: yup.mixed().when('addFile', {
+    is: 'oui',
+    then: yup
+      .mixed()
+      .test('fileSize', 'Le fichier est trop large', (value) =>
+        testFileSize(value, 8)
+      ),
+    otherwise: yup.mixed(),
+  }),
 })
 
 export default newsletterSchema

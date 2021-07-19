@@ -1,6 +1,17 @@
 import * as yup from 'yup'
+import { testFileSize } from '../constants/filetests'
 
-const FILE_MAX_SIZE = 1024 * 1024 * 4
+const entitiesAlias = [
+  'ps',
+  'ms',
+  'gs',
+  'cp',
+  'ce1',
+  'ce2',
+  'cm1',
+  'cm2',
+  'adaptation',
+]
 
 const fournitureSchema = yup.object().shape({
   startdate: yup.date().required('Indiquez la date de debut'),
@@ -16,20 +27,23 @@ const fournitureSchema = yup.object().shape({
           'La date de fin doit etre supérieure à la date de début'
         )
     ),
-  file: yup
-    .mixed()
-    .required('Attachez la pièce jointe')
-    .test(
-      'fileSize',
-      'Le fichier est trop large. Maximum autorisé: 2Mo',
-      (value) => {
-        if (!value.length) return false
-        return value[0].size <= FILE_MAX_SIZE
-      }
-    ),
+  addFile: yup.string().nullable(),
+
+  file: yup.mixed().when('addFile', {
+    is: 'oui',
+    then: yup
+      .mixed()
+      .test('fileSize', 'Le fichier est trop large', (value) =>
+        testFileSize(value)
+      ),
+    otherwise: yup.mixed(),
+  }),
   clientEntityAlias: yup
     .mixed()
-    .oneOf(['ps', 'ms', 'gs', 'cp', 'ce1', 'ce2', 'cm1', 'cm2', 'adaptation']),
+    .test('EntitiesAlias', 'Doit apprtenir à la table des entités', (value) => {
+      if (!value) return false
+      return entitiesAlias.includes(value.value)
+    }),
 })
 
 export default fournitureSchema

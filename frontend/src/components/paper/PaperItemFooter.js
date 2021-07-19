@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useTheme, ButtonGroup, Tooltip } from '@material-ui/core'
@@ -7,7 +8,6 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import EditIcon from '@material-ui/icons/Edit'
 import { StyledPaperFooter, StyledIconButton } from '../elements/styled'
-
 import { useUpdateMutationOptions } from '../../utils/hooks'
 import ModalValidation from '../elements/ModalValidation'
 import { setPaperMutateAlert } from '../../redux/alerts/AlertsActions'
@@ -21,17 +21,16 @@ function PaperItemFooter({
   paper,
   setShowPaperForm,
   setShowPaperList,
-
+  file,
   setFormAction,
   setShowSearch,
 }) {
-  const { _id: paperId, file } = paperItem
+  const { _id: paperId } = paperItem
   const { isAllowedToChange, queryKey, poster } = paper
   const theme = useTheme()
   const dispatch = useDispatch()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openUpdateModal, setOpenUpdateModal] = useState(false)
-
   const { Token } = useSelector((state) => state.user)
   useSelector((state) => state.settings)
 
@@ -41,14 +40,11 @@ function PaperItemFooter({
   )
 
   const mutatePaper = async () => {
-    const options = {
-      headers: { 'x-access-token': Token },
-    }
     try {
       await mutateAsync({
         id: paperId,
         action: 'delete',
-        options: options,
+        Token: Token,
       }).then((response) => {
         dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
       })
@@ -60,6 +56,7 @@ function PaperItemFooter({
   }
 
   const handleUpdate = () => {
+    window.scrollTo(0, 0)
     setShowPaperList(false)
     setShowPaperForm(true)
     setFormAction('update')
@@ -84,7 +81,12 @@ function PaperItemFooter({
         {file && (
           <Tooltip title="Telecharger" placement="bottom">
             <StyledIconButton bgcolor={theme.palette.secondary.main}>
-              <a href={file} download style={{ color: 'inherit' }}>
+              <a
+                href={file}
+                download
+                style={{ color: 'inherit' }}
+                target="blank"
+              >
                 <GetAppIcon style={{ fontSize: 'inherit', color: 'inherit' }} />
               </a>
             </StyledIconButton>
@@ -117,6 +119,10 @@ function PaperItemFooter({
   )
 }
 
+PaperItemFooter.defaultProps = {
+  file: null,
+}
+
 PaperItemFooter.propTypes = {
   paper: PropTypes.shape({
     queryParams: PropTypes.string.isRequired,
@@ -143,7 +149,7 @@ PaperItemFooter.propTypes = {
       _id: PropTypes.string,
     }),
     createdat: PropTypes.number,
-    file: PropTypes.string,
   }).isRequired,
+  file: PropTypes.string,
 }
 export default PaperItemFooter

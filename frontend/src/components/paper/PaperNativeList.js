@@ -29,6 +29,7 @@ function PaperNativeList({
     fetcher(queryParams)
   )
 
+  // hook to dispatch alerts
   useFetchDispatch(isLoading, isError, error, data, setPaperFetchAlert)
 
   return (

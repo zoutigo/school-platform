@@ -83,12 +83,6 @@ export const apiPostPage = async ({ id, body, options, action }) => {
   return result
 }
 
-export const apiPostPaper = async ({ id, body, options, action }) => {
-  const URL = `${PREFIX}/papers?action=${action}&id=${id}`
-  const result = await axios.post(URL, body, options)
-  return result
-}
-
 export const apiFetchPaper = async (params) => {
   const URL = `${PREFIX}/papers/?${params}`
   const { data } = await axios.get(URL)
@@ -172,6 +166,26 @@ export const apiFetchChemin = async () => {
   const URL = `${PREFIX}/chemins`
   const { data } = await axios.get(URL)
 
+  return data
+}
+
+export const apiPostPaper = async ({ id, body, action, Token }) => {
+  const URL = `${PREFIX}/papers?action=${action}&id=${id}`
+  const formdata = new FormData()
+
+  if (body) {
+    Object.entries(body).forEach(([key, value]) => formdata.append(key, value))
+  }
+
+  const { data } = await axios({
+    method: 'post',
+    url: URL,
+    data: formdata,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-access-token': Token,
+    },
+  })
   return data
 }
 

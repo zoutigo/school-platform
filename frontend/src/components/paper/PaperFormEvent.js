@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import { styled, Grid, useTheme } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
@@ -7,19 +8,14 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 import Title from '../elements/Title'
 import InputTextControl from '../elements/InputTextControl'
-import { apiPostPaper } from '../../utils/api'
 import { useUpdateMutationOptions } from '../../utils/hooks'
 import paperActiviteSchema from '../../schemas/paperActiviteSchema'
 import TinyPageEditor from '../elements/TinyPageEditor'
 import CostumButton from '../elements/CustomButton'
 import DatePickerControl from '../elements/DatePickerControl'
-import {
-  setPaperFetchAlert,
-  setPaperMutateAlert,
-} from '../../redux/alerts/AlertsActions'
+import { setPaperMutateAlert } from '../../redux/alerts/AlertsActions'
 import {
   errorAlertCollapse,
-  initialAlertCollapse,
   successAlertCollapse,
 } from '../../constants/alerts'
 
@@ -85,6 +81,7 @@ function PaperFormEvent({
         options: options,
         body: finalDatas,
       }).then((response) => {
+        console.log('response', response)
         dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
         setCurrentDocument(null)
         setShowTooltip(true)

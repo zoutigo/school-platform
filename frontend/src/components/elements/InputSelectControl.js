@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Grid, styled, Collapse } from '@material-ui/core'
 import { useController, Controller } from 'react-hook-form'
 import Select from 'react-select'
@@ -38,12 +38,14 @@ function InputSelectControl({
   options,
   ...rest
 }) {
+  const [value, setValue] = useState(initialValue)
   const {
     field,
     fieldState: { invalid, error },
   } = useController({
     name,
     control,
+    defaultValue: initialValue,
   })
 
   return (
@@ -54,6 +56,7 @@ function InputSelectControl({
       </Grid>
       <Grid item container>
         <Controller
+          // value={value}
           control={control}
           {...rest}
           render={({ field: { ref } }) => (
@@ -63,6 +66,7 @@ function InputSelectControl({
               options={options}
               styles={customStyles}
               defaultValue={initialValue}
+              // onChange={(e) => setValue(e.value)}
             />
           )}
         />

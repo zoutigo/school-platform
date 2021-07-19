@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { styled, Grid, useTheme } from '@material-ui/core'
@@ -17,9 +18,6 @@ const StyledPaperForm = styled('form')(() => ({
   width: '100%',
   margin: '1rem auto',
   background: 'gray',
-  //   [theme.breakpoints.up('md')]: {
-  //     width: '60%',
-  //   },
   '& .form-fields-container': {
     background: 'whitesmoke',
     padding: '0.5rem 0.2rem',

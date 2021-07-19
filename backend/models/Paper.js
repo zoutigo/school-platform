@@ -52,6 +52,16 @@ const paperSchema = new Schema(
     file: {
       type: String,
     },
+    filepath: {
+      type: String,
+      minlength: 2,
+      maxlength: 150,
+    },
+    filename: {
+      type: String,
+      minlength: 2,
+      maxlength: 150,
+    },
     author: {
       type: Schema.Types.ObjectId,
       ref: 'User',

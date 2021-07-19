@@ -21,7 +21,9 @@ PaperItemBody.defaultProps = {
 
 PaperItemBody.propTypes = {
   text: PropTypes.string,
+
   file: PropTypes.string,
+
   paper: PropTypes.shape({
     paperFormat: PropTypes.string,
   }).isRequired,
