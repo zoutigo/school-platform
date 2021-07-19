@@ -86,7 +86,6 @@ function PaperFormEvent({
         body: finalDatas,
       }).then((response) => {
         dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
-
         setCurrentDocument(null)
         setShowTooltip(true)
         setShowPaperList(true)
@@ -106,8 +105,6 @@ function PaperFormEvent({
     return () => {
       setShowTooltip(true)
       setFormAction(null)
-      dispatch(setPaperMutateAlert(initialAlertCollapse))
-      dispatch(setPaperFetchAlert(initialAlertCollapse))
     }
   }, [currentDocument])
 
@@ -194,6 +191,10 @@ function PaperFormEvent({
   )
 }
 
+PaperFormEvent.defaultProps = {
+  currentDocument: null,
+}
+
 PaperFormEvent.propTypes = {
   paper: PropTypes.shape({
     queryParams: PropTypes.string.isRequired,
@@ -209,7 +210,7 @@ PaperFormEvent.propTypes = {
   setShowPaperForm: PropTypes.func.isRequired,
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
-  currentDocument: PropTypes.string.isRequired,
+  currentDocument: PropTypes.string,
   setFormAction: PropTypes.func.isRequired,
   setShowTooltip: PropTypes.func.isRequired,
   formAction: PropTypes.string.isRequired,
