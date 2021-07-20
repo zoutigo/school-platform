@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { styled, Grid, useTheme } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { useMutation } from 'react-query'
 import Title from '../elements/Title'
@@ -13,6 +13,11 @@ import TinyPageEditor from '../elements/TinyPageEditor'
 import CostumButton from '../elements/CustomButton'
 import { apiPostPage } from '../../utils/api'
 import { useUpdateMutationOptions } from '../../utils/hooks'
+import { setPageMutateAlert } from '../../redux/alerts/AlertsActions'
+import {
+  errorAlertCollapse,
+  successAlertCollapse,
+} from '../../constants/alerts'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -28,8 +33,9 @@ const StyledPaperForm = styled('form')(() => ({
 }))
 
 function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
-  const { pageName, setTopAlert, queryKey, isAllowedToChange } = pageParams
+  const { pageName, queryKey, isAllowedToChange } = pageParams
   const theme = useTheme()
+  const dispatch = useDispatch()
   const { Token } = useSelector((state) => state.user)
   const formTitle = `Modification de la page ${pageName}`
 
@@ -61,21 +67,15 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
         options: options,
         body: finalDatas,
       }).then((response) => {
-        setTopAlert({
-          severity: 'success',
-          alertText: response.data.message,
-          openAlert: true,
-        })
+        dispatch(setPageMutateAlert(successAlertCollapse(response.message)))
         setShowEditToolTip(true)
         setShowPageForm(false)
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      setTopAlert({
-        severity: 'error',
-        alertText: err.reponse.data.message,
-        openAlert: true,
-      })
+      dispatch(
+        setPageMutateAlert(errorAlertCollapse(err.response.data.message))
+      )
       window.scrollTo(0, 0)
     }
   }
@@ -84,11 +84,6 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
     setShowEditToolTip(false)
     return () => {
       setShowEditToolTip(true)
-      setTopAlert({
-        severity: 'error',
-        alertText: '',
-        openAlert: false,
-      })
     }
   }, [])
 
@@ -132,7 +127,6 @@ PageForms.propTypes = {
     queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
     queryParams: PropTypes.string.isRequired,
     pageName: PropTypes.string.isRequired,
-    setTopAlert: PropTypes.func.isRequired,
     isAllowedToChange: PropTypes.bool.isRequired,
   }).isRequired,
   page: PropTypes.shape({

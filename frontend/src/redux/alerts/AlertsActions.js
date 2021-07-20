@@ -12,6 +12,8 @@ import {
   SET_PAPER_MUTATE_ALERT,
   SET_MUTATE_ALERT,
   SET_EDITOR_FETCH_ALERT,
+  SET_PAGE_FETCH_ALERT,
+  SET_PAGE_MUTATE_ALERT,
 } from './AlertsActionsTypes'
 
 export const setPrivateAccountDataAlert = (value = null) => ({
@@ -48,6 +50,14 @@ export const setPaperFetchAlert = (value = null) => ({
 })
 export const setPaperMutateAlert = (value = null) => ({
   type: SET_PAPER_MUTATE_ALERT,
+  payload: value,
+})
+export const setPageFetchAlert = (value = null) => ({
+  type: SET_PAGE_FETCH_ALERT,
+  payload: value,
+})
+export const setPageMutateAlert = (value = null) => ({
+  type: SET_PAGE_MUTATE_ALERT,
   payload: value,
 })
 

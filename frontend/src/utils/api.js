@@ -79,8 +79,8 @@ export const apiFecthPage = async (params) => {
 
 export const apiPostPage = async ({ id, body, options, action }) => {
   const URL = `${PREFIX}/pages?action=${action}&id=${id}`
-  const result = await axios.post(URL, body, options)
-  return result
+  const { data } = await axios.post(URL, body, options)
+  return data
 }
 
 export const apiFetchPaper = async (params) => {

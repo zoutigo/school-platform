@@ -13,6 +13,8 @@ const initialState = {
   albumPageFetch: initialAlert,
   paperMutate: initialAlert,
   paperFetch: initialAlert,
+  pageMutate: initialAlert,
+  pageFetch: initialAlert,
   login: initialAlert,
   register: initialAlert,
   mutate: initialAlert,
@@ -47,6 +49,12 @@ const actionsReducers = createReducer(initialState, {
   },
   SET_PAPER_FETCH_ALERT: (state, action) => {
     state.paperFetch = action.payload
+  },
+  SET_PAGE_MUTATE_ALERT: (state, action) => {
+    state.pageMutate = action.payload
+  },
+  SET_PAGE_FETCH_ALERT: (state, action) => {
+    state.pageFetch = action.payload
   },
   SET_LOGIN_ALERT: (state, action) => {
     state.login = action.payload
