@@ -60,10 +60,16 @@ function PaperItemHeader({
       <Grid item container justify="space-between">
         <Box>
           {paper.paperType === 'event' && (
-            <Typography variant="caption">
-              Aura lieu le: &nbsp;&nbsp;
-              {moment(paperItem ? paperItem.date : null).format('DD/MM/YYYY')}
-            </Typography>
+            <>
+              <Typography variant="caption">
+                Date: &nbsp;&nbsp;
+                {moment(paperItem ? paperItem.date : null).format('DD/MM/YYYY')}
+              </Typography>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <Typography variant="caption">
+                Lieu:&nbsp;&nbsp;&nbsp; {paperItem ? paperItem.place : null}
+              </Typography>
+            </>
           )}
           {paper.paperType === 'activite' && (
             <Typography variant="caption">
@@ -91,6 +97,7 @@ PaperItemHeader.propTypes = {
   currentDocumentId: PropTypes.string,
   paperItem: PropTypes.shape({
     _id: PropTypes.string,
+    place: PropTypes.string,
     text: PropTypes.string,
     name: PropTypes.string,
     title: PropTypes.string,

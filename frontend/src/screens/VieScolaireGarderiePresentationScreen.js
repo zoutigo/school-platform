@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import { Grid } from '@material-ui/core'
 import React, { useState } from 'react'
 import Page from '../components/page/Page'
@@ -16,8 +17,8 @@ function VieScolaireGarderiePresentationScreen() {
     alertText: '',
     openAlert: false,
   })
-  const { moderatorLevel } = useRigths()
-  const isAllowedToChange = moderatorLevel
+  const { managerLevel, adminLevel } = useRigths()
+  const isAllowedToChange = managerLevel || adminLevel
 
   const pageParams = {
     isAllowedToChange,
