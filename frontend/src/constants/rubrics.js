@@ -66,6 +66,7 @@ import PrivateAdminCheminsScreen from '../screens/PrivateAdminCheminsScreen'
 import InformationsFournituresScreen from '../screens/InformationsFournituresScreen'
 import PrivateAccountDonneesScreen from '../screens/PrivateAccountDonneesScreen'
 import Album from '../components/elements/album/Album'
+import VieScolaireHorairesFeriesScreen from '../screens/VieScolaireHorairesFeriesScreen'
 
 const rubrics = [
   {
@@ -326,7 +327,18 @@ const rubrics = [
           component: VieScolaireHorairesScreen,
           access: '',
         },
-        chapters: [],
+        chapters: [
+          {
+            chapname: 'Feriés',
+            alias: 'viescolaire-horaires-feries',
+            route: {
+              path: '/viescolaire/horaires/feries',
+              exact: true,
+              component: VieScolaireHorairesFeriesScreen,
+              access: '',
+            },
+          },
+        ],
       },
     ],
   },
