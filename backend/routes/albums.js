@@ -10,11 +10,11 @@ const { tokenVerify } = require('../utils/tokenverify')
 // Get images
 router.get('/images', getAlbums)
 
-// Post albums
+// Post albums images
 router.post(
   '/images',
   tokenVerify,
-  uploadImages('./images/albums', 'album-image', 4),
+  uploadImages('./images/albums', 'album-image', 10),
   postAlbumImages
 )
 

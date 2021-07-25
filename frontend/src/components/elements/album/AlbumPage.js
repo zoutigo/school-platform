@@ -134,7 +134,7 @@ function AlbumPage({ currentAlbum, setShow, isAllowed, type }) {
       )}
       {showPage.imagesList && (
         <CustomSimpleTooltip
-          title="Ajouter une image"
+          title="Ajouter une image ?"
           action="add"
           callback={() =>
             setShowPage({

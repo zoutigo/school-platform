@@ -1,6 +1,6 @@
 /* eslint-disable import/named */
 import { Grid, styled, useTheme } from '@material-ui/core'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import PropTypes from 'prop-types'
@@ -73,6 +73,7 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
         Token: Token,
         entityAlias: entityAlias,
       }).then((response) => {
+        console.log('response', response)
         dispatch(
           setAlbumPageMutateAlert(successAlertCollapse(response.message))
         )
@@ -90,7 +91,11 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
     }
   }
 
-  const formTitle = 'Ajouter des images'
+  const formTitle = 'Ajouter des images ?'
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <Grid item container>
@@ -101,12 +106,12 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
         <Grid container className="form-fields-container">
           <InputFileControl
             control={control}
-            label="Image de couverture"
+            label="Image"
             name="files"
             type="file"
             multiple
             accept="image/jpg,image/jpeg,image/gif,image/png "
-            helperText="maximum 4Mo"
+            helperText="maximum 10Mo"
           />
         </Grid>
         <Grid item container alignItems="center" justify="flex-end">

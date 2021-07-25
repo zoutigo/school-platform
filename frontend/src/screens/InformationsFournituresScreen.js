@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import React from 'react'
 import Paper from '../components/paper/Paper'
 import { apiFetchPaper, apiPostPaper } from '../utils/api'
