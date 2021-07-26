@@ -2,21 +2,33 @@ import React, { useState } from 'react'
 import { useMutation } from 'react-query'
 import Proptypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button } from '@material-ui/core'
+import { Button, styled } from '@material-ui/core'
 // eslint-disable-next-line import/named
 import { useUpdateMutationOptions } from '../../../utils/hooks'
 import { setAlbumMutateAlert } from '../../../redux/alerts/AlertsActions'
 import { apiPostAlbumImages } from '../../../utils/api'
 
-function AlbumPageItem({ image, queryKey, entityAlias, albumId }) {
+const StyledDeleteButton = styled(Button)(({ theme }) => ({
+  background: theme.palette.warning.main,
+  width: '100%',
+}))
+const StyledConfirmDeleteButton = styled(Button)(({ theme }) => ({
+  background: theme.palette.error.main,
+  width: '100%',
+}))
+
+function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
   const dispatch = useDispatch()
   const [showButton, setShowButton] = useState(false)
+  const [showImage, setShowImage] = useState(true)
   const [showConfirmButton, setShowConfirmButton] = useState(false)
   const { URL_PREFIX } = useSelector((state) => state.settings)
 
   const handleClick = () => {
-    setShowButton(!showButton)
-    setShowConfirmButton(false)
+    if (isAllowed) {
+      setShowButton(!showButton)
+      setShowConfirmButton(false)
+    }
   }
 
   const { Token } = useSelector((state) => state.user)
@@ -43,6 +55,7 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId }) {
             alertText: response.message,
           })
         )
+        setShowImage(false)
         setShowButton(false)
         setShowConfirmButton(false)
       })
@@ -61,26 +74,29 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId }) {
 
   return (
     <div className="pics">
-      <div className="pic" onClick={handleClick} role="presentation">
-        <img
-          src={`${URL_PREFIX}/${image.filepath}`}
-          alt={image.filename}
-          key={image.filename}
-          style={{ width: '100%' }}
-        />
-      </div>
-      {showButton && (
-        <Button
-          style={{ width: '100%' }}
-          onClick={() => setShowConfirmButton(true)}
-        >
-          Supprimer
-        </Button>
-      )}
-      {showConfirmButton && (
-        <Button style={{ width: '100%' }} onClick={mutateAlbum}>
-          Confirmer la suppression
-        </Button>
+      {showImage && (
+        <div className="pic">
+          <img
+            src={`${URL_PREFIX}/${image.filepath}`}
+            alt={image.filename}
+            key={image.filename}
+            style={{ width: '100%' }}
+            onClick={handleClick}
+            role="presentation"
+          />
+          {showButton && (
+            <StyledDeleteButton
+              onClick={() => setShowConfirmButton(!showConfirmButton)}
+            >
+              Supprimer
+            </StyledDeleteButton>
+          )}
+          {showConfirmButton && (
+            <StyledConfirmDeleteButton onClick={mutateAlbum}>
+              Confirmer la suppression
+            </StyledConfirmDeleteButton>
+          )}
+        </div>
       )}
     </div>
   )
@@ -90,6 +106,7 @@ AlbumPageItem.defaultProps = {
 }
 
 AlbumPageItem.propTypes = {
+  isAllowed: Proptypes.bool.isRequired,
   albumId: Proptypes.string,
   entityAlias: Proptypes.string.isRequired,
   queryKey: Proptypes.string.isRequired,

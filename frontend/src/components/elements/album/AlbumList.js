@@ -21,6 +21,7 @@ function AlbumList({
   entityAlias,
 }) {
   const dispatch = useDispatch()
+  console.log('isallowed', isAllowed)
   const { isLoading, isError, data, error } = useQuery(queryKey, () =>
     apiFetchAlbum(queryParams)
   )

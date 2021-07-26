@@ -110,6 +110,7 @@ function AlbumPage({ currentAlbum, setShow, isAllowed, type }) {
           currentAlbum={album}
           queryParams={queryParams}
           entityAlias={categoryAlias}
+          isAllowed={isAllowed}
         />
       )}
       {showPage.imagesForm && (

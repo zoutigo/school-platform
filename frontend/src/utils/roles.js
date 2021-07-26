@@ -7,49 +7,76 @@ const useRoles = () => {
 
   const TokenIsValid = new Date().getTime() / 1000 < exp
 
-  const apelMembre = roles?.find((role) => role.entity.alias === 'apel')
-  const ogecMembre = roles?.find((role) => role.entity.alias === 'ogec')
-  const catechiste = roles?.find((role) => role.entity.alias === 'pastorale')
-  const aesh = roles?.find((role) => role.entity.alias === 'aesh')
+  // const apelMembre = roles?.find((role) => role.entity.alias === 'apel')
+  // const ogecMembre = roles?.find((role) => role.entity.alias === 'ogec')
+  // const catechiste = roles?.find((role) => role.entity.alias === 'pastorale')
 
-  const psEnseignant = roles?.find(
-    (role) =>
-      role.entity.alias === 'ps' && role.name === 'enseignant' && TokenIsValid
-  )
-  const msEnseignant = roles?.find(
-    (role) =>
-      role.entity.alias === 'ms' && role.name === 'enseignant' && TokenIsValid
-  )
-  const gsEnseignant = roles?.find(
-    (role) =>
-      role.entity.alias === 'gs' && role.name === 'enseignant' && TokenIsValid
-  )
-  const cpEnseignant = roles?.find(
-    (role) =>
-      role.entity.alias === 'cp' && role.name === 'enseignant' && TokenIsValid
-  )
-  const ce1Enseignant = roles?.find(
-    (role) =>
-      role.entity.alias === 'ce1' && role.name === 'enseignant' && TokenIsValid
-  )
-  const ce2Enseignant = roles?.find(
-    (role) =>
-      role.entity.alias === 'ce2' && role.name === 'enseignant' && TokenIsValid
-  )
-  const cm1Enseignant = roles?.find(
-    (role) =>
-      role.entity.alias === 'cm1' && role.name === 'enseignant' && TokenIsValid
-  )
-  const cm2Enseignant = roles?.find(
-    (role) =>
-      role.entity.alias === 'cm2' && role.name === 'enseignant' && TokenIsValid
-  )
-  const adaptationEnseignant = roles?.find(
-    (role) =>
-      role.entity.alias === 'adaptation' &&
-      role.name === 'enseignant' &&
-      TokenIsValid
-  )
+  const psEnseignant =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter(
+      (role) => role.entity.alias === 'ps' && role.name === 'enseignant'
+    ).length > 0
+  const msEnseignant =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter(
+      (role) => role.entity.alias === 'ms' && role.name === 'enseignant'
+    ).length > 0
+  const gsEnseignant =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter(
+      (role) => role.entity.alias === 'gs' && role.name === 'enseignant'
+    ).length > 0
+  const cpEnseignant =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter(
+      (role) => role.entity.alias === 'cp' && role.name === 'enseignant'
+    ).length > 0
+  const ce1Enseignant =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter(
+      (role) => role.entity.alias === 'ce1' && role.name === 'enseignant'
+    ).length > 0
+  const ce2Enseignant =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter(
+      (role) => role.entity.alias === 'ce2' && role.name === 'enseignant'
+    ).length > 0
+  const cm1Enseignant =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter(
+      (role) => role.entity.alias === 'cm1' && role.name === 'enseignant'
+    ).length > 0
+  const cm2Enseignant =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter(
+      (role) => role.entity.alias === 'cm2' && role.name === 'enseignant'
+    ).length > 0
+  const adaptationEnseignant =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter(
+      (role) => role.entity.alias === 'adaptation' && role.name === 'enseignant'
+    ).length > 0
+  const apelMembre =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter((role) => role.entity.alias === 'apel').length > 0
+  const ogecMembre =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter((role) => role.entity.alias === 'ogec').length > 0
+  const catechiste =
+    TokenIsValid &&
+    Array.isArray(roles) &&
+    roles.filter((role) => role.entity.alias === 'pastorale').length > 0
 
   return {
     apelMembre,

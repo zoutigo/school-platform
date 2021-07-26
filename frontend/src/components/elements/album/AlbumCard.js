@@ -28,7 +28,13 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
 }))
 
-function AlbumCard({ album, setCurrentAlbum, setShow, entityAlias }) {
+function AlbumCard({
+  album,
+  setCurrentAlbum,
+  setShow,
+  entityAlias,
+  isAllowed,
+}) {
   const history = useHistory()
   const { URL_PREFIX } = useSelector((state) => state.settings)
   const { description, coverpath, name } = album
@@ -80,6 +86,7 @@ AlbumCard.propTypes = {
   setCurrentAlbum: PropTypes.func.isRequired,
   setShow: PropTypes.func.isRequired,
   entityAlias: PropTypes.string.isRequired,
+  isAllowed: PropTypes.bool.isRequired,
 }
 
 export default AlbumCard

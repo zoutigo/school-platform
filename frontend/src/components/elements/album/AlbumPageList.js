@@ -41,7 +41,13 @@ const StyledGrid = styled('div')(({ theme }) => ({
   },
 }))
 
-function AlbumPageList({ queryKey, currentAlbum, queryParams, entityAlias }) {
+function AlbumPageList({
+  queryKey,
+  currentAlbum,
+  queryParams,
+  entityAlias,
+  isAllowed,
+}) {
   const [images, setImages] = useState([])
 
   useEffect(() => {
@@ -56,6 +62,7 @@ function AlbumPageList({ queryKey, currentAlbum, queryParams, entityAlias }) {
       {images &&
         images.map((image) => (
           <AlbumPageItem
+            isAllowed={isAllowed}
             image={image}
             queryKey={queryKey}
             entityAlias={entityAlias}
@@ -71,6 +78,7 @@ AlbumPageList.defaultProps = {
 }
 
 AlbumPageList.propTypes = {
+  isAllowed: PropTypes.bool.isRequired,
   entityAlias: PropTypes.string.isRequired,
   queryParams: PropTypes.string.isRequired,
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,

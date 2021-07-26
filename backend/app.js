@@ -47,7 +47,7 @@ mongoose
     useCreateIndex: true,
   })
   .then(() => console.log('Connexion établie à la base de donnée'))
-  .catch((err) => console.log(err))
+  .catch((err) => console.log('mongo connexion error', err))
 
 const allowedOrigins = ['http://localhost:3000', process.env.SERVER_ADRESS]
 
