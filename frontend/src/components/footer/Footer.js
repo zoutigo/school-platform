@@ -1,5 +1,7 @@
 import React from 'react'
 import { Grid, styled } from '@material-ui/core'
+import { useQuery } from 'react-query'
+import { useDispatch } from 'react-redux'
 import Contact from './Contact'
 import Timing from './Timing'
 
@@ -9,6 +11,8 @@ import Copyrights from './Copyrights'
 import Suggestions from './Suggestions'
 import FooterCard from './card/FooterCard'
 import Share from './Share'
+import { setMainDialogDatas } from '../../redux/settings/SettingsActions'
+import { apiFetchDialogs } from '../../utils/api'
 
 const StyledFooterInfos = styled(Grid)(({ theme }) => ({
   background: theme.palette.secondary.main,
@@ -24,6 +28,20 @@ const StyledFooter = styled('footer')(() => ({
 }))
 
 function Footer() {
+  const dispatch = useDispatch()
+  // load modal datas in redux
+  const dialogsQueryKey = ['main-dialog']
+  const { data: dialogs } = useQuery(dialogsQueryKey, () => apiFetchDialogs())
+  if (dialogs && Array.isArray(dialogs) && dialogs.length > 0) {
+    const today = new Date().getTime()
+    const goodDatas = dialogs.filter(
+      (dialog) => dialog.enddate > today && dialog.startdate < today
+    )
+
+    if (goodDatas.length > 0) {
+      dispatch(setMainDialogDatas(goodDatas[0]))
+    }
+  }
   return (
     <StyledFooter>
       <StyledFooterInfos container>

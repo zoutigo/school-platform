@@ -7,10 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  setMainDialogCount,
-  setMainDialogIsOpen,
-} from '../../redux/settings/SettingsActions'
+import { setMainDialogCount } from '../../redux/settings/SettingsActions'
 
 function MainDialog() {
   const { MainDialogDatas, MainDialogCount } = useSelector(

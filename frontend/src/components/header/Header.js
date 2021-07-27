@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import React, { useEffect } from 'react'
 import MenuIcon from '@material-ui/icons/Menu'
 import CancelIcon from '@material-ui/icons/Cancel'
@@ -14,12 +15,9 @@ import NavBloc from './NavBloc'
 import {
   openSmallScreenNav,
   setAllRoutes,
-  setMainDialogCount,
-  setMainDialogDatas,
-  setRoutes,
 } from '../../redux/settings/SettingsActions'
 import { useRigths } from '../../utils/hooks'
-import { apiFetchChemin, apiFetchDialogs } from '../../utils/api'
+import { apiFetchChemin } from '../../utils/api'
 import MainDialog from '../elements/MainDialog'
 
 const StyledHeader = styled('header')(() => ({
@@ -53,20 +51,6 @@ function Header() {
       dispatch(setAllRoutes(newRoutes))
     }
   }, [data])
-
-  // load modal datas in redux
-  const dialogsQueryKey = ['main-dialog']
-  const { data: dialogs } = useQuery(dialogsQueryKey, () => apiFetchDialogs())
-  if (dialogs && Array.isArray(dialogs) && dialogs.length > 0) {
-    const today = new Date().getTime()
-    const goodDatas = dialogs.filter(
-      (dialog) => dialog.enddate > today && dialog.startdate < today
-    )
-
-    if (goodDatas.length > 0) {
-      dispatch(setMainDialogDatas(goodDatas[0]))
-    }
-  }
 
   useEffect(() => {
     window.scrollTo(0, 0)
