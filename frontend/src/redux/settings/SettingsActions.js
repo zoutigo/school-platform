@@ -5,6 +5,8 @@ import {
   SET_ROUTES,
   SET_ALL_ROUTES,
   SET_URL_PREFIX,
+  SET_MAIN_DIALOG_DATAS,
+  SET_MAIN_DIALOG_COUNT,
 } from './SettingsActionsTypes'
 
 /* eslint-disable */
@@ -31,5 +33,14 @@ export const setCategoryAside = (value = null) => ({
 })
 export const setUrlPrefix = (value = null) => ({
   type: SET_URL_PREFIX,
+  payload: value,
+})
+export const setMainDialogDatas = (value = null) => ({
+  type: SET_MAIN_DIALOG_DATAS,
+  payload: value,
+})
+
+export const setMainDialogCount = (value = 1) => ({
+  type: SET_MAIN_DIALOG_COUNT,
   payload: value,
 })

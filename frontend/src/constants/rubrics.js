@@ -67,6 +67,7 @@ import InformationsFournituresScreen from '../screens/InformationsFournituresScr
 import PrivateAccountDonneesScreen from '../screens/PrivateAccountDonneesScreen'
 import Album from '../components/elements/album/Album'
 import VieScolaireHorairesFeriesScreen from '../screens/VieScolaireHorairesFeriesScreen'
+import PrivateAdminParametersScreen from '../screens/PrivateAdminParametersScreens'
 
 const rubrics = [
   {
@@ -961,6 +962,16 @@ const rubrics = [
               exact: true,
               component: PrivateAdminCheminsScreen,
               access: 'admin',
+            },
+          },
+          {
+            chapname: 'Paramètres',
+            alias: 'adminparams',
+            route: {
+              path: '/private/admin/parametres',
+              exact: true,
+              component: PrivateAdminParametersScreen,
+              access: 'manager',
             },
           },
         ],

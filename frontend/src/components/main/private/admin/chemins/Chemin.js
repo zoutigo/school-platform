@@ -43,7 +43,6 @@ function Chemin({ chemin, queryKey, setTopAlert, setShowAddForm }) {
     alertText: '',
   })
 
-  console.log('chemin', chemin)
   const { URL_PREFIX } = useSelector((state) => state.settings)
 
   const { Token } = useSelector((state) => state.user)

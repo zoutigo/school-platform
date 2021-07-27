@@ -5,6 +5,7 @@ import AlertCollapse from '../components/elements/AlertCollapse'
 import PersoDataForm from '../components/main/private/account/persodatas/PersoDataForm'
 import PersoDataList from '../components/main/private/account/persodatas/PersoDataList'
 import { setPrivateAccountMutateAlert } from '../redux/alerts/AlertsActions'
+import { initialAlertCollapse } from '../constants/alerts'
 
 const StyledGrid = styled(Grid)(() => ({
   margin: '1rem 0px',
@@ -33,13 +34,7 @@ function PrivateAccountDonneesScreen() {
   })
 
   const collapseMutateCallback = () => {
-    dispatch(
-      setPrivateAccountMutateAlert({
-        openAlert: false,
-        severity: 'error',
-        alertText: '',
-      })
-    )
+    dispatch(setPrivateAccountMutateAlert(initialAlertCollapse))
   }
 
   // eslint-disable-next-line arrow-body-style

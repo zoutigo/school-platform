@@ -14,10 +14,13 @@ import NavBloc from './NavBloc'
 import {
   openSmallScreenNav,
   setAllRoutes,
+  setMainDialogCount,
+  setMainDialogDatas,
   setRoutes,
 } from '../../redux/settings/SettingsActions'
 import { useRigths } from '../../utils/hooks'
-import { apiFetchChemin } from '../../utils/api'
+import { apiFetchChemin, apiFetchDialogs } from '../../utils/api'
+import MainDialog from '../elements/MainDialog'
 
 const StyledHeader = styled('header')(() => ({
   zIndex: 10,
@@ -50,6 +53,20 @@ function Header() {
       dispatch(setAllRoutes(newRoutes))
     }
   }, [data])
+
+  // load modal datas in redux
+  const dialogsQueryKey = ['main-dialog']
+  const { data: dialogs } = useQuery(dialogsQueryKey, () => apiFetchDialogs())
+  if (dialogs && Array.isArray(dialogs) && dialogs.length > 0) {
+    const today = new Date().getTime()
+    const goodDatas = dialogs.filter(
+      (dialog) => dialog.enddate > today && dialog.startdate < today
+    )
+
+    if (goodDatas.length > 0) {
+      dispatch(setMainDialogDatas(goodDatas[0]))
+    }
+  }
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -91,47 +108,7 @@ function Header() {
           })}
         </ul>
       )}
-      {/* {!isSmallScreen && (
-        <ul
-          className="private"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            background: 'blue',
-          }}
-        >
-          <li style={{ background: 'pink' }}>
-            <StyledIconBox bgcolor={theme.palette.error.main} fontsize="2.2rem">
-              <AccountCircleIcon />
-            </StyledIconBox>
-          </li>
-          <li
-            className="mt-2 btn-height"
-            style={{
-              background: 'purple',
-              marginTop: '-0.07rem',
-            }}
-          >
-            <div className="dropdown" style={{ marginTop: '0.8rem' }}>
-              <StyledNavLink to="/login">
-                <Typography varian="h6">Login</Typography>
-              </StyledNavLink>
-              <ul className="dropdown-content">
-                <li>Mon compte</li>
-              </ul>
-            </div>
-            <div className="dropdown">
-              <Typography varian="h6">Admin</Typography>
-              <ul className="dropdown-content">
-                <li>Gestion des roles</li>
-                <li>Organigramme</li>
-                <li>Inscire utilisateur</li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      )} */}
+
       {isSmallScreen && (
         <div className="mr-1 ml-1">
           <StyledIconBox
@@ -151,6 +128,7 @@ function Header() {
           </StyledIconBox>
         </div>
       )}
+      <MainDialog />
     </StyledHeader>
   )
 }

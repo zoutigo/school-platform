@@ -14,6 +14,8 @@ import {
   SET_EDITOR_FETCH_ALERT,
   SET_PAGE_FETCH_ALERT,
   SET_PAGE_MUTATE_ALERT,
+  SET_PARAMETERS_FETCH_ALERT,
+  SET_PARAMETERS_MUTATE_ALERT,
 } from './AlertsActionsTypes'
 
 export const setPrivateAccountDataAlert = (value = null) => ({
@@ -75,5 +77,13 @@ export const setMutateAlert = (value = null) => ({
 })
 export const setEditorFetchAlert = (value = null) => ({
   type: SET_EDITOR_FETCH_ALERT,
+  payload: value,
+})
+export const setParametersFetchAlert = (value = null) => ({
+  type: SET_PARAMETERS_FETCH_ALERT,
+  payload: value,
+})
+export const setParametersMutateAlert = (value = null) => ({
+  type: SET_PARAMETERS_MUTATE_ALERT,
   payload: value,
 })

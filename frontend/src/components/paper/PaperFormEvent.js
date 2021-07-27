@@ -81,7 +81,6 @@ function PaperFormEvent({
         options: options,
         body: finalDatas,
       }).then((response) => {
-        console.log('response', response)
         dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
         setCurrentDocument(null)
         setShowTooltip(true)

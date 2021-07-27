@@ -301,3 +301,16 @@ export const apiPostSuggestion = async ({ id, body, options, action }) => {
   const { data } = await axios.post(URL, body, options)
   return data
 }
+
+export const apiPostDialog = async ({ id, action, body, options }) => {
+  const URL = `${PREFIX}/dialogs?action=${action}&id=${id}`
+  const { data } = await axios.post(URL, body, options)
+  return data
+}
+
+export const apiFetchDialogs = async () => {
+  const URL = `${PREFIX}/dialogs`
+  const { data } = await axios.get(URL)
+
+  return data
+}

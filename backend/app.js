@@ -22,6 +22,7 @@ const cheminsRouter = require('./routes/chemins')
 const preinscriptionsRouter = require('./routes/preinscriptions')
 const albumsRouter = require('./routes/albums')
 const suggestionsRouter = require('./routes/suggestions')
+const dialogsRouter = require('./routes/dialogs')
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
@@ -105,6 +106,7 @@ app.use('/chemins', cheminsRouter)
 app.use('/preinscriptions', preinscriptionsRouter)
 app.use('/albums', albumsRouter)
 app.use('/suggestions', suggestionsRouter)
+app.use('/dialogs', dialogsRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)

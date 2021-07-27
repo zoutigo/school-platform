@@ -37,6 +37,7 @@ function App() {
       process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3500'
     dispatch(setUrlPrefix(PREFIX))
   }, [])
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

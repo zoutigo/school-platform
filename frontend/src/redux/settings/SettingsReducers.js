@@ -6,6 +6,8 @@ const initialState = {
   Routes: [],
   Asides: [],
   URL_PREFIX: '',
+  MainDialogDatas: '',
+  MainDialogCount: 0,
 }
 
 /* eslint-disable */
@@ -46,6 +48,12 @@ const settingsReducers = createReducer(initialState, {
   },
   SET_URL_PREFIX: (state, action) => {
     state.URL_PREFIX = action.payload
+  },
+  SET_MAIN_DIALOG_DATAS: (state, action) => {
+    state.MainDialogDatas = action.payload
+  },
+  SET_MAIN_DIALOG_COUNT: (state, action) => {
+    state.MainDialogCount = action.payload
   },
 })
 
