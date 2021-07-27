@@ -78,8 +78,6 @@ function Album() {
   const isAllowed =
     managerLevel || adminLevel || moderatorLevel || userIsAllowed()
 
-  console.log('isAllowed:', isAllowed)
-
   const queryParams = `entityAlias=${categoryAlias}`
 
   // eslint-disable-next-line arrow-body-style
