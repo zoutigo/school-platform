@@ -4,7 +4,8 @@ import ResumeCard from '../components/elements/ResumeCard'
 import { StyledCardPageGrid } from '../components/elements/styled'
 import { useRouteDatas } from '../utils/hooks'
 
-function EcoleScreen() {
+function EcoleScreen(props) {
+  console.log(props)
   const { rubricCategories } = useRouteDatas()
 
   return (

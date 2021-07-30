@@ -9,6 +9,7 @@ import SmallScreenNav from './components/smallscreennav/SmallScreenNav'
 import Footer from './components/footer/Footer'
 import { setRoutes, setUrlPrefix } from './redux/settings/SettingsActions'
 import Main from './components/main/Main'
+import WindowLoad from './components/elements/WindowLoad'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,6 +24,7 @@ const queryClient = new QueryClient({
 
 function App() {
   const dispatch = useDispatch()
+
   useEffect(() => {
     for (let i = 0; i < rubricsList.length; i += 1) {
       dispatch(setRoutes(rubricsList[i]))
@@ -41,6 +43,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <WindowLoad />
         <Grid container>
           <Header />
           <SmallScreenNav />

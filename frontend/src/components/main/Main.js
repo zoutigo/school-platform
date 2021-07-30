@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import HomeScreen from '../../screens/HomeScreen'
 import { useCurrentCategory } from '../../utils/hooks'
+import Navigator from '../elements/Navigator'
 import { StyledCentralScreen, StyledMainApp } from '../elements/styled'
 
 import Aside from './Aside'
@@ -70,6 +71,7 @@ function Main() {
                   <BodyBloc />
                 </Grid>
                 {hasAside && <Aside rubriccolors={rubriccolors} />}
+                <Navigator />
               </StyledCentralBloc>
             )}
           </>

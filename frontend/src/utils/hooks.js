@@ -1,8 +1,23 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react'
-import { useQueryClient } from 'react-query'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { useQuery, useQueryClient } from 'react-query'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
+import { setAllRoutes } from '../redux/settings/SettingsActions'
+import { apiFetchChemin } from './api'
+import randomkey from './randomkey'
+import routeDatas from './routeDatas'
+
+const initialRouteDatas = {
+  rubric: null,
+  rubricCategories: [],
+  categories: [],
+  category: null,
+  current: null,
+  chapters: [],
+  rubrics: [],
+  categoryAlias: null,
+}
 
 export const useCurrentCategory = () => {
   const { pathname } = useLocation()
@@ -124,8 +139,8 @@ export const useRigths = () => {
 }
 
 export const useRouteParams = (arg) => {
-  const useQuery = () => new URLSearchParams(useLocation().search)
-  const query = useQuery()
+  const useQueryP = () => new URLSearchParams(useLocation().search)
+  const query = useQueryP()
 
   return query.get(arg)
 }
@@ -133,52 +148,15 @@ export const useRouteParams = (arg) => {
 export const useRouteDatas = () => {
   const { pathname } = useLocation()
   const { Routes } = useSelector((state) => state.settings)
+  const [datas, setDatas] = useState(initialRouteDatas)
 
-  const rubric = Routes.find(
-    (route) => pathname.includes(route.path) && route.type === 'rubric'
-  )
-
-  const rubricCategories = Routes.filter(
-    (route) =>
-      route.path.includes(pathname) &&
-      route?.path !== pathname &&
-      route.type === 'category'
-  )
-  const categories = Routes.filter(
-    (route) =>
-      pathname?.includes(route.path) &&
-      route?.path !== pathname &&
-      route.type === 'category'
-  )
-  const category = Routes.filter(
-    (route) => pathname?.includes(route.path) && route.type === 'category'
-  )
-  const chapters = Routes.filter(
-    (route) => route.path?.includes(pathname) && route.type === 'chapter'
-  )
-  const current = Routes.find((route) => route.path === pathname)
-
-  const categoryAlias = (cat = null) => {
-    switch (cat) {
-      case 'petite-section':
-        return 'ps'
-      case 'moyenne-section':
-        return 'ms'
-      case 'grande-section':
-        return 'gs'
-
-      default:
-        return cat
+  useEffect(() => {
+    const values = routeDatas(pathname, Routes)
+    setDatas(values)
+    return () => {
+      setDatas(null)
     }
-  }
+  }, [pathname])
 
-  return {
-    rubricCategories,
-    categories,
-    category,
-    chapters,
-    rubric,
-    current,
-    categoryAlias: categoryAlias(category[0] ? category[0].alias : null),
-  }
+  return { ...datas }
 }
