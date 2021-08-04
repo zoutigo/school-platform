@@ -32,17 +32,16 @@ const routeDatas = (pathname, Routes) => {
     Routes.forEach((route) => {
       // category
       if (
-        route.path.includes(result.rubric.path) &&
+        route?.path.includes(result.rubric?.path) &&
         route.type === 'category' &&
         route.type !== 'chapter' &&
         pathname.includes(route.path)
       ) {
-        console.log('rote_category', route)
         result.category = route
       }
       // chapter
       if (
-        route.path.includes(result.rubric.path) &&
+        route.path.includes(result.rubric?.path) &&
         route.type === 'chapter' &&
         pathname.includes(route.path)
       ) {

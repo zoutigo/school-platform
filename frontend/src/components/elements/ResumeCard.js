@@ -31,11 +31,12 @@ const StyledCard = styled(Card)(({ theme }) => ({
 function ResumeCard({ element }) {
   const history = useHistory()
   const { URL_PREFIX } = useSelector((state) => state.settings)
-  const { path, description, filepath, name } = element
+  const { path, state } = element
+  const { name, description, filepath } = state
   const image = `${URL_PREFIX}/${filepath}`
 
   return (
-    <StyledCard onClick={() => history.push({ pathname: path })}>
+    <StyledCard onClick={() => history.push({ pathname: path, state: state })}>
       <CardActionArea className="area">
         <CardMedia className="media" image={image} title={name} />
         <CardContent className="title">
@@ -61,11 +62,13 @@ function ResumeCard({ element }) {
 
 ResumeCard.propTypes = {
   element: PropTypes.shape({
-    alias: PropTypes.string.isRequired,
-    filepath: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
+    state: PropTypes.shape({
+      alias: PropTypes.string.isRequired,
+      filepath: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+    }),
   }).isRequired,
 }
 

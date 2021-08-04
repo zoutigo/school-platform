@@ -1,9 +1,10 @@
+/* eslint-disable import/named */
 import { Grid } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { useCurrentCategory, useRigths } from '../utils/hooks'
+import { useRigths, useRoutesInfos } from '../utils/hooks'
 import OGECTEAM from '../constants/ogecteam'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
@@ -12,7 +13,11 @@ import { setCategoryAside } from '../redux/settings/SettingsActions'
 
 function ApelOgecOgecScreen() {
   const dispatch = useDispatch()
-  const { path: categoryPath } = useCurrentCategory()
+
+  const {
+    category: { current },
+  } = useRoutesInfos()
+
   const pageName = 'OGEC'
   const alias = `apel-ogec-ogec`
   const queryKey = [pageName, `page-${alias}`]
@@ -25,29 +30,49 @@ function ApelOgecOgecScreen() {
   })
 
   const { moderatorLevel } = useRigths()
-  const isAllowedToChange = moderatorLevel
+  const { Asides } = useSelector((state) => state.settings)
 
-  const pageParams = {
-    isAllowedToChange,
-    alias,
-    queryKey,
-    queryParams,
-    pageName,
-    setTopAlert,
-  }
+  const asideExist = useCallback(() => {
+    const exist =
+      Asides.length < 1
+        ? false
+        : Array.isArray(Asides.find(([path, datas]) => path === current.path))
+
+    return exist
+  }, [Asides])
+
+  const pageParams = useCallback(
+    {
+      isAllowedToChange: moderatorLevel,
+      alias,
+      queryKey,
+      queryParams,
+      pageName,
+      setTopAlert,
+    },
+    []
+  )
 
   // build ogecaside
-  const asideOgec = {
-    title: 'Bureau Ogec',
-    items: OGECTEAM.map((teamer) => {
-      const { role, gender, firstname, lastname } = teamer
-      return {
-        subtitle: role,
-        user: { gender, firstname, lastname },
-      }
-    }),
+
+  const createAside = useCallback(() => {
+    const asideOgec = {
+      title: 'Bureau Ogec',
+      items: OGECTEAM.map((teamer) => {
+        const { role, gender, firstname, lastname } = teamer
+        return {
+          subtitle: role,
+          user: { gender, firstname, lastname },
+        }
+      }),
+    }
+    dispatch(setCategoryAside([current.path, asideOgec]))
+    return true
+  }, [])
+
+  if (!asideExist()) {
+    createAside()
   }
-  dispatch(setCategoryAside([categoryPath, asideOgec]))
 
   return (
     <StyledPageGrid container>
@@ -66,4 +91,4 @@ function ApelOgecOgecScreen() {
   )
 }
 
-export default ApelOgecOgecScreen
+export default React.memo(ApelOgecOgecScreen)

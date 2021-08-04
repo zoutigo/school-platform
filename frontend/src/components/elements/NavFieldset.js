@@ -32,10 +32,12 @@ function NavFieldset({ legend, routes, current }) {
           routes.map((route) => (
             <div
               key={route.path}
-              className={route.alias === current?.alias ? 'active' : ''}
+              className={
+                route.state.alias === current.state.alias ? 'active' : ''
+              }
             >
               <StyledNavLink to={route.path}>
-                <Typography variant="h4">{route.name}</Typography>
+                <Typography variant="h4">{route.state.name}</Typography>
               </StyledNavLink>
             </div>
           ))}
@@ -53,14 +55,18 @@ NavFieldset.propTypes = {
   routes: PropTypes.arrayOf(
     PropTypes.shape({
       path: PropTypes.string,
-      name: PropTypes.string,
-      alias: PropTypes.string,
+      state: PropTypes.shape({
+        name: PropTypes.string,
+        alias: PropTypes.string,
+      }),
     })
   ).isRequired,
   current: PropTypes.shape({
     path: PropTypes.string,
-    name: PropTypes.string,
-    alias: PropTypes.string,
+    state: PropTypes.shape({
+      name: PropTypes.string,
+      alias: PropTypes.string,
+    }),
   }),
 }
 

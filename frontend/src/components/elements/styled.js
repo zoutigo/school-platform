@@ -181,3 +181,11 @@ export const StyledCardPageGrid = styled(Grid)(() => ({
   display: 'flex',
   justifyContent: 'space-between',
 }))
+
+export const StyledNavigatorGrid = styled(Grid)(({ theme }) => ({
+  background: theme.palette.primary.main,
+  padding: '0.6rem 1rem',
+  [theme.breakpoints.up('md')]: {
+    display: 'none',
+  },
+}))

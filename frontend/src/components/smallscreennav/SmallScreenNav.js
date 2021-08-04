@@ -1,9 +1,12 @@
+/* eslint-disable import/named */
 import { styled, useMediaQuery, useTheme } from '@material-ui/core'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
-import rubrics from '../../constants/rubrics'
+
 import RubricScreen from './RubricScreen'
+import { useRoutesInfos } from '../../utils/hooks'
 
 const StyledSmallScreenDiv = styled('div')(({ theme }) => ({
   position: 'fixed',
@@ -32,25 +35,15 @@ const StyledSmallScreenDiv = styled('div')(({ theme }) => ({
 }))
 
 function SmallScreenNav() {
-  const dispatch = useDispatch()
-  const theme = useTheme()
-  const { SmallScreenNavIsOpened } = useSelector((state) => state.settings)
+  const rubrics = useCallback(useRoutesInfos().rubricsList, [])
 
-  const matches = useMediaQuery(theme.breakpoints.up('lg'))
-
-  /* eslint-disable-next-line */
-  useEffect(() => {
-    dispatch(openSmallScreenNav(false))
-  }, [matches, dispatch])
-
-  if (!SmallScreenNavIsOpened) return null
   return (
     <StyledSmallScreenDiv>
       {rubrics.map((rubric) => (
-        <RubricScreen key={rubric.alias} rubric={rubric} />
+        <RubricScreen key={rubric.path} rubric={rubric} />
       ))}
     </StyledSmallScreenDiv>
   )
 }
 
-export default SmallScreenNav
+export default React.memo(SmallScreenNav)

@@ -4,22 +4,15 @@ import MenuIcon from '@material-ui/icons/Menu'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { useQuery } from 'react-query'
 
 import { styled, useMediaQuery, useTheme } from '@material-ui/core'
 import './headerStyle.css'
 import Logo from './Logo'
 import { StyledIconBox } from '../elements/styled'
-import rubrics from '../../constants/rubrics'
 import NavBloc from './NavBloc'
-import {
-  openSmallScreenNav,
-  setAllRoutes,
-} from '../../redux/settings/SettingsActions'
-import { useRigths } from '../../utils/hooks'
-import { apiFetchChemin } from '../../utils/api'
+import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
+import { useRigths, useRoutesInfos } from '../../utils/hooks'
 import MainDialog from '../elements/MainDialog'
-import WindowLoad from '../elements/WindowLoad'
 
 const StyledHeader = styled('header')(() => ({
   zIndex: 10,
@@ -32,6 +25,7 @@ function Header() {
   const { userLevel } = useRigths()
   const dispatch = useDispatch()
   const { pathname } = useLocation()
+  const { rubricsList } = useRoutesInfos()
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -43,31 +37,30 @@ function Header() {
       </div>
       {!isSmallScreen && (
         <ul className="row nav">
-          {rubrics.map((rubric) => {
+          {rubricsList.map((rubric) => {
             const colors = Object.entries(theme.palette)
             const sortedcolors = colors.filter(
               /* eslint-disable */
-              ([key, object]) => key === rubric.alias
+              ([key, object]) => key === rubric.state.alias
             )
             const [rubcolors] = sortedcolors
             const rubcolor = rubcolors ? rubcolors[1].main : ''
 
             if (
-              (rubric.route.path === '/register' ||
-                rubric.route.path === '/login') &&
+              (rubric.path === '/register' || rubric.path === '/login') &&
               userLevel
             )
               return null
-            if (rubric.route.path === '/private' && !userLevel) return null
-            if (rubric.route.path === '/register' && pathname !== '/register') {
+            if (rubric.path === '/private' && !userLevel) return null
+            if (rubric.path === '/register' && pathname !== '/register') {
               return null
             }
-            if (rubric.route.path === '/login' && pathname === '/register') {
+            if (rubric.path === '/login' && pathname === '/register') {
               return null
             }
 
             return (
-              <NavBloc key={rubric.alias} rubric={rubric} rubcolor={rubcolor} />
+              <NavBloc key={rubric.path} rubric={rubric} rubcolor={rubcolor} />
             )
           })}
         </ul>
@@ -97,4 +90,4 @@ function Header() {
   )
 }
 
-export default Header
+export default React.memo(Header)

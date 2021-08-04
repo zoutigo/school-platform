@@ -1,11 +1,11 @@
 /* eslint-disable import/named */
 import { Grid, useTheme } from '@material-ui/core'
 import { styled } from '@material-ui/styles'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import HomeScreen from '../../screens/HomeScreen'
-import { useCurrentCategory } from '../../utils/hooks'
+import { useRoutesInfos } from '../../utils/hooks'
 import Navigator from '../elements/Navigator'
 import { StyledCentralScreen, StyledMainApp } from '../elements/styled'
 
@@ -18,40 +18,36 @@ const StyledCentralBloc = styled(Grid)(() => ({}))
 function Main() {
   const { pathname } = useLocation()
   const { palette } = useTheme()
-  const { path: catePath } = useCurrentCategory()
   const { Asides } = useSelector((state) => state.settings)
-  const [rubriccolors, setRubriccolors] = useState({
-    main: 'white',
-    light: 'white',
-    dark: 'white',
-  })
-  const [hasAside, setHasAside] = useState(false)
-  const entries = Object.entries(palette)
-  const rubricAlias = pathname.split('/')[1]
 
-  useEffect(() => {
-    if (rubricAlias && pathname !== '/') {
-      // eslint-disable-next-line no-unused-vars
-      const colors = entries.filter(([key, value]) => key === rubricAlias)[0][1]
-      if (colors) {
-        setRubriccolors(colors)
-      }
-    }
-  }, [pathname])
+  const { category, rubric } = useRoutesInfos()
 
-  useEffect(() => {
-    const categoryAside = Asides.find(
-      // eslint-disable-next-line no-unused-vars
-      ([categoryPath, ...rest]) => categoryPath === catePath
-    )
+  const HasAside = useCallback(() => {
+    const categoryPath = category.current?.path ? category.current.path : null
+    const aside =
+      Asides.filter(([asidepath, ...rest]) => asidepath === categoryPath)
+        .length > 0
 
-    if (categoryAside) {
-      setHasAside(true)
-    }
-    return () => {
-      setHasAside(false)
-    }
-  }, [useCurrentCategory()])
+    return aside
+  }, [category, Asides])
+
+  console.log('hasaside:', HasAside())
+
+  const RubricColors = useCallback(() => {
+    const rubricstate = rubric ? rubric.state : null
+    const colors =
+      pathname !== '/' && rubricstate
+        ? Object.entries(palette).filter(
+            ([key, value]) => key === rubricstate.alias
+          )[0][1]
+        : {
+            main: 'white',
+            light: 'white',
+            dark: 'white',
+          }
+
+    return colors
+  }, [rubric])
 
   return (
     <StyledMainApp>
@@ -63,14 +59,11 @@ function Main() {
             )}
             {pathname !== '/' && (
               <StyledCentralBloc container alignItems="flex-start">
-                <Grid item container xs={12} md={hasAside ? 9 : 12}>
-                  <TitleBloc
-                    rubriccolors={rubriccolors}
-                    setHasAside={setHasAside}
-                  />
+                <Grid item container xs={12} md={HasAside() ? 9 : 12}>
+                  <TitleBloc rubriccolors={RubricColors()} />
                   <BodyBloc />
                 </Grid>
-                {hasAside && <Aside rubriccolors={rubriccolors} />}
+                {HasAside() && <Aside rubriccolors={RubricColors()} md={3} />}
                 <Navigator />
               </StyledCentralBloc>
             )}
@@ -81,4 +74,4 @@ function Main() {
   )
 }
 
-export default Main
+export default React.memo(Main)

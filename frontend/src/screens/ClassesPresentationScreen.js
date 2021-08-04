@@ -1,12 +1,12 @@
 import { Grid } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useQuery } from 'react-query'
 import { apiFecthEntity } from '../utils/api'
 import Classrooms from '../constants/classrooms'
 import { setCategoryAside } from '../redux/settings/SettingsActions'
-import { useCurrentCategory, useRigths } from '../utils/hooks'
+import { useRigths, useRoutesInfos } from '../utils/hooks'
 import ClassroomSummary from '../components/main/classes/ClassroomSummary'
 import ApiAlert from '../components/elements/ApiAlert'
 import useRoles from '../utils/roles'
@@ -16,7 +16,11 @@ import ToggleToolTip from '../components/elements/ToggleToolTip'
 
 function ClassesPresentationScreen() {
   const dispatch = useDispatch()
-  const { path: categoryPath } = useCurrentCategory()
+
+  const { Asides } = useSelector((state) => state.settings)
+  const {
+    category: { current },
+  } = useRoutesInfos()
   const { pathname } = useLocation()
   const [showClassroomForm, setShowClassroomForm] = useState(false)
   const [alert, setAlert] = useState({
@@ -24,9 +28,8 @@ function ClassesPresentationScreen() {
     severity: 'error',
     alertText: '',
   })
-  const prealias = pathname.split('/')[2]
 
-  const defineAlias = (extract) => {
+  const defineAlias = useCallback((extract) => {
     switch (extract) {
       case 'petite-section':
         return 'ps'
@@ -38,8 +41,9 @@ function ClassesPresentationScreen() {
       default:
         return extract
     }
-  }
-  const alias = defineAlias(prealias)
+  }, [])
+
+  const alias = defineAlias(pathname.split('/')[2])
 
   const { moderatorLevel } = useRigths()
   const {
@@ -51,10 +55,10 @@ function ClassesPresentationScreen() {
     ce2Enseignant,
     cm1Enseignant,
     cm2Enseignant,
-    aesh,
+    adaptation,
   } = useRoles()
 
-  const defineRole = (aliasName) => {
+  const defineRole = useCallback((aliasName) => {
     switch (aliasName) {
       case 'ps':
         return psEnseignant
@@ -72,22 +76,69 @@ function ClassesPresentationScreen() {
         return cm1Enseignant
       case 'cm2':
         return cm2Enseignant
-      case 'aesh':
-        return aesh
+      case 'adaptation':
+        return adaptation
 
       default:
         return false
     }
-  }
+  }, [])
 
   const isAllowedToChange = moderatorLevel || defineRole(alias)
-
   const queryName = `classroom-${alias}`
   const queryParams = `alias=${alias}`
   const queryKey = [queryName]
   const { isLoading, isError, data, error } = useQuery(queryKey, () =>
     apiFecthEntity(queryParams)
   )
+
+  const asideExist = useCallback(() => {
+    const exist =
+      Asides.length < 1
+        ? false
+        : Array.isArray(Asides.find(([path, datas]) => path === current.path))
+
+    return exist
+  }, [])
+
+  const createAside = useCallback((result) => {
+    if (!asideExist()) {
+      const Classroom = Classrooms.find(
+        (classroom) => result && classroom.name === result?.alias
+      )
+      console.log('classroom:', Classroom)
+
+      if (!Classroom) return null
+
+      const { enseignants: classroomTeachers } = Classroom
+
+      const asideItems = classroomTeachers.map((enseignant) => {
+        const { genre, lastname, firstname } = enseignant
+        return {
+          subtitle: 'enseignant',
+          user: {
+            gender: genre,
+            firstname,
+            lastname,
+          },
+        }
+      })
+
+      const contacts = {
+        subtitle: 'contacts',
+        text: result?.email,
+      }
+      asideItems.push(contacts)
+      const asideClassroom = {
+        title: 'Infos Classe',
+        items: asideItems,
+      }
+
+      dispatch(setCategoryAside([current.path, asideClassroom]))
+    }
+
+    return null
+  }, [])
 
   if (isLoading) return <ApiAlert severity="warning">Chargement ...</ApiAlert>
   if (isError)
@@ -102,34 +153,7 @@ function ClassesPresentationScreen() {
 
   const [result] = data
 
-  // aside creation
-  const { enseignants: classroomTeachers } = Classrooms.find(
-    (classroom) => result && classroom.name === result?.alias
-  )
-
-  const asideItems = classroomTeachers.map((enseignant) => {
-    const { genre, lastname, firstname } = enseignant
-    return {
-      subtitle: 'enseignant',
-      user: {
-        gender: genre,
-        firstname,
-        lastname,
-      },
-    }
-  })
-
-  const contacts = {
-    subtitle: 'contacts',
-    text: result?.email,
-  }
-  asideItems.push(contacts)
-  const asideClassroom = {
-    title: 'Infos Classe',
-    items: asideItems,
-  }
-
-  dispatch(setCategoryAside([categoryPath, asideClassroom]))
+  createAside(result)
 
   return (
     <Grid container>
@@ -170,4 +194,4 @@ function ClassesPresentationScreen() {
   )
 }
 
-export default ClassesPresentationScreen
+export default React.memo(ClassesPresentationScreen)

@@ -1,11 +1,12 @@
+/* eslint-disable import/named */
 import { Grid, styled, useTheme } from '@material-ui/core'
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 import { StyledNavLink, StyledTitle } from '../../elements/styled'
 import Title from '../../elements/Title'
 
-import { useCurrentCategory } from '../../../utils/hooks'
+import { useRoutesInfos } from '../../../utils/hooks'
 
 const StyledTitleBloc = styled(Grid)(() => ({
   background: 'whitesmoke',
@@ -44,71 +45,74 @@ const StyledLargeScreenTitleBloc = styled(Grid)(({ theme }) => ({
   },
 }))
 
-function TitleBloc({ rubriccolors }) {
+function TitleBloc(props) {
+  const { rubriccolors } = props
+
   const { palette } = useTheme()
-  const { pathname } = useLocation()
+  const { pathname, state: locationState } = useLocation()
 
-  const {
-    chapters,
-    currentRoute,
-    name: categoryName,
-    path: categoryPath,
-  } = useCurrentCategory()
+  const { category, current } = useRoutesInfos()
 
-  const TitleTab = ({ rubriccolors: tabcolors, tabtitle, tabpath }) => (
+  const state = useCallback(locationState || current.state, [current])
+
+  const TitleTab = ({ rubriccolors: tabcolors, tabpath, state: tabstate }) => (
     <StyledMainTitle
       bgcolor={pathname === tabpath ? tabcolors.main : tabcolors.ligth}
       bordercolor={tabcolors.dark}
     >
-      <StyledNavLink to={pathname === tabpath ? '#' : tabpath}>
-        <Title title={tabtitle} textcolor={palette.secondary.main} />
+      <StyledNavLink
+        to={{
+          pathname: pathname === tabpath ? '#' : tabpath,
+          state: tabstate,
+        }}
+      >
+        <Title title={tabstate.name} textcolor={palette.secondary.main} />
       </StyledNavLink>
     </StyledMainTitle>
   )
 
   TitleTab.defaultProps = {
     tabpath: '/',
+    state: null,
   }
   TitleTab.propTypes = {
-    tabtitle: PropTypes.string.isRequired,
-
     tabpath: PropTypes.string,
+    state: PropTypes.shape({
+      name: PropTypes.string,
+    }),
   }
 
   return (
     <StyledTitleBloc container>
       <StyledLargeScreenTitleBloc item container>
-        {currentRoute && currentRoute.type === 'rubric' && (
+        {state.type === 'rubric' && (
           <TitleTab
             rubriccolors={rubriccolors}
-            tabtitle={currentRoute.name}
-            tabpath={currentRoute.path}
+            state={state}
+            tabpath={state.path}
           />
         )}
-        {currentRoute && currentRoute !== 'rubric' && categoryName && (
+        {state.type !== 'rubric' && category.current && (
           <TitleTab
             rubriccolors={rubriccolors}
-            tabtitle={categoryName}
-            tabpath={categoryPath}
+            tabpath={category.current.path}
+            state={category.current.state}
           />
         )}
 
-        {chapters &&
-          chapters.length > 0 &&
-          chapters.map((chapter) => (
+        {category &&
+          category.chapters.length > 0 &&
+          category.chapters.map((chapter) => (
             <TitleTab
               rubriccolors={rubriccolors}
-              tabtitle={chapter.name}
               tabpath={chapter.path}
+              state={chapter.state}
               key={chapter.path}
             />
           ))}
       </StyledLargeScreenTitleBloc>
       <StyledSmallScreenTitleBloc container>
-        <TitleTab
-          rubriccolors={rubriccolors}
-          tabtitle={currentRoute ? currentRoute.name : ''}
-        />
+        <TitleTab rubriccolors={rubriccolors} state={state} />
       </StyledSmallScreenTitleBloc>
       <Grid item container>
         <StyledLine bgcolor={rubriccolors.dark} />
@@ -117,12 +121,19 @@ function TitleBloc({ rubriccolors }) {
   )
 }
 
+TitleBloc.defaultProps = {
+  state: null,
+}
+
 TitleBloc.propTypes = {
   rubriccolors: PropTypes.shape({
     main: PropTypes.string,
     dark: PropTypes.string,
     ligth: PropTypes.string,
   }).isRequired,
+  state: PropTypes.shape({
+    type: PropTypes.string,
+  }),
 }
 
-export default TitleBloc
+export default React.memo(TitleBloc)

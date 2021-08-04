@@ -1,17 +1,30 @@
+/* eslint-disable import/named */
 import { Grid } from '@material-ui/core'
 import { Redirect, Route } from 'react-router-dom'
-import React from 'react'
-import PropTypes from 'prop-types'
-import {
-  categoriesRoutes,
-  chaptersRoutes,
-  rubricsRoutes,
-} from '../../constants/rubrics'
 
-import { useRigths } from '../../utils/hooks'
+import React, { useCallback } from 'react'
+import PropTypes from 'prop-types'
+
+import { useRigths, useRoutesInfos } from '../../utils/hooks'
+import routesComponents from '../../constants/routesComponents'
 
 function BodyBloc() {
   const { userLevel, managerLevel, moderatorLevel, adminLevel } = useRigths()
+
+  const { routesList } = useRoutesInfos()
+
+  const routesComposed = useCallback(() => {
+    const list = routesList.map((route) => {
+      const data = routesComponents.find((value) => value.path === route.path)
+      const newroute = { ...route }
+      if (data) {
+        newroute.component = data.component
+      }
+      return newroute
+    })
+
+    return list
+  }, [])
 
   const UserRoute = ({ component: Component, ...rest }) => (
     <Route
@@ -61,41 +74,38 @@ function BodyBloc() {
     component: PropTypes.func.isRequired,
   }
 
-  const Filter = ({ route }) => {
-    switch (route.access) {
+  const Filter = React.memo((props) => {
+    const { state } = props
+    switch (state.access) {
       case 'user':
-        return <UserRoute {...route} />
+        return <UserRoute {...props} />
       case 'moderator':
-        return <ModeratorRoute {...route} />
+        return <ModeratorRoute {...props} />
       case 'manager':
-        return <ManagerRoute {...route} />
+        return <ManagerRoute {...props} />
       case 'admin':
-        return <AdminRoute {...route} />
+        return <AdminRoute {...props} />
 
       default:
-        return <Route {...route} />
+        return <Route {...props} />
     }
-  }
+  })
 
   Filter.propTypes = {
-    route: PropTypes.shape({
+    state: PropTypes.shape({
       access: PropTypes.string,
     }).isRequired,
   }
 
   return (
     <Grid container>
-      {chaptersRoutes.map((chapterRoute) => (
-        <Filter route={chapterRoute} key={chapterRoute.path} />
-      ))}
-      {categoriesRoutes.map((categoryRoute) => (
-        <Filter route={categoryRoute} key={categoryRoute.path} />
-      ))}
-      {rubricsRoutes.map((rubricRoute) => (
-        <Filter route={rubricRoute} key={rubricRoute.path} />
-      ))}
+      {routesComposed().map((element) => {
+        const { path, exact, component, ...rest } = element
+        const route = { path, exact, component }
+        return <Filter {...route} {...rest} key={element.path} />
+      })}
     </Grid>
   )
 }
 
-export default BodyBloc
+export default React.memo(BodyBloc)

@@ -1,16 +1,21 @@
-import { Grid } from '@material-ui/core'
-import React from 'react'
+/* eslint-disable import/named */
+import React, { useCallback } from 'react'
 import { useQuery } from 'react-query'
 import AlbumPage from '../components/elements/album/AlbumPage'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { apiFetchAlbum } from '../utils/api'
-import { useRigths, useRouteDatas } from '../utils/hooks'
+import { useRigths, useRoutesInfos } from '../utils/hooks'
+import redefineAlias from '../utils/redefineAlias'
 
 function EcoleInfrastructuresScreen() {
   const { adminLevel, managerLevel, moderatorLevel } = useRigths()
   const isAllowed = managerLevel || moderatorLevel || adminLevel
 
-  const { categoryAlias, current } = useRouteDatas()
+  const { category } = useRoutesInfos()
+  const categoryAlias = useCallback(
+    redefineAlias(category.current.state.alias),
+    [category]
+  )
 
   const queryKey = [`album-${categoryAlias}`]
   const queryParams = `alias=${categoryAlias}`
@@ -42,4 +47,4 @@ function EcoleInfrastructuresScreen() {
   return <AlbumPage currentAlbum={album} isAllowed={isAllowed} type="page" />
 }
 
-export default EcoleInfrastructuresScreen
+export default React.memo(EcoleInfrastructuresScreen)

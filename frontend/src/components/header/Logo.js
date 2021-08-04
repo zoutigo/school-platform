@@ -1,8 +1,6 @@
 import { Box, makeStyles } from '@material-ui/core'
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { StyledNavLink } from '../elements/styled'
-import { setActiveRubric } from '../../redux/settings/SettingsActions'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,15 +27,9 @@ const useStyles = makeStyles((theme) => ({
 
 function Logo() {
   const classes = useStyles()
-  const dispatch = useDispatch()
   return (
     <Box className={classes.root}>
-      <StyledNavLink
-        to="/"
-        onClick={() =>
-          dispatch(setActiveRubric({ rubname: 'home', rubalias: 'home' }))
-        }
-      >
+      <StyledNavLink to="/">
         <svg
           className={classes.svg}
           version="1.1"

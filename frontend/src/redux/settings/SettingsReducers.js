@@ -2,8 +2,6 @@ import { createReducer } from '@reduxjs/toolkit'
 
 const initialState = {
   SmallScreenNavIsOpened: false,
-  ActiveRubric: { rubname: 'home', rubalias: 'home' },
-  Routes: [],
   Asides: [],
   URL_PREFIX: '',
   MainDialogDatas: '',
@@ -17,20 +15,7 @@ const settingsReducers = createReducer(initialState, {
       ? action.payload
       : !state.SmallScreenNavIsOpened
   },
-  SET_ACTIVE_RUBRIC: (state, action) => {
-    state.ActiveRubric = action.payload
-  },
-  SET_ROUTES: (state, action) => {
-    const newRoutes = state.Routes
-    const check = newRoutes.find((route) => route.path === action.payload.path)
-    if (!check) {
-      newRoutes.push(action.payload)
-    }
-    state.Routes = newRoutes
-  },
-  SET_ALL_ROUTES: (state, action) => {
-    state.Routes = action.payload
-  },
+
   SET_CATEGORY_ASIDE: (state, action) => {
     const [path, datas] = action.payload
     let newAsides = state.Asides

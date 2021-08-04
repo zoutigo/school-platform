@@ -1,12 +1,11 @@
 import { styled, Typography } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 import { withTheme } from '@material-ui/styles'
 import { StyledIconBox, StyledNavLink } from '../elements/styled'
-import { setActiveRubric } from '../../redux/settings/SettingsActions'
 import { useRigths } from '../../utils/hooks'
+import Icons from '../elements/Icons'
 
 const StyledRubricLi = withTheme(
   styled(({ bgcolor, theme, ...rest }) => <li {...rest} />)({
@@ -67,12 +66,10 @@ const StyledLine = withTheme(
 )
 
 function NavBloc({ rubric, rubcolor }) {
-  const { rubname, alias: rubalias, icon, categories, route } = rubric
+  const { state, routes } = rubric
   const { pathname } = useLocation()
-  const dispatch = useDispatch()
   const { adminLevel, userLevel, managerLevel, moderatorLevel } = useRigths()
   const [showDropDown, setShowDropdown] = useState(true)
-  const [active, setActive] = useState(false)
 
   useEffect(() => {
     const handleClick = () => {
@@ -85,105 +82,85 @@ function NavBloc({ rubric, rubcolor }) {
     }
   }, [showDropDown])
 
-  useEffect(() => {
-    if (active) {
-      const currentRubric = {
-        rubname: rubname,
-        rubalias: rubalias,
-      }
-      dispatch(setActiveRubric(currentRubric))
-    }
-  }, [active, dispatch])
-
-  useEffect(() => {
-    const matchRubric = pathname === route.path
-    const chaptersRouteList = []
-    let matchCategory
-    let matchChapter = ''
-    if (categories && categories.length) {
-      matchCategory =
-        categories.filter((category) => category.route.path === pathname)
-          .length > 0
-
-      for (let i = 0; i < categories.length; i += 1) {
-        const listchapters = categories[i].chapters
-        for (let j = 0; j < listchapters.length; j += 1) {
-          const { route: chapterroute } = listchapters[j]
-          chaptersRouteList.push(chapterroute)
-        }
-      }
-    }
-
-    matchChapter =
-      chaptersRouteList.filter((chaproute) => chaproute.path === pathname)
-        .length > 0
-
-    if (matchRubric || matchCategory || matchChapter) {
-      setActive(true)
-    }
-
-    return () => {
-      setActive(false)
-    }
-  }, [pathname])
+  const active = useCallback(pathname.includes(rubric.path), [pathname])
+  const handleClick = useCallback(() => {
+    setShowDropdown(false)
+  }, [])
 
   return (
     <li className="btn-width">
       <ul>
         <li>
           <StyledIconBox bgcolor={rubcolor} fontsize="2.2rem">
-            {icon}
+            <Icons alias={state.alias} />
           </StyledIconBox>
         </li>
         <StyledRubricLi
           className="dropdown btn-size"
           bgcolor={rubcolor}
-          onClick={() => setShowDropdown(false)}
+          onClick={handleClick}
           role="presentation"
         >
-          <StyledNavLink to={rubric.route.path}>
-            <Typography variant="h2">{rubname}</Typography>
+          <StyledNavLink
+            to={{
+              pathname: rubric.path,
+              state: rubric.state,
+            }}
+          >
+            <Typography variant="h2">{rubric.state.name}</Typography>
           </StyledNavLink>
           {showDropDown && (
             <ul className="dropdown-content btn-width bg-transparent">
-              {categories &&
-                categories.map((category) => {
-                  if (category.route.access === 'admin' && !adminLevel)
+              {routes &&
+                routes.map((category) => {
+                  if (category.state.access === 'admin' && !adminLevel)
                     return null
-                  if (category.route.access === 'manager' && !managerLevel)
+                  if (category.state.access === 'manager' && !managerLevel)
                     return null
-                  if (category.route.access === 'moderator' && !moderatorLevel)
+                  if (category.state.access === 'moderator' && !moderatorLevel)
                     return null
-                  if (category.route.access === 'user' && !userLevel)
+                  if (category.state.access === 'user' && !userLevel)
                     return null
                   return (
                     <StyledCategoryLi
-                      key={category.alias}
+                      key={category.state.alias}
                       bgcolor={rubcolor}
                       className="btn-size dropdown"
-                      onClick={() => setShowDropdown(false)}
+                      onClick={handleClick}
                       role="presentation"
                     >
-                      <StyledNavLink to={category.route.path}>
-                        <Typography variant="h4">{category.catname}</Typography>
+                      <StyledNavLink
+                        to={{
+                          pathname: category.path,
+                          state: category.state,
+                        }}
+                      >
+                        <Typography variant="h4">
+                          {category.state.name}
+                        </Typography>
                       </StyledNavLink>{' '}
-                      {category.chapters && (
+                      {category.routes && (
                         <StyledChapterUl
                           bgcolor={rubcolor}
                           className="dropdown-content"
                         >
                           {
                             // eslint-disable-next-line
-                            category.chapters.map((chapter) => (
+                            category.routes.map((chapter) => (
                               <li
-                                key={chapter.alias}
+                                key={chapter.path}
                                 className="btn-size"
-                                onClick={() => setShowDropdown(false)}
+                                onClick={handleClick}
                                 role="presentation"
                               >
-                                <StyledNavLink to={chapter.route.path}>
+                                <StyledNavLink
+                                  to={{
+                                    pathname: chapter.path,
+                                    state: chapter.state,
+                                  }}
+                                >
                                   <Typography variant="h4">
-                                    {chapter.chapname || 'hello'}{' '}
+                                    {chapter.state.name || 'hello'}{' '}
                                   </Typography>{' '}
                                 </StyledNavLink>
                               </li>
@@ -202,41 +179,47 @@ function NavBloc({ rubric, rubcolor }) {
     </li>
   )
 }
-// NavBloc.defaultProps = null
+NavBloc.defaultProps = {
+  rubric: {
+    routes: null,
+  },
+}
 NavBloc.propTypes = {
   rubcolor: PropTypes.string.isRequired,
   rubric: PropTypes.shape({
-    rubname: PropTypes.string,
-    icon: PropTypes.element,
-    alias: PropTypes.string,
-    route: PropTypes.shape({
-      path: PropTypes.string.isRequired,
-      exact: PropTypes.bool.isRequired,
-      component: PropTypes.func.isRequired,
+    path: PropTypes.string,
+    state: PropTypes.shape({
+      name: PropTypes.string,
+      alias: PropTypes.string,
+      type: PropTypes.string,
+      access: PropTypes.string,
+      icon: PropTypes.element,
     }),
-    categories: PropTypes.arrayOf(
+    routes: PropTypes.arrayOf(
       PropTypes.shape({
-        catname: PropTypes.string.isRequired,
-        alias: PropTypes.string.isRequired,
-        route: PropTypes.shape({
-          path: PropTypes.string.isRequired,
-          exact: PropTypes.bool.isRequired,
-          component: PropTypes.func.isRequired,
-        }).isRequired,
-        chapters: PropTypes.arrayOf(
-          PropTypes.shape({
-            chapname: PropTypes.string,
-            alias: PropTypes.string,
-            route: PropTypes.shape({
+        path: PropTypes.string,
+        state: PropTypes.shape({
+          name: PropTypes.string,
+          alias: PropTypes.string,
+          type: PropTypes.string,
+          access: PropTypes.string,
+          icon: PropTypes.element,
+          routes: PropTypes.arrayOf(
+            PropTypes.shape({
               path: PropTypes.string,
-              exact: PropTypes.bool,
-              component: PropTypes.func,
-            }),
-          })
-        ),
+              state: PropTypes.shape({
+                name: PropTypes.string,
+                alias: PropTypes.string,
+                type: PropTypes.string,
+                access: PropTypes.string,
+                icon: PropTypes.element,
+              }),
+            })
+          ),
+        }),
       })
     ),
-  }).isRequired,
+  }),
 }
 
-export default NavBloc
+export default React.memo(NavBloc)

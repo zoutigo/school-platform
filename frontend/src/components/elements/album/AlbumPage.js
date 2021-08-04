@@ -1,5 +1,6 @@
+/* eslint-disable import/named */
 /* eslint-disable arrow-body-style */
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useQuery } from 'react-query'
 import PropTypes from 'prop-types'
@@ -18,10 +19,11 @@ import {
   initialAlertCollapse,
   loadingAlertCollapse,
 } from '../../../constants/alerts'
-import { useRouteDatas } from '../../../utils/hooks'
+import { useRoutesInfos } from '../../../utils/hooks'
 import { apiFetchAlbum } from '../../../utils/api'
 import CustomButton from '../CustomButton'
 import Title from '../Title'
+import redefineAlias from '../../../utils/redefineAlias'
 
 const StyledAlbumHeaderGrid = styled(Grid)(() => ({
   marginLeft: '0.5rem',
@@ -32,12 +34,18 @@ const StyledAlbumHeaderGrid = styled(Grid)(() => ({
 function AlbumPage({ currentAlbum, setShow, isAllowed, type }) {
   const dispatch = useDispatch()
   const theme = useTheme()
-  const { categoryAlias } = useRouteDatas()
+
   const [album, setAlbum] = useState(currentAlbum)
   const [showPage, setShowPage] = useState({
     imagesForm: false,
     imagesList: true,
   })
+
+  const { category } = useRoutesInfos()
+  const categoryAlias = useCallback(
+    redefineAlias(category.current.state.alias),
+    [category]
+  )
   const queryKey = [`album-${currentAlbum.alias}`]
   const queryParams = `alias=${currentAlbum.alias}`
 
@@ -66,12 +74,16 @@ function AlbumPage({ currentAlbum, setShow, isAllowed, type }) {
     }
   }, [isLoading, isError, data, album])
 
-  const handleBack = () =>
-    setShow({
-      page: false,
-      list: true,
-      form: false,
-    })
+  const handleBack = useCallback(
+    () =>
+      setShow({
+        page: false,
+        list: true,
+        form: false,
+      }),
+    []
+  )
+
   return (
     <Grid item container style={{ marginTop: '0.5rem' }}>
       {type === 'album' && (

@@ -3,7 +3,6 @@ import React from 'react'
 
 import SchoolIcon from '@material-ui/icons/School'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-
 import DirectionsRunIcon from '@material-ui/icons/DirectionsRun'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 import EcoSharpIcon from '@material-ui/icons/EcoSharp'

@@ -1,14 +1,18 @@
 /* eslint-disable import/named */
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable import/no-named-as-default */
-import React from 'react'
+import React, { useCallback } from 'react'
 import useRoles from '../utils/roles'
-import { useRigths, useRouteDatas } from '../utils/hooks'
+import { useRigths, useRoutesInfos } from '../utils/hooks'
 import Paper from '../components/paper/Paper'
 import { apiFetchPaper, apiPostPaper } from '../utils/api'
+import redefineAlias from '../utils/redefineAlias'
 
 function ClassesActivitesScreen() {
-  const { categoryAlias: alias } = useRouteDatas()
+  const { category } = useRoutesInfos()
+  const alias = useCallback(redefineAlias(category.current.state.alias), [
+    category,
+  ])
 
   const { moderatorLevel } = useRigths()
   const {
@@ -22,7 +26,7 @@ function ClassesActivitesScreen() {
     cm2Enseignant,
   } = useRoles()
 
-  const defineRole = (aliasName) => {
+  const defineRole = useCallback((aliasName) => {
     switch (aliasName) {
       case 'ps':
         return psEnseignant
@@ -44,7 +48,7 @@ function ClassesActivitesScreen() {
       default:
         return false
     }
-  }
+  }, [])
 
   const isAllowedToChange = moderatorLevel || defineRole(alias)
   const paperType = 'activite'
@@ -71,4 +75,4 @@ function ClassesActivitesScreen() {
   return <Paper paper={paper} />
 }
 
-export default ClassesActivitesScreen
+export default React.memo(ClassesActivitesScreen)

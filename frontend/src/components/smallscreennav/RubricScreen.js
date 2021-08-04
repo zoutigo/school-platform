@@ -18,24 +18,26 @@ const StyledRubricTextGrid = styled(Grid)(() => ({
 function RubricScreen({ rubric }) {
   const { SmallScreenNavIsOpened } = useSelector((state) => state.settings)
   const [showCategories, setShowCategories] = useState(false)
-  const { rubname, categories, route } = rubric
+  const { path, state, routes } = rubric
   const theme = useTheme()
   const dispatch = useDispatch()
 
   const handleToggle = () => {
     setShowCategories((prev) => !prev)
   }
-  const areCategories =
-    SmallScreenNavIsOpened && categories && categories.length > 0
+  const areCategories = SmallScreenNavIsOpened && routes && routes.length > 0
   return (
     <StyledRubricGrid container>
       <Grid item container>
         <StyledRubricTextGrid item xs={areCategories > 0 ? 10 : 12}>
           <StyledNavLink
-            to={route.path}
+            to={{
+              pathname: path,
+              state: state,
+            }}
             onClick={() => dispatch(openSmallScreenNav(false))}
           >
-            <Typography variant="h6">{rubname} </Typography>
+            <Typography variant="h6">{state.name} </Typography>
           </StyledNavLink>
         </StyledRubricTextGrid>
         <Grid item xs={areCategories ? 2 : false}>
@@ -61,7 +63,7 @@ function RubricScreen({ rubric }) {
       </Grid>
       {areCategories && showCategories && (
         <Grid item container>
-          {categories.map((category) => (
+          {routes.map((category) => (
             <CategoryScreen category={category} key={category.alias} />
           ))}
         </Grid>
@@ -72,31 +74,27 @@ function RubricScreen({ rubric }) {
 
 RubricScreen.propTypes = {
   rubric: PropTypes.shape({
-    rubname: PropTypes.string,
-    icon: PropTypes.element,
+    path: PropTypes.string,
     alias: PropTypes.string,
-    route: PropTypes.shape({
-      path: PropTypes.string.isRequired,
-      exact: PropTypes.bool.isRequired,
-      component: PropTypes.func.isRequired,
+    state: PropTypes.shape({
+      alias: PropTypes.string,
+      name: PropTypes.string,
     }),
-    categories: PropTypes.arrayOf(
+    routes: PropTypes.arrayOf(
       PropTypes.shape({
-        catname: PropTypes.string.isRequired,
-        alias: PropTypes.string.isRequired,
-        route: PropTypes.shape({
-          path: PropTypes.string.isRequired,
-          exact: PropTypes.bool.isRequired,
-          component: PropTypes.func.isRequired,
-        }).isRequired,
-        chapters: PropTypes.arrayOf(
+        path: PropTypes.string,
+        alias: PropTypes.string,
+        state: PropTypes.shape({
+          alias: PropTypes.string,
+          name: PropTypes.string,
+        }),
+        routes: PropTypes.arrayOf(
           PropTypes.shape({
-            chapname: PropTypes.string,
+            path: PropTypes.string,
             alias: PropTypes.string,
-            route: PropTypes.shape({
-              path: PropTypes.string,
-              exact: PropTypes.bool,
-              component: PropTypes.func,
+            state: PropTypes.shape({
+              alias: PropTypes.string,
+              name: PropTypes.string,
             }),
           })
         ),

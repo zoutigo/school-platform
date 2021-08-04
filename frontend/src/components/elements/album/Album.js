@@ -2,10 +2,10 @@
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable import/named */
 import { Grid } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAlbumMutateAlert } from '../../../redux/alerts/AlertsActions'
-import { useRigths, useRouteDatas } from '../../../utils/hooks'
+import { useRigths, useRouteDatas, useRoutesInfos } from '../../../utils/hooks'
 import AlertCollapse from '../AlertCollapse'
 import AlbumForm from './AlbumForm'
 import AlbumList from './AlbumList'
@@ -13,9 +13,11 @@ import AlbumPage from './AlbumPage'
 import CustomSimpleTooltip from '../CustomSimpleTooltip'
 import useRoles from '../../../utils/roles'
 import { initialAlertCollapse } from '../../../constants/alerts'
+import redefineAlias from '../../../utils/redefineAlias'
 
 function Album() {
-  const { current, categoryAlias } = useRouteDatas()
+  const { current, category } = useRoutesInfos()
+  // const { current, categoryAlias } = useRouteDatas()
   const dispatch = useDispatch()
   const { albumMutate, albumFetch } = useSelector((state) => state.alerts)
   const [currentAlbum, setCurrentAlbum] = useState('')
@@ -26,6 +28,10 @@ function Album() {
     list: true,
     form: false,
   })
+  const categoryAlias = useCallback(
+    redefineAlias(category.current.state.alias),
+    [category.current.state]
+  )
 
   const {
     apelMembre,
@@ -43,7 +49,7 @@ function Album() {
 
   const queryKey = [current.path]
 
-  const userIsAllowed = () => {
+  const userIsAllowed = useCallback(() => {
     switch (categoryAlias) {
       case 'ps':
         return psEnseignant
@@ -71,7 +77,7 @@ function Album() {
       default:
         return false
     }
-  }
+  }, [useRoles()])
 
   const { managerLevel, adminLevel, moderatorLevel } = useRigths()
 
@@ -87,6 +93,25 @@ function Album() {
       setCurrentAlbum('')
     }
   }, [])
+
+  const handleAdd = useCallback(
+    () =>
+      setShow({
+        page: false,
+        list: false,
+        form: true,
+      }),
+    []
+  )
+  const handleBack = useCallback(
+    () =>
+      setShow({
+        page: false,
+        list: true,
+        form: false,
+      }),
+    []
+  )
 
   return (
     <Grid item container>
@@ -127,26 +152,14 @@ function Album() {
         <CustomSimpleTooltip
           title="Ajouter un album"
           action="add"
-          callback={() =>
-            setShow({
-              page: false,
-              list: false,
-              form: true,
-            })
-          }
+          callback={handleAdd}
         />
       )}
       {show.form && isAllowed && (
         <CustomSimpleTooltip
           title="Retour à la liste"
           action="back"
-          callback={() =>
-            setShow({
-              page: false,
-              list: true,
-              form: false,
-            })
-          }
+          callback={handleBack}
         />
       )}
     </Grid>

@@ -10,7 +10,7 @@ function NewsDocs() {
     <CardItem
       title="Menu hebdomadaire"
       detail="du 14 au 20 Janvier 2021"
-      link="vie-scolaire/cantine/menus"
+      link="viescolaire/cantine/menus"
     />,
     <CardItem
       title="Newsletter mensuelle"
