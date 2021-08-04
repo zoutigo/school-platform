@@ -1065,6 +1065,91 @@ const routes = [
       description: null,
       icon: null,
     },
+    routes: [
+      {
+        path: '/private/account',
+        exact: true,
+        state: {
+          name: 'Mon Compte',
+          alias: 'account',
+          access: 'user',
+          type: 'category',
+          filepath: null,
+          description: null,
+          icon: null,
+        },
+        routes: [
+          {
+            path: '/private/account/donnees-personelles',
+            exact: true,
+            state: {
+              name: 'Mon Compte',
+              alias: 'private-account-mesdonnees',
+              access: 'user',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+        ],
+      },
+      {
+        path: '/private/admin',
+        exact: true,
+        state: {
+          name: 'Admin',
+          alias: 'admin',
+          access: 'manager',
+          type: 'category',
+          filepath: null,
+          description: null,
+          icon: null,
+        },
+        routes: [
+          {
+            path: '/private/admin/chemins',
+            exact: true,
+            state: {
+              name: 'Chemins',
+              alias: 'adminchemins',
+              access: 'admin',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+          {
+            path: '/private/admin/parametres',
+            exact: true,
+            state: {
+              name: 'Paramètres',
+              alias: 'adminparams',
+              access: 'manager',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+        ],
+      },
+      {
+        path: '/private/admin/parametres',
+        exact: true,
+        state: {
+          name: 'Deconnecter',
+          alias: 'loggout',
+          access: 'public',
+          type: 'category',
+          filepath: null,
+          description: null,
+          icon: null,
+        },
+        routes: [],
+      },
+    ],
   },
 ]
 
