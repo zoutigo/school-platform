@@ -31,8 +31,6 @@ function Main() {
     return aside
   }, [category, Asides])
 
-  console.log('hasaside:', HasAside())
-
   const RubricColors = useCallback(() => {
     const rubricstate = rubric ? rubric.state : null
     const colors =

@@ -68,7 +68,7 @@ import Album from '../components/elements/album/Album'
 import VieScolaireHorairesFeriesScreen from '../screens/VieScolaireHorairesFeriesScreen'
 import PrivateAdminParametersScreen from '../screens/PrivateAdminParametersScreens'
 
-const rubrics = [
+const rubricss = [
   {
     rubname: "L'Ecole",
     icon: <SchoolIcon />,
@@ -1026,8 +1026,8 @@ for (let i = 0; i < rubrics.length; i += 1) {
     }
   }
 }
-const rubricsRoutes = rubrics.map((rubric) => rubric.route)
-const rubricsList = rubrics.map((rubric) => {
+const rubricsRoutes = rubricss.map((rubric) => rubric.route)
+const rubricsList = rubricss.map((rubric) => {
   const { rubname, alias, route } = rubric
   return {
     name: rubname,
@@ -1047,4 +1047,4 @@ export {
   categoriesList,
 }
 
-export default rubrics
+export default rubricss
