@@ -1,26 +1,14 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
-import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useRouteMatch } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import routes from '../constants/routes'
 
-import { setAllRoutes } from '../redux/settings/SettingsActions'
 import { apiFetchChemin } from './api'
 import randomkey from './randomkey'
 import routeDatas from './routeDatas'
 import routesInfos from './routesInfos'
-
-const initialRouteDatas = {
-  rubric: null,
-  rubricCategories: [],
-  categories: [],
-  category: null,
-  current: null,
-  chapters: [],
-  rubrics: [],
-  categoryAlias: null,
-}
 
 export const useCurrentCategory = () => {
   const { pathname } = useLocation()

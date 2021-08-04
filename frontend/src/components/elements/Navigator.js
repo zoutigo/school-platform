@@ -1,10 +1,8 @@
 import { Grid, styled } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
-import { useRouteDatas, useRoutesInfos } from '../../utils/hooks'
-import routeDatas from '../../utils/routeDatas'
-import NavFieldset from './NavFieldset'
+import React from 'react'
+
+import { useRoutesInfos } from '../../utils/hooks'
+
 import NavigatorCategory from './NavigatorCategory'
 import NavigatorChapter from './NavigatorChapter'
 import NavigatorRubric from './NavigatorRubric'
