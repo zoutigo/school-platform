@@ -1,7 +1,17 @@
-import React, { useCallback } from 'react'
+/* eslint-disable import/named */
+import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Typography } from '@material-ui/core'
+import {
+  Button,
+  Collapse,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
+} from '@material-ui/core'
+import ArrowDropDownTwoToneIcon from '@material-ui/icons/ArrowDropDownTwoTone'
+import ArrowDropUpTwoToneIcon from '@material-ui/icons/ArrowDropUpTwoTone'
 import Dialog from '@material-ui/core/Dialog'
 import Slide from '@material-ui/core/Slide'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -13,14 +23,18 @@ import { useRigths, useRoutesInfos } from '../../utils/hooks'
 import { StyledNavLink } from './styled'
 
 const RubricTypo = styled(Typography)(({ theme }) => ({
-  background: theme.palette.primary.light,
+  // background: theme.palette.primary.light,
   fontWeight: 'bolder',
+  color: theme.palette.secondary.main,
 }))
 const CategoryTypo = styled(Typography)(({ theme }) => ({
   lineHeight: '3rem',
+  color: theme.palette.secondary.main,
 }))
 const ChapterTypo = styled(Typography)(({ theme }) => ({
   lineHeight: '3rem',
+  textTransform: 'capitalize',
+  color: theme.palette.secondary.main,
 }))
 const StyledButton = styled(Button)(({ theme }) => ({
   width: '100%',
@@ -30,40 +44,54 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }))
 
 const StyledDialog = styled(Dialog)(() => ({}))
-const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
-  background: theme.palette.primary.main,
+const StyledDialogTitle = styled(DialogTitle)(() => ({
+  background: 'transparent',
 }))
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+const StyledDialogContent = styled(DialogContent)(() => ({
   background: 'whitesmoke',
-  paddingLeft: '0.5rem',
-  '& .rubric': {
-    padding: '0.2rem 0px',
-    borderBottom: `solid 1px ${theme.palette.secondary.light}`,
-  },
+  paddingLeft: '0.6rem',
 }))
-const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
+const StyledDialogActions = styled(DialogActions)(() => ({
   background: 'whitesmoke',
   height: '3rem',
 }))
-const StyledCategory = styled('div')(({ theme }) => ({
-  padding: '0.5rem 0px 0.5rem 2rem',
+const StyledCategory = styled(Grid)(({ theme }) => ({
+  marginTop: '0.3rem',
+  '& .category-text': {
+    paddingLeft: '3rem',
+    background: theme.palette.primary.light,
+  },
 }))
-const StyledChapter = styled('div')(({ theme }) => ({
+const StyledChapter = styled('div')(() => ({
   padding: '0.5rem 0px 0.5rem 3rem',
   marginTop: '0.5rem',
+}))
+const StyledRubric = styled(Grid)(({ theme }) => ({
+  marginBottom: '0.5rem',
+
+  '& :first-child': {
+    '& .text': {
+      paddingRight: '1rem',
+      background: theme.palette.primary.main,
+    },
+    '& .icon': {
+      border: `solid 1px ${theme.palette.secondary.light}`,
+    },
+  },
 }))
 
 const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ))
 
-const Chapter = React.memo(({ chapter }) => (
+const Chapter = React.memo(({ chapter, handleClose }) => (
   <StyledChapter>
     <StyledNavLink
       to={{
         pathname: chapter.path,
         state: chapter.state,
       }}
+      onClick={handleClose}
     >
       <ChapterTypo variant="body1">{chapter.state.name}</ChapterTypo>
     </StyledNavLink>
@@ -71,6 +99,7 @@ const Chapter = React.memo(({ chapter }) => (
 ))
 
 Chapter.propTypes = {
+  handleClose: PropTypes.func.isRequired,
   chapter: PropTypes.shape({
     path: PropTypes.string,
     state: PropTypes.shape({
@@ -79,7 +108,7 @@ Chapter.propTypes = {
   }).isRequired,
 }
 
-const Category = React.memo(({ category }) => {
+const Category = React.memo(({ category, handleClose }) => {
   const {
     path: categoryPath,
     state: categoryState,
@@ -87,23 +116,33 @@ const Category = React.memo(({ category }) => {
   } = category
 
   return (
-    <StyledCategory>
-      <StyledNavLink
-        to={{
-          pathname: categoryPath,
-          state: categoryState,
-        }}
-      >
-        <CategoryTypo variant="body1">{categoryState.name}</CategoryTypo>
-      </StyledNavLink>
-      {chapters &&
-        chapters.map((chapter) => (
-          <Chapter key={chapter.path} chapter={chapter} />
-        ))}
+    <StyledCategory container>
+      <Grid item container className="category-text">
+        <StyledNavLink
+          to={{
+            pathname: categoryPath,
+            state: categoryState,
+          }}
+          onClick={handleClose}
+        >
+          <CategoryTypo variant="body1">{categoryState.name}</CategoryTypo>
+        </StyledNavLink>
+      </Grid>
+      <Grid item container>
+        {chapters &&
+          chapters.map((chapter) => (
+            <Chapter
+              key={chapter.path}
+              chapter={chapter}
+              handleClose={handleClose}
+            />
+          ))}
+      </Grid>
     </StyledCategory>
   )
 })
 Category.propTypes = {
+  handleClose: PropTypes.func.isRequired,
   category: PropTypes.shape({
     path: PropTypes.string,
     state: PropTypes.shape({
@@ -115,6 +154,92 @@ Category.propTypes = {
         state: PropTypes.shape({
           name: PropTypes.string,
         }),
+      })
+    ),
+  }).isRequired,
+}
+
+const Rubric = React.memo(({ rubric, handleClose }) => {
+  const [showRubric, setShowRubric] = useState(false)
+  const toggle = useCallback(() => {
+    setShowRubric(!showRubric)
+  }, [showRubric])
+
+  return (
+    <StyledRubric container>
+      <Grid item container>
+        <Grid item xs={10} sm={10} className="text">
+          <StyledNavLink
+            to={{
+              pathname: rubric.path,
+              state: rubric.state,
+            }}
+            onClick={handleClose}
+          >
+            <RubricTypo variant="h3">
+              {' '}
+              &nbsp;&nbsp;{rubric.state.name}
+            </RubricTypo>
+          </StyledNavLink>
+        </Grid>
+        <Grid
+          item
+          xs={2}
+          sm={2}
+          style={{ textAlign: 'center' }}
+          className="icon"
+        >
+          <Tooltip title={showRubric ? 'fermer' : 'ouvrir'}>
+            <IconButton
+              aria-label={showRubric ? 'fermer' : 'ouvrir'}
+              onClick={toggle}
+            >
+              {showRubric ? (
+                <ArrowDropUpTwoToneIcon />
+              ) : (
+                <ArrowDropDownTwoToneIcon />
+              )}
+            </IconButton>
+          </Tooltip>
+        </Grid>
+      </Grid>
+      <Collapse in={showRubric}>
+        <Grid container>
+          {rubric.routes &&
+            rubric.routes.map((category) => (
+              <Category
+                key={category.path}
+                category={category}
+                handleClose={handleClose}
+              />
+            ))}
+        </Grid>
+      </Collapse>
+    </StyledRubric>
+  )
+})
+
+Rubric.propTypes = {
+  handleClose: PropTypes.func.isRequired,
+  rubric: PropTypes.shape({
+    path: PropTypes.string,
+    state: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+    routes: PropTypes.arrayOf(
+      PropTypes.shape({
+        path: PropTypes.string,
+        state: PropTypes.shape({
+          name: PropTypes.string,
+        }),
+        routes: PropTypes.arrayOf(
+          PropTypes.shape({
+            path: PropTypes.string,
+            state: PropTypes.shape({
+              name: PropTypes.string,
+            }),
+          })
+        ),
       })
     ),
   }).isRequired,
@@ -163,31 +288,10 @@ function ModalNavigation() {
       </StyledDialogTitle>
       <StyledDialogContent dividers>
         {filteredRubrics().map((rubric) => (
-          <div className="rubric">
-            <StyledNavLink
-              to={{
-                pathname: rubric.path,
-                state: rubric.state,
-              }}
-              onClick={handleClose}
-            >
-              <RubricTypo variant="h3">
-                {' '}
-                &nbsp;&nbsp;{rubric.state.name}
-              </RubricTypo>
-            </StyledNavLink>
-
-            <StyledCategory>
-              {rubric.routes &&
-                rubric.routes.map((category) => (
-                  <Category key={category.path} category={category} />
-                ))}
-            </StyledCategory>
-          </div>
+          <Rubric rubric={rubric} handleClose={handleClose} key={rubric.path} />
         ))}
       </StyledDialogContent>
       <StyledDialogActions>
-        {/* <CustomButton width="100%" action="cancel" text="FERMER" /> */}
         <StyledButton onClick={handleClose}>
           <Typography variant="button">Fermer</Typography>
         </StyledButton>
