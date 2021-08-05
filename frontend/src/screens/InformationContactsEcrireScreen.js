@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from 'react-query'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Title from '../components/elements/Title'
 import TinyPageEditor from '../components/elements/TinyPageEditor'
 import InputTextControl from '../components/elements/InputTextControl'
@@ -40,7 +40,7 @@ function InformationContactsEcrireScreen() {
   const theme = useTheme()
 
   const dispatch = useDispatch()
-  const { topic } = useParams()
+  const { state: ecrireState } = useLocation()
   const queryKey = ['suggestions']
   const { Token } = useSelector((state) => state.user)
   const { mutate } = useSelector((state) => state.alerts)
@@ -58,21 +58,6 @@ function InformationContactsEcrireScreen() {
     apiPostSuggestion,
     useUpdateMutationOptions(queryKey)
   )
-
-  // const topic = useRouteParams('topic')
-  const formTitle = () => {
-    switch (topic) {
-      case 'idea':
-        return 'Proposer une idée à lécole'
-      case 'bug':
-        return 'Reporter un bug'
-      case 'improvment':
-        return 'Proposer une amélioration du site'
-
-      default:
-        return 'écrire'
-    }
-  }
 
   const onSubmit = async (datas) => {
     const { title, message, topic: suggestionTopic } = datas
@@ -141,7 +126,7 @@ function InformationContactsEcrireScreen() {
     },
   ]
   const initialTopic = suggestionOptions.find(
-    (suggestion) => suggestion.value === topic
+    (suggestion) => suggestion.value === ecrireState.topic
   )
   const otherTopic = suggestionOptions.find(
     (suggestion) => suggestion.value === 'other'
@@ -170,7 +155,10 @@ function InformationContactsEcrireScreen() {
       {tokenIsValid && !mutationIsSuccessfull && (
         <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
           <Grid item container justify="center">
-            <Title title={formTitle()} textcolor="whitesmoke" />
+            <Title
+              title={ecrireState.text || 'Ecrire'}
+              textcolor="whitesmoke"
+            />
           </Grid>
           <Grid container className="form-fields-container">
             <InputSelectControl

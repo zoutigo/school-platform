@@ -20,9 +20,9 @@ function Navigator() {
 
   return (
     <StyledGrid container>
-      {current.state.type === 'rubric' && <NavigatorRubric />}
-      {current.state.type === 'category' && <NavigatorCategory />}
-      {current.state.type === 'chapter' && <NavigatorChapter />}
+      {current?.state.type === 'rubric' && <NavigatorRubric />}
+      {current?.state.type === 'category' && <NavigatorCategory />}
+      {current?.state.type === 'chapter' && <NavigatorChapter />}
     </StyledGrid>
   )
 }

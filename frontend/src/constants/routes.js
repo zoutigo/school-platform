@@ -1083,7 +1083,7 @@ const routes = [
             path: '/private/account/donnees-personelles',
             exact: true,
             state: {
-              name: 'Mon Compte',
+              name: 'Mes données',
               alias: 'private-account-mesdonnees',
               access: 'user',
               type: 'chapter',

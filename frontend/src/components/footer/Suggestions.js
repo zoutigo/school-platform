@@ -1,33 +1,51 @@
 import { Typography } from '@material-ui/core'
-import React from 'react'
+import React, { useCallback } from 'react'
+import { useRoutesInfos } from '../../utils/hooks'
 import { StyledNavLink } from '../elements/styled'
 
 import FooterCard from './card/FooterCard'
 import { StyledFooterElementText } from './styles'
 
 function Suggestions() {
+  const { routesList } = useRoutesInfos()
+  const { path, state: ecrireState } = useCallback(
+    routesList.find((route) => route.path === '/informations/contacts/ecrire'),
+    [routesList]
+  )
   const suggestions = [
     {
       name: "Proposer une idée à l'école",
-      link: '/informations/contacts/ecrire/idea',
+      link: path,
+      state: {
+        ...ecrireState,
+        topic: 'idea',
+        text: "Proposer une idée à l'école",
+      },
     },
     {
       name: 'Suggérer une amélioration du site',
-      link: '/informations/contacts/ecrire/improvment',
+      link: path,
+      state: {
+        ...ecrireState,
+        topic: 'improvment',
+        text: 'Suggérer une amélioration du site',
+      },
     },
     {
       name: 'Signaler un bug',
-      link: '/informations/contacts/ecrire/bug',
+      link: path,
+      state: { ...ecrireState, topic: 'bug', text: 'Signaler un bug' },
     },
   ]
 
   const items = suggestions.map((partner) => {
-    const { link, name } = partner
+    const { link, name, state } = partner
     return (
       <StyledFooterElementText key={name}>
         <StyledNavLink
           to={{
             pathname: link,
+            state: state,
           }}
         >
           <Typography variant="body2">{name}</Typography>
