@@ -8,11 +8,10 @@ function ClassesScreen() {
   const { rubric } = useRoutesInfos()
   return (
     <StyledCardPageGrid container>
-      {/* {rubric.routes &&
+      {rubric.routes &&
         rubric.routes.map((data) => (
           <ResumeCard element={data} key={data.path} />
-        ))} */}
-      <h1>Something wrong</h1>
+        ))}
     </StyledCardPageGrid>
   )
 }

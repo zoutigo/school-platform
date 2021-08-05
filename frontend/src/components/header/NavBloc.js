@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import { styled, Typography } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
@@ -102,12 +103,13 @@ function NavBloc({ rubric, rubcolor }) {
           role="presentation"
         >
           <StyledNavLink
-            to={{
-              pathname: rubric.path,
-              state: rubric.state,
-            }}
+            to={rubric.path}
+            // to={{
+            //   pathname: rubric.path,
+            //   state: state,
+            // }}
           >
-            <Typography variant="h2">{rubric.state.name}</Typography>
+            <Typography variant="h2">{state.name}</Typography>
           </StyledNavLink>
           {showDropDown && (
             <ul className="dropdown-content btn-width bg-transparent">
