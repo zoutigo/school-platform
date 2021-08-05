@@ -103,11 +103,10 @@ function NavBloc({ rubric, rubcolor }) {
           role="presentation"
         >
           <StyledNavLink
-            to={rubric.path}
-            // to={{
-            //   pathname: rubric.path,
-            //   state: state,
-            // }}
+            to={{
+              pathname: rubric.path,
+              state: state,
+            }}
           >
             <Typography variant="h2">{state.name}</Typography>
           </StyledNavLink>

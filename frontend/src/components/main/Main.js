@@ -8,7 +8,6 @@ import HomeScreen from '../../screens/HomeScreen'
 import { useRoutesInfos } from '../../utils/hooks'
 import Navigator from '../elements/Navigator'
 import { StyledCentralScreen, StyledMainApp } from '../elements/styled'
-import UnderConstruction from '../elements/UnderConstruction'
 
 import Aside from './Aside'
 import BodyBloc from './BodyBloc'
@@ -66,9 +65,6 @@ function Main() {
                 <Navigator />
               </StyledCentralBloc>
             )}
-            <Route>
-              <UnderConstruction />
-            </Route>
           </>
         </Switch>
       </StyledCentralScreen>
