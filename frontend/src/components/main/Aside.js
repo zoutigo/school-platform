@@ -26,7 +26,7 @@ const StyledAsideBodyGrid = styled(Grid)(() => ({
 }))
 
 function Aside({ rubriccolors }) {
-  const { category } = useRoutesInfos()
+  const { category, current } = useRoutesInfos()
 
   const { Asides } = useSelector((state) => state.settings)
 
@@ -44,6 +44,8 @@ function Aside({ rubriccolors }) {
       items,
     }
   }, [Asides, category.current])
+
+  if (current.state.type === 'rubric' || !categoryAsideDatas()) return null
 
   return (
     <StyledAsideGrid
