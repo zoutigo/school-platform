@@ -1,10 +1,10 @@
+/* eslint-disable import/named */
 import { Grid } from '@material-ui/core'
 import { styled, withTheme } from '@material-ui/styles'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { useCurrentCategory } from '../../utils/hooks'
-import randomkey from '../../utils/randomkey'
+import { useRoutesInfos } from '../../utils/hooks'
 import AsideItem from './structure/AsideItem'
 import AsideTitle from './structure/AsideTitle'
 
@@ -26,42 +26,41 @@ const StyledAsideBodyGrid = styled(Grid)(() => ({
 }))
 
 function Aside({ rubriccolors }) {
-  const [title, setTitle] = useState('')
-  const [items, setItems] = useState([])
-  const { path: catePath } = useCurrentCategory()
-
-  // fetch the current category using pathname
-  // fetch aside datas from redux
+  const { category } = useRoutesInfos()
 
   const { Asides } = useSelector((state) => state.settings)
 
-  // remove aside(datas) as props from main file
-  // use  the aboce data to build the below aside
-  useEffect(() => {
+  const categoryAsideDatas = useCallback(() => {
+    const currentCategory = category ? category.current : null
+    if (!currentCategory) return null
+    const { path: categoryPath } = currentCategory
     const categoryAside = Asides.find(
-      // eslint-disable-next-line no-unused-vars
-      ([categoryPath, categoryInfos]) => categoryPath === catePath
+      ([asidePath, ...rest]) => asidePath === categoryPath
     )
-    if (categoryAside) {
-      // eslint-disable-next-line no-unused-vars
-      const [a, { title: catTitle, items: catItems }] = categoryAside
-      setTitle(catTitle)
-      setItems(catItems)
+
+    const [a, { title, items }] = categoryAside
+    return {
+      title,
+      items,
     }
-    return () => {
-      setTitle('')
-      setItems([])
-    }
-  }, [catePath])
+  }, [Asides, category.current])
 
   return (
-    <StyledAsideGrid item xs={false} md={title ? 3 : false} show={title}>
-      <AsideTitle rubriccolors={rubriccolors} title={title || ''} />
+    <StyledAsideGrid
+      item
+      xs={false}
+      md={categoryAsideDatas().title ? 3 : false}
+      show={categoryAsideDatas().title}
+    >
+      <AsideTitle
+        rubriccolors={rubriccolors}
+        title={categoryAsideDatas().title || ''}
+      />
       <StyledAsideBodyGrid container>
-        {items &&
-          items.map((asideitem) => (
+        {categoryAsideDatas().items &&
+          categoryAsideDatas().items.map((asideitem) => (
             <AsideItem
-              key={randomkey(987654)}
+              key={categoryAsideDatas().title}
               rubriccolors={rubriccolors}
               item={asideitem}
             />
@@ -81,4 +80,4 @@ Aside.propTypes = {
   }),
 }
 
-export default Aside
+export default React.memo(Aside)

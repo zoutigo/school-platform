@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -9,60 +9,6 @@ import { apiFetchChemin } from './api'
 import randomkey from './randomkey'
 import routeDatas from './routeDatas'
 import routesInfos from './routesInfos'
-
-export const useCurrentCategory = () => {
-  const { pathname } = useLocation()
-  const [categoryDatas, setCategoryDatas] = useState(null)
-  const [chapters, setChapters] = useState(null)
-
-  const [currentRoute, setCurrentRoute] = useState(null)
-  const { Routes } = useSelector((state) => state.settings)
-
-  useEffect(() => {
-    const Route = Routes.find((route) => pathname === route.path)
-    setCurrentRoute(Route)
-  }, [pathname])
-
-  useEffect(() => {
-    if (currentRoute && currentRoute.type === 'category') {
-      setCategoryDatas(currentRoute)
-      setChapters(
-        Routes.filter(
-          (route) =>
-            route.type === 'chapter' && route.path.includes(currentRoute.path)
-        )
-      )
-    } else if (currentRoute && currentRoute.type === 'rubric') {
-      setCategoryDatas(null)
-    } else {
-      const categoryAlias = pathname.split('/')[2]
-      const categoryInfos = Routes.find(
-        (route) => route.alias === categoryAlias && route.type === 'category'
-      )
-      if (categoryInfos) {
-        setCategoryDatas(categoryInfos)
-        setChapters(
-          Routes.filter(
-            (route) =>
-              route.type === 'chapter' &&
-              route.path.includes(categoryInfos.path)
-          )
-        )
-      }
-    }
-
-    return () => {
-      setCategoryDatas(null)
-      // setChapters(null)
-    }
-  }, [currentRoute, pathname])
-
-  return {
-    ...categoryDatas,
-    chapters: chapters,
-    currentRoute: currentRoute,
-  }
-}
 
 export const useUpdateMutationOptions = (queryKey) => {
   const queryClient = useQueryClient()
@@ -113,20 +59,21 @@ export const useIsTokenValid = () => {
 }
 
 export const useRigths = () => {
-  const {
-    User: { isAdmin, isModerator, isManager, isTeacher, exp },
-  } = useSelector((state) => state.user)
+  const { User } = useSelector((state) => state.user)
 
-  const TokenIsValid = new Date().getTime() / 1000 < exp
+  const setRigths = useCallback(() => {
+    const { isAdmin, isModerator, isManager, isTeacher, exp } = User
+    const TokenIsValid = new Date().getTime() / 1000 < exp
+    const userLevel = TokenIsValid
+    const teacherLevel =
+      (isAdmin || isManager || isModerator || isTeacher) && TokenIsValid
+    const managerLevel = (isAdmin || isManager) && TokenIsValid
+    const adminLevel = isAdmin && TokenIsValid
+    const moderatorLevel = (isAdmin || isManager || isModerator) && TokenIsValid
+    return { userLevel, teacherLevel, managerLevel, adminLevel, moderatorLevel }
+  }, [User])
 
-  const userLevel = TokenIsValid
-  const teacherLevel =
-    (isAdmin || isManager || isModerator || isTeacher) && TokenIsValid
-  const managerLevel = (isAdmin || isManager) && TokenIsValid
-  const adminLevel = isAdmin && TokenIsValid
-  const moderatorLevel = (isAdmin || isManager || isModerator) && TokenIsValid
-
-  return { userLevel, teacherLevel, managerLevel, adminLevel, moderatorLevel }
+  return { ...setRigths() }
 }
 
 export const useRouteParams = (arg) => {
