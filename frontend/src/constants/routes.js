@@ -1136,7 +1136,7 @@ const routes = [
         ],
       },
       {
-        path: '/private/admin/parametres',
+        path: '/private/loggout',
         exact: true,
         state: {
           name: 'Deconnecter',
