@@ -11,6 +11,7 @@ import routesComponents from '../../constants/routesComponents'
 function BodyBloc() {
   const { userLevel, managerLevel, moderatorLevel, adminLevel } = useRigths()
 
+  const loginPath = useCallback('/private/identification/login', [])
   const { routesList } = useRoutesInfos()
 
   const routesComposed = useCallback(() => {
@@ -30,7 +31,7 @@ function BodyBloc() {
     <Route
       {...rest}
       render={(props) =>
-        userLevel ? <Component {...props} /> : <Redirect to="/login" />
+        userLevel ? <Component {...props} /> : <Redirect to={loginPath} />
       }
     />
   )
@@ -42,7 +43,7 @@ function BodyBloc() {
     <Route
       {...rest}
       render={(props) =>
-        moderatorLevel ? <Component {...props} /> : <Redirect to="/login" />
+        moderatorLevel ? <Component {...props} /> : <Redirect to={loginPath} />
       }
     />
   )
@@ -54,7 +55,7 @@ function BodyBloc() {
     <Route
       {...rest}
       render={(props) =>
-        managerLevel ? <Component {...props} /> : <Redirect to="/login" />
+        managerLevel ? <Component {...props} /> : <Redirect to={loginPath} />
       }
     />
   )
@@ -66,7 +67,7 @@ function BodyBloc() {
     <Route
       {...rest}
       render={(props) =>
-        adminLevel ? <Component {...props} /> : <Redirect to="/login" />
+        adminLevel ? <Component {...props} /> : <Redirect to={loginPath} />
       }
     />
   )
@@ -85,6 +86,8 @@ function BodyBloc() {
         return <ManagerRoute {...props} />
       case 'admin':
         return <AdminRoute {...props} />
+      case 'public':
+        return <Route {...props} />
 
       default:
         return <Route {...props} />

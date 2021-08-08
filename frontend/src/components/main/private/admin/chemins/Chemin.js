@@ -33,7 +33,7 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
   background: 'whitesmoke',
 }))
 
-function Chemin({ chemin, queryKey, setTopAlert, setShowAddForm }) {
+function Chemin({ chemin, queryKey, setShowAddForm }) {
   const { alias, filepath, description, path, _id: cheminId } = chemin
   const [showImage, setShowImage] = useState(false)
   const [showEditCheminForm, setShowEditCheminForm] = useState(false)
@@ -135,7 +135,6 @@ function Chemin({ chemin, queryKey, setTopAlert, setShowAddForm }) {
           chemin={chemin}
           queryKey={queryKey}
           formAction="update"
-          setTopAlert={setTopAlert}
           setShowAddForm={setShowAddForm}
         />
       </Collapse>
@@ -153,6 +152,5 @@ Chemin.propTypes = {
   }).isRequired,
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
   setShowAddForm: PropTypes.func.isRequired,
-  setTopAlert: PropTypes.func.isRequired,
 }
-export default Chemin
+export default React.memo(Chemin)

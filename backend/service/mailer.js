@@ -26,7 +26,7 @@ const URL =
 
 module.exports.emailConfirmMail = (user) => {
   const options = {
-    from: ` "Fred Foo 👻" <${process.env.MAILER_USER}>`,
+    from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
     to: user.email,
     subject: "Confirmation de l'adresse mail",
     text: `Bonjour.L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.
@@ -43,10 +43,29 @@ module.exports.emailConfirmMail = (user) => {
 
   return { transporter, options }
 }
+module.exports.emailLosspass = (user) => {
+  const options = {
+    from: ` "Ecole Saint Augustin Cremieu" <${process.env.MAILER_USER}>`,
+    to: user.email,
+    subject: 'Reinitialisation du mot de pass',
+    text: `Bonjour.Nous avons bien pris en compte votre demande de reinitialisation du mot de pass.
+    Merci de bien vouloir coller ce lien sur votre navigateur afin de procéder au changement.
+    ${URL}/private/identification/losspass/${user.losspassToken}
+    `,
+    html: `
+    <h3>Bonjour</h3>
+    <p>Nous avons bien pris en compte votre demande de reinitialisation du mot de pass.</p>
+    <p>Afin de procéder au changement, merci de bien vouloir cliquer sur le lien ci dessous ou bien  coller ce lien sur votre navigateur.  </p>
+    <p><a href="${URL}/private/identification/losspass/${user.losspassToken}">Je modifie mon mot de pass</a></p>
+    `,
+  }
+
+  return { transporter, options }
+}
 
 module.exports.emailPreincriptionToUser = (datas) => {
   const options = {
-    from: ` "Fred Foo 👻" <${process.env.MAILER_USER}>`,
+    from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
     to: datas.parent.email,
     subject: "Recapitulatif de pré-inscription à l'Ecole Saint Augustin",
     html: `
@@ -103,7 +122,7 @@ module.exports.emailPreincriptionToManager = (datas) => {
     ? HTMLParser.parse(datas.message)
     : 'Pas de message'
   const options = {
-    from: ` "Fred Foo 👻" <${process.env.MAILER_USER}>`,
+    from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
     to: 'zoutigo@gmail.com',
     subject: `Une nouvelle pré-incription en classe de ${datas.classroom.name}: ${datas.childFirstname}`,
     html: `

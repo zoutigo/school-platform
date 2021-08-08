@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 import { withTheme } from '@material-ui/styles'
 import { StyledIconBox, StyledNavLink } from '../elements/styled'
-import { useRigths } from '../../utils/hooks'
 import Icons from '../elements/Icons'
 
 const StyledRubricLi = withTheme(
@@ -69,7 +68,6 @@ const StyledLine = withTheme(
 function NavBloc({ rubric, rubcolor }) {
   const { state, routes } = rubric
   const { pathname } = useLocation()
-  const { adminLevel, userLevel, managerLevel, moderatorLevel } = useRigths()
   const [showDropDown, setShowDropdown] = useState(true)
 
   useEffect(() => {
@@ -108,70 +106,60 @@ function NavBloc({ rubric, rubcolor }) {
               state: state,
             }}
           >
-            <Typography variant="h2">{state.name}</Typography>
+            <Typography variant="h2">{rubric.state.name}</Typography>
           </StyledNavLink>
           {showDropDown && (
             <ul className="dropdown-content btn-width bg-transparent">
               {routes &&
-                routes.map((category) => {
-                  if (category.state.access === 'admin' && !adminLevel)
-                    return null
-                  if (category.state.access === 'manager' && !managerLevel)
-                    return null
-                  if (category.state.access === 'moderator' && !moderatorLevel)
-                    return null
-                  if (category.state.access === 'user' && !userLevel)
-                    return null
-                  return (
-                    <StyledCategoryLi
-                      key={category.state.alias}
-                      bgcolor={rubcolor}
-                      className="btn-size dropdown"
-                      onClick={handleClick}
-                      role="presentation"
+                routes.map((category) => (
+                  <StyledCategoryLi
+                    key={category.state.alias}
+                    bgcolor={rubcolor}
+                    className="btn-size dropdown"
+                    onClick={handleClick}
+                    role="presentation"
+                  >
+                    <StyledNavLink
+                      to={{
+                        pathname: category.path,
+                        state: category.state,
+                      }}
                     >
-                      <StyledNavLink
-                        to={{
-                          pathname: category.path,
-                          state: category.state,
-                        }}
+                      <Typography variant="h4">
+                        {category.state.name}
+                      </Typography>
+                    </StyledNavLink>{' '}
+                    {category.routes && (
+                      <StyledChapterUl
+                        bgcolor={rubcolor}
+                        className="dropdown-content"
                       >
-                        <Typography variant="h4">
-                          {category.state.name}
-                        </Typography>
-                      </StyledNavLink>{' '}
-                      {category.routes && (
-                        <StyledChapterUl
-                          bgcolor={rubcolor}
-                          className="dropdown-content"
-                        >
-                          {
-                            // eslint-disable-next-line
-                            category.routes.map((chapter) => (
-                              <li
-                                key={chapter.path}
-                                className="btn-size"
-                                onClick={handleClick}
-                                role="presentation"
+                        {
+                          // eslint-disable-next-line
+                          category.routes.map((chapter) => (
+                            <li
+                              key={chapter.path}
+                              className="btn-size"
+                              onClick={handleClick}
+                              role="presentation"
+                            >
+                              <StyledNavLink
+                                to={{
+                                  pathname: chapter.path,
+                                  state: chapter.state,
+                                }}
                               >
-                                <StyledNavLink
-                                  to={{
-                                    pathname: chapter.path,
-                                    state: chapter.state,
-                                  }}
-                                >
-                                  <Typography variant="h4">
-                                    {chapter.state.name || 'hello'}{' '}
-                                  </Typography>{' '}
-                                </StyledNavLink>
-                              </li>
-                            ))
-                          }
-                        </StyledChapterUl>
-                      )}
-                    </StyledCategoryLi>
-                  )
-                })}
+                                <Typography variant="h4">
+                                  {chapter.state.name || 'hello'}{' '}
+                                </Typography>{' '}
+                              </StyledNavLink>
+                            </li>
+                          ))
+                        }
+                      </StyledChapterUl>
+                    )}
+                  </StyledCategoryLi>
+                ))}
             </ul>
           )}
         </StyledRubricLi>

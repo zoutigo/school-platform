@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import { styled, Grid, useTheme } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
@@ -12,13 +13,9 @@ import { useUpdateMutationOptions } from '../../utils/hooks'
 import paperActiviteSchema from '../../schemas/paperActiviteSchema'
 import TinyPageEditor from '../elements/TinyPageEditor'
 import CostumButton from '../elements/CustomButton'
-import {
-  setPaperFetchAlert,
-  setPaperMutateAlert,
-} from '../../redux/alerts/AlertsActions'
+import { setPaperMutateAlert } from '../../redux/alerts/AlertsActions'
 import {
   errorAlertCollapse,
-  initialAlertCollapse,
   successAlertCollapse,
 } from '../../constants/alerts'
 
@@ -77,7 +74,6 @@ function PaperFormActivite({
       await mutateAsync({
         id: currentDocument ? currentDocument._id : null,
         action: formAction,
-
         body: finalDatas,
         Token: Token,
       }).then((response) => {

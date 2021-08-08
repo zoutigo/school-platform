@@ -1,10 +1,11 @@
+/* eslint-disable import/named */
 import { Grid, styled, useTheme } from '@material-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from 'react-query'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import InputTextControl from '../../../../elements/InputTextControl'
 import CustomButton from '../../../../elements/CustomButton'
 import TinyPageEditor from '../../../../elements/TinyPageEditor'
@@ -12,6 +13,11 @@ import cheminSchema from '../../../../../schemas/cheminSchema'
 import InputFileControl from '../../../../elements/InputFileControl'
 import { apiPostChemin } from '../../../../../utils/api'
 import { useUpdateMutationOptions } from '../../../../../utils/hooks'
+import { setMutateAlert } from '../../../../../redux/alerts/AlertsActions'
+import {
+  errorAlertCollapse,
+  successAlertCollapse,
+} from '../../../../../constants/alerts'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -29,13 +35,8 @@ const StyledPaperForm = styled('form')(() => ({
   },
 }))
 
-function CheminForm({
-  queryKey,
-  formAction,
-  chemin,
-  setTopAlert,
-  setShowAddForm,
-}) {
+function CheminForm({ queryKey, formAction, chemin, setShowAddForm }) {
+  const dispatch = useDispatch()
   const theme = useTheme()
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync } = useMutation(
@@ -73,19 +74,11 @@ function CheminForm({
         body: finalDatas,
         token: Token,
       }).then((response) => {
-        setTopAlert({
-          openAlert: true,
-          severity: 'success',
-          alertText: response.statusText,
-        })
+        dispatch(setMutateAlert(successAlertCollapse(response.statusText)))
         setShowAddForm(false)
       })
     } catch (err) {
-      setTopAlert({
-        openAlert: true,
-        severity: 'error',
-        alertText: err.message,
-      })
+      dispatch(setMutateAlert(errorAlertCollapse(err.message)))
 
       window.scrollTo(0, 0)
     }
@@ -157,7 +150,6 @@ CheminForm.defaultProps = null
 CheminForm.propTypes = {
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
   formAction: PropTypes.string.isRequired,
-  setTopAlert: PropTypes.func.isRequired,
   setShowAddForm: PropTypes.func.isRequired,
   chemin: PropTypes.shape({
     _id: PropTypes.string,
@@ -167,4 +159,4 @@ CheminForm.propTypes = {
   }),
 }
 
-export default CheminForm
+export default React.memo(CheminForm)

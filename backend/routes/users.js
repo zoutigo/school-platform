@@ -7,10 +7,14 @@ const {
   viewUser,
   userEmail,
   verifyEmail,
+  userLosspass,
 } = require('../controllers/userController')
 
 const router = express.Router()
 const { tokenVerify } = require('../utils/tokenverify')
+
+// check email availability
+router.post('/losspass', userLosspass)
 
 // check email availability
 router.post('/checkemail', userEmail)

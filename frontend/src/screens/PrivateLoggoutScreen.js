@@ -1,12 +1,19 @@
-import React, { useEffect } from 'react'
+/* eslint-disable import/named */
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 import returnStoreAndPersistor from '../redux/store'
+import { useRoutesInfos } from '../utils/hooks'
 
 function PrivateLoggoutScreen() {
   const dispatch = useDispatch()
   const { persistor } = returnStoreAndPersistor()
+  const { routesList } = useRoutesInfos()
+  const loginRoute = useCallback(
+    routesList.find((route) => route.state.alias === 'login'),
+    [routesList]
+  )
 
   useEffect(() => {
     dispatch(setUserToken(''))
@@ -14,7 +21,14 @@ function PrivateLoggoutScreen() {
     persistor.purge()
   }, [])
 
-  return <Redirect to="/login" />
+  return (
+    <Redirect
+      to={{
+        pathname: '/private/identification/login',
+        state: { ...loginRoute.state, from: 'loggout' },
+      }}
+    />
+  )
 }
 
 export default PrivateLoggoutScreen

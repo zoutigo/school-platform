@@ -1,5 +1,5 @@
 /* eslint-disable import/named */
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import MenuIcon from '@material-ui/icons/Menu'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,14 +22,35 @@ function Header() {
   const theme = useTheme()
   const isSmallScreen = !useMediaQuery(theme.breakpoints.up('lg'))
   const { SmallScreenNavIsOpened } = useSelector((state) => state.settings)
-  const { userLevel } = useRigths()
+
   const dispatch = useDispatch()
   const { pathname } = useLocation()
   const { rubricsList } = useRoutesInfos()
+  const { userLevel } = useRigths()
+
+  const rubricColor = useCallback(
+    (rubric) => {
+      const colors = Object.entries(theme.palette)
+      const sortedcolors = colors.filter(
+        /* eslint-disable */
+        ([key, object]) => key === rubric.state.alias
+      )
+
+      const [rubricalias, rubricColors] = sortedcolors[0]
+
+      const rubColor =
+        rubricalias === 'private' && !userLevel
+          ? rubricColors?.dark
+          : rubricColors?.main
+      return rubColor
+    },
+    [theme, userLevel]
+  )
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+
   return (
     <StyledHeader className="row">
       <div className="logo">
@@ -39,28 +60,19 @@ function Header() {
         <ul className="row nav">
           {rubricsList.map((rubric) => {
             const colors = Object.entries(theme.palette)
-            const sortedcolors = colors.filter(
-              /* eslint-disable */
-              ([key, object]) => key === rubric.state.alias
-            )
-            const [rubcolors] = sortedcolors
-            const rubcolor = rubcolors ? rubcolors[1].main : ''
-
-            if (
-              (rubric.path === '/register' || rubric.path === '/login') &&
-              userLevel
-            )
-              return null
-            if (rubric.path === '/private' && !userLevel) return null
-            if (rubric.path === '/register' && pathname !== '/register') {
-              return null
-            }
-            if (rubric.path === '/login' && pathname === '/register') {
-              return null
-            }
+            // const sortedcolors = colors.filter(
+            //   /* eslint-disable */
+            //   ([key, object]) => key === rubric.state.alias
+            // )
+            // const [rubcolors] = sortedcolors
+            // const rubcolor = rubcolors ? rubcolors[1].main : ''
 
             return (
-              <NavBloc key={rubric.path} rubric={rubric} rubcolor={rubcolor} />
+              <NavBloc
+                key={rubric.path}
+                rubric={rubric}
+                rubcolor={rubricColor(rubric)}
+              />
             )
           })}
         </ul>
@@ -81,7 +93,7 @@ function Header() {
             }}
           >
             {!SmallScreenNavIsOpened && <MenuIcon />}
-            {SmallScreenNavIsOpened && <CancelIcon />}
+            {/* {SmallScreenNavIsOpened && <CancelIcon />} */}
           </StyledIconBox>
         </div>
       )}

@@ -62,6 +62,10 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
+    losspassToken: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 )

@@ -61,6 +61,9 @@ import PrivateAccountDonneesScreen from '../screens/PrivateAccountDonneesScreen'
 import Album from '../components/elements/album/Album'
 import VieScolaireHorairesFeriesScreen from '../screens/VieScolaireHorairesFeriesScreen'
 import PrivateAdminParametersScreen from '../screens/PrivateAdminParametersScreens'
+import PrivateIdentificationScreen from '../screens/PrivateIdentificationScreen'
+import PrivateIdentificationLosspassScreen from '../screens/PrivateIdentificationLosspassScreen'
+import PrivateIdentificationEmailValidationScreen from '../screens/PrivateIdentificationEmailValidationScreen'
 
 const routesComponents = [
   {
@@ -363,41 +366,61 @@ const routesComponents = [
     path: '/apelogec/ogec/albums',
     component: Album,
   },
-  {
-    path: '/login',
-    component: LoginScreen,
-  },
-  {
-    path: '/register',
-    component: RegisterScreen,
-  },
+  // {
+  //   path: '/login',
+  //   component: LoginScreen,
+  // },
+  // {
+  //   path: '/register',
+  //   component: RegisterScreen,
+  // },
   {
     path: '/private',
     component: PrivateScreen,
+  },
+  {
+    path: '/private/identification',
+    component: PrivateIdentificationScreen,
+  },
+  {
+    path: '/private/identification/login',
+    component: LoginScreen,
+  },
+  {
+    path: '/private/identification/register',
+    component: RegisterScreen,
+  },
+  {
+    path: '/private/identification/losspass/:token',
+    component: PrivateIdentificationLosspassScreen,
+  },
+  {
+    path: '/private/identification/emailvalidation/:token',
+    component: PrivateIdentificationEmailValidationScreen,
   },
   {
     path: '/private/account',
     component: PrivateAccountScreen,
   },
   {
-    path: '/private/account/donnees-personelles',
+    path: '/private/account/mesdonnees',
     component: PrivateAccountDonneesScreen,
   },
   {
-    path: '/private/admin',
+    path: '/private/account/loggout',
+    component: PrivateLoggoutScreen,
+  },
+  {
+    path: '/private/administration',
     component: PrivateAdminScreen,
   },
   {
-    path: '/private/admin/chemins',
+    path: '/private/administration/chemins',
     component: PrivateAdminCheminsScreen,
   },
   {
-    path: '/private/admin/parametres',
+    path: '/private/administration/parametres',
     component: PrivateAdminParametersScreen,
-  },
-  {
-    path: '/private/loggout',
-    component: PrivateLoggoutScreen,
   },
 ]
 

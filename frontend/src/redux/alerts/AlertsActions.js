@@ -11,6 +11,7 @@ import {
   SET_PAPER_FETCH_ALERT,
   SET_PAPER_MUTATE_ALERT,
   SET_MUTATE_ALERT,
+  SET_FETCH_ALERT,
   SET_EDITOR_FETCH_ALERT,
   SET_PAGE_FETCH_ALERT,
   SET_PAGE_MUTATE_ALERT,
@@ -73,6 +74,10 @@ export const setRegisterAlert = (value = null) => ({
 })
 export const setMutateAlert = (value = null) => ({
   type: SET_MUTATE_ALERT,
+  payload: value,
+})
+export const setFetchAlert = (value = null) => ({
+  type: SET_FETCH_ALERT,
   payload: value,
 })
 export const setEditorFetchAlert = (value = null) => ({

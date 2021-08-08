@@ -18,6 +18,7 @@ const initialState = {
   login: initialAlert,
   register: initialAlert,
   mutate: initialAlert,
+  fetch: initialAlert,
   parametersFetch: initialAlert,
   parametersMutate: initialAlert,
 }
@@ -65,6 +66,9 @@ const actionsReducers = createReducer(initialState, {
   },
   SET_MUTATE_ALERT: (state, action) => {
     state.mutate = action.payload
+  },
+  SET_FETCH_ALERT: (state, action) => {
+    state.fetch = action.payload
   },
   SET_EDITOR_FETCH_ALERT: (state, action) => {
     state.editorFetch = action.payload

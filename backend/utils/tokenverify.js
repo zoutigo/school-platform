@@ -22,3 +22,18 @@ module.exports.tokenVerify = async (req, res, next) => {
     return next(new TokenInvalid(err))
   }
 }
+
+module.exports.losspassTokenVerify = async (token) => {
+  if (!token) return { error: 'please provide token' }
+
+  try {
+    const verified = await jwt.verify(token, process.env.TOKEN_SECRET)
+    console.log('verified:', verified)
+    if (!verified) return { error: 'jeton invalide. il a du expirer' }
+    const { _id } = verified
+
+    return { id: _id }
+  } catch (err) {
+    return { error: err }
+  }
+}

@@ -249,24 +249,11 @@ function ModalNavigation() {
   const dispatch = useDispatch()
   const { rubricsList } = useRoutesInfos()
   const { SmallScreenNavIsOpened } = useSelector((state) => state.settings)
-  const { userLevel } = useRigths()
 
   const rubrics = useCallback(
     rubricsList.map(({ path, state, routes }) => ({ path, state, routes })),
     [rubricsList]
   )
-
-  const filteredRubrics = useCallback(() => {
-    const userExclusions = ['login', 'register']
-    const visitorExclusions = ['private']
-    const filtered = userLevel
-      ? rubrics.filter((rubric) => !userExclusions.includes(rubric.state.alias))
-      : rubrics.filter(
-          (rubric) => !visitorExclusions.includes(rubric.state.alias)
-        )
-
-    return filtered
-  }, [rubrics])
 
   const handleClose = useCallback(() => {
     dispatch(openSmallScreenNav(false))
@@ -287,7 +274,7 @@ function ModalNavigation() {
         Où souhaitez vous aller ?
       </StyledDialogTitle>
       <StyledDialogContent dividers>
-        {filteredRubrics().map((rubric) => (
+        {rubrics.map((rubric) => (
           <Rubric rubric={rubric} handleClose={handleClose} key={rubric.path} />
         ))}
       </StyledDialogContent>

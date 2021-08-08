@@ -314,3 +314,9 @@ export const apiFetchDialogs = async () => {
 
   return data
 }
+
+export const apiPostLosspass = async ({ body, action }) => {
+  const URL = `${PREFIX}/users/losspass?action=${action}`
+  const result = await axios.post(URL, body)
+  return result
+}

@@ -3,9 +3,11 @@ const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const Entity = require('../models/Entity')
 const User = require('../models/User')
-const { emailConfirmMail } = require('../service/mailer')
-const { Unauthorized, BadRequest } = require('../utils/errors')
+const { emailConfirmMail, emailLosspass } = require('../service/mailer')
+const { Unauthorized, BadRequest, TokenInvalid } = require('../utils/errors')
+const { generateLosspassToken } = require('../utils/generateLosspassToken')
 const { generateToken } = require('../utils/generatetoken')
+const { losspassTokenVerify } = require('../utils/tokenverify')
 const { updateArray } = require('../utils/updateArray')
 
 const { userValidator } = require('../validators/userValidator')
@@ -356,4 +358,80 @@ module.exports.verifyEmail = async (req, res, next) => {
   } catch (err) {
     return next(new BadRequest(err))
   }
+}
+
+module.exports.userLosspass = async (req, res, next) => {
+  const { action } = req.query
+
+  const { email, password, passwordConfirm, token } = req.body
+
+  console.log(action)
+
+  if (!action) return next(new BadRequest('Please provide action'))
+
+  if (action === 'losspass_checkemail') {
+    const user = await User.findOne({ email })
+    if (!user)
+      return next(
+        new BadRequest(" Cet email n'est pas connu dans notre base données")
+      )
+
+    const losspassToken = generateLosspassToken(user)
+
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: user._id },
+      { losspassToken: losspassToken },
+      { returnOriginal: false }
+    )
+    if (!updatedUser) return next(new BadRequest('une erreur est survenue'))
+
+    const { transporter, options } = emailLosspass(updatedUser)
+
+    try {
+      const mailToUser = await transporter.sendMail(options)
+      if (mailToUser)
+        return res.status(200).send({
+          message: 'Demande prise en compte. Un mail vous a été adressé',
+        })
+    } catch (err) {
+      return next(err)
+    }
+  }
+  if (action === 'losspass_updatepass') {
+    console.log('here also')
+    const { error, id: userId } = await losspassTokenVerify(token)
+    console.log('userID', userId)
+
+    if (error) return next(new TokenInvalid(error))
+
+    if (!password || !passwordConfirm)
+      return next(new BadRequest('Veillez saisir les mots de pass demandés'))
+
+    if (password !== passwordConfirm)
+      return next(new BadRequest('Les mots de pass doivent etre identiques'))
+
+    const errors = userValidator({ password, passwordConfirm })
+    if (errors.length > 0) return next(new BadRequest(errors.join()))
+
+    try {
+      // pass should be crypted
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(password, salt)
+
+      const modifiedUser = await User.findOneAndUpdate(
+        { _id: userId },
+        { password: hashedPassword },
+        { returnOriginal: false }
+      )
+
+      if (modifiedUser)
+        return res.status(200).send({
+          message:
+            'Le mot de pass a été  reinitialisé correctement. Dans 3 secondes , vous allez etre redirigés vers la page de login.',
+        })
+    } catch (err) {
+      return next(new BadRequest(err))
+    }
+  }
+  return next(new BadRequest('il y a une erreur'))
 }

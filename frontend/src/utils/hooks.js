@@ -63,13 +63,13 @@ export const useRigths = () => {
 
   const setRigths = useCallback(() => {
     const { isAdmin, isModerator, isManager, isTeacher, exp } = User
-    const TokenIsValid = new Date().getTime() / 1000 < exp
+    const TokenIsValid = exp ? new Date().getTime() / 1000 < exp : false
     const userLevel = TokenIsValid
     const teacherLevel =
-      (isAdmin || isManager || isModerator || isTeacher) && TokenIsValid
-    const managerLevel = (isAdmin || isManager) && TokenIsValid
-    const adminLevel = isAdmin && TokenIsValid
-    const moderatorLevel = (isAdmin || isManager || isModerator) && TokenIsValid
+      TokenIsValid && (isAdmin || isManager || isModerator || isTeacher)
+    const managerLevel = TokenIsValid && (isAdmin || isManager)
+    const adminLevel = TokenIsValid && isAdmin
+    const moderatorLevel = TokenIsValid && (isAdmin || isManager || isModerator)
     return { userLevel, teacherLevel, managerLevel, adminLevel, moderatorLevel }
   }, [User])
 
@@ -112,6 +112,7 @@ export const useRoutesInfos = () => {
     routesList: [],
   }
   const { pathname } = useLocation()
+  const rights = useRigths()
 
   const { data: chemins } = useQuery(
     ['liste-chemins'],
@@ -182,15 +183,27 @@ export const useRoutesInfos = () => {
       return null
     })
     return list
-  }, [])
+  }, [pathname])
 
   const rubricsListe = useCallback(() => {
+    const visitorExcludedCats = ['account', 'administration']
+    const userExcludedCats = ['identification']
+    const moderatorExcludedCats = ['administration', 'identification']
     const rubrics = routesList().filter(
       (route) => route.state.type === 'rubric'
     )
-    const categories = routesList().filter(
-      (route) => route.state.type === 'category'
-    )
+    const categories = routesList().filter((route) => {
+      const catCond = route.state.type === 'category'
+      const visitorCond =
+        !rights.userLevel && !visitorExcludedCats.includes(route.state.alias)
+      const userCond =
+        rights.userLevel && !userExcludedCats.includes(route.state.alias)
+      const moderatorCond =
+        rights.moderatorLevel &&
+        !moderatorExcludedCats.includes(route.state.alias)
+
+      return catCond && (visitorCond || userCond || moderatorCond)
+    })
     const chapters = routesList().filter(
       (route) => route.state.type === 'chapter'
     )
@@ -221,7 +234,7 @@ export const useRoutesInfos = () => {
       return newRubric
     })
     return newrubrics
-  }, [routesList()])
+  }, [routesList(), rights])
 
   const rubricItem = useCallback(
     pathname === '/'

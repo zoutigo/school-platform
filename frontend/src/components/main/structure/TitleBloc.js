@@ -45,6 +45,16 @@ const StyledLargeScreenTitleBloc = styled(Grid)(({ theme }) => ({
   },
 }))
 
+const fakeState = {
+  name: 'Fake',
+  alias: 'fake',
+  access: 'public',
+  type: 'chapter',
+  filepath: null,
+  description: null,
+  icon: null,
+}
+
 function TitleBloc(props) {
   const { rubriccolors } = props
 
@@ -53,7 +63,9 @@ function TitleBloc(props) {
 
   const { category, current } = useRoutesInfos()
 
-  const state = useCallback(locationState || current.state, [current])
+  const state = useCallback(locationState || current?.state || fakeState, [
+    current,
+  ])
 
   const TitleTab = ({ rubriccolors: tabcolors, tabpath, state: tabstate }) => (
     <StyledMainTitle

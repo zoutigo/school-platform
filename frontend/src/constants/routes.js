@@ -1028,44 +1028,85 @@ const routes = [
     ],
   },
   {
-    path: '/login',
-    exact: true,
-    state: {
-      name: 'login',
-      alias: 'login',
-      access: 'public',
-      type: 'rubric',
-      filepath: null,
-      description: null,
-      icon: null,
-    },
-  },
-  {
-    path: '/register',
-    exact: true,
-    state: {
-      name: "S'enregistrer",
-      alias: 'register',
-      access: 'public',
-      type: 'rubric',
-      filepath: null,
-      description: null,
-      icon: null,
-    },
-  },
-  {
     path: '/private',
     exact: true,
     state: {
-      name: 'Espace-Privé',
+      name: 'Espace Privé',
       alias: 'private',
-      access: 'user',
+      access: 'public',
       type: 'rubric',
       filepath: null,
       description: null,
       icon: null,
     },
     routes: [
+      {
+        path: '/private/identification',
+        exact: true,
+        state: {
+          name: 'Identification',
+          alias: 'identification',
+          access: 'public',
+          type: 'category',
+          filepath: null,
+          description: null,
+          icon: null,
+        },
+        routes: [
+          {
+            path: '/private/identification/login',
+            exact: true,
+            state: {
+              name: 'login',
+              alias: 'login',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+          {
+            path: '/private/identification/register',
+            exact: true,
+            state: {
+              name: "S'enregistrer",
+              alias: 'register',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+          {
+            path: '/private/identification/losspass/:token',
+            exact: true,
+            state: {
+              name: 'Pass Perdu',
+              alias: 'losspass',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+          {
+            path: '/private/identification/emailvalidation/:token',
+            exact: true,
+            state: {
+              name: 'Validation Mail',
+              alias: 'emailvalidation',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+        ],
+      },
       {
         path: '/private/account',
         exact: true,
@@ -1080,11 +1121,24 @@ const routes = [
         },
         routes: [
           {
-            path: '/private/account/donnees-personelles',
+            path: '/private/account/mesdonnees',
             exact: true,
             state: {
               name: 'Mes données',
-              alias: 'private-account-mesdonnees',
+              alias: 'mesdonnees',
+              access: 'user',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+          {
+            path: '/private/account/loggout',
+            exact: true,
+            state: {
+              name: 'Deconnecter',
+              alias: 'loggout',
               access: 'user',
               type: 'chapter',
               filepath: null,
@@ -1095,11 +1149,11 @@ const routes = [
         ],
       },
       {
-        path: '/private/admin',
+        path: '/private/administration',
         exact: true,
         state: {
-          name: 'Admin',
-          alias: 'admin',
+          name: 'Administration',
+          alias: 'administration',
           access: 'manager',
           type: 'category',
           filepath: null,
@@ -1108,7 +1162,7 @@ const routes = [
         },
         routes: [
           {
-            path: '/private/admin/chemins',
+            path: '/private/administration/chemins',
             exact: true,
             state: {
               name: 'Chemins',
@@ -1121,7 +1175,7 @@ const routes = [
             },
           },
           {
-            path: '/private/admin/parametres',
+            path: '/private/administration/parametres',
             exact: true,
             state: {
               name: 'Paramètres',
@@ -1134,20 +1188,6 @@ const routes = [
             },
           },
         ],
-      },
-      {
-        path: '/private/loggout',
-        exact: true,
-        state: {
-          name: 'Deconnecter',
-          alias: 'loggout',
-          access: 'public',
-          type: 'category',
-          filepath: null,
-          description: null,
-          icon: null,
-        },
-        routes: [],
       },
     ],
   },
