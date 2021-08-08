@@ -5,7 +5,7 @@ const Entity = require('../models/Entity')
 const User = require('../models/User')
 const { emailConfirmMail, emailLosspass } = require('../service/mailer')
 const { Unauthorized, BadRequest, TokenInvalid } = require('../utils/errors')
-const { generateLosspassToken } = require('../utils/generateLosspassToken')
+const { generateValidationToken } = require('../utils/generateValidationToken')
 const { generateToken } = require('../utils/generatetoken')
 const { losspassTokenVerify } = require('../utils/tokenverify')
 const { updateArray } = require('../utils/updateArray')
@@ -347,14 +347,18 @@ module.exports.verifyEmail = async (req, res, next) => {
     const user = await User.findOne({ emailToken: req.query.token })
     if (!user) {
       const errorMessage = `Le jeton n'est plus valide. Contactez le support technique`
-      return res.redirect(`/register?status=error&message=${errorMessage}`)
+      return res.redirect(
+        `/private/identification/register?status=error&message=${errorMessage}`
+      )
     }
 
     user.emailToken = null
     user.isverified = true
     await user.save()
     const successMessage = `Votre email a bien été validé . vous pouvez desormais vous connecter et profiter des actulités de l'école saint augustin`
-    return res.redirect(`/login?status=success&message=${successMessage}`)
+    return res.redirect(
+      `/private/identification/login?status=success&message=${successMessage}`
+    )
   } catch (err) {
     return next(new BadRequest(err))
   }
@@ -365,8 +369,6 @@ module.exports.userLosspass = async (req, res, next) => {
 
   const { email, password, passwordConfirm, token } = req.body
 
-  console.log(action)
-
   if (!action) return next(new BadRequest('Please provide action'))
 
   if (action === 'losspass_checkemail') {
@@ -376,7 +378,7 @@ module.exports.userLosspass = async (req, res, next) => {
         new BadRequest(" Cet email n'est pas connu dans notre base données")
       )
 
-    const losspassToken = generateLosspassToken(user)
+    const losspassToken = generateValidationToken(user)
 
     const updatedUser = await User.findOneAndUpdate(
       { _id: user._id },
@@ -398,9 +400,7 @@ module.exports.userLosspass = async (req, res, next) => {
     }
   }
   if (action === 'losspass_updatepass') {
-    console.log('here also')
     const { error, id: userId } = await losspassTokenVerify(token)
-    console.log('userID', userId)
 
     if (error) return next(new TokenInvalid(error))
 
@@ -420,7 +420,7 @@ module.exports.userLosspass = async (req, res, next) => {
 
       const modifiedUser = await User.findOneAndUpdate(
         { _id: userId },
-        { password: hashedPassword },
+        { password: hashedPassword, losspassToken: null },
         { returnOriginal: false }
       )
 
