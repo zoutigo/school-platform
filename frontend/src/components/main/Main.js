@@ -5,7 +5,7 @@ import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import HomeScreen from '../../screens/HomeScreen'
-import { useRoutesInfos } from '../../utils/hooks'
+import { useRigths, useRoutesInfos, useThemeColors } from '../../utils/hooks'
 import Navigator from '../elements/Navigator'
 import { StyledCentralScreen, StyledMainApp } from '../elements/styled'
 
@@ -21,6 +21,7 @@ function Main() {
   const { Asides } = useSelector((state) => state.settings)
 
   const { category, rubric } = useRoutesInfos()
+  const { userLevel } = useRigths()
 
   const HasAside = useCallback(() => {
     const categoryPath = category.current?.path ? category.current.path : null
@@ -31,21 +32,12 @@ function Main() {
     return aside
   }, [category, Asides])
 
-  const RubricColors = useCallback(() => {
-    const rubricstate = rubric ? rubric.state : null
-    const colors =
-      pathname !== '/' && rubricstate
-        ? Object.entries(palette).filter(
-            ([key, value]) => key === rubricstate.alias
-          )[0][1]
-        : {
-            main: 'white',
-            light: 'white',
-            dark: 'white',
-          }
+  const colorAlias =
+    rubric.state.alias === 'private' && !userLevel
+      ? 'visitor'
+      : rubric.state.alias
 
-    return colors
-  }, [rubric])
+  const rubricolors = useThemeColors(colorAlias)
 
   return (
     <StyledMainApp>
@@ -58,10 +50,10 @@ function Main() {
             {pathname !== '/' && (
               <StyledCentralBloc container alignItems="flex-start">
                 <Grid item container xs={12} md={HasAside() ? 9 : 12}>
-                  <TitleBloc rubriccolors={RubricColors()} />
+                  <TitleBloc rubriccolors={rubricolors} />
                   <BodyBloc />
                 </Grid>
-                {HasAside() && <Aside rubriccolors={RubricColors()} md={3} />}
+                {HasAside() && <Aside rubriccolors={rubricolors} md={3} />}
                 <Navigator />
               </StyledCentralBloc>
             )}

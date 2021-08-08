@@ -2,9 +2,11 @@ import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles'
 import cyan from '@material-ui/core/colors/cyan'
 import deepPurple from '@material-ui/core/colors/deepPurple'
 import lightGreen from '@material-ui/core/colors/lightGreen'
+import green from '@material-ui/core/colors/lightGreen'
 import deepOrange from '@material-ui/core/colors/deepOrange'
 import red from '@material-ui/core/colors/red'
 import amber from '@material-ui/core/colors/amber'
+import { grey } from '@material-ui/core/colors'
 
 const initialTheme = createMuiTheme({
   palette: {
@@ -36,9 +38,9 @@ const initialTheme = createMuiTheme({
       dark: amber[600],
     },
     classes: {
-      ligth: lightGreen[50],
-      main: lightGreen[500],
-      dark: lightGreen[900],
+      ligth: green[50],
+      main: green[500],
+      dark: green[900],
     },
     apelogec: {
       ligth: deepPurple[50],
@@ -51,9 +53,14 @@ const initialTheme = createMuiTheme({
       dark: deepOrange[800],
     },
     private: {
-      ligth: red[50],
-      main: red[500],
-      dark: red[900],
+      ligth: lightGreen.A100,
+      main: lightGreen.A400,
+      dark: red.A400,
+    },
+    visitor: {
+      ligth: grey[200],
+      main: grey[500],
+      dark: grey[900],
     },
   },
   typography: {

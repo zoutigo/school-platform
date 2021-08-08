@@ -1,9 +1,11 @@
 // eslint-disable-next-line no-unused-vars
+import { useTheme } from '@material-ui/styles'
 import React, { useCallback } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import routes from '../constants/routes'
+import theme from '../constants/theme'
 
 import { apiFetchChemin } from './api'
 import randomkey from './randomkey'
@@ -74,6 +76,19 @@ export const useRigths = () => {
   }, [User])
 
   return { ...setRigths() }
+}
+
+export const useThemeColors = (alias = 'private') => {
+  const colors = Object.entries(theme.palette)
+
+  const sortedcolors = colors.filter(
+    /* eslint-disable */
+    ([key, object]) => key === alias
+  )
+
+  const [itemalias, themeColors] = sortedcolors[0]
+
+  return { ...themeColors }
 }
 
 export const useRouteParams = (arg) => {

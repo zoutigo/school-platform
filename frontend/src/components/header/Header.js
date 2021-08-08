@@ -11,7 +11,7 @@ import Logo from './Logo'
 import { StyledIconBox } from '../elements/styled'
 import NavBloc from './NavBloc'
 import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
-import { useRigths, useRoutesInfos } from '../../utils/hooks'
+import { useRigths, useRoutesInfos, useThemeColors } from '../../utils/hooks'
 import MainDialog from '../elements/MainDialog'
 
 const StyledHeader = styled('header')(() => ({
@@ -28,25 +28,6 @@ function Header() {
   const { rubricsList } = useRoutesInfos()
   const { userLevel } = useRigths()
 
-  const rubricColor = useCallback(
-    (rubric) => {
-      const colors = Object.entries(theme.palette)
-      const sortedcolors = colors.filter(
-        /* eslint-disable */
-        ([key, object]) => key === rubric.state.alias
-      )
-
-      const [rubricalias, rubricColors] = sortedcolors[0]
-
-      const rubColor =
-        rubricalias === 'private' && !userLevel
-          ? rubricColors?.dark
-          : rubricColors?.main
-      return rubColor
-    },
-    [theme, userLevel]
-  )
-
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
@@ -59,21 +40,13 @@ function Header() {
       {!isSmallScreen && (
         <ul className="row nav">
           {rubricsList.map((rubric) => {
-            const colors = Object.entries(theme.palette)
-            // const sortedcolors = colors.filter(
-            //   /* eslint-disable */
-            //   ([key, object]) => key === rubric.state.alias
-            // )
-            // const [rubcolors] = sortedcolors
-            // const rubcolor = rubcolors ? rubcolors[1].main : ''
+            const ColorAlias =
+              rubric.state.alias === 'private' && !userLevel
+                ? 'visitor'
+                : rubric.state.alias
+            const { main, dark } = useThemeColors(ColorAlias)
 
-            return (
-              <NavBloc
-                key={rubric.path}
-                rubric={rubric}
-                rubcolor={rubricColor(rubric)}
-              />
-            )
+            return <NavBloc key={rubric.path} rubric={rubric} rubcolor={main} />
           })}
         </ul>
       )}
