@@ -5,7 +5,7 @@ import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import HomeScreen from '../../screens/HomeScreen'
-import { useRigths, useRoutesInfos, useThemeColors } from '../../utils/hooks'
+import { useRigths, useRoutesInfos } from '../../utils/hooks'
 import Navigator from '../elements/Navigator'
 import { StyledCentralScreen, StyledMainApp } from '../elements/styled'
 
@@ -32,12 +32,18 @@ function Main() {
     return aside
   }, [category, Asides])
 
-  const colorAlias =
-    rubric.state.alias === 'private' && !userLevel
-      ? 'visitor'
-      : rubric.state.alias
+  const rubricColors = useCallback(
+    (route) => {
+      const colors = Object.entries(palette)
+      if (!route) return colors.find(([key, value]) => key === 'visitor')[1]
+      if (rubric.state.alias === 'private' && !userLevel)
+        return colors.find(([key, value]) => key === 'visitor')[1]
+      return colors.find(([key, value]) => key === route.state.alias)[1]
+    },
+    [rubric, userLevel]
+  )
 
-  const rubricolors = useThemeColors(colorAlias)
+  const rubricolors = rubricColors(rubric)
 
   return (
     <StyledMainApp>

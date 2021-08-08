@@ -125,9 +125,9 @@ export const StyledForm = styled('form')(({ theme }) => ({
   },
 }))
 
-export const StyledPaperHeader = styled(Grid)(() => ({
+export const StyledPaperHeader = styled(Grid)(({ bgcolor }) => ({
   padding: '0px 1rem ',
-  background: 'whitesmoke',
+  background: bgcolor || 'whitesmoke',
   cursor: 'pointer',
   '& >:first-child': {
     padding: '0.5rem 0',

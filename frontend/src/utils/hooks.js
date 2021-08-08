@@ -78,19 +78,6 @@ export const useRigths = () => {
   return { ...setRigths() }
 }
 
-export const useThemeColors = (alias = 'private') => {
-  const colors = Object.entries(theme.palette)
-
-  const sortedcolors = colors.filter(
-    /* eslint-disable */
-    ([key, object]) => key === alias
-  )
-
-  const [itemalias, themeColors] = sortedcolors[0]
-
-  return { ...themeColors }
-}
-
 export const useRouteParams = (arg) => {
   const useQueryP = () => new URLSearchParams(useLocation().search)
   const query = useQueryP()

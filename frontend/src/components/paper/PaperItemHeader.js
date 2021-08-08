@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
+import { useTheme } from '@material-ui/styles'
 import moment from 'moment'
 import { Grid, Box, Typography, styled } from '@material-ui/core'
 
@@ -16,6 +17,8 @@ function PaperItemHeader({
   paper,
   currentDocumentId,
 }) {
+  console.log(paperItem)
+  const { palette } = useTheme()
   const PaperItemHeaderTitle = ({ criteria }) => {
     switch (criteria) {
       case 'fourniture':
@@ -45,6 +48,30 @@ function PaperItemHeader({
     criteria: PropTypes.string,
   }
 
+  const headerColor = useCallback((alias) => {
+    switch (alias) {
+      case 'cantine':
+      case 'pastorale':
+        return palette.viescolaire.ligth
+      case 'ps':
+      case 'ms':
+      case 'gs':
+      case 'cp':
+      case 'ce1':
+      case 'ce2':
+      case 'cm1':
+      case 'cm2':
+      case 'adaptation':
+        return palette.classes.ligth
+      case 'apel':
+      case 'ogec':
+        return palette.apelogec.ligth
+
+      default:
+        return palette.ecole.ligth
+    }
+  }, [])
+
   const handleClick = () => {
     if (currentDocumentId && currentDocumentId === paperItem._id) {
       setCurrentDocument(null)
@@ -53,7 +80,16 @@ function PaperItemHeader({
     }
   }
   return (
-    <StyledPaperHeader item container onClick={handleClick}>
+    <StyledPaperHeader
+      item
+      container
+      onClick={handleClick}
+      bgcolor={
+        paper.paperType === 'activite'
+          ? headerColor(paperItem.entity.alias)
+          : null
+      }
+    >
       <Grid item container>
         <PaperItemHeaderTitle criteria={paper.paperType} />
       </Grid>
@@ -106,6 +142,7 @@ PaperItemHeader.propTypes = {
     enddate: PropTypes.number,
     entity: PropTypes.shape({
       name: PropTypes.string,
+      alias: PropTypes.string,
     }),
     clientEntity: PropTypes.shape({
       name: PropTypes.string,
@@ -114,4 +151,4 @@ PaperItemHeader.propTypes = {
   }).isRequired,
 }
 
-export default PaperItemHeader
+export default React.memo(PaperItemHeader)

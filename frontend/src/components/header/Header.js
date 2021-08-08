@@ -11,7 +11,7 @@ import Logo from './Logo'
 import { StyledIconBox } from '../elements/styled'
 import NavBloc from './NavBloc'
 import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
-import { useRigths, useRoutesInfos, useThemeColors } from '../../utils/hooks'
+import { useRigths, useRoutesInfos } from '../../utils/hooks'
 import MainDialog from '../elements/MainDialog'
 
 const StyledHeader = styled('header')(() => ({
@@ -28,6 +28,17 @@ function Header() {
   const { rubricsList } = useRoutesInfos()
   const { userLevel } = useRigths()
 
+  const routeColors = useCallback(
+    (route) => {
+      const colors = Object.entries(theme.palette)
+      if (!route) return colors.find(([key, value]) => key === 'visitor')[1]
+      if (route.state.alias === 'private' && !userLevel)
+        return colors.find(([key, value]) => key === 'visitor')[1]
+      return colors.find(([key, value]) => key === route.state.alias)[1]
+    },
+    [userLevel]
+  )
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
@@ -40,11 +51,7 @@ function Header() {
       {!isSmallScreen && (
         <ul className="row nav">
           {rubricsList.map((rubric) => {
-            const ColorAlias =
-              rubric.state.alias === 'private' && !userLevel
-                ? 'visitor'
-                : rubric.state.alias
-            const { main, dark } = useThemeColors(ColorAlias)
+            const { main, dark } = routeColors(rubric)
 
             return <NavBloc key={rubric.path} rubric={rubric} rubcolor={main} />
           })}
