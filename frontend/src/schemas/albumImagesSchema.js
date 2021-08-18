@@ -1,5 +1,5 @@
 import * as yup from 'yup'
-import { testFileSize } from '../constants/filetests'
+import { testImageSize } from '../constants/filetests'
 
 const albumImagesSchema = yup.object().shape({
   files: yup
@@ -7,7 +7,7 @@ const albumImagesSchema = yup.object().shape({
     .test(
       'fileSize',
       'Le fichier est trop large. Le max autorisé est 10Mo',
-      (value) => testFileSize(value, 10)
+      (value) => testImageSize(value, 10)
     ),
 })
 

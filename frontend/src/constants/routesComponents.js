@@ -159,6 +159,10 @@ const routesComponents = [
     component: VieScolairePastoraleAgendaScreen,
   },
   {
+    path: '/viescolaire/pastorale/albums',
+    component: Album,
+  },
+  {
     path: '/viescolaire/horaires',
     component: VieScolaireHorairesScreen,
   },

@@ -48,6 +48,7 @@ module.exports.createImages = async (req, res) => {
   res.status(201).send(locations)
 }
 module.exports.createImage = async (req, res, next) => {
+  console.log(req)
   if (!req.file) return next(new BadRequest('Please select an image to upload'))
   const { filename, path } = req.file
   if (!path || !filename)
@@ -70,7 +71,8 @@ module.exports.createImage = async (req, res, next) => {
           ? `${process.env.SERVER_ADRESS}/${path}`
           : `http://localhost:3500/${path}`
 
-      return res.status(201).send({ location: location })
+      // return res.status(201).send({ location: location })
+      return res.status(201).send({ url: location, uploaded: true })
     }
   } catch (err) {
     return next(err)

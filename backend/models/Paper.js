@@ -23,6 +23,14 @@ const paperSchema = new Schema(
       minlength: 3,
       maxlength: 100,
     },
+
+    content: {
+      type: Object,
+    },
+    isPrivate: {
+      type: Boolean,
+      default: true,
+    },
     entity: {
       type: Schema.Types.ObjectId,
       ref: 'Entity',
@@ -36,7 +44,6 @@ const paperSchema = new Schema(
     text: {
       type: String,
       maxlength: 200000,
-      minlength: 3,
     },
 
     date: {

@@ -17,7 +17,6 @@ function PaperItemHeader({
   paper,
   currentDocumentId,
 }) {
-  console.log(paperItem)
   const { palette } = useTheme()
   const PaperItemHeaderTitle = ({ criteria }) => {
     switch (criteria) {

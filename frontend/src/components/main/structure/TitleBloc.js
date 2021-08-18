@@ -55,8 +55,8 @@ const fakeState = {
   icon: null,
 }
 
-function TitleBloc(props) {
-  const { rubriccolors } = props
+function TitleBloc() {
+  const { rubricColors: rubriccolors } = useRoutesInfos()
 
   const { palette } = useTheme()
   const { pathname, state: locationState } = useLocation()
@@ -88,6 +88,11 @@ function TitleBloc(props) {
     state: null,
   }
   TitleTab.propTypes = {
+    rubriccolors: PropTypes.shape({
+      main: PropTypes.string,
+      dark: PropTypes.string,
+      ligth: PropTypes.string,
+    }).isRequired,
     tabpath: PropTypes.string,
     state: PropTypes.shape({
       name: PropTypes.string,
@@ -138,11 +143,6 @@ TitleBloc.defaultProps = {
 }
 
 TitleBloc.propTypes = {
-  rubriccolors: PropTypes.shape({
-    main: PropTypes.string,
-    dark: PropTypes.string,
-    ligth: PropTypes.string,
-  }).isRequired,
   state: PropTypes.shape({
     type: PropTypes.string,
   }),

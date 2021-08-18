@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import React from 'react'
 import { apiFetchPaper, apiPostPaper } from '../utils/api'
 import { useRigths } from '../utils/hooks'

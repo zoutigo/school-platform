@@ -1,5 +1,7 @@
-import React from 'react'
-import { styled } from '@material-ui/core/styles'
+/* eslint-disable import/named */
+import React, { useState } from 'react'
+import { useMutation } from 'react-query'
+import { styled, useTheme } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import CardActions from '@material-ui/core/CardActions'
@@ -7,10 +9,18 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
-import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import ReactHtmlParser from 'react-html-parser'
+import { Collapse, Grid } from '@material-ui/core'
+import { apiPostAlbum } from '../../../utils/api'
+import { useUpdateMutationOptions } from '../../../utils/hooks'
+import { setAlbumMutateAlert } from '../../../redux/alerts/AlertsActions'
+import {
+  errorAlertCollapse,
+  successAlertCollapse,
+} from '../../../constants/alerts'
+import CustomButton from '../CustomButton'
 
 const StyledCard = styled(Card)(({ theme }) => ({
   margin: '1rem auto',
@@ -28,17 +38,37 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
 }))
 
+const StyledCollapse = styled(Collapse)(() => ({
+  width: '100%',
+  background: 'transparent',
+}))
+
+const StyledCardActions = styled(CardActions)(({ bgcolor }) => ({
+  background: bgcolor || 'transparent',
+}))
+
 function AlbumCard({
   album,
   setCurrentAlbum,
+  setFormAction,
   setShow,
   entityAlias,
   isAllowed,
+  queryKey,
 }) {
-  const history = useHistory()
+  const dispatch = useDispatch()
+  const theme = useTheme()
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showUpdateConfirm, setShowUpdateConfirm] = useState(false)
   const { URL_PREFIX } = useSelector((state) => state.settings)
+  const { Token } = useSelector((state) => state.user)
   const { description, coverpath, name } = album
   const image = `${URL_PREFIX}/${coverpath}`
+
+  const { mutateAsync } = useMutation(
+    apiPostAlbum,
+    useUpdateMutationOptions(queryKey)
+  )
 
   const handleClick = () => {
     setCurrentAlbum(album)
@@ -48,6 +78,43 @@ function AlbumCard({
       list: false,
     })
     window.scrollTo(0, 0)
+  }
+
+  const handleConfirmDelete = () => {
+    setShowDeleteConfirm(!showDeleteConfirm)
+    setShowUpdateConfirm(false)
+  }
+  const handleConfirmUpdate = () => {
+    setShowUpdateConfirm(!showUpdateConfirm)
+    setShowDeleteConfirm(false)
+  }
+
+  const handleDelete = async () => {
+    try {
+      await mutateAsync({
+        id: album._id,
+        action: 'delete',
+        Token,
+        entityAlias,
+      }).then((response) => {
+        dispatch(setAlbumMutateAlert(successAlertCollapse(response.message)))
+        setShowDeleteConfirm(false)
+      })
+    } catch (err) {
+      dispatch(
+        setAlbumMutateAlert(errorAlertCollapse(err.response.data.message))
+      )
+    }
+  }
+
+  const handleUpdate = () => {
+    setCurrentAlbum(album)
+    setFormAction('update')
+    setShow({
+      page: false,
+      list: false,
+      form: true,
+    })
   }
 
   return (
@@ -61,32 +128,85 @@ function AlbumCard({
           <Typography variant="body2" color="textSecondary" component="p">
             {ReactHtmlParser(description)}
           </Typography>
+          {isAllowed && (
+            <div>
+              <Typography variant="caption">
+                {album.isPrivate ? '@privé' : null}
+              </Typography>
+            </div>
+          )}
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary">
-          {'EN SAVOIR PLUS >>>'}
-        </Button>
-        <Button size="small" color="primary">
-          .
-        </Button>
-      </CardActions>
+      <StyledCardActions
+        bgcolor={
+          album.isPrivate
+            ? theme.palette.secondary.light
+            : theme.palette.secondary.main
+        }
+      >
+        {isAllowed ? (
+          <Grid container>
+            <Grid item container justify="space-between">
+              <Button
+                size="small"
+                color="primary"
+                onClick={handleConfirmUpdate}
+              >
+                Modifier
+              </Button>
+              <Button
+                size="small"
+                color="primary"
+                onClick={handleConfirmDelete}
+              >
+                Supprimer
+              </Button>
+            </Grid>
+            <StyledCollapse in={showDeleteConfirm}>
+              <CustomButton
+                text="Je supprime"
+                bgcolor={theme.palette.error.main}
+                action="confirm"
+                width="100%"
+                onClick={handleDelete}
+              />
+            </StyledCollapse>
+            <StyledCollapse in={showUpdateConfirm}>
+              <CustomButton
+                text="Je modifie"
+                bgcolor={theme.palette.warning.main}
+                action="confirm"
+                width="100%"
+                onClick={handleUpdate}
+              />
+            </StyledCollapse>
+          </Grid>
+        ) : (
+          <Button size="small" color="primary">
+            {'EN SAVOIR PLUS >>>'}
+          </Button>
+        )}
+      </StyledCardActions>
     </StyledCard>
   )
 }
 
 AlbumCard.propTypes = {
   album: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    isPrivate: PropTypes.bool.isRequired,
     alias: PropTypes.string.isRequired,
     coverpath: PropTypes.string.isRequired,
-    filename: PropTypes.string.isRequired,
+    covername: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
   setCurrentAlbum: PropTypes.func.isRequired,
+  setFormAction: PropTypes.func.isRequired,
   setShow: PropTypes.func.isRequired,
   entityAlias: PropTypes.string.isRequired,
   isAllowed: PropTypes.bool.isRequired,
+  queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
 }
 
-export default AlbumCard
+export default React.memo(AlbumCard)

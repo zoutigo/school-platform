@@ -77,7 +77,7 @@ function Page({ pageParams }) {
 }
 
 Page.propTypes = {
-  pageParams: PropTypes.exact({
+  pageParams: PropTypes.shape({
     alias: PropTypes.string.isRequired,
     pageName: PropTypes.string.isRequired,
     queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -86,4 +86,4 @@ Page.propTypes = {
   }).isRequired,
 }
 
-export default Page
+export default React.memo(Page)

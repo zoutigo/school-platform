@@ -1,7 +1,7 @@
 /* eslint-disable import/named */
 import { styled, Grid, useTheme, Collapse } from '@material-ui/core'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMutation } from 'react-query'
@@ -40,13 +40,10 @@ const StyledPaperForm = styled('form')(() => ({
 
 function PaperFormPDF({
   currentDocument,
-  setCurrentDocument,
-  setShowTooltip,
-  setFormAction,
   formAction,
-  setShowPaperList,
-  setShowPaperForm,
   paper,
+  handleBack,
+  isPrivateDatas,
 }) {
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -86,7 +83,7 @@ function PaperFormPDF({
   })
 
   const onSubmit = async (datas) => {
-    const { startdate, enddate, file } = datas
+    const { startdate, enddate, file, isPrivate } = datas
 
     const finalDatas = async (type) => {
       switch (type) {
@@ -98,6 +95,7 @@ function PaperFormPDF({
             )} au ${moment(enddate).format('dddd DD/MM/YYYY')}`,
             startdate: startdate.valueOf(),
             enddate: enddate.valueOf(),
+            isPrivate: isPrivate === 'oui',
             type: paper.paperType,
             // file: await convertBase64(file[0]),
             file: file ? file[0] : null,
@@ -110,6 +108,7 @@ function PaperFormPDF({
             )} au ${moment(enddate).format('dddd DD/MM/YYYY')}`,
             startdate: startdate.valueOf(),
             enddate: enddate.valueOf(),
+            isPrivate: isPrivate === 'oui',
             type: paper.paperType,
             file: file ? file[0] : null,
             entityAlias: paper.entityAlias,
@@ -119,6 +118,7 @@ function PaperFormPDF({
           return {
             title: `Newsletter de ${moment(startdate).format('MM/YYYY')} `,
             startdate: startdate.valueOf(),
+            isPrivate: isPrivate === 'oui',
             type: paper.paperType,
             file: file ? file[0] : null,
             entityAlias: paper.entityAlias,
@@ -137,31 +137,14 @@ function PaperFormPDF({
         Token: Token,
       }).then((response) => {
         dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
-        setCurrentDocument(null)
-        setShowTooltip(true)
-        setShowPaperList(true)
-        setShowPaperForm(false)
+        handleBack()
+        window.scrollTo(0, 0)
       })
-      window.scrollTo(0, 0)
     } catch (err) {
       setPaperMutateAlert(errorAlertCollapse(err.response.data.message))
-
       window.scrollTo(0, 0)
     }
   }
-
-  useEffect(() => {
-    setShowTooltip(false)
-    return () => {
-      setShowTooltip(true)
-      setFormAction(null)
-    }
-  }, [currentDocument])
-
-  const formTitle =
-    formAction === 'update'
-      ? `Modification ${paper.paperType}`
-      : `Ajout ${paper.paperType}`
 
   if (!currentDocument && formAction === 'update') return null
 
@@ -205,9 +188,6 @@ function PaperFormPDF({
   ]
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
-      <Grid item container justify="center">
-        <Title title={formTitle} textcolor="whitesmoke" />
-      </Grid>
       <Grid container className="form-fields-container">
         {paper.paperType === 'fourniture' && (
           <InputSelectControl
@@ -252,6 +232,17 @@ function PaperFormPDF({
             }
           />
         )}
+
+        <InputRadio
+          question="Document privé ?"
+          options={isPrivateDatas?.isPrivateOptions}
+          name="isPrivate"
+          defaultValue={isPrivateDatas?.isPrivateDefaultValue}
+          control={control}
+          radioGroupProps={{ row: true }}
+          display="block"
+        />
+
         <Collapse in={formAction === 'update'} style={{ width: '100%' }}>
           <InputRadio
             question="Modifier le fichier ?"
@@ -311,17 +302,16 @@ PaperFormPDF.propTypes = {
     fetcher: PropTypes.func.isRequired,
     poster: PropTypes.func.isRequired,
   }).isRequired,
-  setShowPaperForm: PropTypes.func.isRequired,
-  setShowPaperList: PropTypes.func.isRequired,
-  setCurrentDocument: PropTypes.func.isRequired,
-  setFormAction: PropTypes.func.isRequired,
-  setShowTooltip: PropTypes.func.isRequired,
+
   formAction: PropTypes.string.isRequired,
   currentDocument: PropTypes.shape({
     _id: PropTypes.string,
+    isPrivate: PropTypes.bool,
     text: PropTypes.string,
     title: PropTypes.string,
-    entity: PropTypes.string,
+    entity: PropTypes.shape({
+      _id: PropTypes.string,
+    }),
     createdat: PropTypes.number,
     date: PropTypes.number,
     startdate: PropTypes.number,
@@ -331,6 +321,16 @@ PaperFormPDF.propTypes = {
       alias: PropTypes.string,
     }),
   }),
+  handleBack: PropTypes.func.isRequired,
+  isPrivateDatas: PropTypes.shape({
+    isPrivateDefaultValue: PropTypes.string.isRequired,
+    isPrivateOptions: PropTypes.arrayOf(
+      PropTypes.shape({
+        labelOption: PropTypes.string,
+        optionvalue: PropTypes.string,
+      })
+    ),
+  }).isRequired,
 }
 
-export default PaperFormPDF
+export default React.memo(PaperFormPDF)

@@ -64,9 +64,38 @@ export const apiFetchEvents = async (param) => {
   return data
 }
 
-export const apiPostEvents = async ({ id, action, body, options }) => {
+// export const apiPostEvents = async ({ id, action, body, options }) => {
+//   const URL = `${PREFIX}/events?action=${action}&id=${id}`
+//   const { data } = await axios.post(URL, body, options)
+//   return data
+// }
+
+export const apiPostEvents = async ({ id, body, action, Token }) => {
   const URL = `${PREFIX}/events?action=${action}&id=${id}`
+  // const formdata = new FormData()
+
+  // if (body) {
+  //   Object.entries(body).forEach(([key, value]) => {
+  //     if (value) formdata.append(key, value)
+  //   })
+  // }
+
+  // const { data } = await axios({
+  //   method: 'POST',
+  //   url: URL,
+  //   data: formdata,
+  //   headers: {
+  //     'Content-Type': 'multipart/form-data',
+  //     'x-access-token': Token,
+  //   },
+  // })
+
+  const options = {
+    headers: { 'x-access-token': Token },
+  }
+
   const { data } = await axios.post(URL, body, options)
+
   return data
 }
 
@@ -244,6 +273,9 @@ export const apiPostAlbum = async ({
   if (body && body.alias) {
     formdata.append('alias', body.alias)
   }
+  if (body) {
+    formdata.append('isPrivate', body.isPrivate)
+  }
 
   const { data } = await axios({
     method: 'post',
@@ -319,4 +351,25 @@ export const apiPostLosspass = async ({ body, action }) => {
   const URL = `${PREFIX}/users/losspass?action=${action}`
   const result = await axios.post(URL, body)
   return result
+}
+
+export const apiPostImage = async ({ id: albumId, file, action, Token }) => {
+  const URL = `${PREFIX}/images/tinymce`
+  const formdata = new FormData()
+
+  if (file) {
+    formdata.append('file', file)
+  }
+
+  const { data } = await axios({
+    method: 'post',
+    url: URL,
+    data: formdata,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-access-token': Token,
+    },
+  })
+
+  return data
 }

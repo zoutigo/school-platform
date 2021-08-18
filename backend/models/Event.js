@@ -8,10 +8,14 @@ const eventSchema = new Schema(
       max: 100,
       required: true,
     },
-    text: {
-      type: String,
-      min: 10,
+    content: {
+      type: Object,
+      required: true,
       max: 30000,
+    },
+    isPrivate: {
+      type: Boolean,
+      default: true,
     },
     place: {
       type: String,

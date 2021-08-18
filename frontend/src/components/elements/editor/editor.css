@@ -1,0 +1,29 @@
+* {
+  text-decoration: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+html {
+  /* 16px x 62.5 = 10px = 1rem */
+  /* font-size: 62.5%;  */
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-size: 0.8rem;
+  font-family: 'Comfortaa', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#editor {
+  padding: 3rem;
+  margin: 3rem;
+  background: green;
+  font-size: 3rem;
+  font-weight: 500;
+  color: red;
+}

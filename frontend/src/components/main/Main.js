@@ -1,15 +1,16 @@
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
 /* eslint-disable import/named */
-import { Grid, useTheme } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { styled } from '@material-ui/styles'
 import React, { useCallback } from 'react'
-import { useSelector } from 'react-redux'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import HomeScreen from '../../screens/HomeScreen'
-import { useRigths, useRoutesInfos } from '../../utils/hooks'
+import { useRoutesInfos } from '../../utils/hooks'
 import Navigator from '../elements/Navigator'
 import { StyledCentralScreen, StyledMainApp } from '../elements/styled'
 
-import Aside from './Aside'
+import asidesList from './asides/asidesList'
 import BodyBloc from './BodyBloc'
 import TitleBloc from './structure/TitleBloc'
 
@@ -17,33 +18,16 @@ const StyledCentralBloc = styled(Grid)(() => ({}))
 
 function Main() {
   const { pathname } = useLocation()
-  const { palette } = useTheme()
-  const { Asides } = useSelector((state) => state.settings)
 
-  const { category, rubric } = useRoutesInfos()
-  const { userLevel } = useRigths()
+  const { category } = useRoutesInfos()
 
-  const HasAside = useCallback(() => {
-    const categoryPath = category.current?.path ? category.current.path : null
-    const aside =
-      Asides.filter(([asidepath, ...rest]) => asidepath === categoryPath)
-        .length > 0
-
-    return aside
-  }, [category, Asides])
-
-  const rubricColors = useCallback(
-    (route) => {
-      const colors = Object.entries(palette)
-      if (!route) return colors.find(([key, value]) => key === 'visitor')[1]
-      if (rubric.state.alias === 'private' && !userLevel)
-        return colors.find(([key, value]) => key === 'visitor')[1]
-      return colors.find(([key, value]) => key === route.state.alias)[1]
-    },
-    [rubric, userLevel]
-  )
-
-  const rubricolors = rubricColors(rubric)
+  const hasAside = useCallback(() => {
+    const aside = asidesList.find(
+      (item) => category.current?.path === item.categorypath
+    )
+    if (!aside) return null
+    return aside.component
+  }, [asidesList, category])
 
   return (
     <StyledMainApp>
@@ -55,11 +39,11 @@ function Main() {
             )}
             {pathname !== '/' && (
               <StyledCentralBloc container alignItems="flex-start">
-                <Grid item container xs={12} md={HasAside() ? 9 : 12}>
-                  <TitleBloc rubriccolors={rubricolors} />
+                <Grid item container xs={12} md={hasAside() ? 9 : 12}>
+                  <TitleBloc />
                   <BodyBloc />
                 </Grid>
-                {HasAside() && <Aside rubriccolors={rubricolors} md={3} />}
+                {hasAside()}
                 <Navigator />
               </StyledCentralBloc>
             )}

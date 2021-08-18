@@ -23,7 +23,7 @@ function PaperItem({
   setFormAction,
   setShowSearch,
 }) {
-  const { _id, text, filepath } = paperItem
+  const { _id, text, content, filepath } = paperItem
 
   const { URL_PREFIX } = useSelector((state) => state.settings)
 
@@ -39,7 +39,12 @@ function PaperItem({
       />
       <Grid item container>
         <Collapse in={currentDocument ? currentDocument._id === _id : false}>
-          <PaperItemBody text={text} file={file} paper={paper} />
+          <PaperItemBody
+            text={text}
+            content={content}
+            file={file}
+            paper={paper}
+          />
           <PaperItemFooter
             paper={paper}
             paperItem={paperItem}
@@ -80,6 +85,7 @@ PaperItem.propTypes = {
   paperItem: PropTypes.shape({
     _id: PropTypes.string,
     text: PropTypes.string,
+    content: PropTypes.string,
     title: PropTypes.string,
     filename: PropTypes.string,
     filepath: PropTypes.string,
@@ -90,4 +96,4 @@ PaperItem.propTypes = {
   }).isRequired,
 }
 
-export default PaperItem
+export default React.memo(PaperItem)

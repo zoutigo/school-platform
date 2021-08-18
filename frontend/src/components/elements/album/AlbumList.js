@@ -1,62 +1,52 @@
-import React, { useEffect } from 'react'
+/* eslint-disable import/named */
+import React, { useCallback } from 'react'
 import { Grid } from '@material-ui/core'
-import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { useQuery } from 'react-query'
 import { apiFetchAlbum } from '../../../utils/api'
 import { setAlbumFetchAlert } from '../../../redux/alerts/AlertsActions'
 import AlbumCard from './AlbumCard'
-import {
-  errorAlertCollapse,
-  initialAlertCollapse,
-  loadingAlertCollapse,
-} from '../../../constants/alerts'
+import useFetchDispatch from '../useFetchDispatch'
+import { useRigths } from '../../../utils/hooks'
 
 function AlbumList({
   queryKey,
   queryParams,
   setCurrentAlbum,
+  setFormAction,
   setShow,
   isAllowed,
   entityAlias,
 }) {
-  const dispatch = useDispatch()
-
+  const { userLevel } = useRigths()
   const { isLoading, isError, data, error } = useQuery(queryKey, () =>
     apiFetchAlbum(queryParams)
   )
 
-  useEffect(() => {
-    if (isLoading) {
-      dispatch(setAlbumFetchAlert(loadingAlertCollapse))
-    }
-    if (isError) {
-      dispatch(
-        setAlbumFetchAlert(errorAlertCollapse(error.response.data.message))
-      )
-    }
-    if (data && Array.isArray(data)) {
-      dispatch(setAlbumFetchAlert(initialAlertCollapse))
-    }
+  useFetchDispatch(isLoading, isError, error, data, setAlbumFetchAlert)
 
-    return () => {
-      dispatch(setAlbumFetchAlert(initialAlertCollapse))
+  const filteredAlbums = useCallback(() => {
+    if (!data || !Array.isArray(data)) return null
+    if (userLevel) {
+      return data
     }
-  }, [isLoading, isError, data])
+    const result = data.filter((pack) => pack.isPrivate !== true)
+    return result
+  }, [data, userLevel])
 
   return (
     <Grid item container>
-      {data &&
-        Array.isArray(data) &&
-        data.length > 0 &&
-        data.map((album) => (
+      {filteredAlbums() &&
+        filteredAlbums().map((album) => (
           <AlbumCard
             key={album._id}
             album={album}
             setCurrentAlbum={setCurrentAlbum}
+            setFormAction={setFormAction}
             setShow={setShow}
             isAllowed={isAllowed}
             entityAlias={entityAlias}
+            queryKey={queryKey}
           />
         ))}
     </Grid>
@@ -72,8 +62,9 @@ AlbumList.propTypes = {
   queryParams: PropTypes.string,
   entityAlias: PropTypes.string.isRequired,
   setCurrentAlbum: PropTypes.func.isRequired,
+  setFormAction: PropTypes.func.isRequired,
   setShow: PropTypes.func.isRequired,
   isAllowed: PropTypes.bool.isRequired,
 }
 
-export default AlbumList
+export default React.memo(AlbumList)

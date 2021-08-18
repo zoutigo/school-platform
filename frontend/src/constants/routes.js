@@ -311,6 +311,19 @@ const routes = [
               icon: null,
             },
           },
+          {
+            path: '/viescolaire/pastorale/albums',
+            exact: true,
+            state: {
+              name: 'Albums',
+              alias: 'albums-pastorale',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
         ],
       },
       {

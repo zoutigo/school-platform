@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./backend/bin/www",
-    "dev": "cross-env NODE_ENV=development  DEBUG=express nodemon ./backend/bin/www",
+    "backdev": "cross-env NODE_ENV=development  DEBUG=express nodemon ./backend/bin/www",
+    "frontdev": "cd ./frontend NODE_ENV=development npm start ",
     "test": "npm run mocha",
     "mocha": "cross-env NODE_ENV=test mocha --require babel-register ./backend/test/*.js --exit",
-    "frontdev": "cd ./frontend cross-env NODE_ENV=development npm start ",
     "build": "rm -rf ./public/* && cd ./frontend && npm run build",
-    "postbuild": "cp -r ./frontend/build/* ./public && rm -rf ./frontend/build"
+    "postbuild": "cp -r ./frontend/build/* ./public && rm -rf ./frontend/build",
+    "dev": "concurrently \"npm run backdev\" \"npm run frontdev\""
   },
   "repository": {
     "type": "git",
@@ -54,6 +55,7 @@
     "babel-preset-env": "^1.7.0",
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
+    "concurrently": "^6.2.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.27.0",
     "eslint-config-airbnb": "^18.2.1",

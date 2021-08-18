@@ -11,13 +11,16 @@ module.exports.postAlbum = async (req, res, next) => {
   const { id: albumId, action, entityAlias } = req.query
 
   const entity = await Entity.findOne({ alias: entityAlias })
-  if (!entity)
-    return next(
-      deleteFile(
-        req.file.path,
-        new BadRequest('une ou plusieurs données manquantes: entité')
+  if (!entity) {
+    if (action !== 'delete')
+      return next(
+        deleteFile(
+          req.file.path,
+          new BadRequest('une ou plusieurs données manquantes: entité')
+        )
       )
-    )
+    return next(new BadRequest('une ou plusieurs données manquantes: entité'))
+  }
 
   let roleIsAllowed = false
 
@@ -93,12 +96,14 @@ module.exports.postAlbum = async (req, res, next) => {
         if (err) return next(err)
       })
     }
+
     try {
       const updatedAlbum = await Album.findOneAndUpdate(
         { _id: albumId },
         {
           name: req.body.name || currentAlbum.name,
           description: req.body.description || currentAlbum.description,
+          isPrivate: req.body.isPrivate,
           covername: req.file ? req.file.filename : currentAlbum.covername,
           coverpath: req.file ? req.file.path : currentAlbum.coverpath,
         },
@@ -122,11 +127,27 @@ module.exports.postAlbum = async (req, res, next) => {
     try {
       const deletedChemin = await Album.findOneAndDelete({ _id: albumId })
 
+      // delete coverpath
       if (deletedChemin) {
-        fs.unlink(deletedChemin.filepath, (err) => {
+        fs.unlink(deletedChemin.coverpath, (err) => {
           if (err) return next(err)
         })
-        return res.status(200).send({ message: 'chemin correctement effacé' })
+
+        // delete all images pah in the album
+
+        if (deletedChemin.pictures.length > 0) {
+          const deletionErrors = []
+          for (let i = 0; i < deletedChemin.pictures.length; i += 1) {
+            const picture = deletedChemin.pictures[i]
+            fs.unlink(picture.filepath, (err) => {
+              if (err) deletionErrors.push(err)
+            })
+          }
+
+          if (deletionErrors.length > 0) return next(deletionErrors.join())
+        }
+
+        return res.status(200).send({ message: 'album correctement effacé' })
       }
     } catch (err) {
       return next(err)
@@ -155,7 +176,9 @@ module.exports.getAlbums = async (req, res, next) => {
 
   try {
     const albums = await Album.find(req.query)
-      .select('_id name alias description entity coverpath covername pictures')
+      .select(
+        '_id name alias description entity coverpath covername pictures isPrivate'
+      )
       .populate('entity')
 
     if (albums.length < 1)

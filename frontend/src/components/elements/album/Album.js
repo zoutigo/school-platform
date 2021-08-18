@@ -5,7 +5,7 @@ import { Grid } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAlbumMutateAlert } from '../../../redux/alerts/AlertsActions'
-import { useRigths, useRouteDatas, useRoutesInfos } from '../../../utils/hooks'
+import { useRigths, useRoutesInfos } from '../../../utils/hooks'
 import AlertCollapse from '../AlertCollapse'
 import AlbumForm from './AlbumForm'
 import AlbumList from './AlbumList'
@@ -121,13 +121,13 @@ function Album() {
         <AlbumList
           queryKey={queryKey}
           setCurrentAlbum={setCurrentAlbum}
+          setFormAction={setFormAction}
           entityAlias={categoryAlias}
           queryParams={queryParams}
           setShow={setShow}
           isAllowed={isAllowed}
         />
       )}
-
       {show.form && (
         <AlbumForm
           formAction={formAction}
@@ -139,7 +139,6 @@ function Album() {
           setShow={setShow}
         />
       )}
-
       {show.page && (
         <AlbumPage
           currentAlbum={currentAlbum}

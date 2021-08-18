@@ -1,6 +1,6 @@
 /* eslint-disable import/named */
 import { styled, Grid, useTheme } from '@material-ui/core'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMutation } from 'react-query'
@@ -18,6 +18,8 @@ import {
   errorAlertCollapse,
   successAlertCollapse,
 } from '../../constants/alerts'
+import InputReactPageControl from '../elements/InputReactPageControl'
+import InputRadio from '../elements/InputRadio'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -37,13 +39,10 @@ const StyledPaperForm = styled('form')(() => ({
 
 function PaperFormEvent({
   currentDocument,
-  setCurrentDocument,
-  setShowTooltip,
-  setFormAction,
   formAction,
-  setShowPaperList,
-  setShowPaperForm,
   paper,
+  handleBack,
+  isPrivateDatas,
 }) {
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -62,15 +61,13 @@ function PaperFormEvent({
   })
 
   const onSubmit = async (datas) => {
-    const { title, text, date, place } = datas
-    const options = {
-      headers: { 'x-access-token': Token },
-    }
+    const { title, content, date, place, isPrivate } = datas
     const finalDatas = {
       title,
       date: date.valueOf(),
       place,
-      text,
+      isPrivate: isPrivate === 'oui',
+      content: JSON.stringify(content),
       entityAlias: paper.entityAlias,
     }
 
@@ -78,14 +75,11 @@ function PaperFormEvent({
       await mutateAsync({
         id: currentDocument ? currentDocument._id : null,
         action: formAction,
-        options: options,
+        Token: Token,
         body: finalDatas,
       }).then((response) => {
         dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
-        setCurrentDocument(null)
-        setShowTooltip(true)
-        setShowPaperList(true)
-        setShowPaperForm(false)
+        handleBack()
         window.scrollTo(0, 0)
       })
     } catch (err) {
@@ -96,26 +90,10 @@ function PaperFormEvent({
     }
   }
 
-  useEffect(() => {
-    setShowTooltip(false)
-    return () => {
-      setShowTooltip(true)
-      setFormAction(null)
-    }
-  }, [currentDocument])
-
-  const formTitle =
-    formAction === 'update'
-      ? `Modification ${paper.paperType}`
-      : `Ajout ${paper.paperType}`
-
   if (!currentDocument && formAction === 'update') return null
 
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
-      <Grid item container justify="center">
-        <Title title={formTitle} textcolor="whitesmoke" />
-      </Grid>
       <Grid container className="form-fields-container">
         <InputTextControl
           name="title"
@@ -154,7 +132,23 @@ function PaperFormEvent({
               : new Date()
           }
         />
-        <Grid item container>
+
+        <InputRadio
+          question="Evenement privé ?"
+          options={isPrivateDatas?.isPrivateOptions}
+          name="isPrivate"
+          defaultValue={isPrivateDatas?.isPrivateDefaultValue}
+          control={control}
+          radioGroupProps={{ row: true }}
+          display="block"
+        />
+        <InputReactPageControl
+          name="content"
+          control={control}
+          initialValue={formAction === 'update' ? currentDocument.content : ''}
+          label="Texte:"
+        />
+        {/* <Grid item container>
           <Controller
             name="text"
             control={control}
@@ -167,7 +161,7 @@ function PaperFormEvent({
               <TinyPageEditor onChange={onChange} value={value} />
             )}
           />
-        </Grid>
+        </Grid> */}
       </Grid>
       <Grid item container alignItems="center" justify="flex-end">
         <CostumButton
@@ -203,20 +197,29 @@ PaperFormEvent.propTypes = {
     fetcher: PropTypes.func.isRequired,
     poster: PropTypes.func.isRequired,
   }).isRequired,
-  setShowPaperForm: PropTypes.func.isRequired,
-  setShowPaperList: PropTypes.func.isRequired,
-  setCurrentDocument: PropTypes.func.isRequired,
-  currentDocument: PropTypes.string,
-  setFormAction: PropTypes.func.isRequired,
-  setShowTooltip: PropTypes.func.isRequired,
   formAction: PropTypes.string.isRequired,
-  paperItem: PropTypes.shape({
+  currentDocument: PropTypes.shape({
     _id: PropTypes.string,
-    text: PropTypes.string,
+    place: PropTypes.string,
+    isPrivate: PropTypes.bool,
+    content: PropTypes.string,
+    date: PropTypes.number,
     title: PropTypes.string,
-    entity: PropTypes.string,
+    entity: PropTypes.shape({
+      _id: PropTypes.string,
+    }),
     createdat: PropTypes.number,
+  }),
+  handleBack: PropTypes.func.isRequired,
+  isPrivateDatas: PropTypes.shape({
+    isPrivateDefaultValue: PropTypes.string.isRequired,
+    isPrivateOptions: PropTypes.arrayOf(
+      PropTypes.shape({
+        labelOption: PropTypes.string,
+        optionvalue: PropTypes.string,
+      })
+    ),
   }).isRequired,
 }
 
-export default PaperFormEvent
+export default React.memo(PaperFormEvent)

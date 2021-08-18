@@ -22,9 +22,9 @@ module.exports.eventValidator = (datas) => {
           place: Joi.string().required().min(3).max(100),
         }).validate(data)
 
-      case 'text':
+      case 'content':
         return Joi.object({
-          text: Joi.string().required().min(3).max(500),
+          content: Joi.any().required(),
         }).validate(data)
 
       case 'date':
@@ -40,6 +40,11 @@ module.exports.eventValidator = (datas) => {
       case 'entityAlias':
         return Joi.object({
           entityAlias: Joi.string().required().min(2).max(50),
+        }).validate(data)
+
+      case 'isPrivate':
+        return Joi.object({
+          isPrivate: Joi.bool().required(),
         }).validate(data)
 
       default:

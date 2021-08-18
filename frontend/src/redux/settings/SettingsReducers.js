@@ -2,10 +2,10 @@ import { createReducer } from '@reduxjs/toolkit'
 
 const initialState = {
   SmallScreenNavIsOpened: false,
-  Asides: [],
   URL_PREFIX: '',
   MainDialogDatas: '',
   MainDialogCount: 0,
+  Variables: null,
 }
 
 /* eslint-disable */
@@ -16,21 +16,6 @@ const settingsReducers = createReducer(initialState, {
       : !state.SmallScreenNavIsOpened
   },
 
-  SET_CATEGORY_ASIDE: (state, action) => {
-    const [path, datas] = action.payload
-    let newAsides = state.Asides
-    const verify = newAsides.find(
-      ([asidePath, asideDatas]) => path === asidePath
-    )
-    if (!verify) {
-      newAsides.push(action.payload)
-    } else {
-      newAsides.map((aside) => {
-        return aside[0] === path ? action.payload : aside
-      })
-    }
-    state.Asides = newAsides
-  },
   SET_URL_PREFIX: (state, action) => {
     state.URL_PREFIX = action.payload
   },
@@ -39,6 +24,9 @@ const settingsReducers = createReducer(initialState, {
   },
   SET_MAIN_DIALOG_COUNT: (state, action) => {
     state.MainDialogCount = action.payload
+  },
+  SET_VARIABLES: (state, action) => {
+    state.Variables = action.payload
   },
 })
 

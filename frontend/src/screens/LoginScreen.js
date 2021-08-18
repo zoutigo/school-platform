@@ -169,11 +169,11 @@ function LoginScreen() {
             justify="space-between"
             alignItems="center"
           >
-            <StyledNavLink to="/register">
+            <StyledNavLink to="/private/identification/register">
               {' '}
               Pas de compte ? Incrivez vous
             </StyledNavLink>
-            <StyledNavLink to="/register">
+            <StyledNavLink to="/private/identification/losspass/:token">
               {' '}
               Pass perdu ? Réinitialiser
             </StyledNavLink>

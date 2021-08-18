@@ -70,6 +70,11 @@ module.exports.paperValidator = (datas) => {
           place: Joi.string().required().min(3).max(100),
         }).validate(data)
 
+      case 'content':
+        return Joi.object({
+          content: Joi.any().required(),
+        }).validate(data)
+
       case 'file':
         return Joi.object({
           file: Joi.string().required(),
@@ -78,11 +83,6 @@ module.exports.paperValidator = (datas) => {
       case 'title':
         return Joi.object({
           title: Joi.string().required().min(3).max(100),
-        }).validate(data)
-
-      case 'text':
-        return Joi.object({
-          text: htmlJoi.string().required().htmlStrip().min(3).max(200000),
         }).validate(data)
 
       case 'entityAlias':
@@ -108,6 +108,11 @@ module.exports.paperValidator = (datas) => {
       case 'author':
         return Joi.object({
           author: Joi.objectId(),
+        }).validate(data)
+
+      case 'isPrivate':
+        return Joi.object({
+          isPrivate: Joi.bool().required(),
         }).validate(data)
 
       default:

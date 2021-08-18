@@ -36,6 +36,10 @@ const albumSchema = new Schema(
       required: true,
       max: 100,
     },
+    isPrivate: {
+      type: Boolean,
+      default: true,
+    },
     pictures: [
       {
         filename: {

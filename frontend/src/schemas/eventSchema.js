@@ -1,10 +1,7 @@
 import * as yup from 'yup'
 
 const eventSchema = yup.object().shape({
-  text: yup
-    .string()
-    .required('Veillez donner une description de évènement')
-    .min(20, 'au moins 20 caractères'),
+  content: yup.object().required('Veillez remplir le texte'),
   place: yup
     .string()
     .required('Veillez indiquer le lieu de deroulement')

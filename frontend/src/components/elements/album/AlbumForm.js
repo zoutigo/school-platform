@@ -1,7 +1,8 @@
+/* eslint-disable import/named */
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Grid, styled, useTheme } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
@@ -48,13 +49,10 @@ function AlbumForm({
   const { Token } = useSelector((state) => state.user)
   const [addFile, setAddFile] = useState(true)
 
-  const {
-    mutateAsync,
-    isSuccess,
-    isError,
-    data: mutationData,
-    error,
-  } = useMutation(apiPostAlbum, useUpdateMutationOptions(queryKey))
+  const { mutateAsync } = useMutation(
+    apiPostAlbum,
+    useUpdateMutationOptions(queryKey)
+  )
   const {
     control,
     handleSubmit,
@@ -65,11 +63,12 @@ function AlbumForm({
   })
 
   const onSubmit = async (datas) => {
-    const { description, file, name } = datas
+    const { description, file, name, isPrivate } = datas
 
     const finalDatas = {
       description,
       name,
+      isPrivate: isPrivate === 'oui',
       file: file ? file[0] : null,
       alias: currentAlbum
         ? currentAlbum.alias
@@ -84,43 +83,50 @@ function AlbumForm({
 
     try {
       await mutateAsync({
-        id: null,
-        action: 'create',
+        id: formAction === 'update' ? currentAlbum._id : null,
+        action: formAction,
         options: options,
         body: finalDatas,
         Token: Token,
         entityAlias: entityAlias,
-      }).then(() => {
+      }).then((response) => {
+        dispatch(setAlbumMutateAlert(successAlertCollapse(response.message)))
+        setShow({
+          page: false,
+          form: false,
+          list: true,
+        })
         window.scrollTo(0, 0)
       })
     } catch (err) {
+      dispatch(
+        setAlbumMutateAlert(errorAlertCollapse(err.response.data.message))
+      )
       window.scrollTo(0, 0)
     }
   }
 
+  // eslint-disable-next-line arrow-body-style
   useEffect(() => {
-    if (isError) {
-      dispatch(
-        setAlbumMutateAlert(errorAlertCollapse(error.response.data.message))
-      )
+    if (formAction === 'update') {
+      setAddFile(false)
     }
-    if (mutationData) {
+    return () => {
       setFormAction('create')
       setCurrentAlbum(null)
-      dispatch(setAlbumMutateAlert(successAlertCollapse(mutationData.message)))
-      setShow({
-        page: false,
-        form: false,
-        list: true,
-      })
-      window.scrollTo(0, 0)
     }
-  }, [isSuccess, isError, mutationData, error])
+  }, [])
 
   const displayRadio = formAction === 'update' ? 'block' : 'none'
 
   const formTitle =
     formAction === 'create' ? 'Créer un album' : "Modifier l'album"
+
+  const isPrivateDefaultValue = useCallback(() => {
+    if (formAction === 'create') return 'oui'
+    if (currentAlbum.isPrivate) return 'oui'
+    return 'non'
+  }, [formAction, currentAlbum])
   return (
     <Grid item container>
       <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
@@ -132,7 +138,7 @@ function AlbumForm({
             control={control}
             name="name"
             label="Nom de l'album"
-            initialvalue={currentAlbum ? currentAlbum.name : ''}
+            initialValue={currentAlbum ? currentAlbum.name : ''}
           />
           <InputSmallEditorControl
             control={control}
@@ -150,12 +156,25 @@ function AlbumForm({
               { labelOption: 'Non', optionvalue: 'non' },
             ]}
             name="addFile"
-            defaultValue="oui"
+            defaultValue="non"
             callback={setAddFile}
             control={control}
             radioGroupProps={{ row: true }}
             display={displayRadio}
           />
+          <InputRadio
+            question="L'album reste privé ?"
+            options={[
+              { labelOption: 'Oui', optionvalue: 'oui' },
+              { labelOption: 'Non', optionvalue: 'non' },
+            ]}
+            name="isPrivate"
+            defaultValue={isPrivateDefaultValue}
+            control={control}
+            radioGroupProps={{ row: true }}
+            display="block"
+          />
+
           {addFile && (
             <InputFileControl
               control={control}
@@ -163,16 +182,14 @@ function AlbumForm({
               name="file"
               type="file"
               accept="image/jpg,image/jpeg,image/gif,image/png "
-              helperText="maximum 4Mo"
+              helperText="maximum 10Mo"
             />
           )}
         </Grid>
         <Grid item container alignItems="center" justify="flex-end">
           <CostumButton
             text={
-              formAction === 'update'
-                ? `Modifier l'album`
-                : `Poster créer un album`
+              formAction === 'update' ? `Modifier l'album` : `Créer un album`
             }
             bgcolor={theme.palette.success.main}
             action="post"
@@ -196,6 +213,8 @@ AlbumForm.propTypes = {
   setCurrentAlbum: PropTypes.func.isRequired,
   entityAlias: PropTypes.string.isRequired,
   currentAlbum: PropTypes.shape({
+    _id: PropTypes.string,
+    isPrivate: PropTypes.bool,
     name: PropTypes.string,
     description: PropTypes.string,
     alias: PropTypes.string,

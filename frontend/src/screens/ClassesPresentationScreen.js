@@ -1,12 +1,10 @@
 import { Grid } from '@material-ui/core'
 import React, { useCallback, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
 import { useQuery } from 'react-query'
 import { apiFecthEntity } from '../utils/api'
-import Classrooms from '../constants/classrooms'
-import { setCategoryAside } from '../redux/settings/SettingsActions'
-import { useRigths, useRoutesInfos } from '../utils/hooks'
+
+import { useRigths } from '../utils/hooks'
 import ClassroomSummary from '../components/main/classes/ClassroomSummary'
 import ApiAlert from '../components/elements/ApiAlert'
 import useRoles from '../utils/roles'
@@ -15,12 +13,6 @@ import AlertCollapse from '../components/elements/AlertCollapse'
 import ToggleToolTip from '../components/elements/ToggleToolTip'
 
 function ClassesPresentationScreen() {
-  const dispatch = useDispatch()
-
-  const { Asides } = useSelector((state) => state.settings)
-  const {
-    category: { current },
-  } = useRoutesInfos()
   const { pathname } = useLocation()
   const [showClassroomForm, setShowClassroomForm] = useState(false)
   const [alert, setAlert] = useState({
@@ -92,54 +84,6 @@ function ClassesPresentationScreen() {
     apiFecthEntity(queryParams)
   )
 
-  const asideExist = useCallback(() => {
-    const exist =
-      Asides.length < 1
-        ? false
-        : Array.isArray(Asides.find(([path, datas]) => path === current.path))
-
-    return exist
-  }, [])
-
-  const createAside = useCallback((result) => {
-    if (!asideExist()) {
-      const Classroom = Classrooms.find(
-        (classroom) => result && classroom.name === result?.alias
-      )
-      console.log('classroom:', Classroom)
-
-      if (!Classroom) return null
-
-      const { enseignants: classroomTeachers } = Classroom
-
-      const asideItems = classroomTeachers.map((enseignant) => {
-        const { genre, lastname, firstname } = enseignant
-        return {
-          subtitle: 'enseignant',
-          user: {
-            gender: genre,
-            firstname,
-            lastname,
-          },
-        }
-      })
-
-      const contacts = {
-        subtitle: 'contacts',
-        text: result?.email,
-      }
-      asideItems.push(contacts)
-      const asideClassroom = {
-        title: 'Infos Classe',
-        items: asideItems,
-      }
-
-      dispatch(setCategoryAside([current.path, asideClassroom]))
-    }
-
-    return null
-  }, [])
-
   if (isLoading) return <ApiAlert severity="warning">Chargement ...</ApiAlert>
   if (isError)
     return (
@@ -152,8 +96,6 @@ function ClassesPresentationScreen() {
   if (!Array.isArray(data)) return null
 
   const [result] = data
-
-  createAside(result)
 
   return (
     <Grid container>

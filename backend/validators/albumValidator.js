@@ -48,6 +48,11 @@ module.exports.albumValidator = (datas) => {
           description: htmlJoi.string().required().htmlStrip().min(3).max(200),
         }).validate(data)
 
+      case 'isPrivate':
+        return Joi.object({
+          isPrivate: Joi.bool().required(),
+        }).validate(data)
+
       default:
         return null
     }

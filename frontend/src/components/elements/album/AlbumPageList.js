@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useQuery } from 'react-query'
+
 import PropTypes from 'prop-types'
-import { Grid, styled } from '@material-ui/core'
-import { useSelector } from 'react-redux'
+import { styled } from '@material-ui/core'
+
 import AlbumPageItem from './AlbumPageItem'
-import { apiFetchAlbum } from '../../../utils/api'
 
 const StyledGrid = styled('div')(({ theme }) => ({
   WebkitColumnCount: 3,
@@ -62,6 +61,7 @@ function AlbumPageList({
       {images &&
         images.map((image) => (
           <AlbumPageItem
+            key={image.filepath}
             isAllowed={isAllowed}
             image={image}
             queryKey={queryKey}
@@ -92,4 +92,4 @@ AlbumPageList.propTypes = {
     ),
   }),
 }
-export default AlbumPageList
+export default React.memo(AlbumPageList)

@@ -2,22 +2,12 @@
 import { Grid } from '@material-ui/core'
 import React, { useCallback, useState } from 'react'
 
-import { useDispatch, useSelector } from 'react-redux'
-
-import { useRigths, useRoutesInfos } from '../utils/hooks'
-import OGECTEAM from '../constants/ogecteam'
+import { useRigths } from '../utils/hooks'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
 import Page from '../components/page/Page'
-import { setCategoryAside } from '../redux/settings/SettingsActions'
 
 function ApelOgecOgecScreen() {
-  const dispatch = useDispatch()
-
-  const {
-    category: { current },
-  } = useRoutesInfos()
-
   const pageName = 'OGEC'
   const alias = `apel-ogec-ogec`
   const queryKey = [pageName, `page-${alias}`]
@@ -30,16 +20,6 @@ function ApelOgecOgecScreen() {
   })
 
   const { moderatorLevel } = useRigths()
-  const { Asides } = useSelector((state) => state.settings)
-
-  const asideExist = useCallback(() => {
-    const exist =
-      Asides.length < 1
-        ? false
-        : Array.isArray(Asides.find(([path, datas]) => path === current.path))
-
-    return exist
-  }, [Asides])
 
   const pageParams = useCallback(
     {
@@ -52,27 +32,6 @@ function ApelOgecOgecScreen() {
     },
     []
   )
-
-  // build ogecaside
-
-  const createAside = useCallback(() => {
-    const asideOgec = {
-      title: 'Bureau Ogec',
-      items: OGECTEAM.map((teamer) => {
-        const { role, gender, firstname, lastname } = teamer
-        return {
-          subtitle: role,
-          user: { gender, firstname, lastname },
-        }
-      }),
-    }
-    dispatch(setCategoryAside([current.path, asideOgec]))
-    return true
-  }, [])
-
-  if (!asideExist()) {
-    createAside()
-  }
 
   return (
     <StyledPageGrid container>

@@ -189,7 +189,7 @@ export const useRoutesInfos = () => {
 
   const rubricsListe = useCallback(() => {
     const visitorExcludedCats = ['account', 'administration']
-    const userExcludedCats = ['identification']
+    const userExcludedCats = ['identification', 'administration']
     const moderatorExcludedCats = ['administration', 'identification']
     const rubrics = routesList().filter(
       (route) => route.state.type === 'rubric'
@@ -275,14 +275,24 @@ export const useRoutesInfos = () => {
         }
   }, [pathname, routesList(), rubricsListe()])
 
+  const rubricColors = useCallback(() => {
+    const colors = Object.entries(theme.palette)
+    if (!rubricItem) return null
+    if (rubricItem.state.alias === 'private' && !rights.userLevel)
+      return colors.find(([key, value]) => key === 'visitor')[1]
+    return colors.find(([key, value]) => key === rubricItem.state.alias)[1]
+  }, [theme, rubricItem, rights])
+
   const current = useCallback(
     routesList().find((route) => route.path === pathname),
+
     [pathname]
   )
 
   return {
     rubric: rubricItem,
     rubricCategories: [],
+    rubricColors: rubricColors(),
     categories: [],
     category: category(),
     current: current,
