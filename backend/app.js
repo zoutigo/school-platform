@@ -23,6 +23,8 @@ const preinscriptionsRouter = require('./routes/preinscriptions')
 const albumsRouter = require('./routes/albums')
 const suggestionsRouter = require('./routes/suggestions')
 const dialogsRouter = require('./routes/dialogs')
+const updatesRouter = require('./routes/updates')
+const db = require('./config/database')
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
@@ -31,7 +33,15 @@ dotenv.config()
 
 const app = express()
 
-// Database connexion
+// Postgres connexion
+
+db.authenticate()
+  .then(() => console.log('Postgres Database connected'))
+  .catch((err) =>
+    console.log(`connexion to postgres failed with error: ${err}`)
+  )
+
+// Mongodb Database connexion
 
 const DB_URL =
   process.env.NODE_ENV === 'development'
@@ -107,6 +117,7 @@ app.use('/preinscriptions', preinscriptionsRouter)
 app.use('/albums', albumsRouter)
 app.use('/suggestions', suggestionsRouter)
 app.use('/dialogs', dialogsRouter)
+app.use('/updates', updatesRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)

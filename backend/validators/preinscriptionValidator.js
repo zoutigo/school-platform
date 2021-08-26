@@ -33,6 +33,11 @@ module.exports.preinscriptionValidator = (datas) => {
           childFirstname: Joi.string().required().min(2).max(30),
         }).validate(data)
 
+      case 'childLastname':
+        return Joi.object({
+          childLastname: Joi.string().required().min(2).max(30),
+        }).validate(data)
+
       case 'classroomAlias':
         return Joi.object({
           classroomAlias: Joi.string().required().min(2).max(30),

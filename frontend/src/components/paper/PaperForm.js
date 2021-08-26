@@ -81,21 +81,20 @@ function PaperForm({
           />
         </Grid>
       </StyledHeaderGrid>
-      {paperType === 'activite' ||
-        (paperType === 'parent-info' && (
-          <PaperFormActivite
-            setCurrentDocument={setCurrentDocument}
-            currentDocument={currentDocument}
-            setShowTooltip={setShowTooltip}
-            setFormAction={setFormAction}
-            formAction={formAction}
-            setShowPaperList={setShowPaperList}
-            setShowPaperForm={setShowPaperForm}
-            paper={paper}
-            handleBack={handleBack}
-            isPrivateDatas={isPrivateDatas}
-          />
-        ))}
+      {(paperType === 'activite' || paperType === 'parent-info') && (
+        <PaperFormActivite
+          setCurrentDocument={setCurrentDocument}
+          currentDocument={currentDocument}
+          setShowTooltip={setShowTooltip}
+          setFormAction={setFormAction}
+          formAction={formAction}
+          setShowPaperList={setShowPaperList}
+          setShowPaperForm={setShowPaperForm}
+          paper={paper}
+          handleBack={handleBack}
+          isPrivateDatas={isPrivateDatas}
+        />
+      )}
       {(paperType === 'menu' ||
         paperType === 'fourniture' ||
         paperType === 'breve' ||

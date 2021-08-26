@@ -40,6 +40,22 @@ export const StyledMainApp = styled('main')(({ theme }) => ({
   width: '100%',
   minHeight: '80vh',
   overflow: 'hidden',
+  fontSize: '1.4rem',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '1rem',
+  },
+  [theme.breakpoints.between('md', 'lg')]: {
+    fontSize: '1.2rem',
+  },
+  [theme.breakpoints.up('lg')]: {
+    fontSize: '1.4rem',
+  },
+  '& .react-editor-form': {},
+  '& .react-editor-read': {
+    '& p:empty': {
+      marginTop: '1rem',
+    },
+  },
 }))
 
 const StyledScreen = styled('section')(({ theme }) => ({

@@ -7,9 +7,9 @@ Joi.objectId = require('joi-objectid')(Joi)
 module.exports.eventValidator = (datas) => {
   const validator = (data) => {
     switch (Object.keys(data)[0]) {
-      case '_id':
+      case 'id':
         return Joi.object({
-          _id: Joi.objectId(),
+          id: Joi.number(),
         }).validate(data)
 
       case 'title':

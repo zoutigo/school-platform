@@ -193,14 +193,14 @@ function PaperFormPDF({
           <InputSelectControl
             control={control}
             options={selectOptions}
-            name="clientEntityAlias"
+            name="classe_fourniture"
             label="Choisir la classe"
             helperText="Les fournitures sont pour quelle classe ?"
             initialValue={
               currentDocument
                 ? selectOptions.find(
                     (option) =>
-                      option.value === currentDocument.clientEntity.alias
+                      option.value === currentDocument.classe_fourniture
                   )
                 : null
             }
@@ -309,6 +309,7 @@ PaperFormPDF.propTypes = {
     isPrivate: PropTypes.bool,
     text: PropTypes.string,
     title: PropTypes.string,
+    classe_fourniture: PropTypes.string,
     entity: PropTypes.shape({
       _id: PropTypes.string,
     }),

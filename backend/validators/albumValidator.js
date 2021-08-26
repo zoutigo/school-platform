@@ -23,9 +23,9 @@ const htmlJoi = Joi.extend((joi) => {
 module.exports.albumValidator = (datas) => {
   const validator = (data) => {
     switch (Object.keys(data)[0]) {
-      case '_id':
+      case 'id':
         return Joi.object({
-          _id: Joi.objectId(),
+          id: Joi.string(),
         }).validate(data)
 
       case 'alias':

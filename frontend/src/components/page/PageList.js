@@ -11,6 +11,7 @@ import {
   initialAlertCollapse,
   loadingAlertCollapse,
 } from '../../constants/alerts'
+import PageScreen from '../elements/reactpage/PageScreen'
 
 function PageList({ queryKey, queryParams, setPage }) {
   const dispatch = useDispatch()
@@ -41,11 +42,12 @@ function PageList({ queryKey, queryParams, setPage }) {
   }
 
   const [page] = data
-  const { text } = page
+  const { content } = page
 
   return (
-    <Grid item container>
-      {ReactHtmlParser(text) || "il n'y a pas plus de détails pour le moment"}
+    <Grid item container className="react-editor-read">
+      <PageScreen content={content} />
+      {/* {ReactHtmlParser(text) || "il n'y a pas plus de détails pour le moment"} */}
     </Grid>
   )
 }

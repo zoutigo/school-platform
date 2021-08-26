@@ -9,9 +9,9 @@ const passwordRegex = new RegExp('^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$')
 module.exports.userValidator = (datas) => {
   const validator = (data) => {
     switch (Object.keys(data)[0]) {
-      case '_id':
+      case 'id':
         return Joi.object({
-          _id: Joi.objectId(),
+          id: Joi.number(),
         }).validate(data)
 
       case 'role':
@@ -66,9 +66,9 @@ module.exports.userValidator = (datas) => {
           lastname: Joi.string().required().min(3).max(30),
         }).validate(data)
 
-      case 'childrenClasses':
+      case 'entitiesIds':
         return Joi.object({
-          childrenClasses: Joi.array().items(Joi.string().required()),
+          entitiesIds: Joi.array().items(Joi.number().required()),
         }).validate(data)
 
       case 'roles':

@@ -1,5 +1,7 @@
 /* eslint-disable consistent-return */
+const EntityP = require('../models/EntityP')
 const Roles = require('../models/Role')
+const RoleP = require('../models/RoleP')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { roleValidator } = require('../validators/roleValidator')
 
@@ -22,22 +24,21 @@ module.exports.postRole = async (req, res, next) => {
     return next(new BadRequest(errors.join()))
   }
 
-  const { name, mission, entity } = req.body
+  const { name, mission, entityId } = req.body
 
   if (action === 'create') {
     // case role creation
 
-    if (!name || !mission || !entity)
+    if (!name || !mission || !entityId)
       return next(
         new BadRequest(
           'une ou plusieurs données manquante: name,mission,entity'
         )
       )
 
-    const newRole = new Roles(req.body)
     try {
-      const savedRole = await newRole.save()
-      if (savedRole) {
+      const nextrole = await RoleP.create({ name, mission, entityId })
+      if (nextrole) {
         return res.status(201).send({ message: 'Role correctement créee' })
       }
     } catch (err) {
@@ -46,33 +47,39 @@ module.exports.postRole = async (req, res, next) => {
   } else if (action === 'update' && roleId) {
     // case update
 
-    const currentRole = await Roles.findOne({ _id: roleId })
-    if (!currentRole) return next(new BadRequest("Le role  n'existe pas"))
+    const currentrole = await RoleP.findOne({
+      where: { id: roleId },
+    })
+
+    if (!currentrole) return next(new BadRequest("Le role  n'existe pas"))
 
     try {
-      const updatedRole = await Roles.findOneAndUpdate(
-        { _id: roleId },
-        req.body,
-        {
-          returnOriginal: false,
-        }
-      )
-      if (updatedRole) {
+      const updatedRole = await RoleP.update(req.body, {
+        where: { id: roleId },
+        returning: true,
+      })
+
+      if (updatedRole[1]) {
         if (process.env.NODE_ENV === 'production') {
           return res.status(200).send('Role correctement modifié')
         }
         return res.status(200).send({
           message: 'Role correctement modifié',
-          data: updatedRole,
+          data: updatedRole[1],
         })
       }
+      return next('something went wrong with server')
     } catch (err) {
       return next(err)
     }
   } else if (action === 'delete' && roleId) {
     try {
-      const deletedRole = await Roles.findOneAndDelete({ _id: roleId })
-      if (deletedRole) {
+      const deletedrole = await RoleP.destroy({
+        where: {
+          id: roleId,
+        },
+      })
+      if (deletedrole) {
         return res.status(200).send({ message: 'role deleted successfully' })
       }
     } catch (err) {
@@ -90,11 +97,11 @@ module.exports.getRoles = async (req, res, next) => {
   }
 
   try {
-    if (req.query.id) {
-      req.query._id = req.query.id
-      delete req.query.id
-    }
-    const roles = await Roles.find(req.query).populate('entity')
+    // const roles = await Roles.find(req.query).populate('entity')
+    const roles = await RoleP.findAll({
+      where: req.query,
+      include: EntityP,
+    })
 
     if (roles.length < 1) return next(new NotFound('role not found'))
     return res.status(200).send(roles)

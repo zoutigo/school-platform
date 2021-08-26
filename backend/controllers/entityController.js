@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 const Entity = require('../models/Entity')
+const EntityP = require('../models/EntityP')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { entityValidator } = require('../validators/entityValidator')
 
@@ -34,9 +35,9 @@ module.exports.postEntity = async (req, res, next) => {
 
     const entity = req.body
 
-    const newEntity = new Entity(entity)
+    // const newEntity = new Entity(entity)
     try {
-      const savedEntity = await newEntity.save()
+      const savedEntity = await EntityP.create(entity)
       if (savedEntity) {
         return res.status(201).send({ message: 'Entité correctement créee' })
       }
@@ -46,17 +47,12 @@ module.exports.postEntity = async (req, res, next) => {
   } else if (action === 'update' && entityId) {
     // case update
 
-    const currentEntity = await Entity.findOne({ _id: entityId })
+    const [currentEntity] = await EntityP.findAll({ id: entityId })
     if (!currentEntity) return next(new BadRequest("L'entité nexiste pas"))
-
     try {
-      const updatedEntity = await Entity.findOneAndUpdate(
-        { _id: entityId },
-        req.body,
-        {
-          returnOriginal: false,
-        }
-      )
+      const updatedEntity = await EntityP.update(req.body, {
+        where: { id: entityId },
+      })
       if (updatedEntity) {
         if (process.env.NODE_ENV === 'production') {
           return res.status(200).send('Entité correctement modifiée')
@@ -71,9 +67,9 @@ module.exports.postEntity = async (req, res, next) => {
     }
   } else if (action === 'delete' && entityId) {
     try {
-      const deletedEntity = await Entity.findOneAndDelete({ _id: entityId })
+      const deletedEntity = await EntityP.destroy({ id: entityId })
       if (deletedEntity) {
-        return res.status(200).send({ message: 'event deleted successfully' })
+        return res.status(200).send({ message: 'entity deleted successfully' })
       }
     } catch (err) {
       return next(err)
@@ -90,11 +86,7 @@ module.exports.getEntities = async (req, res, next) => {
   }
 
   try {
-    if (req.query.id) {
-      req.query._id = req.query.id
-      delete req.query.id
-    }
-    const entities = await Entity.find(req.query)
+    const entities = await EntityP.findAll({ where: req.query })
 
     if (entities.length < 1) return next(new NotFound('event not found'))
     return res.status(200).send(entities)

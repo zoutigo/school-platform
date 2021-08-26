@@ -1,9 +1,10 @@
 // eslint-disable-next-line no-unused-vars
 import { useTheme } from '@material-ui/styles'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
+import Compressor from 'compressorjs'
 import routes from '../constants/routes'
 import theme from '../constants/theme'
 
@@ -60,6 +61,15 @@ export const useIsTokenValid = () => {
   return { tokenIsValid }
 }
 
+export const useCompressFile = (file) => {
+  const [compressedFile, setCompressedFile] = useState(null)
+  Compressor(file, {
+    quality: 0.8,
+    success: (compressesResult) => setCompressedFile(compressesResult),
+  })
+  return compressedFile
+}
+
 export const useRigths = () => {
   const { User } = useSelector((state) => state.user)
 
@@ -84,22 +94,6 @@ export const useRouteParams = (arg) => {
 
   return query.get(arg)
 }
-
-// export const useRouteDatas = () => {
-//   const { pathname } = useLocation()
-//   const { Routes } = useSelector((state) => state.settings)
-//   const [datas, setDatas] = useState(initialRouteDatas)
-
-//   useEffect(() => {
-//     const values = routeDatas(pathname, Routes)
-//     setDatas(values)
-//     return () => {
-//       setDatas(null)
-//     }
-//   }, [pathname])
-
-//   return { ...datas }
-// }
 
 export const useRoutesInfos = () => {
   const initialRouteInfos = {

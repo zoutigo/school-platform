@@ -12,7 +12,7 @@ const TRANSLATIONS = {
 
 const cellSpacing = {
   x: 25, // horizontal cell spacing
-  y: 25, // vertical cell spacing
+  y: 20, // vertical cell spacing
 }
 
 const useUiTranslator = () => {

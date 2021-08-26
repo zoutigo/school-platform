@@ -5,14 +5,14 @@ require('dotenv').config()
 module.exports.generateToken = (user) =>
   jwt.sign(
     {
-      _id: user._id,
+      id: user.id,
       roles: user.roles,
       isAdmin: user.isAdmin,
       isManager: user.isManager,
       isModerator: user.isModerator,
       isTeacher: user.isTeacher,
       isVerified: user.isVerified,
-      childrenClasses: user.childrenClasses,
+      entities: user.entities,
       firstname: user.firstname,
       gender: user.gender,
     },

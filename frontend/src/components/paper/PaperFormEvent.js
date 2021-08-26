@@ -62,6 +62,7 @@ function PaperFormEvent({
 
   const onSubmit = async (datas) => {
     const { title, content, date, place, isPrivate } = datas
+    console.log('content', content)
     const finalDatas = {
       title,
       date: date.valueOf(),

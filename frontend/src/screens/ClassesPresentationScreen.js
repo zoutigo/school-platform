@@ -1,25 +1,28 @@
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable import/named */
+/* eslint-disable arrow-body-style */
 import { Grid } from '@material-ui/core'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useQuery } from 'react-query'
-import { apiFecthEntity } from '../utils/api'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useRigths } from '../utils/hooks'
 import ClassroomSummary from '../components/main/classes/ClassroomSummary'
-import ApiAlert from '../components/elements/ApiAlert'
 import useRoles from '../utils/roles'
 import ClassroomForm from '../components/main/classes/ClassroomForm'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import ToggleToolTip from '../components/elements/ToggleToolTip'
+import { setFetchAlert, setMutateAlert } from '../redux/alerts/AlertsActions'
+import { initialAlertCollapse } from '../constants/alerts'
 
 function ClassesPresentationScreen() {
+  const dispatch = useDispatch()
   const { pathname } = useLocation()
+  const [currentClassroom, setCurrentClassroom] = useState(null)
   const [showClassroomForm, setShowClassroomForm] = useState(false)
-  const [alert, setAlert] = useState({
-    openAlert: false,
-    severity: 'error',
-    alertText: '',
-  })
+
+  const { mutate, fetch } = useSelector((state) => state.alerts)
 
   const defineAlias = useCallback((extract) => {
     switch (extract) {
@@ -76,50 +79,45 @@ function ClassesPresentationScreen() {
     }
   }, [])
 
+  const clearFetch = useCallback(() => {
+    dispatch(setFetchAlert(initialAlertCollapse))
+  }, [])
+  const clearMutate = useCallback(() => {
+    dispatch(setMutateAlert(initialAlertCollapse))
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      // clearMutate()
+      // clearFetch()
+      setCurrentClassroom(null)
+    }
+  }, [])
+
   const isAllowedToChange = moderatorLevel || defineRole(alias)
   const queryName = `classroom-${alias}`
   const queryParams = `alias=${alias}`
   const queryKey = [queryName]
-  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFecthEntity(queryParams)
-  )
-
-  if (isLoading) return <ApiAlert severity="warning">Chargement ...</ApiAlert>
-  if (isError)
-    return (
-      <AlertCollapse
-        severity="error"
-        alertText={error.message}
-        openAlert={isError}
-      />
-    )
-  if (!Array.isArray(data)) return null
-
-  const [result] = data
 
   return (
     <Grid container>
-      <AlertCollapse
-        severity={alert.severity}
-        alertText={alert.alertText}
-        openAlert={alert.openAlert}
-      />
+      <AlertCollapse {...fetch} callback={clearFetch} />
+      <AlertCollapse {...mutate} callback={clearMutate} />
 
       {showClassroomForm && isAllowedToChange && (
         <ClassroomForm
           setShowClassroomForm={setShowClassroomForm}
-          queryKey={queryKey}
-          setAlert={setAlert}
-          classroomData={result}
+          setCurrentClassroom={setCurrentClassroom}
+          currentClassroom={currentClassroom}
         />
       )}
 
       {!showClassroomForm && (
         <ClassroomSummary
-          text={result?.summary}
-          image={result?.image}
-          alias={result?.alias}
-          id={result._id || null}
+          queryParams={queryParams}
+          queryKey={queryKey}
+          setCurrentClassroom={setCurrentClassroom}
+          currentClassroom={currentClassroom}
         />
       )}
       {isAllowedToChange && (

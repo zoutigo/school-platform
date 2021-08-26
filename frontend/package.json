@@ -22,6 +22,7 @@
     "@testing-library/user-event": "^12.8.3",
     "@tinymce/tinymce-react": "^3.12.6",
     "axios": "^0.21.1",
+    "compressorjs": "^1.0.7",
     "faker": "^5.5.3",
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",

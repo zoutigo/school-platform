@@ -1,13 +1,15 @@
 /* eslint-disable consistent-return */
-const Entity = require('../models/Entity')
-const Event = require('../models/Event')
+const { Op } = require('sequelize')
+const EntityP = require('../models/EntityP')
+const EventP = require('../models/EventP')
+const UserP = require('../models/UserP')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { eventValidator } = require('../validators/eventValidator')
 
 require('dotenv').config()
 
 module.exports.postEvent = async (req, res, next) => {
-  const { isAdmin, isManager, isModerator, isTeacher, _id: userId } = req.user
+  const { isAdmin, isManager, isModerator, isTeacher, id: userId } = req.user
   const { id: eventId, action } = req.query
   const userIsAllowed = isAdmin || isManager || isTeacher || isModerator
 
@@ -26,18 +28,24 @@ module.exports.postEvent = async (req, res, next) => {
   }
 
   if (action === 'create') {
-    const { entityAlias } = req.body
+    const { entityAlias, title, content, date, place } = req.body
+
+    if (!entityAlias || !title || !content || !date || !place)
+      return next(new BadRequest('datas missing again'))
+
     // check the entity
-    const checkedEntity = await Entity.findOne({ alias: entityAlias })
+    const checkedEntity = await EntityP.findOne({
+      where: { alias: entityAlias },
+    })
     if (!checkedEntity) return next(new BadRequest('mauvaise entité'))
 
     const event = req.body
-    event.entity = checkedEntity._id
+    event.entityId = checkedEntity.id
     delete event.entityAlias
-    event.author = userId
-    const newEvent = new Event(event)
+    event.userId = userId
+
     try {
-      const savedEvent = await newEvent.save()
+      const savedEvent = await EventP.create(event)
       if (savedEvent) {
         return res.status(201).send({ message: 'Evenement correctement crée' })
       }
@@ -48,13 +56,10 @@ module.exports.postEvent = async (req, res, next) => {
     // case update
 
     try {
-      const updatedEvent = await Event.findOneAndUpdate(
-        { _id: eventId },
-        req.body,
-        {
-          returnOriginal: false,
-        }
-      )
+      const updatedEvent = await EventP.update(req.body, {
+        where: { id: eventId },
+      })
+
       if (updatedEvent) {
         if (process.env.NODE_ENV === 'production') {
           return res.status(200).send('Evènement modifié')
@@ -66,7 +71,7 @@ module.exports.postEvent = async (req, res, next) => {
     }
   } else if (action === 'delete' && eventId) {
     try {
-      const deletedEvent = await Event.findOneAndDelete({ _id: eventId })
+      const deletedEvent = await EventP.destroy({ where: { id: eventId } })
       if (deletedEvent) {
         return res.status(200).send({ message: 'Evènement éffacé' })
       }
@@ -86,25 +91,35 @@ module.exports.getEvents = async (req, res, next) => {
     return next(new BadRequest(errors.join()))
   }
 
-  if (req.query.id) {
-    req.query._id = req.query.id
-    delete req.query.id
-  }
-
   // check the entity
   if (req.query.entityAlias) {
-    const checkedEntity = await Entity.findOne({ alias: req.query.entityAlias })
+    const checkedEntity = await EntityP.findOne({
+      where: { alias: req.query.entityAlias },
+    })
     if (!checkedEntity) return next(new BadRequest('mauvaise entité'))
-    req.query.entity = checkedEntity._id
+    req.query.entityId = checkedEntity.id
     delete req.query.entityAlias
   }
 
   try {
-    const events = await Event.find(req.query)
-      .where('date')
-      .gt(today)
-      .sort({ date: 1 })
-      .populate('entity')
+    const events = await EventP.findAll({
+      where: {
+        ...req.query,
+        date: {
+          [Op.gt]: today,
+        },
+      },
+      include: [
+        {
+          model: EntityP,
+          attributes: ['alias', 'id', 'name'],
+        },
+        {
+          model: UserP,
+          attributes: ['id', 'lastname'],
+        },
+      ],
+    })
 
     if (events.length < 1) return next(new NotFound('event not found'))
     return res.status(200).send(events)

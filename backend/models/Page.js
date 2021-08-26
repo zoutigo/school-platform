@@ -21,6 +21,12 @@ const pageSchema = new Schema(
       maxlength: 50000,
       minlength: 3,
     },
+    content: {
+      type: String,
+      required: true,
+      maxlength: 50000,
+      minlength: 3,
+    },
   },
   { timestamps: true }
 )

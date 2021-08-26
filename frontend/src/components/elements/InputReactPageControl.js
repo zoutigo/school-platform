@@ -7,15 +7,16 @@ import slate from '@react-page/plugins-slate'
 import image, { imagePlugin } from '@react-page/plugins-image'
 import divider from '@react-page/plugins-divider'
 import spacer from '@react-page/plugins-spacer'
-import '@react-page/editor/lib/index.css'
 import '@react-page/plugins-slate/lib/index.css'
 import '@react-page/plugins-image/lib/index.css'
+import '@react-page/editor/lib/index.css'
+
 import { Grid, styled } from '@material-ui/core'
 import AlertCollapse from './AlertCollapse'
 import TRANSLATIONS from './reactpage/constants'
 import cellSpacing from './reactpage/constants'
 import { apiPostImage } from '../../utils/api'
-import colorPlugin from './reactpage/colorPlugin'
+// import colorPlugin from './reactpage/colorPlugin'
 
 // const cellSpacing = {
 //   x: 15, // horizontal cell spacing
@@ -32,6 +33,11 @@ import colorPlugin from './reactpage/colorPlugin'
 const StyledGrid = styled(Grid)(() => ({
   margin: '1rem 0px',
   padding: '0px 1rem',
+  '& .controller': {
+    '& >div': {
+      width: '100%',
+    },
+  },
 }))
 const StyledLabel = styled(Grid)(({ theme }) => ({
   color: theme.palette.secondary.main,
@@ -88,12 +94,12 @@ function InputReactPageControl({
     onChange(data)
   }
   return (
-    <div>
+    <StyledGrid container>
       <Grid item container>
         <AlertCollapse {...alert} />
       </Grid>
       <StyledLabel item> {formlabel}</StyledLabel>
-      <div>
+      <Grid item container className="controller">
         <Controller
           {...rest}
           control={control}
@@ -102,15 +108,16 @@ function InputReactPageControl({
             <Editor
               cellPlugins={cellPlugins}
               value={editorValue}
+              cellSpacing={cellSpacing}
               lang="fr"
               onChange={(newvalue) => handleChange(newvalue)}
-              cellSpacing={cellSpacing}
+              // cellSpacing={cellSpacing}
               // uiTranslator={useUiTranslator()}
             />
           )}
         />
-      </div>
-    </div>
+      </Grid>
+    </StyledGrid>
   )
 }
 

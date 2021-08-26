@@ -18,6 +18,7 @@ import {
   errorAlertCollapse,
   successAlertCollapse,
 } from '../../constants/alerts'
+import InputReactPageControl from '../elements/InputReactPageControl'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -54,15 +55,15 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
   })
 
   const onSubmit = async (datas) => {
-    const { text } = datas
+    const { content } = datas
     const options = {
       headers: { 'x-access-token': Token },
     }
-    const finalDatas = { text }
+    const finalDatas = { content: JSON.stringify(content) }
 
     try {
       await mutateAsync({
-        id: page ? page._id : null,
+        id: page ? page.id : null,
         action: 'update',
         options: options,
         body: finalDatas,
@@ -94,16 +95,12 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
         <Title title={formTitle} textcolor="whitesmoke" />
       </Grid>
       <Grid container className="form-fields-container">
-        <Grid item container>
-          <Controller
-            name="text"
-            control={control}
-            defaultValue={page ? page.text : null}
-            render={({ field: { onChange, value } }) => (
-              <TinyPageEditor onChange={onChange} value={value} />
-            )}
-          />
-        </Grid>
+        <InputReactPageControl
+          control={control}
+          name="content"
+          initialValue={page ? page.content : null}
+          label="Contenu de la page"
+        />
       </Grid>
       <Grid item container alignItems="center" justify="flex-end">
         <CostumButton
@@ -130,8 +127,8 @@ PageForms.propTypes = {
     isAllowedToChange: PropTypes.bool.isRequired,
   }).isRequired,
   page: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    content: PropTypes.string.isRequired,
   }).isRequired,
 }
 

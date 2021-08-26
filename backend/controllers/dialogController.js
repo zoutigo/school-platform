@@ -1,13 +1,13 @@
 /* eslint-disable consistent-return */
-const Entity = require('../models/Entity')
-const Dialog = require('../models/Dialog')
+const { Op } = require('sequelize')
+const DialogP = require('../models/DialogP')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { dialogValidator } = require('../validators/dialogValidator')
 
 require('dotenv').config()
 
 module.exports.postDialog = async (req, res, next) => {
-  const { isAdmin, isManager, isModerator, _id: userId } = req.user
+  const { isAdmin, isManager, isModerator, id: userId } = req.user
   const { id: dialogId, action } = req.query
   const userIsAllowed = isAdmin || isManager || isModerator
 
@@ -27,10 +27,10 @@ module.exports.postDialog = async (req, res, next) => {
 
   if (action === 'create') {
     const dialog = req.body
-    dialog.author = userId
-    const newEvent = new Dialog(dialog)
+    dialog.userId = userId
+
     try {
-      const savedDialog = await newEvent.save()
+      const savedDialog = await DialogP.create(dialog)
       if (savedDialog) {
         return res.status(201).send({ message: 'Modale correctement crée' })
       }
@@ -41,13 +41,10 @@ module.exports.postDialog = async (req, res, next) => {
     // case update
 
     try {
-      const updatedDialog = await Dialog.findOneAndUpdate(
-        { _id: dialogId },
-        req.body,
-        {
-          returnOriginal: false,
-        }
-      )
+      const updatedDialog = await DialogP.update(req.body, {
+        where: { id: dialogId },
+      })
+
       if (updatedDialog) {
         if (process.env.NODE_ENV === 'production') {
           return res
@@ -61,7 +58,7 @@ module.exports.postDialog = async (req, res, next) => {
     }
   } else if (action === 'delete' && dialogId) {
     try {
-      const deletedDialog = await Dialog.findOneAndDelete({ _id: dialogId })
+      const deletedDialog = await DialogP.destroy({ where: { id: dialogId } })
       if (deletedDialog) {
         return res.status(200).send({ message: 'Modale correctement éffacée' })
       }
@@ -81,16 +78,17 @@ module.exports.getDialogs = async (req, res, next) => {
     return next(new BadRequest(errors.join()))
   }
 
-  if (req.query.id) {
-    req.query._id = req.query.id
-    delete req.query.id
-  }
-
   try {
-    const dialogs = await Dialog.find(req.query)
-      .where('enddate')
-      .gt(today)
-      .sort({ date: 1 })
+    const dialogs = await DialogP.findAll({
+      where: {
+        ...req.query,
+        enddate: {
+          [Op.gt]: today,
+        },
+      },
+      sort: [('createdA', 'ASC')],
+      limit: 5,
+    })
 
     if (dialogs.length < 1) return next(new NotFound('Pas de modale en cours'))
     return res.status(200).send(dialogs)

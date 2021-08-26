@@ -7,9 +7,9 @@ Joi.objectId = require('joi-objectid')(Joi)
 module.exports.suggestionValidator = (datas) => {
   const validator = (data) => {
     switch (Object.keys(data)[0]) {
-      case '_id':
+      case 'id':
         return Joi.object({
-          _id: Joi.objectId(),
+          id: Joi.number(),
         }).validate(data)
 
       case 'title':
@@ -29,9 +29,9 @@ module.exports.suggestionValidator = (datas) => {
           message: Joi.string().required().min(3).max(1000),
         }).validate(data)
 
-      case 'author':
+      case 'userId':
         return Joi.object({
-          author: Joi.objectId(),
+          userId: Joi.number(),
         }).validate(data)
 
       default:

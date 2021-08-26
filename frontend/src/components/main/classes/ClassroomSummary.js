@@ -1,45 +1,51 @@
 import { Grid, styled } from '@material-ui/core'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useQuery } from 'react-query'
 import PropTypes from 'prop-types'
-import ReactHtmlParser from 'react-html-parser'
+import PageScreen from '../../elements/reactpage/PageScreen'
+import { apiFecthEntity } from '../../../utils/api'
+import useFetchDispatch from '../../elements/useFetchDispatch'
+import { setFetchAlert } from '../../../redux/alerts/AlertsActions'
 
 const StyledClassroomContainer = styled(Grid)(() => ({
-  padding: '0.1em !important',
-}))
-const StyledImageContainer = styled(Grid)(() => ({
-  '& img': {
-    width: '100%',
-    maxHeight: '70vh',
-    objectFit: 'cover',
-  },
-  padding: '0.5em !important',
-}))
-const StyledTextContainer = styled('div')(() => ({
-  padding: '0.5em',
-  background: 'whitesmoke',
+  padding: '1rem 0',
 }))
 
-function ClassroomSummary({ image, text, alias }) {
+function ClassroomSummary({
+  queryParams,
+  queryKey,
+  setCurrentClassroom,
+  currentClassroom,
+}) {
+  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
+    apiFecthEntity(queryParams)
+  )
+
+  useFetchDispatch(isLoading, isError, error, data, setFetchAlert)
+
+  useEffect(() => {
+    if (data && Array.isArray(data)) {
+      const [result] = data
+      setCurrentClassroom(result)
+    }
+  }, [data])
+
   return (
-    <StyledClassroomContainer item container>
-      <StyledImageContainer item container>
-        {image && <img src={image} alt={alias} />}
-      </StyledImageContainer>
-
-      <Grid item>
-        <StyledTextContainer>{ReactHtmlParser(text)}</StyledTextContainer>
-      </Grid>
+    <StyledClassroomContainer item container className="react-editor-read">
+      {data && Array.isArray(data) && <PageScreen content={data[0].content} />}
     </StyledClassroomContainer>
   )
 }
-ClassroomSummary.defaultProps = {
-  image: null,
-}
+
+ClassroomSummary.defaultProps = null
 
 ClassroomSummary.propTypes = {
-  text: PropTypes.string.isRequired,
-  alias: PropTypes.string.isRequired,
-  image: PropTypes.string,
+  queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
+  queryParams: PropTypes.string.isRequired,
+  setCurrentClassroom: PropTypes.func.isRequired,
+  currentClassroom: PropTypes.shape({
+    content: PropTypes.string,
+  }),
 }
 
-export default ClassroomSummary
+export default React.memo(ClassroomSummary)

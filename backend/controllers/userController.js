@@ -11,6 +11,10 @@ const { losspassTokenVerify } = require('../utils/tokenverify')
 const { updateArray } = require('../utils/updateArray')
 
 const { userValidator } = require('../validators/userValidator')
+const UserP = require('../models/UserP')
+const RoleP = require('../models/RoleP')
+const EntityP = require('../models/EntityP')
+const UserEntities = require('../models/UserEntities')
 
 module.exports.registerUser = async (req, res, next) => {
   if (Object.keys(req.body).length < 1)
@@ -34,8 +38,9 @@ module.exports.registerUser = async (req, res, next) => {
   }
 
   // check if email exist in database
-  const checkedEmail = await User.findOne({ email })
-  if (checkedEmail) return next(new BadRequest(`email already exists`))
+  const checkedEmail = await UserP.findOne({ where: { email } })
+  if (checkedEmail)
+    return next(new BadRequest(`cet email est deja détenu par un utilisateur`))
 
   // password hash
   const salt = await bcrypt.genSalt(10)
@@ -43,15 +48,20 @@ module.exports.registerUser = async (req, res, next) => {
 
   // email token
 
-  const user = new User({
+  const user = {
     email,
     password: hashedPassword,
     emailToken: crypto.randomBytes(64).toString('hex'),
-  })
+  }
 
   try {
-    const newUser = await user.save()
+    const newUser = await UserP.create(user)
     if (!newUser) return next(new BadRequest('une erreur est survenue'))
+
+    if (process.env.NODE_ENV === 'development')
+      return res
+        .status(200)
+        .send({ message: 'compte correctement crée', data: newUser })
 
     const { transporter, options } = emailConfirmMail(newUser)
 
@@ -89,7 +99,10 @@ module.exports.loginUser = async (req, res, next) => {
   }
 
   // check if email exists
-  const userVerified = await User.findOne({ email: email }).populate('roles')
+  const userVerified = await UserP.findOne({
+    where: { email },
+    include: RoleP,
+  })
   if (!userVerified) return next(new BadRequest('invalid email or password'))
 
   // check password
@@ -104,8 +117,9 @@ module.exports.loginUser = async (req, res, next) => {
 }
 module.exports.updateUser = async (req, res, next) => {
   const { id: toUpdateId, roleAction } = req.query
+
   const {
-    _id: requesterId,
+    id: requesterId,
     isAdmin: requesterIsAdmin,
     isManager: requesterIsManager,
     isModerator: requesterIsModerator,
@@ -118,11 +132,14 @@ module.exports.updateUser = async (req, res, next) => {
   if (errors.length > 0) return next(new BadRequest(errors.join()))
 
   // check if user exist
-  const toUpdateuser = await User.findOne({ _id: toUpdateId })
+  const toUpdateuser = await UserP.findOne({
+    where: { id: toUpdateId },
+    include: [RoleP, EntityP],
+  })
   if (!toUpdateuser)
     return next(new BadRequest('user to update does not exist'))
 
-  const isOwner = toUpdateId === requesterId
+  const isOwner = Number(toUpdateId) === requesterId
 
   const newUserDatas = {}
 
@@ -138,34 +155,42 @@ module.exports.updateUser = async (req, res, next) => {
     newPasswordConfirm,
     role,
     phone,
-    childrenClasses,
+    entitiesIds,
   } = req.body
 
-  if (childrenClasses) {
+  if (entitiesIds) {
     if (isOwner) {
       if (
-        JSON.stringify(childrenClasses) !==
-        JSON.stringify(toUpdateuser.childrenClasses)
+        JSON.stringify(entitiesIds) !== JSON.stringify(toUpdateuser.entities)
       ) {
-        // fetch entities
-
-        const classrooms = await Promise.all(
-          childrenClasses.map(async (classroom) => {
-            const entity = await Entity.findOne({ alias: classroom })
-            return entity._id
+        // destroy previous associations
+        const previousEntities = toUpdateuser.entities
+        if (previousEntities) {
+          previousEntities.forEach(async (prevEntity) => {
+            const oldEntity = await EntityP.findOne({
+              where: { id: prevEntity.id },
+            })
+            await toUpdateuser.removeEntity(oldEntity)
           })
-        )
-        newUserDatas.childrenClasses = classrooms
+        }
+
+        // create new associations
+        entitiesIds.forEach(async (newEntityId) => {
+          const newEntity = await EntityP.findOne({
+            where: { id: newEntityId },
+          })
+          await toUpdateuser.addEntity(newEntity)
+        })
       }
     } else {
-      return next(new Unauthorized('only the owner can modify its lastname'))
+      return next(new Unauthorized('only the owner can modify its entities'))
     }
   }
 
-  if (lastname) {
+  if (lastname || lastname !== 'undefined') {
     if (isOwner) {
       if (!(lastname === toUpdateuser.lastname)) {
-        newUserDatas.lastname = lastname
+        toUpdateuser.lastname = lastname
       }
     } else {
       return next(new Unauthorized('only the owner can modify its lastname'))
@@ -176,29 +201,29 @@ module.exports.updateUser = async (req, res, next) => {
   if (firstname) {
     if (isOwner) {
       if (!(firstname === toUpdateuser.firstname)) {
-        newUserDatas.firstname = firstname
+        toUpdateuser.firstname = firstname
       }
     } else {
-      return next(new Unauthorized('only the owner can modify its lastname'))
+      return next(new Unauthorized('only the owner can modify its firstname'))
     }
   }
 
   if (gender) {
     if (isOwner) {
       if (!(gender === toUpdateuser.gender)) {
-        newUserDatas.gender = gender
+        toUpdateuser.gender = gender
       }
     } else {
-      return next(new Unauthorized('only the owner can modify its lastname'))
+      return next(new Unauthorized('only the owner can modify its gender'))
     }
   }
   if (phone) {
     if (isOwner) {
       if (!(phone === toUpdateuser.phone)) {
-        newUserDatas.phone = phone
+        toUpdateuser.phone = phone
       }
     } else {
-      return next(new Unauthorized('only the owner can modify its lastname'))
+      return next(new Unauthorized('only the owner can modify its phone'))
     }
   }
 
@@ -222,7 +247,7 @@ module.exports.updateUser = async (req, res, next) => {
       // pass should be crypted
       const salt = await bcrypt.genSalt(10)
       const hashedPassword = await bcrypt.hash(newPassword, salt)
-      newUserDatas.password = hashedPassword
+      toUpdateuser.password = hashedPassword
     } else {
       return next(new Unauthorized('only the owner can modify'))
     }
@@ -231,7 +256,7 @@ module.exports.updateUser = async (req, res, next) => {
   if (isManager) {
     if (requesterIsAdmin) {
       if (!(isManager === toUpdateuser.isManager)) {
-        newUserDatas.isManager = isManager
+        toUpdateuser.isManager = isManager
       }
     } else {
       return next(new Unauthorized('only admin can define manager'))
@@ -241,7 +266,7 @@ module.exports.updateUser = async (req, res, next) => {
   if (isModerator) {
     if (requesterIsAdmin || requesterIsManager) {
       if (!(isModerator === toUpdateuser.isModerator)) {
-        newUserDatas.isModerator = isModerator
+        toUpdateuser.isModerator = isModerator
       }
     } else {
       return next(
@@ -253,13 +278,13 @@ module.exports.updateUser = async (req, res, next) => {
   if (isTeacher) {
     if (requesterIsAdmin || requesterIsManager || requesterIsModerator) {
       if (!(isTeacher === toUpdateuser.isTeacher)) {
-        newUserDatas.isTeacher = isTeacher
+        toUpdateuser.isTeacher = isTeacher
       }
     } else {
       return next(new Unauthorized('only manager or admin can define teacher'))
     }
   }
-
+  /// to be reworked
   if (role) {
     if (requesterIsAdmin || requesterIsManager || requesterIsModerator) {
       if (!roleAction) return next(new BadRequest('missing roleAction'))
@@ -275,11 +300,8 @@ module.exports.updateUser = async (req, res, next) => {
   if (Object.keys(newUserDatas).length < 1)
     return next(new BadRequest('something wrong happened'))
   try {
-    const savedModifiedUser = await User.findOneAndUpdate(
-      { _id: toUpdateId },
-      newUserDatas,
-      { returnOriginal: false }
-    )
+    const savedModifiedUser = await toUpdateuser.save()
+
     if (!savedModifiedUser) return next()
     const message = { message: 'Modification correctement effectuée' }
     if (isOwner)
@@ -299,9 +321,11 @@ module.exports.updateUser = async (req, res, next) => {
 
 module.exports.listUsers = async (req, res, next) => {
   try {
-    const users = await User.find()
-      .select('_id email lastname firstname gender')
-      .populate('roles')
+    const users = await UserP.findAll({
+      include: [RoleP, EntityP],
+      attributes: ['id', 'email', 'lastname', 'firstname', 'gender', 'isAdmin'],
+    })
+
     if (!users) return res.status(204).send('no user found')
     return res.status(200).send(users)
   } catch (err) {
@@ -311,15 +335,25 @@ module.exports.listUsers = async (req, res, next) => {
 
 module.exports.viewUser = async (req, res, next) => {
   const { id } = req.params
-  const errors = userValidator({ _id: id })
+  const errors = userValidator({ id: id })
   if (errors.length > 0) return next(new BadRequest(errors))
 
-  const user = await User.findOne({ _id: id })
-    .select(
-      '_id firstname lastname gender isAdmin isManager isTeacher childrenClasses roles email phone'
-    )
-    .populate('roles')
-    .populate('childrenClasses')
+  const user = await UserP.findOne({
+    where: { id },
+    include: [RoleP, EntityP],
+    attributes: [
+      'id',
+      'firstname',
+      'lastname',
+      'gender',
+      'isAdmin',
+      'isManager',
+      'isTeacher',
+      'email',
+      'phone',
+    ],
+  })
+
   if (!user) return next(new BadRequest('no user found with that id'))
 
   return res.status(200).send(user)
@@ -334,7 +368,7 @@ module.exports.userEmail = async (req, res, next) => {
   if (errors.length > 0) return next(new BadRequest(errors))
 
   try {
-    const user = await User.findOne(req.body)
+    const user = await UserP.findOne({ where: req.body })
     if (!user) return res.status(204).send('no user')
     return res.status(200).send('user exist')
   } catch (err) {
@@ -344,7 +378,7 @@ module.exports.userEmail = async (req, res, next) => {
 
 module.exports.verifyEmail = async (req, res, next) => {
   try {
-    const user = await User.findOne({ emailToken: req.query.token })
+    const user = await UserP.findOne({ where: { emailToken: req.query.token } })
     if (!user) {
       const errorMessage = `Le jeton n'est plus valide. Contactez le support technique`
       return res.redirect(
@@ -372,24 +406,22 @@ module.exports.userLosspass = async (req, res, next) => {
   if (!action) return next(new BadRequest('Please provide action'))
 
   if (action === 'losspass_checkemail') {
-    const user = await User.findOne({ email })
+    const user = await UserP.findOne({
+      where: { email },
+      include: [RoleP, EntityP],
+    })
     if (!user)
       return next(
         new BadRequest(" Cet email n'est pas connu dans notre base données")
       )
 
     const losspassToken = generateValidationToken(user)
+    user.losspassToken = losspassToken
 
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: user._id },
-      { losspassToken: losspassToken },
-      { returnOriginal: false }
-    )
-    if (!updatedUser) return next(new BadRequest('une erreur est survenue'))
-
-    const { transporter, options } = emailLosspass(updatedUser)
+    const { transporter, options } = emailLosspass(user)
 
     try {
+      await user.save()
       const mailToUser = await transporter.sendMail(options)
       if (mailToUser)
         return res.status(200).send({
@@ -418,10 +450,11 @@ module.exports.userLosspass = async (req, res, next) => {
       const salt = await bcrypt.genSalt(10)
       const hashedPassword = await bcrypt.hash(password, salt)
 
-      const modifiedUser = await User.findOneAndUpdate(
-        { _id: userId },
-        { password: hashedPassword, losspassToken: null },
-        { returnOriginal: false }
+      const modifiedUser = await UserP.update(
+        { password: hashedPassword },
+        {
+          where: { id: userId },
+        }
       )
 
       if (modifiedUser)

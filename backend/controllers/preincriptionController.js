@@ -1,8 +1,10 @@
 /* eslint-disable consistent-return */
 const fs = require('fs')
-const Entity = require('../models/Entity')
+const EntityP = require('../models/EntityP')
+const FileP = require('../models/FileP')
 const Preinscription = require('../models/Preinscription')
-const User = require('../models/User')
+const PreinscriptionP = require('../models/PreinscriptionP')
+const UserP = require('../models/UserP')
 const {
   emailPreincriptionToUser,
   emailPreincriptionToManager,
@@ -14,8 +16,23 @@ const {
   preinscriptionValidator,
 } = require('../validators/preinscriptionValidator')
 
+const includes = [
+  {
+    model: UserP,
+    attributes: ['email'],
+  },
+  {
+    model: EntityP,
+    attributes: ['name'],
+  },
+  {
+    model: FileP,
+    attributes: ['filename', 'filepath'],
+  },
+]
+
 module.exports.postPreinscription = async (req, res, next) => {
-  const { isAdmin, _id: userId } = req.user
+  const { isAdmin, id: userId } = req.user
   const { id: preinscriptionId, action } = req.query
   const filename = req.file ? req.file.filename : null
   const filepath = req.file ? req.file.path : null
@@ -35,22 +52,18 @@ module.exports.postPreinscription = async (req, res, next) => {
   }
 
   // check if user exits
-  const user = await User.findOne({ _id: userId })
+  const user = await UserP.findOne({ where: { id: userId } })
   if (!user)
     return next(
       deleteFile(filepath, new BadRequest("l'utilisateur n'existe pas"))
     )
 
-  const { childFirstname, classroomAlias } = req.body
+  const { childFirstname, childLastname, classroomAlias } = req.body
 
   if (action === 'create') {
-    req.body.parent = userId
-    if (filepath) {
-      req.body.filepath = filepath
-      req.body.filename = filename
-    }
+    req.body.userId = userId
 
-    if (!childFirstname || !classroomAlias)
+    if (!childFirstname || !childLastname || !classroomAlias)
       return next(
         deleteFile(
           filepath,
@@ -61,26 +74,45 @@ module.exports.postPreinscription = async (req, res, next) => {
       )
 
     // manage the classroom entity
-    const classroomEntity = await Entity.findOne({ alias: classroomAlias })
+    const classroomEntity = await EntityP.findOne({
+      where: { alias: classroomAlias },
+    })
 
     if (!classroomEntity)
       return next(
         deleteFile(filepath, new BadRequest('Mauvaie entité de classe'))
       )
-    req.body.classroom = classroomEntity._id
+    req.body.entityId = classroomEntity.id
     delete req.body.classroomAlias
     const preinscription = req.body
-    const newPreinscription = new Preinscription(preinscription)
+    const newPreinscription = PreinscriptionP.build(preinscription)
 
     try {
       const savedPreinscription = await newPreinscription.save()
 
-      if (savedPreinscription) {
-        const populated = await Preinscription.findOne({
-          _id: savedPreinscription._id,
+      // manage image
+      if (filepath) {
+        const savedFile = await FileP.create({
+          filename,
+          filepath,
+          filetype: 'file',
+          albumId: '7ad88801-9056-4395-86dd-fd2d041bef58',
         })
-          .populate('parent')
-          .populate('classroom')
+        await savedPreinscription.addFile(savedFile)
+      }
+
+      if (savedPreinscription) {
+        const populated = await PreinscriptionP.findOne({
+          where: {
+            id: savedPreinscription.id,
+          },
+          include: includes,
+        })
+        if (process.env.NODE_ENV !== 'production') {
+          return res
+            .status(200)
+            .send({ message: 'preinscription enregistréee', datas: populated })
+        }
         const { transporter: tspUser, options: optsUser } =
           emailPreincriptionToUser(populated)
         const { transporter: tspManager, options: optsManager } =
@@ -101,35 +133,37 @@ module.exports.postPreinscription = async (req, res, next) => {
   } else if (action === 'update' && preinscriptionId) {
     // case update
 
-    const currentPreinscription = await Preinscription.findOne({
-      _id: preinscriptionId,
+    const currentPreinscription = await PreinscriptionP.findOne({
+      where: { id: preinscriptionId },
     })
-    if (!currentPreinscription)
+    if (!currentPreinscription) {
+      if (req.file) {
+        fs.unlink(currentPreinscription.filepath, (err) => {
+          if (err) return next(err)
+        })
+      }
       return next(new BadRequest("Le chemin n'existe pas"))
-    if (req.file) {
-      fs.unlink(currentPreinscription.filepath, (err) => {
-        if (err) return next(err)
-      })
     }
+
+    const updates = {
+      childFirstname:
+        req.body.childFirstname || currentPreinscription.childFirstname,
+      childLastname:
+        req.body.childLastname || currentPreinscription.childLastname,
+      status: req.body.status || currentPreinscription.status,
+      verdict: req.body.verdict || currentPreinscription.verdict,
+    }
+
     try {
-      const updatedpreinscription = await Preinscription.findOneAndUpdate(
-        { _id: preinscriptionId },
-        {
-          childFirstname:
-            req.body.alias || currentPreinscription.childFirstname,
-          status: req.body.status || currentPreinscription.status,
-          verdict: req.body.verdict || currentPreinscription.verdict,
-        },
-        {
-          returnOriginal: false,
-        }
-      )
+      const updatedpreinscription = await PreinscriptionP.update(updates, {
+        where: { id: preinscriptionId },
+      })
       if (updatedpreinscription) {
         if (process.env.NODE_ENV === 'production') {
-          return res.status(200).send('Chemin correctement modifiée')
+          return res.status(200).send('preinscription correctement modifiée')
         }
         return res.status(200).send({
-          message: 'Chemin correctement modifié',
+          message: 'preinscription correctement modifié',
           data: updatedpreinscription,
         })
       }
@@ -138,21 +172,23 @@ module.exports.postPreinscription = async (req, res, next) => {
     }
   } else if (action === 'delete' && preinscriptionId) {
     try {
-      const deletedPreinscription = await Preinscription.findOneAndDelete({
-        _id: preinscriptionId,
+      const deletedPreinscription = await PreinscriptionP.destroy({
+        where: { id: preinscriptionId },
       })
 
       if (deletedPreinscription) {
         fs.unlink(deletedPreinscription.filepath, (err) => {
           if (err) return next(err)
         })
-        return res.status(200).send({ message: 'chemin correctement effacé' })
+        return res
+          .status(200)
+          .send({ message: 'preinscription correctement effacée' })
       }
     } catch (err) {
       return next(err)
     }
   } else {
-    return next(deleteFile(req.file.path, new BadRequest('params missing')))
+    return next(deleteFile(filepath, new BadRequest('params missing')))
   }
 }
 
@@ -163,14 +199,14 @@ module.exports.getPreinscriptions = async (req, res, next) => {
   }
 
   try {
-    if (req.query.id) {
-      req.query._id = req.query.id
-      delete req.query.id
-    }
-    const chemins = await Preinscription.find(req.query)
+    const preinscriptions = await Preinscription.find({
+      where: req.query,
+      include: includes,
+    })
 
-    if (chemins.length < 1) return next(new NotFound('Pas de chemin trouvé'))
-    return res.status(200).send(chemins)
+    if (preinscriptions.length < 1)
+      return next(new NotFound('Pas de chemin trouvé'))
+    return res.status(200).send(preinscriptions)
   } catch (err) {
     return next(err)
   }

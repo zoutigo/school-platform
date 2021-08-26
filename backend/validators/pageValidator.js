@@ -42,9 +42,9 @@ module.exports.pageValidator = (datas) => {
           alias: Joi.string().required().min(3).max(50),
         }).validate(data)
 
-      case 'text':
+      case 'content':
         return Joi.object({
-          text: htmlJoi.string().required().htmlStrip().min(3).max(50000),
+          content: htmlJoi.string().required().htmlStrip().min(3).max(50000),
         }).validate(data)
 
       default:

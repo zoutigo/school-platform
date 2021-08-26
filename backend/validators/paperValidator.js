@@ -23,13 +23,9 @@ const htmlJoi = Joi.extend((joi) => {
 module.exports.paperValidator = (datas) => {
   const validator = (data) => {
     switch (Object.keys(data)[0]) {
-      case '_id':
-        return Joi.object({
-          _id: Joi.objectId(),
-        }).validate(data)
       case 'id':
         return Joi.object({
-          id: Joi.objectId(),
+          id: Joi.number(),
         }).validate(data)
 
       case 'type':
@@ -48,9 +44,9 @@ module.exports.paperValidator = (datas) => {
             ),
         }).validate(data)
 
-      case 'clientEntityAlias':
+      case 'classe_fourniture':
         return Joi.object({
-          clientEntityAlias: Joi.string()
+          classe_fourniture: Joi.string()
             .required()
             .valid(
               'ps',

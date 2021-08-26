@@ -12,9 +12,9 @@ module.exports.roleValidator = (datas) => {
           _id: Joi.objectId(),
         }).validate(data)
 
-      case 'entity':
+      case 'entityId':
         return Joi.object({
-          entity: Joi.objectId(),
+          entityId: Joi.number(),
         }).validate(data)
 
       case 'name':
