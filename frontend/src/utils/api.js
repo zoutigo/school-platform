@@ -39,10 +39,9 @@ export const apiLogin = async (datas) => {
 
 export const apiFecthUserDatas = async (id) => {
   const url = `${PREFIX}/users/${id}`
+  const { data } = await axios.get(url)
 
-  const result = await fetch(url).then((res) => res)
-
-  return result.json()
+  return data
 }
 
 export const apiFecthEntity = async (param) => {
@@ -194,7 +193,6 @@ export const apiPostChemin = async ({ id, body, options, action, token }) => {
 export const apiFetchChemin = async () => {
   const URL = `${PREFIX}/chemins`
   const { data } = await axios.get(URL)
-
   return data
 }
 

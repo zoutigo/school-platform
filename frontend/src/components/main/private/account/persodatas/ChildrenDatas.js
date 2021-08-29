@@ -15,7 +15,7 @@ function ChildrenDatas({ childrenClasses, toggle, setToggle, setForm }) {
     if (!classrooms || classrooms.length < 1)
       return <StyledPersoDataValueTypo>{text}</StyledPersoDataValueTypo>
     return classrooms.map((classroom) => (
-      <div key={classroom._id}>
+      <div key={classroom.id}>
         <StyledPersoDataValueTypo>{classroom.name}</StyledPersoDataValueTypo>
       </div>
     ))

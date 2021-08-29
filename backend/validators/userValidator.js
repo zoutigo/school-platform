@@ -66,9 +66,9 @@ module.exports.userValidator = (datas) => {
           lastname: Joi.string().required().min(3).max(30),
         }).validate(data)
 
-      case 'entitiesIds':
+      case 'childrenClasses':
         return Joi.object({
-          entitiesIds: Joi.array().items(Joi.number().required()),
+          childrenClasses: Joi.array().items(Joi.string().required()),
         }).validate(data)
 
       case 'roles':

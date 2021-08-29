@@ -58,7 +58,7 @@ function PaperNativeList({
           }
           return (
             <PaperItem
-              key={paperItem._id}
+              key={paperItem.id}
               paper={paper}
               setShowPaperForm={setShowPaperForm}
               setShowPaperList={setShowPaperList}
@@ -93,7 +93,7 @@ PaperNativeList.propTypes = {
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
   currentDocument: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
   }),
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.func.isRequired,

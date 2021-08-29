@@ -5,6 +5,8 @@ const {
   postUpdateAlbums,
   postUpdateRoles,
   postUpdateUsers,
+  postUpdateChemins,
+  postUpdatePapers,
 } = require('../controllers/updateController')
 
 const { tokenVerify } = require('../utils/tokenverify')
@@ -22,6 +24,12 @@ const { tokenVerify } = require('../utils/tokenverify')
 // router.post('/roles', postUpdateRoles)
 
 // Users
-router.post('/users', postUpdateUsers)
+// router.post('/users', postUpdateUsers)
+
+// Users
+// router.post('/chemins', postUpdateChemins)
+
+// Papers
+router.post('/papers', postUpdatePapers)
 
 module.exports = router

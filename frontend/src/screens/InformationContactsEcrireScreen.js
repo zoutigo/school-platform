@@ -97,10 +97,12 @@ function InformationContactsEcrireScreen() {
         Votre compte doit avoir été vérifié par mail.
       </p>
       <p style={{ color: 'green', fontWeight: 'bold' }}>
-        <Link to="/login">Connectez vous maintenant.</Link>
+        <Link to="/private/identification/login">
+          Connectez vous maintenant.
+        </Link>
       </p>
       <p style={{ color: 'red', fontWeight: 'bold' }}>
-        <Link to="/register">Créez votre compte :</Link>
+        <Link to="/private/identification/register">Créez votre compte :</Link>
         <br />
         <strong>Ca ne prend que une minute.</strong>
       </p>

@@ -88,7 +88,7 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
     }
   }, [])
 
-  if (!isAllowedToChange) return <Redirect to="/login" />
+  if (!isAllowedToChange) return <Redirect to="/private/identification/login" />
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
       <Grid item container justify="center">

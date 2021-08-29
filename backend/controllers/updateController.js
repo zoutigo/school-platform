@@ -2,6 +2,7 @@ const Album = require('../models/Album')
 const AlbumImage = require('../models/AlbumImage')
 const AlbumP = require('../models/AlbumP')
 const Entity = require('../models/Entity')
+const Paper = require('../models/Paper')
 const EntityP = require('../models/EntityP')
 const FileP = require('../models/FileP')
 const PageP = require('../models/PageP')
@@ -9,7 +10,18 @@ const Role = require('../models/Role')
 const RoleP = require('../models/RoleP')
 const User = require('../models/User')
 const UserP = require('../models/UserP')
+const Chemin = require('../models/Chemin')
 const { BadRequest } = require('../utils/errors')
+const {
+  adminEntity,
+  cardsAlbum,
+  papersAlbumDatas,
+  secretariatEntityDatas,
+} = require('../constants/mainsrows')
+const CardP = require('../models/CardP')
+const PaperP = require('../models/PaperP')
+
+const today = new Date().getTime()
 
 module.exports.postUpdatePages = async (req, res, next) => {
   const [{ content }] = await PageP.findAll({ where: { id: 2 } })
@@ -206,4 +218,135 @@ module.exports.postUpdateUsers = async (req, res, next) => {
   } catch (err) {
     return next(err)
   }
+}
+
+module.exports.postUpdateChemins = async (req, res, next) => {
+  try {
+    const chemins = await Chemin.find()
+    const [administrationEntity] = await EntityP.findOrCreate({
+      where: adminEntity,
+    })
+
+    const [cardsalbum] = await AlbumP.findOrCreate({
+      where: { ...cardsAlbum, entityId: administrationEntity.id },
+    })
+
+    chemins.forEach(async (chemin) => {
+      const { alias, path, description, filepath, filename } = chemin
+      const [card] = await CardP.findOrCreate({
+        where: { alias, path, description },
+      })
+      const [image] = await FileP.findOrCreate({
+        where: {
+          filename,
+          filepath,
+          filetype: 'image',
+          albumId: cardsalbum.id,
+        },
+      })
+
+      await card.addFile(image)
+    })
+
+    const cards = await CardP.findAll({ include: [FileP] })
+
+    return res.status(200).send(cards)
+  } catch (err) {
+    return next(err)
+  }
+}
+
+module.exports.postUpdatePapers = async (req, res, next) => {
+  const papers = await Paper.find()
+  const entities = await Entity.find()
+  const Users = await User.find()
+  const users = await UserP.findAll()
+  const [administrationEntity] = await EntityP.findOrCreate({
+    where: adminEntity,
+  })
+  const [papersAlbum] = await AlbumP.findOrCreate({
+    where: { ...papersAlbumDatas, entityId: administrationEntity.id },
+  })
+  const [secretariatEntity] = await EntityP.findOrCreate({
+    where: secretariatEntityDatas,
+  })
+
+  const admin = await UserP.findOne({
+    where: { isAdmin: true },
+  })
+
+  papers.forEach(async (paper) => {
+    const {
+      author,
+      entity,
+      date,
+      filename,
+      filepath,
+      type,
+      enddate,
+      startdate,
+      title,
+      isPrivate,
+      content,
+      clientEntity,
+    } = paper
+
+    const FournitureEntity = clientEntity
+      ? entities.find((entiti) => entiti._id === clientEntity)
+      : null
+
+    const paperEntity = entities.find(
+      (entit) => JSON.stringify(entit._id) === JSON.stringify(entity)
+    )
+    const newPaperEntity = await EntityP.findOne({
+      where: { alias: paperEntity.alias },
+    })
+
+    const Author = Users.find(
+      (boy) => JSON.stringify(boy._id) === JSON.stringify(author)
+    )
+
+    const newAuthor = Author
+      ? users.find((usere) => usere.email === Author.email)
+      : null
+
+    const newPaper = {
+      type,
+      title,
+      content: content || '<div>Nocontent</div>',
+      classe_fourniture: FournitureEntity ? FournitureEntity.name : null,
+      isPrivate: isPrivate || false,
+      date: (date || today).toString(),
+      startdate: (startdate || today).toString(),
+      enddate: (enddate || today).toString(),
+      userId: newAuthor ? newAuthor.id : admin.id,
+      entityId:
+        entity && newPaperEntity ? newPaperEntity.id : secretariatEntity.id,
+    }
+
+    let fileDatas = null
+
+    if (filename && filepath) {
+      fileDatas = {
+        filename,
+        filepath,
+        filetype: 'file',
+        albumId: papersAlbum.id,
+      }
+      const [file] = await FileP.findOrCreate({ where: fileDatas })
+      const [brandPaper] = await PaperP.findOrCreate({ where: newPaper })
+
+      if (file && brandPaper) {
+        brandPaper.addFile(file)
+      }
+    } else {
+      await PaperP.findOrCreate({ where: newPaper })
+    }
+  })
+
+  const Papers = await PaperP.findAll({
+    include: [FileP],
+  })
+
+  res.status(200).send(Papers)
 }

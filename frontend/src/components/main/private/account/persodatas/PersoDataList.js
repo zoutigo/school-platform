@@ -23,15 +23,15 @@ function PersoDataList({
 }) {
   const history = useHistory()
   const {
-    User: { _id },
+    User: { id },
   } = useSelector((state) => state.user)
-  const queryKey = [`datas-${_id}`]
+  const queryKey = [`datas-${id}`]
 
   const { credentialsform, rolesform, passwordform, childrenform, gradeform } =
     form
 
   const { isLoading, isError, error, data } = useQuery(queryKey, () =>
-    apiFecthUserDatas(_id)
+    apiFecthUserDatas(id)
   )
 
   useEffect(() => {
@@ -50,7 +50,6 @@ function PersoDataList({
       })
     }
     if (data) {
-      console.log('datas:', data)
       setData(data)
       setFetchAlert({
         openAlert: false,
@@ -58,7 +57,7 @@ function PersoDataList({
         alertText: '',
       })
     } else {
-      history.push('/login')
+      history.push('/private/identification/login')
     }
     return () => {
       setFetchAlert({
@@ -93,7 +92,7 @@ function PersoDataList({
       </StyledPersoDataCollapse>
       <StyledPersoDataCollapse in={toggle === 'list' || childrenform}>
         <ChildrenDatas
-          childrenClasses={data ? data.childrenClasses : []}
+          childrenClasses={data ? data.entities : []}
           toggle={toggle}
           setForm={setForm}
           setToggle={setToggle}

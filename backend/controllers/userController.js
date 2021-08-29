@@ -1,8 +1,7 @@
 /* eslint-disable consistent-return */
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
-const Entity = require('../models/Entity')
-const User = require('../models/User')
+
 const { emailConfirmMail, emailLosspass } = require('../service/mailer')
 const { Unauthorized, BadRequest, TokenInvalid } = require('../utils/errors')
 const { generateValidationToken } = require('../utils/generateValidationToken')
@@ -58,19 +57,16 @@ module.exports.registerUser = async (req, res, next) => {
     const newUser = await UserP.create(user)
     if (!newUser) return next(new BadRequest('une erreur est survenue'))
 
-    if (process.env.NODE_ENV === 'development')
-      return res
-        .status(200)
-        .send({ message: 'compte correctement crée', data: newUser })
+    // if (process.env.NODE_ENV === 'development')
+    //   return res.status(201).send({ message: 'compte correctement crée' })
 
+    // if (process.env.NODE_ENV === 'test')
+    //   return res
+    //     .status(201)
+    //     .send(
+    //       'Votre compte est correctement crée. Un mail de validation vous a été adressé'
+    //     )
     const { transporter, options } = emailConfirmMail(newUser)
-
-    if (process.env.NODE_ENV === 'test')
-      return res
-        .status(201)
-        .send(
-          'Votre compte est correctement crée. Un mail de validation vous a été adressé'
-        )
 
     await transporter.sendMail(options, (error, info) => {
       if (error) {
@@ -155,13 +151,24 @@ module.exports.updateUser = async (req, res, next) => {
     newPasswordConfirm,
     role,
     phone,
-    entitiesIds,
+    childrenClasses,
   } = req.body
 
-  if (entitiesIds) {
+  if (childrenClasses) {
     if (isOwner) {
+      const entities = await EntityP.findAll({
+        attributes: ['id', 'name', 'alias'],
+      })
+
+      const newEntitiesIds = childrenClasses.map((classroomAlias) => {
+        const { id: classroomEntityId } = entities.find(
+          (entity) => classroomAlias === entity.alias
+        )
+        return classroomEntityId
+      })
+
       if (
-        JSON.stringify(entitiesIds) !== JSON.stringify(toUpdateuser.entities)
+        JSON.stringify(newEntitiesIds) !== JSON.stringify(toUpdateuser.entities)
       ) {
         // destroy previous associations
         const previousEntities = toUpdateuser.entities
@@ -175,7 +182,7 @@ module.exports.updateUser = async (req, res, next) => {
         }
 
         // create new associations
-        entitiesIds.forEach(async (newEntityId) => {
+        newEntitiesIds.forEach(async (newEntityId) => {
           const newEntity = await EntityP.findOne({
             where: { id: newEntityId },
           })
@@ -297,22 +304,32 @@ module.exports.updateUser = async (req, res, next) => {
 
   // insersion in database
 
-  if (Object.keys(newUserDatas).length < 1)
-    return next(new BadRequest('something wrong happened'))
+  // if (Object.keys(newUserDatas).length < 1)
+  //   return next(new BadRequest('something wrong happened'))
   try {
     const savedModifiedUser = await toUpdateuser.save()
 
     if (!savedModifiedUser) return next()
+
+    const userId = isOwner ? toUpdateId : requesterId
+    const user = await UserP.findOne({
+      where: { id: userId },
+      include: [
+        {
+          model: EntityP,
+          attributes: ['id', 'name', 'alias'],
+        },
+        {
+          model: RoleP,
+          attributes: ['id', 'name'],
+        },
+      ],
+    })
     const message = { message: 'Modification correctement effectuée' }
-    if (isOwner)
-      return res
-        .status(200)
-        .header('x-access-token', generateToken(savedModifiedUser))
-        .send(message)
 
     return res
       .status(200)
-      .header('x-access-token', generateToken(req.user))
+      .header('x-access-token', generateToken(user))
       .send(message)
   } catch (err) {
     return next(err)

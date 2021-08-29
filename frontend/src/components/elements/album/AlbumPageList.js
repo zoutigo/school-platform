@@ -50,7 +50,7 @@ function AlbumPageList({
   const [images, setImages] = useState([])
 
   useEffect(() => {
-    setImages(currentAlbum ? currentAlbum.pictures : null)
+    setImages(currentAlbum ? currentAlbum.files : null)
     return () => {
       setImages([])
     }
@@ -66,7 +66,7 @@ function AlbumPageList({
             image={image}
             queryKey={queryKey}
             entityAlias={entityAlias}
-            albumId={currentAlbum ? currentAlbum._id : null}
+            albumId={currentAlbum ? currentAlbum.id : null}
           />
         ))}
     </StyledGrid>
@@ -83,8 +83,8 @@ AlbumPageList.propTypes = {
   queryParams: PropTypes.string.isRequired,
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
   currentAlbum: PropTypes.shape({
-    _id: PropTypes.string,
-    pictures: PropTypes.arrayOf(
+    id: PropTypes.string,
+    files: PropTypes.arrayOf(
       PropTypes.shape({
         filename: PropTypes.string,
         filepath: PropTypes.string,

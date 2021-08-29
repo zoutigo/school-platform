@@ -131,7 +131,7 @@ function PaperFormPDF({
 
     try {
       await mutateAsync({
-        id: currentDocument ? currentDocument._id : null,
+        id: currentDocument ? currentDocument.id : null,
         action: formAction,
         body: await finalDatas(paper.paperType),
         Token: Token,
@@ -214,7 +214,7 @@ function PaperFormPDF({
           helperText="Les dates passées ne sont pas autorisées"
           initialDate={
             formAction === 'update'
-              ? new Date(currentDocument.startdate)
+              ? new Date(Number(currentDocument.startdate))
               : new Date()
           }
         />
@@ -227,7 +227,7 @@ function PaperFormPDF({
             helperText="Supérieure à la date de début"
             initialDate={
               formAction === 'update'
-                ? new Date(currentDocument.enddate)
+                ? new Date(Number(currentDocument.enddate))
                 : new Date()
             }
           />
@@ -305,22 +305,22 @@ PaperFormPDF.propTypes = {
 
   formAction: PropTypes.string.isRequired,
   currentDocument: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
     isPrivate: PropTypes.bool,
     text: PropTypes.string,
     title: PropTypes.string,
     classe_fourniture: PropTypes.string,
     entity: PropTypes.shape({
-      _id: PropTypes.string,
+      id: PropTypes.string,
     }),
     createdat: PropTypes.number,
     date: PropTypes.number,
     startdate: PropTypes.number,
     enddate: PropTypes.number,
-    clientEntity: PropTypes.shape({
-      name: PropTypes.string,
-      alias: PropTypes.string,
-    }),
+    // clientEntity: PropTypes.shape({
+    //   name: PropTypes.string,
+    //   alias: PropTypes.string,
+    // }),
   }),
   handleBack: PropTypes.func.isRequired,
   isPrivateDatas: PropTypes.shape({

@@ -7,6 +7,8 @@ const EntityP = require('../models/EntityP')
 const UserP = require('../models/UserP')
 const PaperP = require('../models/PaperP')
 const FileP = require('../models/FileP')
+const AlbumP = require('../models/AlbumP')
+const { adminEntity, papersAlbumDatas } = require('../constants/mainsrows')
 
 require('dotenv').config()
 
@@ -77,6 +79,13 @@ module.exports.postPaper = async (req, res, next) => {
       deleteFile(filepath, new BadRequest("l'utilisateur n'existe pas"))
     )
 
+  const [administrationEntity] = await EntityP.findOrCreate({
+    where: adminEntity,
+  })
+  const [papersAlbum] = await AlbumP.findOrCreate({
+    where: { ...papersAlbumDatas, entityId: administrationEntity.id },
+  })
+
   if (action === 'create') {
     // const paper = { ...req.body }
     // eslint-disable-next-line prefer-object-spread
@@ -113,12 +122,13 @@ module.exports.postPaper = async (req, res, next) => {
 
     try {
       const savedPaper = await PaperP.create(paper)
+
       if (filepath) {
         const savedFile = await FileP.create({
           filename,
           filepath,
           filetype: 'file',
-          albumId: 'b8d5b564-9fe0-4fec-9543-f4110c3cc72a',
+          albumId: papersAlbum.id,
         })
         await savedPaper.addFile(savedFile)
       }
@@ -142,17 +152,44 @@ module.exports.postPaper = async (req, res, next) => {
       return next(deleteFile(filepath, new BadRequest("L'entité nexiste pas")))
 
     if (req.file) {
-      fs.unlink(currentPaper.files.filepath, async (err) => {
-        const toRemoveFile = await FileP.findOne({
-          where: { filepath: currentPaper.files.filepath },
+      // delete previous file
+      // add new file
+      currentPaper.files.forEach(async (fichier) => {
+        fs.unlink(fichier.filepath, async (err) => {
+          if (err) return next(err)
+          const toRemoveFile = await FileP.findOne({
+            where: { filepath: fichier.filepath },
+          })
+          await currentPaper.removeFile(toRemoveFile)
         })
-        await currentPaper.removeFile(toRemoveFile)
-        if (err) return next(err)
       })
-      req.body.filename = filename
-      req.body.filepath = filepath
+
+      // fs.unlink(currentPaper.files.filepath, async (err) => {
+      //   const toRemoveFile = await FileP.findOne({
+      //     where: { filepath: currentPaper.files.filepath },
+      //   })
+      //   await currentPaper.removeFile(toRemoveFile)
+      //   if (err) return next(err)
+      // })
+
+      // req.body.filename = filename
+      // req.body.filepath = filepath
     }
     try {
+      // add files
+      if (filepath) {
+        const modifiedPaper = await PaperP.findOne({
+          where: { id: paperId },
+          include: [FileP],
+        })
+        const savedFile = await FileP.create({
+          filename,
+          filepath,
+          filetype: 'file',
+          albumId: papersAlbum.id,
+        })
+        await modifiedPaper.addFile(savedFile)
+      }
       const updatedPaper = await PaperP.update(req.body, {
         where: { id: paperId },
       })
@@ -175,7 +212,6 @@ module.exports.postPaper = async (req, res, next) => {
         where: { id: paperId },
         include: [FileP],
       })
-
       const { filepath: toDeletePath } = toDeletePaper
 
       if (toDeletePath) {

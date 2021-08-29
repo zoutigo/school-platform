@@ -34,10 +34,10 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
   const theme = useTheme()
   const dispatch = useDispatch()
   const {
-    User: { _id },
+    User: { id },
     Token,
   } = useSelector((state) => state.user)
-  const queryKey = [`datas-${_id}`]
+  const queryKey = [`datas-${id}`]
   const { mutateAsync } = useMutation(
     apiUpdateUser,
     useUpdateMutationOptions(queryKey)
@@ -108,7 +108,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
 
     try {
       await mutateAsync({
-        id: _id,
+        id: id,
         action: 'update',
         options: options,
         body: finalDatas(),
@@ -140,11 +140,18 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
         }
       })
     } catch (err) {
+      console.log('Err:', err)
+      console.log('ErrResponse:', err.response)
+      console.log('ErrMessage:', err.message)
+      console.log('ErrRespoData:', err.response.data)
+      console.log('ErrRespoDataMessage:', err.response.data)
+      const message = err.response.data.message || err.message
+
       dispatch(
         setPrivateAccountMutateAlert({
           openAlert: true,
           severity: 'error',
-          alertText: err.response.data.message,
+          alertText: message,
         })
       )
 
@@ -152,8 +159,8 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
     }
   }
 
-  const initialClassrooms = data.childrenClasses
-    ? data.childrenClasses.map((classroom) => {
+  const initialClassrooms = data.entities
+    ? data.entities.map((classroom) => {
         const { name: entityname, alias: entityalias } = classroom
         return {
           label: entityname,
@@ -283,7 +290,7 @@ PersoDataForm.propTypes = {
     lastname: PropTypes.string,
     firstname: PropTypes.string,
     gender: PropTypes.string,
-    childrenClasses: PropTypes.arrayOf(
+    entities: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string,
         alias: PropTypes.string,

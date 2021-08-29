@@ -370,14 +370,7 @@ const routesComponents = [
     path: '/apelogec/ogec/albums',
     component: Album,
   },
-  // {
-  //   path: '/login',
-  //   component: LoginScreen,
-  // },
-  // {
-  //   path: '/register',
-  //   component: RegisterScreen,
-  // },
+
   {
     path: '/private',
     component: PrivateScreen,

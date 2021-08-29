@@ -27,9 +27,9 @@ function PaperItemHeader({
               {`${paperItem.clientEntity.name}  `}
             </StyledTypo>
             <Typography variant="caption">
-              {`Année Scolaire ${moment(paperItem.startdate).format(
+              {`Année Scolaire ${moment(Number(paperItem.startdate)).format(
                 'YYYY'
-              )}-${moment(paperItem.enddate).format('YYYY')}`}
+              )}-${moment(Number(paperItem.enddate)).format('YYYY')}`}
             </Typography>
           </>
         )
@@ -98,7 +98,9 @@ function PaperItemHeader({
             <>
               <Typography variant="caption">
                 Date: &nbsp;&nbsp;
-                {moment(paperItem ? paperItem.date : null).format('DD/MM/YYYY')}
+                {moment(Number(paperItem ? paperItem.date : null)).format(
+                  'DD/MM/YYYY'
+                )}
               </Typography>
               &nbsp;&nbsp;&nbsp;&nbsp;
               <Typography variant="caption">
@@ -108,7 +110,9 @@ function PaperItemHeader({
           )}
           {paper.paperType === 'activite' && (
             <Typography variant="caption">
-              {moment(paperItem ? paperItem.date : null).format('DD/MM/YYYY')}
+              {moment(Number(paperItem ? paperItem.date : null)).format(
+                'DD/MM/YYYY'
+              )}
             </Typography>
           )}
         </Box>

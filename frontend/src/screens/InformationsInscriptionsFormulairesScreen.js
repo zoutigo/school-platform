@@ -108,7 +108,7 @@ function InformationsInscriptionsFormulairesScreen() {
             severity: 'error',
           })
         )
-        history.push('/login')
+        history.push('/private/identification/login')
       }
       setAlert({
         openAlert: true,
@@ -142,13 +142,13 @@ function InformationsInscriptionsFormulairesScreen() {
         aurons besoin de vos coordonnées.
       </p>
       <p>
-        <Link to="/login">
+        <Link to="/private/identification/login">
           Connectez vous. Ou assurez verifiez le mail de validation qui vous a
           été adressé.
         </Link>
       </p>
       <p>
-        <Link to="/register">Créez votre compte :</Link>{' '}
+        <Link to="/private/identification/register">Créez votre compte :</Link>{' '}
         <strong>Ca ne prend que une minute.</strong>
       </p>
     </div>

@@ -39,7 +39,7 @@ function AlbumList({
       {filteredAlbums() &&
         filteredAlbums().map((album) => (
           <AlbumCard
-            key={album._id}
+            key={album.id}
             album={album}
             setCurrentAlbum={setCurrentAlbum}
             setFormAction={setFormAction}

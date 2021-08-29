@@ -150,10 +150,11 @@ module.exports.getChemins = async (req, res, next) => {
   try {
     const chemins = await CardP.findAll({
       where: req.query,
-      attributes: ['id', 'path'],
+      attributes: ['id', 'path', 'description', 'alias'],
       include: [
         {
           model: FileP,
+          attributes: ['filename', 'filepath'],
         },
       ],
     })

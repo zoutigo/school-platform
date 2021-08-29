@@ -1,5 +1,6 @@
 const fs = require('fs')
 const Album = require('../models/Album')
+const AlbumImage = require('../models/AlbumImage')
 const AlbumP = require('../models/AlbumP')
 const Entity = require('../models/Entity')
 const EntityP = require('../models/EntityP')
@@ -147,18 +148,31 @@ module.exports.postAlbum = async (req, res, next) => {
         where: { id: albumId },
         include: albumIncludes,
       })
+
       if (!toDeleteAlbum)
         return res.status(200).send('album avait deja été supprimé')
-
       const deletionImageErrors = []
-      toDeleteAlbum.files.forEach((file) => {
-        fs.unlink(file.filepath, (err) => {
-          if (err) deletionImageErrors.push(err)
+
+      if (toDeleteAlbum.files && toDeleteAlbum.files > 0) {
+        toDeleteAlbum.files.forEach((file) => {
+          fs.unlink(file.filepath, async (err) => {
+            if (err) {
+              deletionImageErrors.push(err)
+            }
+            const toDeleteFile = await FileP.findOne({
+              where: { filepath: file.filepath },
+            })
+            await toDeleteAlbum.removeFile(toDeleteFile)
+          })
         })
-      })
+      }
 
       if (deletionImageErrors.length > 0)
         return next(deletionImageErrors.join())
+
+      // const deletedAlbum = await AlbumP.destroy({
+      //   where: { id: albumId },
+      // })
 
       const deletedAlbum = await toDeleteAlbum.destroy()
       if (deletedAlbum)
@@ -189,7 +203,7 @@ module.exports.getAlbums = async (req, res, next) => {
   try {
     const albums = await AlbumP.findAll({
       where: req.query,
-      attributes: ['id', 'name', 'alias'],
+      attributes: ['id', 'name', 'alias', 'description'],
       limit: 10,
       include: albumIncludes,
     })
@@ -208,7 +222,7 @@ module.exports.postAlbumImages = async (req, res, next) => {
   const { isAdmin, isManager, isModerator, roles } = req.user
   const { id: albumId, action, entityAlias, filepath } = req.query
 
-  if (action !== 'delete' && (!entityAlias || !albumId))
+  if (action !== 'delete' && !entityAlias)
     return next(new BadRequest('params missing: entityAlias, albumId, action '))
 
   const entity =
@@ -247,11 +261,18 @@ module.exports.postAlbumImages = async (req, res, next) => {
   if ((!req.files || req.files.length < 1) && action !== 'delete')
     return next(new BadRequest('les images ne sont pas telechargées'))
 
+  console.log('albumId:', albumId)
+  if (albumId === null || albumId === undefined) {
+    return next(deleteFiles(req.files, new BadRequest('albulId missing')))
+  }
+
   // check if album exist
-  const album = await AlbumP.findOne({
-    where: { id: albumId },
-    includes: albumIncludes,
-  })
+  const album = albumId
+    ? await AlbumP.findOne({
+        where: { id: albumId },
+        includes: albumIncludes,
+      })
+    : null
 
   if (!album)
     return next(deleteFiles(req.files, new BadRequest('album non identifié')))
@@ -272,18 +293,23 @@ module.exports.postAlbumImages = async (req, res, next) => {
     } catch (err) {
       return next(deleteFiles(req.files, new BadRequest(err)))
     }
-  } else if (action === 'delete') {
+  } else if (action === 'delete' && albumId && filepath) {
     try {
-      const deletedFile = await FileP.destroy({
-        where: { albumId: albumId, filepath },
+      const deleteErrors = []
+
+      fs.unlink(filepath, async (err) => {
+        if (err) {
+          deleteErrors.push(err)
+        } else {
+          await FileP.destroy({
+            where: { filepath, albumId },
+          })
+        }
       })
 
-      if (deletedFile) {
-        fs.unlink(filepath, async (err) => {
-          if (err) return err
-        })
-        return res.status(200).send({ message: 'image supprimée' })
-      }
+      if (deleteErrors.length > 0) return next(deleteErrors.join())
+
+      return res.status(200).send({ message: 'image supprimée' })
     } catch (err) {
       return next(new BadRequest(err))
     }

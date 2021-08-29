@@ -5,25 +5,27 @@ import { StyledPaperBody } from '../elements/styled'
 import PaperPdfHandler from './PaperPdfHandler'
 import PageScreen from '../elements/reactpage/PageScreen'
 
-function PaperItemBody({ text, content, file, paper: { paperFormat } }) {
+function PaperItemBody({ content, files, paper: { paperFormat } }) {
   return (
     <StyledPaperBody className="react-editor-read">
-      {paperFormat === 'pdf' && <PaperPdfHandler file={file} />}
+      {paperFormat === 'pdf' && <PaperPdfHandler files={files} />}
 
       {content && <PageScreen content={content} />}
     </StyledPaperBody>
   )
 }
 PaperItemBody.defaultProps = {
-  text: null,
-  file: null,
+  files: [],
   content: null,
 }
 
 PaperItemBody.propTypes = {
-  text: PropTypes.string,
-
-  file: PropTypes.string,
+  files: PropTypes.arrayOf(
+    PropTypes.shape({
+      filename: PropTypes.string,
+      filepath: PropTypes.string,
+    })
+  ),
   content: PropTypes.string,
   paper: PropTypes.shape({
     paperFormat: PropTypes.string,

@@ -8,7 +8,7 @@ function InformationsActualitesAgendaScreen() {
   const isAllowedToChange = moderatorLevel
   const paperType = 'event'
   const paperFormat = 'html'
-  const entityAlias = 'cantine'
+  const entityAlias = null
   const paperName = `Agenda ${entityAlias}`
   const queryKey = [paperName]
   const queryParams = `entityAlias=${entityAlias}`

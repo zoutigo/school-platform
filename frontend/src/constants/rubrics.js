@@ -890,7 +890,7 @@ const rubricss = [
     icon: <AccountCircleIcon />,
     alias: 'login',
     route: {
-      path: '/login',
+      path: '/private/identification/login',
       exact: true,
       component: LoginScreen,
       access: '',
@@ -902,7 +902,7 @@ const rubricss = [
     icon: <AccountCircleIcon />,
     alias: 'register',
     route: {
-      path: '/register',
+      path: '/private/identification/register',
       exact: true,
       component: RegisterScreen,
       access: '',

@@ -64,7 +64,7 @@ module.exports.postEvent = async (req, res, next) => {
         if (process.env.NODE_ENV === 'production') {
           return res.status(200).send('Evènement modifié')
         }
-        return res.status(200).send(updatedEvent)
+        return res.status(200).send({ message: 'evenement modifié' })
       }
     } catch (err) {
       return next(err)
@@ -92,14 +92,15 @@ module.exports.getEvents = async (req, res, next) => {
   }
 
   // check the entity
-  if (req.query.entityAlias) {
+  if (req.query.entityAlias && req.query.entityAlias !== 'null') {
     const checkedEntity = await EntityP.findOne({
       where: { alias: req.query.entityAlias },
     })
     if (!checkedEntity) return next(new BadRequest('mauvaise entité'))
     req.query.entityId = checkedEntity.id
-    delete req.query.entityAlias
   }
+
+  delete req.query.entityAlias
 
   try {
     const events = await EventP.findAll({

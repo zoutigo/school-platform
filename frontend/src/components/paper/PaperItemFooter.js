@@ -21,11 +21,11 @@ function PaperItemFooter({
   paper,
   setShowPaperForm,
   setShowPaperList,
-  file,
+  files,
   setFormAction,
   setShowSearch,
 }) {
-  const { _id: paperId } = paperItem
+  const { id: paperId } = paperItem
   const { isAllowedToChange, queryKey, poster } = paper
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -78,20 +78,23 @@ function PaperItemFooter({
       />
 
       <ButtonGroup>
-        {file && (
-          <Tooltip title="Telecharger" placement="bottom">
-            <StyledIconButton bgcolor={theme.palette.secondary.main}>
-              <a
-                href={file}
-                download
-                style={{ color: 'inherit' }}
-                target="blank"
-              >
-                <GetAppIcon style={{ fontSize: 'inherit', color: 'inherit' }} />
-              </a>
-            </StyledIconButton>
-          </Tooltip>
-        )}
+        {files &&
+          files.map((file) => (
+            <Tooltip title="Telecharger" placement="bottom">
+              <StyledIconButton bgcolor={theme.palette.secondary.main}>
+                <a
+                  href={file}
+                  download
+                  style={{ color: 'inherit' }}
+                  target="blank"
+                >
+                  <GetAppIcon
+                    style={{ fontSize: 'inherit', color: 'inherit' }}
+                  />
+                </a>
+              </StyledIconButton>
+            </Tooltip>
+          ))}
         {isAllowedToChange && (
           <Tooltip title="Modifier" placement="bottom">
             <StyledIconButton
@@ -120,7 +123,7 @@ function PaperItemFooter({
 }
 
 PaperItemFooter.defaultProps = {
-  file: null,
+  files: null,
 }
 
 PaperItemFooter.propTypes = {
@@ -131,7 +134,7 @@ PaperItemFooter.propTypes = {
     paperFormat: PropTypes.string.isRequired,
     paperType: PropTypes.string.isRequired,
     entityAlias: PropTypes.shape({
-      _id: PropTypes.string,
+      id: PropTypes.string,
     }),
     poster: PropTypes.func,
     isAllowedToChange: PropTypes.bool.isRequired,
@@ -142,14 +145,19 @@ PaperItemFooter.propTypes = {
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.func.isRequired,
   paperItem: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
     text: PropTypes.string,
     title: PropTypes.string,
     entity: PropTypes.shape({
-      _id: PropTypes.string,
+      id: PropTypes.string,
     }),
     createdat: PropTypes.number,
   }).isRequired,
-  file: PropTypes.string,
+  files: PropTypes.arrayOf(
+    PropTypes.shape({
+      filename: PropTypes.string,
+      filepath: PropTypes.string,
+    })
+  ),
 }
 export default PaperItemFooter

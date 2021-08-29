@@ -62,7 +62,6 @@ function PaperFormEvent({
 
   const onSubmit = async (datas) => {
     const { title, content, date, place, isPrivate } = datas
-    console.log('content', content)
     const finalDatas = {
       title,
       date: date.valueOf(),
@@ -74,7 +73,7 @@ function PaperFormEvent({
 
     try {
       await mutateAsync({
-        id: currentDocument ? currentDocument._id : null,
+        id: currentDocument ? currentDocument.id : null,
         action: formAction,
         Token: Token,
         body: finalDatas,
@@ -129,7 +128,7 @@ function PaperFormEvent({
           format="dddd Do MMMM yyyy"
           initialDate={
             currentDocument && formAction === 'update'
-              ? new Date(currentDocument.date)
+              ? new Date(Number(currentDocument.date))
               : new Date()
           }
         />
@@ -200,14 +199,14 @@ PaperFormEvent.propTypes = {
   }).isRequired,
   formAction: PropTypes.string.isRequired,
   currentDocument: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
     place: PropTypes.string,
     isPrivate: PropTypes.bool,
     content: PropTypes.string,
     date: PropTypes.number,
     title: PropTypes.string,
     entity: PropTypes.shape({
-      _id: PropTypes.string,
+      id: PropTypes.string,
     }),
     createdat: PropTypes.number,
   }),

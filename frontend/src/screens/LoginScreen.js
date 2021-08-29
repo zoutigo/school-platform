@@ -22,6 +22,7 @@ import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 import { setLoginAlert } from '../redux/alerts/AlertsActions'
 import { initialAlertCollapse } from '../constants/alerts'
 import returnStoreAndPersistor from '../redux/store'
+import tokenDatas from '../utils/tokenDatas'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
@@ -58,13 +59,17 @@ function LoginScreen() {
     try {
       await mutateAsync(datas).then((response) => {
         if (response.status === 200) {
-          persistor.purge()
-          const token = response.headers['x-access-token']
-          const splittedToken = token.split('.')
-          const tokenDatas = JSON.parse(atob(splittedToken[1]))
-          dispatch(setUserInfos(tokenDatas))
-          dispatch(setUserToken(token))
-          const { isAdmin, isVerified } = tokenDatas
+          // persistor.purge()
+          // const token = response.headers['x-access-token']
+
+          // const splittedToken = token.split('.')
+          // const tokenDatas = JSON.parse(atob(splittedToken[1]))
+
+          const { newToken, newDatas } = tokenDatas(response)
+
+          dispatch(setUserInfos(newDatas))
+          dispatch(setUserToken(newToken))
+          const { isAdmin, isVerified } = newDatas
           if (isAdmin) {
             history.push('/informations')
           } else {

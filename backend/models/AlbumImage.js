@@ -6,10 +6,10 @@ const FileP = require('./FileP')
 const AlbumImage = db.define(
   'image',
   {
-    album_id: {
+    albumId: {
       type: Sequelize.INTEGER,
     },
-    file_id: {
+    fileId: {
       type: Sequelize.INTEGER,
     },
   },

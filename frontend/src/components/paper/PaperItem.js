@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { styled, Grid, Collapse } from '@material-ui/core'
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import PaperItemHeader from './PaperItemHeader'
 import PaperItemFooter from './PaperItemFooter'
@@ -23,26 +23,36 @@ function PaperItem({
   setFormAction,
   setShowSearch,
 }) {
-  const { _id, text, content, filepath } = paperItem
+  const { id, content, files } = paperItem
 
+  console.log('paperitem', paperItem)
   const { URL_PREFIX } = useSelector((state) => state.settings)
 
-  const file = filepath ? `${URL_PREFIX}/${filepath}` : null
+  const transformedFiles = useCallback(
+    files && files.length > 0
+      ? files.map((file) => ({
+          filepath: `${URL_PREFIX}/${file.filepath}`,
+          filename: file.filename,
+          filetype: file.filetype,
+          albumId: file.albumId,
+        }))
+      : [],
+    [files, URL_PREFIX]
+  )
 
   return (
     <StyledPaperItemGrid item container>
       <PaperItemHeader
         setCurrentDocument={setCurrentDocument}
-        currentDocumentId={currentDocument?._id}
+        currentDocumentId={currentDocument?.id}
         paperItem={paperItem}
         paper={paper}
       />
       <Grid item container>
-        <Collapse in={currentDocument ? currentDocument._id === _id : false}>
+        <Collapse in={currentDocument ? currentDocument.id === id : false}>
           <PaperItemBody
-            text={text}
             content={content}
-            file={file}
+            files={transformedFiles}
             paper={paper}
           />
           <PaperItemFooter
@@ -54,7 +64,7 @@ function PaperItem({
             currentDocument={currentDocument}
             setFormAction={setFormAction}
             setShowSearch={setShowSearch}
-            file={file}
+            files={files}
           />
         </Collapse>
       </Grid>
@@ -62,7 +72,15 @@ function PaperItem({
   )
 }
 
-PaperItem.defaultProps = null
+PaperItem.defaultProps = {
+  currentDocument: null,
+  // paperItem: {
+  //   files: [],
+  //   id: null,
+  //   content: null,
+  //   title: null,
+  // },
+}
 
 PaperItem.propTypes = {
   paper: PropTypes.shape({
@@ -78,20 +96,23 @@ PaperItem.propTypes = {
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
   currentDocument: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
   }),
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.func.isRequired,
   paperItem: PropTypes.shape({
-    _id: PropTypes.string,
-    text: PropTypes.string,
+    id: PropTypes.string,
     content: PropTypes.string,
     title: PropTypes.string,
-    filename: PropTypes.string,
-    filepath: PropTypes.string,
     entity: PropTypes.shape({
       name: PropTypes.string,
     }),
+    files: PropTypes.arrayOf(
+      PropTypes.shape({
+        filename: PropTypes.string,
+        filepath: PropTypes.string,
+      })
+    ),
     createdat: PropTypes.number,
   }).isRequired,
 }

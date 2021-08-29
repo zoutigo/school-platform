@@ -11,18 +11,28 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
   },
 }))
 
-function PaperPdfHandler({ file }) {
+function PaperPdfHandler({ files }) {
   return (
     <StyledGrid item container>
       <Grid item container>
-        <PdfDocument file={file} />
+        {files &&
+          files.map((file) => (
+            <PdfDocument file={file.filepath} key={file.filepath} />
+          ))}
       </Grid>
     </StyledGrid>
   )
 }
 
+PaperPdfHandler.defaultProps = null
+
 PaperPdfHandler.propTypes = {
-  file: PropTypes.string.isRequired,
+  files: PropTypes.arrayOf(
+    PropTypes.shape({
+      filename: PropTypes.string,
+      filepath: PropTypes.string,
+    })
+  ),
 }
 
 export default PaperPdfHandler

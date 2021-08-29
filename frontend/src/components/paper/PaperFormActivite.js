@@ -75,7 +75,7 @@ function PaperFormActivite({
 
     try {
       await mutateAsync({
-        id: currentDocument ? currentDocument._id : null,
+        id: currentDocument ? currentDocument.id : null,
         action: formAction,
         body: finalDatas,
         Token: Token,
@@ -182,12 +182,12 @@ PaperFormActivite.propTypes = {
   }).isRequired,
   formAction: PropTypes.string.isRequired,
   currentDocument: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
     content: PropTypes.string,
     isPrivate: PropTypes.bool,
     title: PropTypes.string,
     entity: PropTypes.shape({
-      _id: PropTypes.string,
+      id: PropTypes.string,
     }),
     createdat: PropTypes.number,
   }),

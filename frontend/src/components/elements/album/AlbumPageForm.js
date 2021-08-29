@@ -66,14 +66,13 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
 
     try {
       await mutateAsync({
-        id: currentAlbum._id,
+        id: currentAlbum.id,
         action: 'create',
         options: options,
         body: finalDatas,
         Token: Token,
         entityAlias: entityAlias,
       }).then((response) => {
-        console.log('response', response)
         dispatch(
           setAlbumPageMutateAlert(successAlertCollapse(response.message))
         )
@@ -133,7 +132,7 @@ AlbumPageForm.defaultProps = null
 
 AlbumPageForm.propTypes = {
   currentAlbum: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
     alias: PropTypes.string,
     name: PropTypes.string,
   }),

@@ -10,7 +10,7 @@ const CardP = db.define(
       allowNull: false,
     },
     description: {
-      type: Sequelize.STRING(200),
+      type: Sequelize.STRING(1000),
       allowNull: false,
     },
     alias: {

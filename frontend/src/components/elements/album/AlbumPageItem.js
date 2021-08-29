@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation } from 'react-query'
-import Proptypes from 'prop-types'
+import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, styled } from '@material-ui/core'
 // eslint-disable-next-line import/named
@@ -25,6 +25,7 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
   const { URL_PREFIX } = useSelector((state) => state.settings)
 
   const handleClick = () => {
+    console.log('albumId:', albumId)
     if (isAllowed) {
       setShowButton(!showButton)
       setShowConfirmButton(false)
@@ -86,7 +87,10 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
           />
           {showButton && (
             <StyledDeleteButton
-              onClick={() => setShowConfirmButton(!showConfirmButton)}
+              onClick={() => {
+                console.log('albumId:', albumId)
+                setShowConfirmButton(!showConfirmButton)
+              }}
             >
               Supprimer
             </StyledDeleteButton>
@@ -106,13 +110,13 @@ AlbumPageItem.defaultProps = {
 }
 
 AlbumPageItem.propTypes = {
-  isAllowed: Proptypes.bool.isRequired,
-  albumId: Proptypes.string,
-  entityAlias: Proptypes.string.isRequired,
-  queryKey: Proptypes.string.isRequired,
-  image: Proptypes.shape({
-    filename: Proptypes.string.isRequired,
-    filepath: Proptypes.string.isRequired,
+  isAllowed: PropTypes.bool.isRequired,
+  albumId: PropTypes.string,
+  entityAlias: PropTypes.string.isRequired,
+  queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
+  image: PropTypes.shape({
+    filename: PropTypes.string.isRequired,
+    filepath: PropTypes.string.isRequired,
   }).isRequired,
 }
 

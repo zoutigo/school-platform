@@ -62,8 +62,8 @@ function AlbumCard({
   const [showUpdateConfirm, setShowUpdateConfirm] = useState(false)
   const { URL_PREFIX } = useSelector((state) => state.settings)
   const { Token } = useSelector((state) => state.user)
-  const { description, coverpath, name } = album
-  const image = `${URL_PREFIX}/${coverpath}`
+  const { description, files, name } = album
+  const image = `${URL_PREFIX}/${files[0].filepath}`
 
   const { mutateAsync } = useMutation(
     apiPostAlbum,
@@ -92,7 +92,7 @@ function AlbumCard({
   const handleDelete = async () => {
     try {
       await mutateAsync({
-        id: album._id,
+        id: album.id,
         action: 'delete',
         Token,
         entityAlias,
@@ -193,11 +193,15 @@ function AlbumCard({
 
 AlbumCard.propTypes = {
   album: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     isPrivate: PropTypes.bool.isRequired,
     alias: PropTypes.string.isRequired,
-    coverpath: PropTypes.string.isRequired,
-    covername: PropTypes.string.isRequired,
+    files: PropTypes.arrayOf(
+      PropTypes.shape({
+        filepath: PropTypes.string,
+        filename: PropTypes.string,
+      })
+    ),
     description: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,

@@ -24,7 +24,6 @@ const PaperP = db.define(
     },
     content: {
       type: Sequelize.TEXT,
-      allowNull: false,
     },
     classe_fourniture: {
       type: Sequelize.STRING(30),
@@ -34,14 +33,14 @@ const PaperP = db.define(
       defaultValue: true,
     },
     date: {
-      type: Sequelize.NUMBER,
+      type: Sequelize.STRING(14),
       defaultValue: new Date().getTime(),
     },
     startdate: {
-      type: Sequelize.NUMBER,
+      type: Sequelize.STRING(14),
     },
     enddate: {
-      type: Sequelize.NUMBER,
+      type: Sequelize.STRING(14),
     },
     userId: {
       type: Sequelize.INTEGER,

@@ -133,8 +133,8 @@ export const useRoutesInfos = () => {
 
       if (rubricmatch) {
         rubricstate.description = rubricmatch.description
-        rubricstate.filename = rubricmatch.filename
-        rubricstate.filepath = rubricmatch.filepath
+        rubricstate.filename = rubricmatch.files[0].filename
+        rubricstate.filepath = rubricmatch.files[0].filepath
       }
       list.push({ state: { ...rubricstate }, ...rubricrest })
 
@@ -151,8 +151,8 @@ export const useRoutesInfos = () => {
 
           if (categorymatch) {
             categorystate.description = categorymatch.description
-            categorystate.filename = categorymatch.filename
-            categorystate.filepath = categorymatch.filepath
+            categorystate.filename = categorymatch.files[0].filename
+            categorystate.filepath = categorymatch.files[0].filepath
           }
 
           list.push({ state: { ...categorystate }, ...categoryrest })
@@ -165,8 +165,8 @@ export const useRoutesInfos = () => {
 
               if (chaptermatch) {
                 chapterstate.description = chaptermatch.description
-                chapterstate.filename = chaptermatch.filename
-                chapterstate.filepath = chaptermatch.filepath
+                chapterstate.filename = chaptermatch.files[0].filename
+                chapterstate.filepath = chaptermatch.files[0].filepath
               }
 
               list.push({ state: { ...chapterstate }, ...chapterrest })
