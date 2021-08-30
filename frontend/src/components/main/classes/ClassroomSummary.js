@@ -11,12 +11,7 @@ const StyledClassroomContainer = styled(Grid)(() => ({
   padding: '1rem 0',
 }))
 
-function ClassroomSummary({
-  queryParams,
-  queryKey,
-  setCurrentClassroom,
-  currentClassroom,
-}) {
+function ClassroomSummary({ queryParams, queryKey, setCurrentClassroom }) {
   const { isLoading, isError, data, error } = useQuery(queryKey, () =>
     apiFecthEntity(queryParams)
   )

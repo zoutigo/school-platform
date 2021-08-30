@@ -48,13 +48,13 @@ export const useUpdateMutationOptions = (queryKey) => {
 
 export const useIsTokenValid = () => {
   const {
-    User: { exp, _id, isVerified },
+    User: { exp, id, isVerified },
   } = useSelector((state) => state.user)
 
   // const tokenIsValid = (!exp ? false : exp > new Date().getTime() / 1000) && _id
   const valid = () => {
     if (!exp || !isVerified) return false
-    if (exp > new Date().getTime() / 1000 && _id) return true
+    if (exp > new Date().getTime() / 1000 && id) return true
     return false
   }
   const tokenIsValid = valid()
@@ -74,8 +74,9 @@ export const useRigths = () => {
   const { User } = useSelector((state) => state.user)
 
   const setRigths = useCallback(() => {
-    const { isAdmin, isModerator, isManager, isTeacher, exp } = User
-    const TokenIsValid = exp ? new Date().getTime() / 1000 < exp : false
+    const { isAdmin, isModerator, isManager, isTeacher, exp, id } = User
+    const TokenIsValid = exp && id ? new Date().getTime() / 1000 < exp : false
+
     const userLevel = TokenIsValid
     const teacherLevel =
       TokenIsValid && (isAdmin || isManager || isModerator || isTeacher)

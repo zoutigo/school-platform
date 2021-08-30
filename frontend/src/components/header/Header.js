@@ -1,7 +1,7 @@
 /* eslint-disable import/named */
 import React, { useCallback, useEffect } from 'react'
 import MenuIcon from '@material-ui/icons/Menu'
-import CancelIcon from '@material-ui/icons/Cancel'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 

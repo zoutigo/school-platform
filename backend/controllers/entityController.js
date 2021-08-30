@@ -30,7 +30,7 @@ module.exports.postEntity = async (req, res, next) => {
 
     if (!name || !alias)
       return next(
-        new BadRequest('une ou plusieurs données manquante: name,roles')
+        new BadRequest('une ou plusieurs données manquante: name,alias')
       )
 
     const entity = req.body
@@ -47,19 +47,19 @@ module.exports.postEntity = async (req, res, next) => {
   } else if (action === 'update' && entityId) {
     // case update
 
-    const [currentEntity] = await EntityP.findAll({ id: entityId })
+    const currentEntity = await EntityP.findOne({ where: { id: entityId } })
     if (!currentEntity) return next(new BadRequest("L'entité nexiste pas"))
     try {
       const updatedEntity = await EntityP.update(req.body, {
         where: { id: entityId },
       })
       if (updatedEntity) {
-        if (process.env.NODE_ENV === 'production') {
-          return res.status(200).send('Entité correctement modifiée')
-        }
+        // if (process.env.NODE_ENV === 'production') {
+        //   return res.status(200).send('Entité correctement modifiée')
+        // }
         return res.status(200).send({
           message: 'Entité correctement modifiée',
-          data: updatedEntity,
+          // data: updatedEntity,
         })
       }
     } catch (err) {

@@ -5,7 +5,7 @@ require('dotenv').config()
 module.exports.generateValidationToken = (user) =>
   jwt.sign(
     {
-      _id: user._id,
+      id: user.id,
     },
     process.env.TOKEN_SECRET,
     { expiresIn: '1h' }

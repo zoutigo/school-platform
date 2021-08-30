@@ -12,7 +12,7 @@ import InputTextControl from '../components/elements/InputTextControl'
 import suggestionSchema from '../schemas/suggestionSchema'
 import CustomButton from '../components/elements/CustomButton'
 import AlertCollapse from '../components/elements/AlertCollapse'
-import { useIsTokenValid, useUpdateMutationOptions } from '../utils/hooks'
+import { useRigths, useUpdateMutationOptions } from '../utils/hooks'
 import LazyMessage from '../components/elements/LazyMessage'
 import InputSelectControl from '../components/elements/InputSelectControl'
 import { apiPostSuggestion } from '../utils/api'
@@ -44,7 +44,8 @@ function InformationContactsEcrireScreen() {
   const queryKey = ['suggestions']
   const { Token } = useSelector((state) => state.user)
   const { mutate } = useSelector((state) => state.alerts)
-  const { tokenIsValid } = useIsTokenValid()
+
+  const { userLevel } = useRigths()
   const {
     control,
     handleSubmit,
@@ -149,12 +150,12 @@ function InformationContactsEcrireScreen() {
         {...mutate}
         callback={() => dispatch(setMutateAlert(initialAlertCollapse))}
       />
-      {!tokenIsValid && (
+      {!userLevel && (
         <LazyMessage severity="error">
           <NotTokenIsValidMessage />
         </LazyMessage>
       )}
-      {tokenIsValid && !mutationIsSuccessfull && (
+      {userLevel && !mutationIsSuccessfull && (
         <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
           <Grid item container justify="center">
             <Title

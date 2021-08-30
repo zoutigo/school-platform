@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { useRoutesInfos } from '../../../utils/hooks'
+import randomkey from '../../../utils/randomkey'
 
 import AsideItem from './AsideItem'
 import AsideTitle from './AsideTitle'
@@ -38,7 +39,9 @@ function Aside({ datas }) {
       <AsideTitle title={title || ''} />
       <StyledAsideBodyGrid container>
         {items &&
-          items.map((asideitem) => <AsideItem key={title} item={asideitem} />)}
+          items.map((asideitem) => (
+            <AsideItem key={randomkey(9999999)} item={asideitem} />
+          ))}
       </StyledAsideBodyGrid>
     </StyledAsideGrid>
   )
