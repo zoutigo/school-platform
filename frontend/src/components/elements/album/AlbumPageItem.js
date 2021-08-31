@@ -25,7 +25,6 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
   const { URL_PREFIX } = useSelector((state) => state.settings)
 
   const handleClick = () => {
-    console.log('albumId:', albumId)
     if (isAllowed) {
       setShowButton(!showButton)
       setShowConfirmButton(false)
@@ -88,7 +87,6 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
           {showButton && (
             <StyledDeleteButton
               onClick={() => {
-                console.log('albumId:', albumId)
                 setShowConfirmButton(!showConfirmButton)
               }}
             >

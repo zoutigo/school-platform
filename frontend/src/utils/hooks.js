@@ -4,7 +4,6 @@ import React, { useCallback, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import Compressor from 'compressorjs'
 import routes from '../constants/routes'
 import theme from '../constants/theme'
 
@@ -61,15 +60,6 @@ export const useIsTokenValid = () => {
   return { tokenIsValid }
 }
 
-export const useCompressFile = (file) => {
-  const [compressedFile, setCompressedFile] = useState(null)
-  Compressor(file, {
-    quality: 0.8,
-    success: (compressesResult) => setCompressedFile(compressesResult),
-  })
-  return compressedFile
-}
-
 export const useRigths = () => {
   const { User } = useSelector((state) => state.user)
 
@@ -108,6 +98,11 @@ export const useRoutesInfos = () => {
     rubricsList: [],
     routesList: [],
   }
+
+  const { User } = useSelector((state) => state.user)
+  const { isAdmin, isModerator, isManager, isTeacher, exp, id } = User
+  const TokenIsValid = exp && id ? new Date().getTime() / 1000 < exp : false
+
   const { pathname } = useLocation()
   const rights = useRigths()
 
@@ -186,21 +181,54 @@ export const useRoutesInfos = () => {
     const visitorExcludedCats = ['account', 'administration']
     const userExcludedCats = ['identification', 'administration']
     const moderatorExcludedCats = ['administration', 'identification']
+
     const rubrics = routesList().filter(
       (route) => route.state.type === 'rubric'
     )
     const categories = routesList().filter((route) => {
       const catCond = route.state.type === 'category'
-      const visitorCond =
-        !rights.userLevel && !visitorExcludedCats.includes(route.state.alias)
-      const userCond =
-        rights.userLevel && !userExcludedCats.includes(route.state.alias)
-      const moderatorCond =
-        rights.moderatorLevel &&
-        !moderatorExcludedCats.includes(route.state.alias)
 
-      return catCond && (visitorCond || userCond || moderatorCond)
+      // const visitorCond =
+      //   !rights.userLevel && !visitorExcludedCats.includes(route.state.alias)
+      const visitorCond = !TokenIsValid && route.state.access === 'public'
+
+      // const userCond =
+      //   rights.userLevel && !userExcludedCats.includes(route.state.alias)
+
+      const userCond =
+        TokenIsValid &&
+        (route.state.access === 'public' || route.state.access === 'user')
+
+      // const moderatorCond =
+      //   rights.moderatorLevel &&
+      //   !moderatorExcludedCats.includes(route.state.alias)
+      const moderatorCond =
+        TokenIsValid &&
+        (route.state.access === 'public' ||
+          route.state.access === 'user' ||
+          route.state.access === 'moderator')
+
+      const managerCond =
+        TokenIsValid &&
+        (route.state.access === 'public' ||
+          route.state.access === 'user' ||
+          route.state.access === 'moderator' ||
+          route.state.access === 'manager')
+
+      const adminCond =
+        TokenIsValid &&
+        (route.state.access === 'public' ||
+          route.state.access === 'user' ||
+          route.state.access === 'moderator' ||
+          route.state.access === 'manager' ||
+          route.state.access === 'admin')
+
+      return (
+        catCond &&
+        (visitorCond || userCond || moderatorCond || managerCond || adminCond)
+      )
     })
+
     const chapters = routesList().filter(
       (route) => route.state.type === 'chapter'
     )

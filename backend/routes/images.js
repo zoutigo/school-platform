@@ -10,6 +10,7 @@ const {
   deleteImage,
   createImages,
   createImage,
+  createEditorImage,
 } = require('../controllers/imageController')
 
 const storage = multer.memoryStorage({
@@ -17,9 +18,15 @@ const storage = multer.memoryStorage({
     callback(null, '')
   },
 })
+const EditorStorage = multer.memoryStorage()
 
 const upload = multer({
   storage: storage,
+  // fileFilter: fileFilter,
+}) // Field name and max count
+
+const uploadEditorImage = multer({
+  storage: EditorStorage,
   // fileFilter: fileFilter,
 }) // Field name and max count
 
@@ -32,6 +39,8 @@ router.post(
   uploadImage('./images/tinymce', 'tinymce', 4),
   createImage
 )
+
+router.post('/editor', uploadEditorImage.single('file'), createEditorImage)
 
 // creta many images
 router.post('/multiple', upload.array('images', 15), createImages)

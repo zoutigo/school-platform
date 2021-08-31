@@ -86,7 +86,7 @@ module.exports.getDialogs = async (req, res, next) => {
           [Op.gt]: today,
         },
       },
-      sort: [('createdA', 'ASC')],
+      sort: [('createdAt', 'ASC')],
       limit: 5,
     })
 

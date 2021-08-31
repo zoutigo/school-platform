@@ -5,11 +5,11 @@ const FileP = db.define(
   'file',
   {
     filename: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(300),
       allowNull: false,
     },
     filepath: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(150),
       allowNull: false,
     },
     filetype: {

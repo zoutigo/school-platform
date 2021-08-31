@@ -74,7 +74,7 @@ function ManageDialogForm({
 
     try {
       await mutateAsync({
-        id: currentModal ? currentModal._id : null,
+        id: currentModal ? currentModal.id : null,
         action: formAction,
         options: options,
         body: finalDatas,
@@ -120,7 +120,7 @@ function ManageDialogForm({
           format="dddd Do MMMM yyyy"
           initialDate={
             currentModal && formAction === 'update'
-              ? new Date(currentModal.startdate)
+              ? new Date(Number(currentModal.startdate))
               : new Date()
           }
         />
@@ -131,7 +131,7 @@ function ManageDialogForm({
           format="dddd Do MMMM yyyy"
           initialDate={
             currentModal && formAction === 'update'
-              ? new Date(currentModal.startdate)
+              ? new Date(Number(currentModal.startdate))
               : new Date()
           }
         />
@@ -176,7 +176,7 @@ ManageDialogForm.propTypes = {
   formAction: PropTypes.string,
   queryKey: PropTypes.string.isRequired,
   currentModal: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
     title: PropTypes.string,
     enddate: PropTypes.number,
     startdate: PropTypes.number,

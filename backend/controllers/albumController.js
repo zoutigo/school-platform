@@ -1,8 +1,8 @@
 const fs = require('fs')
-const Album = require('../models/Album')
+const sharp = require('sharp')
+const path = require('path')
 const AlbumImage = require('../models/AlbumImage')
 const AlbumP = require('../models/AlbumP')
-const Entity = require('../models/Entity')
 const EntityP = require('../models/EntityP')
 const FileP = require('../models/FileP')
 const { deleteFile, deleteFiles } = require('../utils/deleteFile')
@@ -76,7 +76,7 @@ module.exports.postAlbum = async (req, res, next) => {
     if (!req.file)
       return next(new BadRequest('Please select an image to upload'))
 
-    if (!filepath || !filename)
+    if (!req.file)
       return next(
         new BadRequest(
           "une ereeur s'est produite à la creation multer de l'image"
@@ -84,11 +84,8 @@ module.exports.postAlbum = async (req, res, next) => {
       )
     if (!name || !alias || !description)
       return next(
-        deleteFile(
-          filepath,
-          new BadRequest(
-            'une ou plusieurs données manquantes: cover,name, alias, description'
-          )
+        new BadRequest(
+          'une ou plusieurs données manquantes: cover,name, alias, description'
         )
       )
 
@@ -97,9 +94,28 @@ module.exports.postAlbum = async (req, res, next) => {
     try {
       const savedAlbum = await newAlbum.save()
       if (savedAlbum) {
+        const albumFolder = '/images/albums/'
+        const directory = path.join('.', albumFolder, alias, '/')
+        const timestamp = new Date().toISOString()
+        fs.access(directory, (error) => {
+          if (error) {
+            fs.mkdirSync(directory)
+          }
+        })
+        const { buffer, originalname } = req.file
+        const ref = `${timestamp}-${originalname}.webp`
+        const destination = path.join(directory, ref)
+
+        await sharp(buffer).webp({ quality: 20 }).toFile(destination)
+
+        const location =
+          process.env.NODE_ENV === 'production'
+            ? `images/albums/${alias}/${ref}`
+            : `images/albums/${alias}/${ref}`
+
         await FileP.create({
-          filename,
-          filepath,
+          filename: originalname,
+          filepath: location,
           type: 'image',
           albumId: savedAlbum.id,
         })
@@ -229,13 +245,6 @@ module.exports.postAlbumImages = async (req, res, next) => {
     action === 'delete'
       ? null
       : await EntityP.findOne({ where: { alias: entityAlias } })
-  // if (!entity)
-  //   return next(
-  //     deleteFiles(
-  //       req.files,
-  //       new BadRequest('une ou plusieurs données manquantes: entité')
-  //     )
-  //   )
 
   let roleIsAllowed = false
 
@@ -261,9 +270,8 @@ module.exports.postAlbumImages = async (req, res, next) => {
   if ((!req.files || req.files.length < 1) && action !== 'delete')
     return next(new BadRequest('les images ne sont pas telechargées'))
 
-  console.log('albumId:', albumId)
   if (albumId === null || albumId === undefined) {
-    return next(deleteFiles(req.files, new BadRequest('albulId missing')))
+    return next(deleteFiles(req.files, new BadRequest('albumlId missing')))
   }
 
   // check if album exist
@@ -279,15 +287,50 @@ module.exports.postAlbumImages = async (req, res, next) => {
 
   if (action === 'create') {
     try {
-      req.files.forEach(async (file) => {
-        const { filename, path } = file
+      // path.join(__dirname, '..', '/files'
+      const albumFolder = '/images/albums/'
+      const directory = path.join('.', albumFolder, album.alias, '/')
+      const timestamp = new Date().toISOString()
+
+      fs.access(directory, (error) => {
+        if (error) {
+          fs.mkdirSync(directory)
+        }
+      })
+
+      req.files.forEach(async (image) => {
+        const { buffer, originalname } = image
+        const ref = `${timestamp}-${originalname}.webp`
+        const destination = path.join(directory, ref)
+
+        await sharp(buffer).webp({ quality: 20 }).toFile(destination)
+
+        // const location =
+        //   process.env.NODE_ENV === 'production'
+        //     ? `${process.env.SERVER_ADRESS}/images/albums/${album.alias}/${ref}`
+        //     : `http://localhost:3500/images/albums/${album.alias}/${ref}`
+        const location =
+          process.env.NODE_ENV === 'production'
+            ? `images/albums/${album.alias}/${ref}`
+            : `images/albums/${album.alias}/${ref}`
+
         await FileP.create({
-          filename,
-          filepath: path,
+          filename: ref,
+          filepath: location,
           type: 'image',
           albumId: album.id,
         })
       })
+
+      // req.files.forEach(async (file) => {
+      //   const { filename, path } = file
+      //   await FileP.create({
+      //     filename,
+      //     filepath: path,
+      //     type: 'image',
+      //     albumId: album.id,
+      //   })
+      // })
 
       return res.status(200).send({ message: 'images enregistrées' })
     } catch (err) {

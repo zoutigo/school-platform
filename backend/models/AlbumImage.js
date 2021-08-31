@@ -1,7 +1,5 @@
 const Sequelize = require('sequelize')
 const db = require('../config/database')
-const AlbumP = require('./AlbumP')
-const FileP = require('./FileP')
 
 const AlbumImage = db.define(
   'image',

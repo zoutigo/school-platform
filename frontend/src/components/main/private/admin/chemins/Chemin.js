@@ -9,6 +9,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility'
 import Tooltip from '@material-ui/core/Tooltip'
 import { useSelector } from 'react-redux'
 import { useMutation } from 'react-query'
+import ReactHtmlParser from 'react-html-parser'
 import { useUpdateMutationOptions } from '../../../../../utils/hooks'
 import { apiPostChemin } from '../../../../../utils/api'
 import AlertCollapse from '../../../../elements/AlertCollapse'
@@ -97,7 +98,7 @@ function Chemin({ chemin, queryKey, setShowAddForm }) {
           </Grid>
         </Grid>
         <Grid item container>
-          {description}{' '}
+          {ReactHtmlParser(description)}{' '}
         </Grid>
         <Collapse in={showImage} timeout="auto">
           <Grid item container justify="center">

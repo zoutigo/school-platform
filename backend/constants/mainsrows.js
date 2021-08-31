@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 module.exports.cardsAlbum = {
   name: 'Cartes Chemins',
   alias: 'cards',
@@ -12,11 +14,18 @@ module.exports.papersAlbumDatas = {
   isPrivate: false,
   isActive: true,
 }
+module.exports.editorAlbumDatas = {
+  name: 'Editor',
+  alias: 'editor',
+  description: 'Album des images de editor',
+  isPrivate: false,
+  isActive: true,
+}
 module.exports.adminEntity = {
   name: 'Administration',
   alias: 'admin',
   content: 'Entité principale du site',
-  email: 'zoutigo@gmail.com',
+  email: process.env.ADMIN_EMAIL,
 }
 module.exports.secretariatEntityDatas = {
   name: 'secretariat',

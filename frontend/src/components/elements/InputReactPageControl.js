@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Controller, useController } from 'react-hook-form'
 import { useSelector } from 'react-redux'
+
 import Editor, { useUiTranslator } from '@react-page/editor'
 import slate from '@react-page/plugins-slate'
 import image, { imagePlugin } from '@react-page/plugins-image'
@@ -15,7 +16,7 @@ import { Grid, styled } from '@material-ui/core'
 import AlertCollapse from './AlertCollapse'
 import TRANSLATIONS from './reactpage/constants'
 import cellSpacing from './reactpage/constants'
-import { apiPostImage } from '../../utils/api'
+import { apiPostEditorImage } from '../../utils/api'
 // import colorPlugin from './reactpage/colorPlugin'
 
 // const cellSpacing = {
@@ -61,7 +62,7 @@ function InputReactPageControl({
 
   const uploadImage = useCallback(
     () => async (file, reportProgress) => {
-      const data = await apiPostImage({ file, Token })
+      const data = await apiPostEditorImage({ file, Token })
       return { url: data.url }
     },
     []

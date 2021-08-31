@@ -371,3 +371,23 @@ export const apiPostImage = async ({ id: albumId, file, action, Token }) => {
 
   return data
 }
+export const apiPostEditorImage = async ({ file, Token }) => {
+  const URL = `${PREFIX}/images/editor`
+  const formdata = new FormData()
+
+  if (file) {
+    formdata.append('file', file)
+  }
+
+  const { data } = await axios({
+    method: 'post',
+    url: URL,
+    data: formdata,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-access-token': Token,
+    },
+  })
+
+  return data
+}

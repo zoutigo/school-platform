@@ -63,7 +63,8 @@ function AlbumCard({
   const { URL_PREFIX } = useSelector((state) => state.settings)
   const { Token } = useSelector((state) => state.user)
   const { description, files, name } = album
-  const image = `${URL_PREFIX}/${files[0].filepath}`
+  const image =
+    files && files.length > 0 ? `${URL_PREFIX}/${files[0].filepath}` : null
 
   const { mutateAsync } = useMutation(
     apiPostAlbum,

@@ -95,8 +95,8 @@ function DialogItem({ dialog, queryKey }) {
             {title}
           </Grid>
           <Grid item>
-            Début: {moment(startdate).format('lll')} - Fin:{' '}
-            {moment(enddate).format('lll')}
+            Début: {moment(Number(startdate)).format('lll')} - Fin:{' '}
+            {moment(Number(enddate)).format('lll')}
           </Grid>
         </Grid>
         <Collapse in={showText}>

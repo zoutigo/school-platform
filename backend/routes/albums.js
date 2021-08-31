@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const multer = require('multer')
 const {
   postAlbum,
   getAlbums,
@@ -7,14 +8,27 @@ const {
 const { uploadImage, uploadImages } = require('../service/uploads')
 const { tokenVerify } = require('../utils/tokenverify')
 
+const albumStorage = multer.memoryStorage()
+
+const uploadAlbumImages = multer({
+  storage: albumStorage,
+  // fileFilter: fileFilter,
+}) // Field name and max count
+
 // Get images
 router.get('/images', getAlbums)
 
 // Post albums images
+// router.post(
+//   '/images',
+//   tokenVerify,
+//   uploadImages('./images/albums', 'album-image', 10),
+//   postAlbumImages
+// )
 router.post(
   '/images',
   tokenVerify,
-  uploadImages('./images/albums', 'album-image', 10),
+  uploadAlbumImages.array('files', 15),
   postAlbumImages
 )
 
@@ -22,11 +36,12 @@ router.post(
 router.get('/:id?', getAlbums)
 
 // Post albums
-router.post(
-  '/',
-  tokenVerify,
-  uploadImage('./images/albums', 'album-cover', 5),
-  postAlbum
-)
+// router.post(
+//   '/',
+//   tokenVerify,
+//   uploadImage('./images/albums', 'album-cover', 5),
+//   postAlbum
+// )
+router.post('/', tokenVerify, uploadAlbumImages.single('file'), postAlbum)
 
 module.exports = router

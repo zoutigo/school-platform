@@ -1,6 +1,12 @@
+const fs = require('fs')
+const sharp = require('sharp')
 const Image = require('../models/Image')
+const AlbumP = require('../models/AlbumP')
 const { BadRequest } = require('../utils/errors')
 const fileUploadService = require('../service/uploads')
+const { editorAlbumDatas, adminEntity } = require('../constants/mainsrows')
+const EntityP = require('../models/EntityP')
+const FileP = require('../models/FileP')
 require('dotenv').config()
 
 module.exports.createPageImage = async (req, res, next) => {
@@ -47,8 +53,8 @@ module.exports.createImages = async (req, res) => {
   }
   res.status(201).send(locations)
 }
+
 module.exports.createImage = async (req, res, next) => {
-  console.log(req)
   if (!req.file) return next(new BadRequest('Please select an image to upload'))
   const { filename, path } = req.file
   if (!path || !filename)
@@ -74,6 +80,49 @@ module.exports.createImage = async (req, res, next) => {
       // return res.status(201).send({ location: location })
       return res.status(201).send({ url: location, uploaded: true })
     }
+  } catch (err) {
+    return next(err)
+  }
+}
+
+module.exports.createEditorImage = async (req, res, next) => {
+  const directory = './images/editor/'
+  fs.access(directory, (error) => {
+    if (error) {
+      fs.mkdirSync(directory)
+    }
+  })
+  const { buffer, originalname } = req.file
+  const timestamp = new Date().toISOString()
+  const ref = `${timestamp}-${originalname}.webp`
+
+  try {
+    await sharp(buffer)
+      .webp({ quality: 20 })
+      .toFile('./images/editor/' + ref)
+
+    const location =
+      process.env.NODE_ENV === 'production'
+        ? `${process.env.SERVER_ADRESS}/images/editor/${ref}`
+        : `http://localhost:3500/images/editor/${ref}`
+
+    const adminEntit = await EntityP.findOne({
+      where: { alias: 'admin' },
+    })
+
+    const editorAlbum = await AlbumP.findOne({
+      where: {
+        entityId: adminEntit.id,
+      },
+    })
+
+    const file = await FileP.create({
+      filename: ref,
+      filepath: location,
+      filetype: 'file',
+      albumId: editorAlbum.id,
+    })
+    if (file) return res.status(201).send({ url: location, uploaded: true })
   } catch (err) {
     return next(err)
   }

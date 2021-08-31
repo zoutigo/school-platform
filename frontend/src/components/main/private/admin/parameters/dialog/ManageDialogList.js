@@ -24,7 +24,7 @@ function ManageDialogList({ queryKey }) {
       {Array.isArray(data) &&
         data.length > 0 &&
         data.map((dialog) => (
-          <DialogItem dialog={dialog} key={dialog._id} queryKey={queryKey} />
+          <DialogItem dialog={dialog} key={dialog.id} queryKey={queryKey} />
         ))}
     </StyledGrid>
   )

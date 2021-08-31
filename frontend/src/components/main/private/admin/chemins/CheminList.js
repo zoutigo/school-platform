@@ -38,7 +38,7 @@ function CheminList({ queryKey, setShowAddForm, setTopAlert }) {
           <Chemin
             item
             container
-            key={chemin._id}
+            key={chemin.id}
             chemin={chemin}
             queryKey={queryKey}
             setTopAlert={setTopAlert}
