@@ -1,12 +1,10 @@
-const Album = require('../models/Album')
-const AlbumImage = require('../models/AlbumImage')
 const AlbumP = require('../models/AlbumP')
 const Entity = require('../models/Entity')
 const Paper = require('../models/Paper')
 const EntityP = require('../models/EntityP')
 const FileP = require('../models/FileP')
 const PageP = require('../models/PageP')
-const Role = require('../models/Role')
+
 const RoleP = require('../models/RoleP')
 const User = require('../models/User')
 const UserP = require('../models/UserP')

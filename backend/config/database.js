@@ -3,11 +3,11 @@ const Sequelize = require('sequelize')
 require('dotenv').config()
 
 const db = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  process.env.PGDB_NAME,
+  process.env.PGDB_USER,
+  process.env.PGDB_PASSWORD,
   {
-    host: process.env.DB_HOST,
+    host: process.env.PGDB_HOST,
     dialect: 'postgres',
     operatorsAliases: false,
     pool: {
