@@ -212,9 +212,13 @@ module.exports.postUpdateUsers = async (req, res, next) => {
     const ModifiedUsers = await UserP.findAll({
       include: [RoleP, EntityP],
     })
-    if (ModifiedUsers) return res.status(200).send({ users: ModifiedUsers })
+    if (ModifiedUsers) {
+      // return res.status(200).send({ users: ModifiedUsers })
+      console.log('users:', ModifiedUsers)
+    }
   } catch (err) {
-    return next(err)
+    // return next(err)
+    console.log('Error:', err)
   }
 }
 
