@@ -8,8 +8,10 @@ const runTest = async () => {
       alias: 'difficult',
     })
 
-    if (update && test) {
-      console.log(update)
+    const result = await TestP.findAll()
+
+    if ((update && test, result)) {
+      console.log('the result is', result)
     }
   } catch (err) {
     return err
