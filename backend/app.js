@@ -26,6 +26,7 @@ const dialogsRouter = require('./routes/dialogs')
 const updatesRouter = require('./routes/updates')
 const databaseRouter = require('./routes/databases')
 const db = require('./config/database')
+const TestP = require('./models/TestP')
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
@@ -37,7 +38,16 @@ const app = express()
 // Postgres connexion
 
 db.authenticate()
-  .then(() => console.log('Postgres Database connected'))
+  .then(async () => {
+    await TestP.sync({ force: true })
+    const test = await TestP.create({
+      name: 'New one',
+      alias: 'dnew',
+    })
+    if (test) {
+      console.log('connexion etabie à postgres')
+    }
+  })
   .catch((err) =>
     console.log(`connexion to postgres failed with error: ${err}`)
   )
