@@ -14,11 +14,11 @@ const DialogP = db.define(
       unique: true,
     },
     startdate: {
-      type: Sequelize.NUMBER,
+      type: Sequelize.INTEGER(14),
       allowNull: false,
     },
     enddate: {
-      type: Sequelize.NUMBER,
+      type: Sequelize.INTEGER(14),
       allowNull: false,
     },
     // userId: {
