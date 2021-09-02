@@ -42,14 +42,14 @@ const PaperP = db.define(
     enddate: {
       type: Sequelize.STRING(14),
     },
-    userId: {
-      type: Sequelize.INTEGER,
-      defaultValue: 1,
-    },
-    entityId: {
-      type: Sequelize.INTEGER,
-      defaultValue: 13,
-    },
+    // userId: {
+    //   type: Sequelize.INTEGER,
+    //   defaultValue: 1,
+    // },
+    // entityId: {
+    //   type: Sequelize.INTEGER,
+    //   defaultValue: 13,
+    // },
   },
   {
     tableName: 'papers',

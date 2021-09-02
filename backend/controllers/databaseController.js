@@ -1,18 +1,53 @@
+const AlbumP = require('../models/AlbumP')
+const CardP = require('../models/CardP')
+const DialogP = require('../models/DialogP')
+const EntityP = require('../models/EntityP')
+const EventP = require('../models/EventP')
+const FileP = require('../models/FileP')
+const PageP = require('../models/PageP')
+const PaperP = require('../models/PaperP')
+const PreinscriptionP = require('../models/PreinscriptionP')
+const SuggestionP = require('../models/SuggestionP')
 const TestP = require('../models/TestP')
+const UserP = require('../models/UserP')
 
 const runTest = async () => {
   try {
-    const update = await TestP.sync({ force: true })
-    const test = await TestP.create({
-      name: 'Difficult one',
-      alias: 'difficult',
-    })
+    // test
 
-    const result = await TestP.findAll()
+    const test = await TestP.sync({ force: true })
+    const page = await PageP.sync({ force: true })
+    const entity = await EntityP.sync({ force: true })
+    const role = await PageP.sync({ force: true })
+    const event = await EventP.sync({ force: true })
+    const paper = await PaperP.sync({ force: true })
+    const album = await AlbumP.sync({ force: true })
+    const file = await FileP.sync({ force: true })
+    const card = await CardP.sync({ force: true })
+    const user = await UserP.sync({ force: true })
+    const dialog = await DialogP.sync({ force: true })
+    const preinscription = await PreinscriptionP.sync({ force: true })
+    const suggestion = await SuggestionP.sync({ force: true })
 
-    if ((update && test, result)) {
-      console.log('the result is', result)
+    if (
+      (test,
+      page,
+      entity,
+      role,
+      event,
+      paper,
+      album,
+      file,
+      card,
+      user,
+      dialog,
+      preinscription,
+      suggestion)
+    ) {
+      console.log('all sychronisation is done')
     }
+
+    // entities
   } catch (err) {
     return err
   }

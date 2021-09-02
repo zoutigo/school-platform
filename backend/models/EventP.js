@@ -20,14 +20,14 @@ const EventP = db.define(
       type: Sequelize.INTEGER,
       allowNull: false,
     },
-    userId: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
-    entityId: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
+    // userId: {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: false,
+    // },
+    // entityId: {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: false,
+    // },
     isPrivate: {
       type: Sequelize.BOOLEAN,
       defaultValue: true,

@@ -21,10 +21,10 @@ const DialogP = db.define(
       type: Sequelize.NUMBER,
       allowNull: false,
     },
-    userId: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
+    // userId: {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: false,
+    // },
   },
   {
     tableName: 'dialogs',

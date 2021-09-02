@@ -6,21 +6,27 @@ const PaperP = require('./PaperP')
 const PreinscriptionP = require('./PreinscriptionP')
 const RoleP = require('./RoleP')
 
-const EntityP = db.define('entity', {
-  name: {
-    type: Sequelize.STRING,
+const EntityP = db.define(
+  'entity',
+  {
+    name: {
+      type: Sequelize.STRING,
+    },
+    alias: {
+      type: Sequelize.STRING,
+    },
+    content: {
+      type: Sequelize.STRING,
+      defaultValue: 'Empty Page',
+    },
+    email: {
+      type: Sequelize.STRING,
+    },
   },
-  alias: {
-    type: Sequelize.STRING,
-  },
-  content: {
-    type: Sequelize.STRING,
-    defaultValue: 'Empty Page',
-  },
-  email: {
-    type: Sequelize.STRING,
-  },
-})
+  {
+    tableName: 'entities',
+  }
+)
 
 EntityP.hasMany(RoleP, { foreignKey: 'entityId' })
 RoleP.belongsTo(EntityP)
