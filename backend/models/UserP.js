@@ -17,7 +17,6 @@ const UserP = db.define('user', {
   },
   gender: {
     type: Sequelize.ENUM('monsieur', 'madame', 'choisir'),
-    defaultValue: 'choisir',
   },
   email: {
     type: Sequelize.STRING(50),
