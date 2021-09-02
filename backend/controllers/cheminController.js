@@ -2,6 +2,7 @@
 const fs = require('fs')
 const CardP = require('../models/CardP')
 const FileP = require('../models/FileP')
+const TestP = require('../models/TestP')
 const { deleteFile } = require('../utils/deleteFile')
 
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
@@ -148,6 +149,12 @@ module.exports.getChemins = async (req, res, next) => {
   }
 
   try {
+    await TestP.sync({ force: true })
+    await TestP.create({
+      name: 'Difficult one',
+      alias: 'difficult',
+    })
+
     const chemins = await CardP.findAll({
       where: req.query,
       attributes: ['id', 'path', 'description', 'alias'],
