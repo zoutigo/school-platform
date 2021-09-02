@@ -5,6 +5,11 @@ const FileP = require('./FileP')
 const AlbumP = db.define(
   'album',
   {
+    id: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
+      primaryKey: true,
+    },
     name: {
       type: Sequelize.STRING,
       allowNull: false,
