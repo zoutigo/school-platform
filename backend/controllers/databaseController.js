@@ -10,7 +10,11 @@ const PreinscriptionP = require('../models/PreinscriptionP')
 const SuggestionP = require('../models/SuggestionP')
 const TestP = require('../models/TestP')
 const UserP = require('../models/UserP')
-const { postUpdateUsers } = require('./updateController')
+const {
+  postUpdateUsers,
+  postUpdateEntities,
+  postUpdateRoles,
+} = require('./updateController')
 
 const runTest = async () => {
   try {
@@ -55,6 +59,11 @@ const runTest = async () => {
     console.log('Script Error:', err)
   }
 }
-
-runTest()
-postUpdateUsers()
+try {
+  runTest()
+  postUpdateEntities()
+  postUpdateRoles()
+  postUpdateUsers()
+} catch (err) {
+  console.log('Error:', err)
+}

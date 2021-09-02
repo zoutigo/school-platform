@@ -75,8 +75,12 @@ module.exports.postUpdateEntities = async (req, res, next) => {
     }
   })
 
-  if (errors.length > 0) return next(new BadRequest(errors.join()))
-  return res.status(200).send({ message: 'entities created successfully' })
+  if (errors.length > 0) {
+    // return next(new BadRequest(errors.join()))
+    console.log('Error:', errors.join())
+  }
+  // return res.status(200).send({ message: 'entities created successfully' })
+  console.log('success:entities created successfully')
 }
 
 module.exports.postUpdateAlbums = async (req, res, next) => {
@@ -140,26 +144,26 @@ module.exports.postUpdateAlbums = async (req, res, next) => {
 }
 
 module.exports.postUpdateRoles = async (req, res, next) => {
-  // const roles = await Role.find().populate('entity')
+  const roles = await Role.find().populate('entity')
 
-  // try {
-  //   roles.forEach(async (role) => {
-  //     const { name, mission, entity } = role
-  //     const [{ id: entityId }] = await EntityP.findAll({
-  //       where: { alias: entity.alias },
-  //     })
+  try {
+    roles.forEach(async (role) => {
+      const { name, mission, entity } = role
+      const [{ id: entityId }] = await EntityP.findAll({
+        where: { alias: entity.alias },
+      })
 
-  //     const newRole = await RoleP.create({
-  //       name,
-  //       mission,
-  //       entityId,
-  //     })
+      const newRole = await RoleP.create({
+        name,
+        mission,
+        entityId,
+      })
 
-  //     if (newRole) return null
-  //   })
-  // } catch (err) {
-  //   return next(err)
-  // }
+      if (newRole) return null
+    })
+  } catch (err) {
+    return next(err)
+  }
 
   try {
     const Roles = await RoleP.findAll({
