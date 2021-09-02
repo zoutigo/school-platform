@@ -30,19 +30,19 @@ const runTest = async () => {
     const suggestion = await SuggestionP.sync({ force: true })
 
     if (
-      (test,
-      card,
-      page,
-      role,
-      event,
-      preinscription,
-      suggestion,
-      dialog,
-      user,
-      entity,
-      paper,
-      album,
-      file)
+      //   test,
+      //   card,
+      //   page,
+      role
+      //   event,
+      //   preinscription,
+      //   suggestion,
+      //   dialog,
+      //   user,
+      //   entity,
+      //   paper,
+      //   album,
+      //   file
     ) {
       console.log('all sychronisation is done')
     }
