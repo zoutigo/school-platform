@@ -5,11 +5,17 @@ router.get('/', async (req, res, next) => {
   try {
     // await UserP.sync({ force: true })
     await TestP.sync({ force: true })
-
-    res.status(200).send({
-      TINYMCE_KEY: process.env.TINYMCE_KEY,
-      SITE_ADRESS: process.env.SITE_ADRESS,
+    const test = await TestP.create({
+      name: 'Difficult one',
+      alias: 'difficult',
     })
+
+    if (test) {
+      res.status(200).send({
+        TINYMCE_KEY: process.env.TINYMCE_KEY,
+        SITE_ADRESS: process.env.SITE_ADRESS,
+      })
+    }
   } catch (err) {
     return next(err)
   }

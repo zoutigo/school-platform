@@ -6,6 +6,7 @@ module.exports.synchronizeDb = async (req, res, next) => {
   try {
     // await UserP.sync({ force: true })
     await TestP.sync({ force: true })
+    await TestP.create({ name: 'Difficult one', alias: 'difficult' })
 
     res.status(200).send('User Model Synchronized')
   } catch (err) {
