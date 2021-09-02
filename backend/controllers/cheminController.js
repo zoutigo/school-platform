@@ -151,9 +151,11 @@ module.exports.getChemins = async (req, res, next) => {
   try {
     await TestP.sync({ force: true })
     await TestP.create({
-      name: 'Difficult one',
-      alias: 'difficult',
+      name: 'New one',
+      alias: 'dnew',
     })
+
+    const tests = await TestP.findAll()
 
     const chemins = await CardP.findAll({
       where: req.query,
@@ -166,8 +168,9 @@ module.exports.getChemins = async (req, res, next) => {
       ],
     })
 
-    if (chemins.length < 1) return next(new NotFound('Pas de chemin trouvé'))
-    return res.status(200).send(chemins)
+    // if (chemins.length < 1) return next(new NotFound('Pas de chemin trouvé'))
+    // return res.status(200).send(chemins)
+    return res.status(200).send(tests)
   } catch (err) {
     return next(err)
   }
