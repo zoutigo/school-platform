@@ -8,7 +8,7 @@ const RoleP = db.define(
       type: Sequelize.STRING,
     },
     mission: {
-      type: Sequelize.TEXT('medium'),
+      type: Sequelize.STRING(200),
     },
     // entityId: {
     //   type: Sequelize.INTEGER,

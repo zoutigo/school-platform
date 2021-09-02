@@ -49,7 +49,7 @@ const runTest = async () => {
 
     // entities
   } catch (err) {
-    return err
+    console.log('Script Error:', err)
   }
 }
 
