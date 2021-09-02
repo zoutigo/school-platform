@@ -11,7 +11,8 @@
     "mocha": "cross-env NODE_ENV=test mocha --require babel-register ./backend/test/*.js --exit",
     "build": "rm -rf ./public/* && cd ./frontend && npm run build",
     "postbuild": "cp -r ./frontend/build/* ./public && rm -rf ./frontend/build",
-    "dev": "concurrently \"npm run backdev\" \"npm run frontdev\""
+    "dev": "concurrently \"npm run backdev\" \"npm run frontdev\"",
+    "update": "node ./backend/controllers/databaseController"
   },
   "repository": {
     "type": "git",

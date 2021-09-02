@@ -1,8 +1,9 @@
 const router = require('express').Router()
-const { synchronizeDb } = require('../controllers/databaseController')
 const { tokenVerify } = require('../utils/tokenverify')
 
 // Post databases
-router.post('/', synchronizeDb)
+router.post('/', (req, res, next) => {
+  console.log('nothing to do here')
+})
 
 module.exports = router

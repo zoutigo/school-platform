@@ -1,15 +1,19 @@
-const db = require('../config/database')
 const TestP = require('../models/TestP')
-const UserP = require('../models/UserP')
 
-module.exports.synchronizeDb = async (req, res, next) => {
+const runTest = async () => {
   try {
-    // await UserP.sync({ force: true })
-    await TestP.sync({ force: true })
-    await TestP.create({ name: 'Difficult one', alias: 'difficult' })
+    const update = await TestP.sync({ force: true })
+    const test = await TestP.create({
+      name: 'Difficult one',
+      alias: 'difficult',
+    })
 
-    res.status(200).send('User Model Synchronized')
+    if (update && test) {
+      console.log(update)
+    }
   } catch (err) {
-    return next(err)
+    return err
   }
 }
+
+runTest()
