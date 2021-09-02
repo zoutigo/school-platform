@@ -18,6 +18,8 @@ const {
 } = require('../constants/mainsrows')
 const CardP = require('../models/CardP')
 const PaperP = require('../models/PaperP')
+const Role = require('../models/Role')
+const { entitiesDatas } = require('../constants/entitiesdatas')
 
 const today = new Date().getTime()
 
@@ -44,7 +46,6 @@ module.exports.postUpdatePages = async (req, res, next) => {
 }
 
 module.exports.postUpdateEntities = async (req, res, next) => {
-  const entities = await Entity.find()
   const [{ content }] = await PageP.findAll({ where: { id: 2 } })
   const errors = []
 
@@ -60,7 +61,7 @@ module.exports.postUpdateEntities = async (req, res, next) => {
     errors.push(err)
   }
 
-  entities.forEach(async (entity) => {
+  entitiesDatas.forEach(async (entity) => {
     const nextEntity = {
       name: entity.name,
       alias: entity.alias,
