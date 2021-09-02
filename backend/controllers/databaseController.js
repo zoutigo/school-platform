@@ -31,18 +31,18 @@ const runTest = async () => {
 
     if (
       (test,
+      card,
       page,
-      entity,
       role,
       event,
+      preinscription,
+      suggestion,
+      dialog,
+      user,
+      entity,
       paper,
       album,
-      file,
-      card,
-      user,
-      dialog,
-      preinscription,
-      suggestion)
+      file)
     ) {
       console.log('all sychronisation is done')
     }
