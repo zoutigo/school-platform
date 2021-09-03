@@ -17,7 +17,7 @@ const EventP = db.define(
       allowNull: false,
     },
     date: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING(14),
       allowNull: false,
     },
     // userId: {

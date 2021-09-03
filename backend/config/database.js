@@ -9,7 +9,7 @@ const db = new Sequelize(
   {
     host: process.env.PGDB_HOST,
     dialect: 'postgres',
-    operatorsAliases: false,
+    operatorsAliases: 0,
     pool: {
       max: 5,
       min: 0,
