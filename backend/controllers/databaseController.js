@@ -25,27 +25,27 @@ const {
 
 require('dotenv').config()
 
-const DB_URL =
-  process.env.NODE_ENV === 'development'
-    ? process.env.NODE_ENV === 'test'
-      ? process.env.DB_TEST
-      : process.env.DB_DEV
-    : process.env.DB_PROD
+// const DB_URL =
+//   process.env.NODE_ENV === 'development'
+//     ? process.env.NODE_ENV === 'test'
+//       ? process.env.DB_TEST
+//       : process.env.DB_DEV
+//     : process.env.DB_PROD
 
-mongoose
-  .connect(process.env.MONGO_URI || DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-  })
-  .then(() => console.log('Connexion établie à la base de donnée'))
-  .catch((err) => console.log('mongo connexion error', err))
+// mongoose
+//   .connect(process.env.MONGO_URI || DB_URL, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     useFindAndModify: false,
+//     useCreateIndex: true,
+//   })
+//   .then(() => console.log('Connexion établie à la base de donnée'))
+//   .catch((err) => console.log('mongo connexion error', err))
 
 const updateModels = async () => {
   try {
     const test = await TestP.sync({ force: true })
-    const user = await UserP.sync({ force: true })
+    // const user = await UserP.sync({ force: true })
     // const entity = await EntityP.sync({ force: true })
     // const page = await PageP.sync({ force: true })
     // const role = await PageP.sync({ force: true })
@@ -59,8 +59,8 @@ const updateModels = async () => {
     // const suggestion = await SuggestionP.sync({ force: true })
 
     if (
-      test &&
-      user
+      test
+      // user
       //   entity
       //   card,
       //   page &&
