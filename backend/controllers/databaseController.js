@@ -1,3 +1,4 @@
+const { entitiesDatas } = require('../constants/entitiesdatas')
 const { pageRawContent } = require('../constants/pageRawContent')
 const { pagesDatas } = require('../constants/pagesDatas')
 const AlbumP = require('../models/AlbumP')
@@ -19,12 +20,14 @@ const {
   postUpdatePages,
 } = require('./updateController')
 
+require('dotenv').config()
+
 const runTest = async () => {
   try {
     // test
 
     const test = await TestP.sync({ force: true })
-    // const page = await PageP.sync({ force: true })
+    const page = await PageP.sync({ force: true })
     // const entity = await EntityP.sync({ force: true })
     // const user = await UserP.sync({ force: true })
     // const role = await PageP.sync({ force: true })
@@ -77,21 +80,41 @@ const createPages = async () => {
     }
   })
 
-  //   await PageP.create({
-  //     alias: 'teste',
-  //     title: 'un petit test',
-  //     constent: JSON.stringify(pageRawContent),
-  //   })
-
   const createdPages = await PageP.findAll()
-  console.log('pages crées:', createdPages)
+  console.log('pages crées:', createdPages.length)
+}
+const createEntities = async () => {
+  entitiesDatas.forEach(async (entity) => {
+    try {
+      const newEntity = await EntityP.create({
+        name: entity.name,
+        alias: entity.alias,
+        email: entity.email,
+        content: JSON.stringify(pageRawContent),
+      })
+      if (newEntity) console.log(`${entity.name} entity have been created`)
+    } catch (err) {
+      console.log('error:', err)
+    }
+  })
+
+  await EntityP.create({
+    name: 'Administration',
+    alias: 'admin',
+    email: process.env.ADMIN_EMAIL,
+    content: JSON.stringify(pageRawContent),
+  })
+
+  const createdEntities = await EntityP.findAll()
+  console.log('entités crées:', createdEntities.length)
 }
 
 try {
   //   runTest()
-  createPages()
+  //   createPages()
+  createEntities()
   //   postUpdatePages()
-  //   postUpdateEntities()
+
   //   postUpdateRoles()
   //   postUpdateUsers()
 } catch (err) {
