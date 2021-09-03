@@ -17,9 +17,11 @@ const UserP = db.define('user', {
   },
   gender: {
     type: Sequelize.ENUM('monsieur', 'madame', 'choisir'),
+    defaultValue: 'choisir',
   },
   email: {
     type: Sequelize.STRING(50),
+    unique: true,
   },
   phone: {
     type: Sequelize.STRING(14),
@@ -40,15 +42,19 @@ const UserP = db.define('user', {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
+  isVerified: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
   password: {
     type: Sequelize.STRING(64),
   },
   emailToken: {
-    type: Sequelize.STRING(64),
+    type: Sequelize.STRING,
     defaultValue: null,
   },
   losspassToken: {
-    type: Sequelize.STRING(64),
+    type: Sequelize.STRING,
     defaultValue: null,
   },
 })

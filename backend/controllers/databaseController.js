@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+const mongoose = require('mongoose')
 const { entitiesDatas } = require('../constants/entitiesdatas')
 const { pageRawContent } = require('../constants/pageRawContent')
 const { pagesDatas } = require('../constants/pagesDatas')
@@ -12,6 +14,7 @@ const PaperP = require('../models/PaperP')
 const PreinscriptionP = require('../models/PreinscriptionP')
 const SuggestionP = require('../models/SuggestionP')
 const TestP = require('../models/TestP')
+const User = require('../models/User')
 const UserP = require('../models/UserP')
 const {
   postUpdateUsers,
@@ -22,12 +25,29 @@ const {
 
 require('dotenv').config()
 
+const DB_URL =
+  process.env.NODE_ENV === 'development'
+    ? process.env.NODE_ENV === 'test'
+      ? process.env.DB_TEST
+      : process.env.DB_DEV
+    : process.env.DB_PROD
+
+mongoose
+  .connect(process.env.MONGO_URI || DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  })
+  .then(() => console.log('Connexion établie à la base de donnée'))
+  .catch((err) => console.log('mongo connexion error', err))
+
 const runTest = async () => {
   try {
     const test = await TestP.sync({ force: true })
-    const entity = await EntityP.sync({ force: true })
+    // const entity = await EntityP.sync({ force: true })
     // const page = await PageP.sync({ force: true })
-    // const user = await UserP.sync({ force: true })
+    const user = await UserP.sync({ force: true })
     // const role = await PageP.sync({ force: true })
     // const event = await EventP.sync({ force: true })
     // const paper = await PaperP.sync({ force: true })
@@ -40,7 +60,8 @@ const runTest = async () => {
 
     if (
       test &&
-      entity
+      user
+      //   entity
       //   card,
       //   page &&
       //   role &&
@@ -107,10 +128,56 @@ const createEntities = async () => {
   console.log('entités crées:', createdEntities.length)
 }
 
+const createUsers = async () => {
+  try {
+    const users = await User.find()
+    users.forEach(async (user) => {
+      const {
+        isAdmin,
+        isManager,
+        isModerator,
+        isTeacher,
+        isVerified,
+        emailToken,
+        losspassToken,
+        email,
+        password,
+        lastname,
+        firstname,
+        gender,
+        phone,
+      } = user
+
+      const newUser = await UserP.create({
+        firstname,
+        lastname,
+        gender,
+        phone,
+        isAdmin,
+        isManager,
+        isModerator,
+        isTeacher,
+        isVerified,
+        email,
+        password,
+        emailToken,
+        losspassToken,
+      })
+
+      if (newUser) {
+        console.log(email)
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 try {
-  //   runTest()
+  runTest()
   //   createPages()
-  createEntities()
+  //   createEntities()
+  createUsers()
   //   postUpdatePages()
 
   //   postUpdateRoles()
