@@ -44,8 +44,8 @@ require('dotenv').config()
 
 const updateModels = async () => {
   try {
-    const test = await TestP.sync({ force: true })
-    // const user = await UserP.sync({ force: true })
+    // const test = await TestP.sync({ force: true })
+    const user = await UserP.sync({ force: true })
     // const entity = await EntityP.sync({ force: true })
     // const page = await PageP.sync({ force: true })
     // const role = await PageP.sync({ force: true })
@@ -59,7 +59,7 @@ const updateModels = async () => {
     // const suggestion = await SuggestionP.sync({ force: true })
 
     if (
-      test
+      user
       // user
       //   entity
       //   card,
