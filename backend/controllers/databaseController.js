@@ -76,7 +76,7 @@ pagesDatas.forEach(async (page) => {
     const newPage = await PageP.create({
       title: page.title,
       alias: page.alias,
-      content: page.content,
+      content: JSON.stringify(page.content),
     })
     if (newPage) console.log(`${page.title} have been created`)
   } catch (err) {
