@@ -10,7 +10,7 @@ const PageP = db.define('page', {
     type: Sequelize.STRING(100),
   },
   content: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING(10000),
     defaultValue: JSON.stringify(pageRawContent),
   },
 })
