@@ -38,15 +38,8 @@ const app = express()
 // Postgres connexion
 
 db.authenticate()
-  .then(async () => {
-    await TestP.sync({ force: true })
-    const test = await TestP.create({
-      name: 'New one',
-      alias: 'dnew',
-    })
-    if (test) {
-      console.log('connexion etabie à postgres')
-    }
+  .then(() => {
+    console.log('connexion etabie à postgres')
   })
   .catch((err) =>
     console.log(`connexion to postgres failed with error: ${err}`)

@@ -1,3 +1,4 @@
+const { pageRawContent } = require('../constants/pageRawContent')
 const { pagesDatas } = require('../constants/pagesDatas')
 const AlbumP = require('../models/AlbumP')
 const CardP = require('../models/CardP')
@@ -23,25 +24,25 @@ const runTest = async () => {
     // test
 
     const test = await TestP.sync({ force: true })
-    const page = await PageP.sync({ force: true })
-    const entity = await EntityP.sync({ force: true })
-    const user = await UserP.sync({ force: true })
-    const role = await PageP.sync({ force: true })
-    const event = await EventP.sync({ force: true })
-    const paper = await PaperP.sync({ force: true })
-    const album = await AlbumP.sync({ force: true })
-    const file = await FileP.sync({ force: true })
-    const card = await CardP.sync({ force: true })
-    const dialog = await DialogP.sync({ force: true })
-    const preinscription = await PreinscriptionP.sync({ force: true })
-    const suggestion = await SuggestionP.sync({ force: true })
+    // const page = await PageP.sync({ force: true })
+    // const entity = await EntityP.sync({ force: true })
+    // const user = await UserP.sync({ force: true })
+    // const role = await PageP.sync({ force: true })
+    // const event = await EventP.sync({ force: true })
+    // const paper = await PaperP.sync({ force: true })
+    // const album = await AlbumP.sync({ force: true })
+    // const file = await FileP.sync({ force: true })
+    // const card = await CardP.sync({ force: true })
+    // const dialog = await DialogP.sync({ force: true })
+    // const preinscription = await PreinscriptionP.sync({ force: true })
+    // const suggestion = await SuggestionP.sync({ force: true })
 
     if (
-      //   test,
+      test
       //   card,
-      page &&
-      role &&
-      user
+      //   page &&
+      //   role &&
+      //   user
 
       //   event,
       //   preinscription,
@@ -63,17 +64,23 @@ const runTest = async () => {
 }
 
 const createPages = async () => {
-  pagesDatas.forEach(async (page) => {
-    try {
-      const newPage = await PageP.create({
-        title: page.title,
-        alias: page.alias,
-        content: JSON.stringify(page.content),
-      })
-      if (newPage) console.log(`${page.title} have been created`)
-    } catch (err) {
-      console.log('error:', err)
-    }
+  //   pagesDatas.forEach(async (page) => {
+  //     try {
+  //       const newPage = await PageP.create({
+  //         title: page.title,
+  //         alias: page.alias,
+  //         content: JSON.stringify(page.content),
+  //       })
+  //       if (newPage) console.log(`${page.title} have been created`)
+  //     } catch (err) {
+  //       console.log('error:', err)
+  //     }
+  //   })
+
+  await PageP.create({
+    alias: 'teste',
+    title: 'un petit test',
+    constent: JSON.stringify(pageRawContent),
   })
 
   const createdPages = await PageP.findAll()
