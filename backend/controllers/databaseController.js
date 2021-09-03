@@ -168,6 +168,12 @@ const createUsers = async () => {
         console.log(email)
       }
     })
+
+    const newUsers = await UserP.findAll
+
+    if (newUsers) {
+      console.log('createdUsers:', newUsers)
+    }
   } catch (err) {
     console.log(err)
   }
@@ -177,7 +183,7 @@ try {
   runTest()
   //   createPages()
   //   createEntities()
-  createUsers()
+  //   createUsers()
   //   postUpdatePages()
 
   //   postUpdateRoles()

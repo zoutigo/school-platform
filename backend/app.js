@@ -26,7 +26,7 @@ const dialogsRouter = require('./routes/dialogs')
 const updatesRouter = require('./routes/updates')
 const databaseRouter = require('./routes/databases')
 const db = require('./config/database')
-const TestP = require('./models/TestP')
+
 // const datasRouter = require("./routes/datas");
 
 // const filesRouter = require('./routes/files')
