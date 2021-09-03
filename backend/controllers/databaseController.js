@@ -42,12 +42,12 @@ mongoose
   .then(() => console.log('Connexion établie à la base de donnée'))
   .catch((err) => console.log('mongo connexion error', err))
 
-const runTest = async () => {
+const updateModels = async () => {
   try {
     const test = await TestP.sync({ force: true })
+    const user = await UserP.sync({ force: true })
     // const entity = await EntityP.sync({ force: true })
     // const page = await PageP.sync({ force: true })
-    const user = await UserP.sync({ force: true })
     // const role = await PageP.sync({ force: true })
     // const event = await EventP.sync({ force: true })
     // const paper = await PaperP.sync({ force: true })
@@ -77,11 +77,13 @@ const runTest = async () => {
       //   file
     ) {
       console.log('all sychronisation is done')
+      return null
     }
 
     // entities
   } catch (err) {
     console.log('Script Error:', err)
+    return null
   }
 }
 
@@ -180,7 +182,7 @@ const createUsers = async () => {
 }
 
 try {
-  runTest()
+  updateModels()
   //   createPages()
   //   createEntities()
   //   createUsers()
