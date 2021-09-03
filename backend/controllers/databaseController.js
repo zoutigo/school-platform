@@ -14,6 +14,7 @@ const {
   postUpdateUsers,
   postUpdateEntities,
   postUpdateRoles,
+  postUpdatePages,
 } = require('./updateController')
 
 const runTest = async () => {
@@ -61,9 +62,10 @@ const runTest = async () => {
 }
 try {
   runTest()
-  postUpdateEntities()
-  postUpdateRoles()
-  postUpdateUsers()
+  postUpdatePages()
+  //   postUpdateEntities()
+  //   postUpdateRoles()
+  //   postUpdateUsers()
 } catch (err) {
   console.log('Error:', err)
 }

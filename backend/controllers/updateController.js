@@ -19,30 +19,38 @@ const {
 const CardP = require('../models/CardP')
 const PaperP = require('../models/PaperP')
 const Role = require('../models/Role')
+const Page = require('../models/Page')
 const { entitiesDatas } = require('../constants/entitiesdatas')
+const { pageRawContent } = require('../constants/pageRawContent')
 
 const today = new Date().getTime()
 
 module.exports.postUpdatePages = async (req, res, next) => {
-  const [{ content }] = await PageP.findAll({ where: { id: 2 } })
+  const pages = await Page.find()
 
-  const pages = await PageP.findAll()
   const errors = []
 
   pages.forEach(async (page) => {
     try {
-      const updated = await PageP.update(
-        { content: content },
-        { where: { id: page.id } }
-      )
-      if (updated) console.log(`${page.name} have been updated`)
+      const newPage = await PageP.create({
+        title: page.title,
+        alias: page.alias,
+        content: pageRawContent,
+      })
+      if (newPage) console.log(`${page.title} have been created`)
     } catch (err) {
       errors.push(err)
     }
   })
 
-  if (errors.length > 0) return next(errors.join())
-  return res.status(200).send({ message: 'updates pages successfull' })
+  if (errors.length > 0) {
+    // return next(errors.join())
+    console.log('erreurs creation pages:', errors.join())
+  } else {
+    console.log('pages crées')
+  }
+
+  // return res.status(200).send({ message: 'updates pages successfull' })
 }
 
 module.exports.postUpdateEntities = async (req, res, next) => {
