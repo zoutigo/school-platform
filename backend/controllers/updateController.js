@@ -22,15 +22,14 @@ const Role = require('../models/Role')
 const Page = require('../models/Page')
 const { entitiesDatas } = require('../constants/entitiesdatas')
 const { pageRawContent } = require('../constants/pageRawContent')
+const { pagesDatas } = require('../constants/pagesDatas')
 
 const today = new Date().getTime()
 
 module.exports.postUpdatePages = async (req, res, next) => {
-  const pages = await Page.find()
-
   const errors = []
 
-  pages.forEach(async (page) => {
+  pagesDatas.forEach(async (page) => {
     try {
       const newPage = await PageP.create({
         title: page.title,
