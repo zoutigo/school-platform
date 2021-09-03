@@ -24,11 +24,9 @@ require('dotenv').config()
 
 const runTest = async () => {
   try {
-    // test
-
     const test = await TestP.sync({ force: true })
-    // const page = await PageP.sync({ force: true })
     const entity = await EntityP.sync({ force: true })
+    // const page = await PageP.sync({ force: true })
     // const user = await UserP.sync({ force: true })
     // const role = await PageP.sync({ force: true })
     // const event = await EventP.sync({ force: true })

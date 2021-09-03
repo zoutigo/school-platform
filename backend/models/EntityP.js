@@ -18,7 +18,7 @@ const EntityP = db.define(
     },
     content: {
       type: Sequelize.STRING(10000),
-      defaultValue: pageRawContent,
+      defaultValue: JSON.stringify(pageRawContent),
     },
     email: {
       type: Sequelize.STRING,
