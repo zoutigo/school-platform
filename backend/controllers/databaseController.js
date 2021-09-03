@@ -64,24 +64,24 @@ const runTest = async () => {
 }
 
 const createPages = async () => {
-  //   pagesDatas.forEach(async (page) => {
-  //     try {
-  //       const newPage = await PageP.create({
-  //         title: page.title,
-  //         alias: page.alias,
-  //         content: JSON.stringify(page.content),
-  //       })
-  //       if (newPage) console.log(`${page.title} have been created`)
-  //     } catch (err) {
-  //       console.log('error:', err)
-  //     }
-  //   })
-
-  await PageP.create({
-    alias: 'teste',
-    title: 'un petit test',
-    constent: JSON.stringify(pageRawContent),
+  pagesDatas.forEach(async (page) => {
+    try {
+      const newPage = await PageP.create({
+        title: page.title,
+        alias: page.alias,
+        content: JSON.stringify(page.content),
+      })
+      if (newPage) console.log(`${page.title} have been created`)
+    } catch (err) {
+      console.log('error:', err)
+    }
   })
+
+  //   await PageP.create({
+  //     alias: 'teste',
+  //     title: 'un petit test',
+  //     constent: JSON.stringify(pageRawContent),
+  //   })
 
   const createdPages = await PageP.findAll()
   console.log('pages crées:', createdPages)
