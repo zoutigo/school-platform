@@ -39,7 +39,7 @@ const runTest = async () => {
     if (
       //   test,
       //   card,
-      //   page,
+      page &&
       role &&
       user
 
@@ -61,15 +61,15 @@ const runTest = async () => {
     console.log('Script Error:', err)
   }
 }
-// try {
-//   //   runTest()
-// //   postUpdatePages()
-//   //   postUpdateEntities()
-//   //   postUpdateRoles()
-//   //   postUpdateUsers()
-// } catch (err) {
-//   console.log('Error:', err)
-// }
+try {
+  runTest()
+  //   postUpdatePages()
+  //   postUpdateEntities()
+  //   postUpdateRoles()
+  //   postUpdateUsers()
+} catch (err) {
+  console.log('Error:', err)
+}
 
 pagesDatas.forEach(async (page) => {
   try {

@@ -1,16 +1,17 @@
 const Sequelize = require('sequelize')
 const db = require('../config/database')
+const { pageRawContent } = require('../constants/pageRawContent')
 
 const PageP = db.define('page', {
   title: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(100),
   },
   alias: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(100),
   },
   content: {
-    type: Sequelize.STRING,
-    defaultValue: 'Empty Page',
+    type: Sequelize.TEXT,
+    defaultValue: JSON.stringify(pageRawContent),
   },
 })
 
