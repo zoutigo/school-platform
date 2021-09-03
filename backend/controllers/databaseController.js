@@ -61,8 +61,28 @@ const runTest = async () => {
     console.log('Script Error:', err)
   }
 }
+
+const createPages = async () => {
+  pagesDatas.forEach(async (page) => {
+    try {
+      const newPage = await PageP.create({
+        title: page.title,
+        alias: page.alias,
+        content: JSON.stringify(page.content),
+      })
+      if (newPage) console.log(`${page.title} have been created`)
+    } catch (err) {
+      console.log('error:', err)
+    }
+  })
+
+  const createdPages = await PageP.findAll()
+  console.log('pages crées:', createdPages)
+}
+
 try {
-  runTest()
+  //   runTest()
+  createPages()
   //   postUpdatePages()
   //   postUpdateEntities()
   //   postUpdateRoles()
@@ -70,16 +90,3 @@ try {
 } catch (err) {
   console.log('Error:', err)
 }
-
-pagesDatas.forEach(async (page) => {
-  try {
-    const newPage = await PageP.create({
-      title: page.title,
-      alias: page.alias,
-      content: JSON.stringify(page.content),
-    })
-    if (newPage) console.log(`${page.title} have been created`)
-  } catch (err) {
-    console.log('error:', err)
-  }
-})
