@@ -61,7 +61,7 @@ const runTest = async () => {
   }
 }
 try {
-  runTest()
+  //   runTest()
   postUpdatePages()
   //   postUpdateEntities()
   //   postUpdateRoles()

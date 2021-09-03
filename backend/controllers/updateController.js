@@ -46,7 +46,8 @@ module.exports.postUpdatePages = async (req, res, next) => {
     // return next(errors.join())
     console.log('erreurs creation pages:', errors.join())
   } else {
-    console.log('pages crées')
+    const createdPages = await PageP.findAll()
+    console.log('pages crées:', createdPages)
   }
 
   // return res.status(200).send({ message: 'updates pages successfull' })

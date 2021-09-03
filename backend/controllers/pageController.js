@@ -90,7 +90,7 @@ module.exports.getPages = async (req, res, next) => {
 
   try {
     const pages = await PageP.findAll({ where: req.query })
-    if (pages.length < 1) return next(new NotFound('paper not found'))
+    if (pages.length < 1) return next(new NotFound('page not found'))
     return res.status(200).send(pages)
   } catch (err) {
     next(err)
