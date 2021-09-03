@@ -108,9 +108,9 @@ const createEntities = async () => {
 }
 
 try {
-  runTest()
+  //   runTest()
   //   createPages()
-  //   createEntities()
+  createEntities()
   //   postUpdatePages()
 
   //   postUpdateRoles()
