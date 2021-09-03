@@ -27,8 +27,8 @@ const runTest = async () => {
     // test
 
     const test = await TestP.sync({ force: true })
-    const page = await PageP.sync({ force: true })
-    // const entity = await EntityP.sync({ force: true })
+    // const page = await PageP.sync({ force: true })
+    const entity = await EntityP.sync({ force: true })
     // const user = await UserP.sync({ force: true })
     // const role = await PageP.sync({ force: true })
     // const event = await EventP.sync({ force: true })
@@ -41,7 +41,8 @@ const runTest = async () => {
     // const suggestion = await SuggestionP.sync({ force: true })
 
     if (
-      test
+      test &&
+      entity
       //   card,
       //   page &&
       //   role &&
@@ -52,7 +53,6 @@ const runTest = async () => {
       //   suggestion,
       //   dialog,
 
-      //   entity,
       //   paper,
       //   album,
       //   file
@@ -110,7 +110,7 @@ const createEntities = async () => {
 }
 
 try {
-  //   runTest()
+  runTest()
   //   createPages()
   createEntities()
   //   postUpdatePages()

@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('../config/database')
+const { pageRawContent } = require('../constants/pageRawContent')
 const AlbumP = require('./AlbumP')
 const EventP = require('./EventP')
 const PaperP = require('./PaperP')
@@ -16,8 +17,8 @@ const EntityP = db.define(
       type: Sequelize.STRING,
     },
     content: {
-      type: Sequelize.STRING,
-      defaultValue: 'Empty Page',
+      type: Sequelize.STRING(10000),
+      defaultValue: pageRawContent,
     },
     email: {
       type: Sequelize.STRING,
