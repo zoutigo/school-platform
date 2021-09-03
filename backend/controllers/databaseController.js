@@ -1,3 +1,4 @@
+const { pagesDatas } = require('../constants/pagesDatas')
 const AlbumP = require('../models/AlbumP')
 const CardP = require('../models/CardP')
 const DialogP = require('../models/DialogP')
@@ -60,12 +61,25 @@ const runTest = async () => {
     console.log('Script Error:', err)
   }
 }
-try {
-  //   runTest()
-  postUpdatePages()
-  //   postUpdateEntities()
-  //   postUpdateRoles()
-  //   postUpdateUsers()
-} catch (err) {
-  console.log('Error:', err)
-}
+// try {
+//   //   runTest()
+// //   postUpdatePages()
+//   //   postUpdateEntities()
+//   //   postUpdateRoles()
+//   //   postUpdateUsers()
+// } catch (err) {
+//   console.log('Error:', err)
+// }
+
+pagesDatas.forEach(async (page) => {
+  try {
+    const newPage = await PageP.create({
+      title: page.title,
+      alias: page.alias,
+      content: page.content,
+    })
+    if (newPage) console.log(`${page.title} have been created`)
+  } catch (err) {
+    console.log('error:', err)
+  }
+})
