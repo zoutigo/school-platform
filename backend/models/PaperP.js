@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize')
 const db = require('../config/database')
-const FileP = require('./FileP')
 
 const PaperP = db.define(
   'paper',
@@ -23,7 +22,7 @@ const PaperP = db.define(
       allowNull: false,
     },
     content: {
-      type: Sequelize.TEXT,
+      type: Sequelize.STRING(10000),
     },
     classe_fourniture: {
       type: Sequelize.STRING(30),
@@ -42,21 +41,10 @@ const PaperP = db.define(
     enddate: {
       type: Sequelize.STRING(14),
     },
-    // userId: {
-    //   type: Sequelize.INTEGER,
-    //   defaultValue: 1,
-    // },
-    // entityId: {
-    //   type: Sequelize.INTEGER,
-    //   defaultValue: 13,
-    // },
   },
   {
     tableName: 'papers',
   }
 )
-
-PaperP.belongsToMany(FileP, { through: 'paper_files' })
-FileP.belongsToMany(PaperP, { through: 'paper_files' })
 
 module.exports = PaperP

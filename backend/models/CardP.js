@@ -23,7 +23,4 @@ const CardP = db.define(
   }
 )
 
-// CardP.belongsToMany(FileP, { through: 'card_images' })
-// FileP.belongsToMany(CardP, { through: 'card_images' })
-
 module.exports = CardP
