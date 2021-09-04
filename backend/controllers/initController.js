@@ -71,46 +71,46 @@ module.exports.initPages = async (req, res, next) => {
 }
 
 module.exports.initEntities = async (req, res, next) => {
-  try {
-    const reset = await EntityP.sync({ force: true })
-    if (reset) return res.status(200).send('successfull reset')
-    return next('reset was not done')
-  } catch (err) {
-    return next(err)
-  }
-
   //   try {
-  //     await EntityP.create({
-  //       aias: 'admin',
-  //       name: 'Administration',
-  //       email: process.env.ADMIN_EMAIL,
-  //       content: JSON.stringify(pageRawContent),
-  //     })
-  //     const entities = await Entity.find()
-
-  //     if (entities.length > 0) {
-  //       entities.forEach(async (entity) => {
-  //         const { name, alias, email } = entity
-  //         await EntityP.create({
-  //           name,
-  //           email,
-  //           alias,
-  //           content: JSON.stringify(pageRawContent),
-  //         })
-  //       })
-
-  //       const createdEntities = await EntityP.findAll()
-  //       if (createdEntities)
-  //         return res
-  //           .status(200)
-  //           .send({ message: 'entities created', datas: createdEntities })
-
-  //       return next('no entity  created')
-  //     }
-  //     return next('no entiy found on mongodb')
+  //     const reset = await EntityP.sync({ force: true })
+  //     if (reset) return res.status(200).send('successfull reset')
+  //     return next('reset was not done')
   //   } catch (err) {
   //     return next(err)
   //   }
+
+  try {
+    await EntityP.create({
+      aias: 'admin',
+      name: 'Administration',
+      email: process.env.ADMIN_EMAIL,
+      content: JSON.stringify(pageRawContent),
+    })
+    const entities = await Entity.find()
+
+    if (entities.length > 0) {
+      entities.forEach(async (entity) => {
+        const { name, alias, email } = entity
+        await EntityP.create({
+          name,
+          email,
+          alias,
+          content: JSON.stringify(pageRawContent),
+        })
+      })
+
+      const createdEntities = await EntityP.findAll()
+      if (createdEntities)
+        return res
+          .status(200)
+          .send({ message: 'entities created', datas: createdEntities })
+
+      return next('no entity  created')
+    }
+    return next('no entiy found on mongodb')
+  } catch (err) {
+    return next(err)
+  }
 }
 
 module.exports.initAlbums = async (req, res, next) => {
