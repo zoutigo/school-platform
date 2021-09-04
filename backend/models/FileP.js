@@ -16,10 +16,6 @@ const FileP = db.define(
       type: Sequelize.ENUM('image', 'file'),
       defaultValue: 'image',
     },
-    // albumId: {
-    //   type: Sequelize.UUID(),
-    //   allowNull: false,
-    // },
   },
   {
     tableName: 'files',
