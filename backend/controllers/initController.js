@@ -115,74 +115,78 @@ module.exports.initEntities = async (req, res, next) => {
 }
 
 module.exports.initAlbums = async (req, res, next) => {
+  //   try {
+  //     const resetAlbum = await RoleP.sync({ alter: true })
+  //     const resetFile = await FileP.sync({ alter: true })
+  //     const resetEntity = await EntityP.sync({ alter: true })
+  //     if (resetAlbum && resetEntity && resetFile)
+  //       return res.status(200).send('Album successfull reset')
+  //     return next('album reset was not done')
+  //   } catch (err) {
+  //     return next(err)
+  //   }
+
+  const createImage = async (image, ownerId) => {
+    try {
+      const { id: imageId } = await FileP.create({
+        filepath: image.filepath,
+        filename: image.filename,
+        filetype: 'image',
+        albumId: ownerId,
+      })
+      if (imageId) return imageId
+    } catch (err) {
+      return err
+    }
+    return null
+  }
+
   try {
-    const resetAlbum = await RoleP.sync({ alter: true })
-    const resetFile = await FileP.sync({ force: true })
-    const resetEntity = await EntityP.sync({ alter: true })
-    if (resetAlbum && resetEntity && resetFile)
-      return res.status(200).send('Album successfull reset')
-    return next('album reset was not done')
+    const albums = await Album.find().populate('entity')
+    // /// foreach bloc
+    albums.forEach(async (album) => {
+      const {
+        name,
+        alias,
+        description,
+        isPrivate,
+        pictures,
+        entity,
+        coverpath: filepath,
+        covername: filename,
+      } = album
+
+      const [{ id: entityId }] = await EntityP.findAll({
+        where: { alias: entity.alias },
+      })
+
+      //   / create album
+      const { id: albumId } = await AlbumP.create({
+        name,
+        alias,
+        description,
+        isPrivate,
+        entityId: entityId,
+      })
+
+      // create images
+      if (albumId) {
+        for (let i = 0; i < pictures.length; i += 1) {
+          createImage(pictures[i], albumId)
+        }
+      }
+    })
+
+    //   / return the resukt
+
+    const ALBUMS = await AlbumP.findAll({
+      include: FileP,
+    })
+
+    return res.status(200).send({ datas: ALBUMS })
   } catch (err) {
     return next(err)
   }
-
-  //   const createImage = async (image, ownerId) => {
-  //     try {
-  //       const { id: imageId } = await FileP.create({
-  //         filepath: image.filepath,
-  //         filename: image.filename,
-  //         filetype: 'image',
-  //         albumId: ownerId,
-  //       })
-  //       if (imageId) return imageId
-  //     } catch (err) {
-  //       return err
-  //     }
-  //     return null
-  //   }
-
-  //   const albums = await Album.find().populate('entity')
-  //   // /// foreach bloc
-  //   albums.forEach(async (album) => {
-  //     const {
-  //       name,
-  //       alias,
-  //       description,
-  //       isPrivate,
-  //       pictures,
-  //       entity,
-  //       coverpath: filepath,
-  //       covername: filename,
-  //     } = album
-
-  //     const [{ id: entityId }] = await EntityP.findAll({
-  //       where: { alias: entity.alias },
-  //     })
-
-  /// create album
-  //     const { id: albumId } = await AlbumP.create({
-  //       name,
-  //       alias,
-  //       description,
-  //       isPrivate,
-  //       entityId: entityId,
-  //     })
-
-  //     // create images
-  //     if (albumId) {
-  //       for (let i = 0; i < pictures.length; i += 1) {
-  //         createImage(pictures[i], albumId)
-  //       }
-  //     }
-  //   })
-
-  /// return the resukt
-
-  //   const ALBUMS = await AlbumP.findAll({
-  //     include: FileP,
-  //   })
-
-  //   return res.status(200).send({ datas: ALBUMS })
 }
 
 module.exports.initRoles = async (req, res, next) => {
