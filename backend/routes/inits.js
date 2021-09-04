@@ -25,9 +25,7 @@ router.post('/models', initSyncModels)
 router.post('/pages', initPages)
 
 // Entities
-router.post('/entities', (req, res) => {
-  return res.status(200).send('here the route')
-})
+router.post('/entities', initEntities)
 
 // Albums
 router.post('/albums', initAlbums)
