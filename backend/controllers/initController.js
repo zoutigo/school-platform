@@ -330,97 +330,97 @@ module.exports.initChemins = async (req, res, next) => {
 }
 
 module.exports.initPapers = async (req, res, next) => {
-  //   try {
-  //     const resetPaperFiles = await PaperFiles.sync({ force: true })
-  //     const resetPaper = await PaperP.sync({ force: true })
-  //     if (resetPaper && resetPaperFiles)
-  //       return res.status(200).send('paper successfull reset')
-  //     return next('paper reset was not done')
-  //   } catch (err) {
-  //     return next(err)
-  //   }
   try {
-    const papers = await Paper.find()
-    const entities = await Entity.find()
-    const Users = await User.find()
-    const users = await UserP.findAll()
-    const [administrationEntity] = await EntityP.findOrCreate({
-      where: adminEntity,
-    })
-    const [papersAlbum] = await AlbumP.findOrCreate({
-      where: { ...papersAlbumDatas, entityId: administrationEntity.id },
-    })
-    const [secretariatEntity] = await EntityP.findOrCreate({
-      where: secretariatEntityDatas,
-    })
-    const admin = await UserP.findOne({
-      where: { isAdmin: true },
-    })
-    papers.forEach(async (paper) => {
-      const {
-        author,
-        entity,
-        date,
-        filename,
-        filepath,
-        type,
-        enddate,
-        startdate,
-        title,
-        isPrivate,
-        content,
-        clientEntity,
-      } = paper
-      const FournitureEntity = clientEntity
-        ? entities.find((entiti) => entiti._id === clientEntity)
-        : null
-      const paperEntity = entities.find(
-        (entit) => JSON.stringify(entit._id) === JSON.stringify(entity)
-      )
-      const newPaperEntity = await EntityP.findOne({
-        where: { alias: paperEntity.alias },
-      })
-      const Author = Users.find(
-        (boy) => JSON.stringify(boy._id) === JSON.stringify(author)
-      )
-      const newAuthor = Author
-        ? users.find((usere) => usere.email === Author.email)
-        : null
-      const newPaper = {
-        type,
-        title,
-        content: JSON.stringify(pageRawContent),
-        classe_fourniture: FournitureEntity ? FournitureEntity.name : null,
-        isPrivate: isPrivate || false,
-        date: (date || today).toString(),
-        startdate: (startdate || today).toString(),
-        enddate: (enddate || today).toString(),
-        userId: newAuthor ? newAuthor.id : admin.id,
-        entityId:
-          entity && newPaperEntity ? newPaperEntity.id : secretariatEntity.id,
-      }
-      let fileDatas = null
-      if (filename && filepath) {
-        fileDatas = {
-          filename,
-          filepath,
-          filetype: 'file',
-          albumId: papersAlbum.id,
-        }
-        const [file] = await FileP.findOrCreate({ where: fileDatas })
-        const [brandPaper] = await PaperP.findOrCreate({ where: newPaper })
-        if (file && brandPaper) {
-          brandPaper.addFile(file)
-        }
-      } else {
-        await PaperP.findOrCreate({ where: newPaper })
-      }
-    })
-    const Papers = await PaperP.findAll({
-      include: [FileP],
-    })
-    res.status(200).send(Papers)
+    const resetPaperFiles = await PaperFiles.sync({ force: true })
+    const resetPaper = await PaperP.sync({ force: true })
+    if (resetPaper && resetPaperFiles)
+      return res.status(200).send('paper successfull reset')
+    return next('paper reset was not done')
   } catch (err) {
     return next(err)
   }
+  //   try {
+  //     const papers = await Paper.find()
+  //     const entities = await Entity.find()
+  //     const Users = await User.find()
+  //     const users = await UserP.findAll()
+  //     const [administrationEntity] = await EntityP.findOrCreate({
+  //       where: adminEntity,
+  //     })
+  //     const [papersAlbum] = await AlbumP.findOrCreate({
+  //       where: { ...papersAlbumDatas, entityId: administrationEntity.id },
+  //     })
+  //     const [secretariatEntity] = await EntityP.findOrCreate({
+  //       where: secretariatEntityDatas,
+  //     })
+  //     const admin = await UserP.findOne({
+  //       where: { isAdmin: true },
+  //     })
+  //     papers.forEach(async (paper) => {
+  //       const {
+  //         author,
+  //         entity,
+  //         date,
+  //         filename,
+  //         filepath,
+  //         type,
+  //         enddate,
+  //         startdate,
+  //         title,
+  //         isPrivate,
+  //         content,
+  //         clientEntity,
+  //       } = paper
+  //       const FournitureEntity = clientEntity
+  //         ? entities.find((entiti) => entiti._id === clientEntity)
+  //         : null
+  //       const paperEntity = entities.find(
+  //         (entit) => JSON.stringify(entit._id) === JSON.stringify(entity)
+  //       )
+  //       const newPaperEntity = await EntityP.findOne({
+  //         where: { alias: paperEntity.alias },
+  //       })
+  //       const Author = Users.find(
+  //         (boy) => JSON.stringify(boy._id) === JSON.stringify(author)
+  //       )
+  //       const newAuthor = Author
+  //         ? users.find((usere) => usere.email === Author.email)
+  //         : null
+  //       const newPaper = {
+  //         type,
+  //         title,
+  //         content: JSON.stringify(pageRawContent),
+  //         classe_fourniture: FournitureEntity ? FournitureEntity.name : null,
+  //         isPrivate: isPrivate || false,
+  //         date: (date || today).toString(),
+  //         startdate: (startdate || today).toString(),
+  //         enddate: (enddate || today).toString(),
+  //         userId: newAuthor ? newAuthor.id : admin.id,
+  //         entityId:
+  //           entity && newPaperEntity ? newPaperEntity.id : secretariatEntity.id,
+  //       }
+  //       let fileDatas = null
+  //       if (filename && filepath) {
+  //         fileDatas = {
+  //           filename,
+  //           filepath,
+  //           filetype: 'file',
+  //           albumId: papersAlbum.id,
+  //         }
+  //         const [file] = await FileP.findOrCreate({ where: fileDatas })
+  //         const [brandPaper] = await PaperP.findOrCreate({ where: newPaper })
+  //         if (file && brandPaper) {
+  //           brandPaper.addFile(file)
+  //         }
+  //       } else {
+  //         await PaperP.findOrCreate({ where: newPaper })
+  //       }
+  //     })
+  //     const Papers = await PaperP.findAll({
+  //       include: [FileP],
+  //     })
+  //     res.status(200).send(Papers)
+  //   } catch (err) {
+  //     return next(err)
+  //   }
 }
