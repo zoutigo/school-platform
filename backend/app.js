@@ -129,7 +129,8 @@ app.use('/inits', initRouter)
 
 app.use(handleErrors)
 app.post('*', (req, res) => {
-  res.redirect('/inits')
+  const page = req.body
+  res.redirect(`/inits/${page}`)
 })
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
