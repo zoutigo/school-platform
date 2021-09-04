@@ -174,7 +174,7 @@ const createUsers = async () => {
     const newUsers = await UserP.findAll()
 
     if (newUsers) {
-      console.log('createdUsers:', newUsers)
+      console.log('newUsers:', newUsers)
     }
   } catch (err) {
     console.log(err)
