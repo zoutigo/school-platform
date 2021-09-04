@@ -239,7 +239,6 @@ module.exports.initRoles = async (req, res, next) => {
 }
 
 module.exports.initUsers = async (req, res, next) => {
-  const users = await User.find()
   const Errors = []
 
   const createUser = async (user) => {
@@ -264,10 +263,11 @@ module.exports.initUsers = async (req, res, next) => {
       )
       if (newUser) console.log('user migrated')
     } catch (err) {
-      console.log(err)
       Errors.push(err)
     }
   }
+
+  const users = await User.find()
 
   for (let i = 0; i < users.length; i += 1) {
     createUser(users[i])
@@ -279,12 +279,10 @@ module.exports.initUsers = async (req, res, next) => {
       include: [RoleP, EntityP],
     })
     if (ModifiedUsers) {
-      // return res.status(200).send({ users: ModifiedUsers })
-      console.log('users:', ModifiedUsers)
+      return res.status(200).send({ users: ModifiedUsers })
     }
   } catch (err) {
-    // return next(err)
-    console.log('Error:', err)
+    return next(err)
   }
 }
 
