@@ -389,7 +389,7 @@ module.exports.initPapers = async (req, res, next) => {
       const newPaper = {
         type,
         title,
-        content: null,
+        content: JSON.stringify(pageRawContent),
         classe_fourniture: FournitureEntity ? FournitureEntity.name : null,
         isPrivate: isPrivate || false,
         date: (date || today).toString(),
