@@ -282,7 +282,7 @@ module.exports.initUsers = async (req, res, next) => {
 module.exports.initChemins = async (req, res, next) => {
   try {
     const resetCard = await CardP.sync({ force: true })
-    const resetFile = await FileP.sync({ alter: true })
+    const resetFile = await FileP.sync()
 
     if (resetCard && resetFile)
       return res.status(200).send('Card successfull reset')
