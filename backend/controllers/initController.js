@@ -81,7 +81,7 @@ module.exports.initEntities = async (req, res, next) => {
 
   try {
     await EntityP.create({
-      aias: 'admin',
+      alias: 'admin',
       name: 'Administration',
       email: process.env.ADMIN_EMAIL,
       content: JSON.stringify(pageRawContent),
