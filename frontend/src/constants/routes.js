@@ -1124,7 +1124,7 @@ const routes = [
             state: {
               name: 'Initialisation',
               alias: 'init',
-              access: 'public',
+              access: 'admin',
               type: 'chapter',
               filepath: null,
               description: null,
