@@ -27,6 +27,13 @@ const { pageRawContent } = require('../constants/pageRawContent')
 const { pagesDatas } = require('../constants/pagesDatas')
 const CardImages = require('../models/CardImages')
 const PaperFiles = require('../models/PaperFiles')
+const EventP = require('../models/EventP')
+const DialogP = require('../models/DialogP')
+const PreinscriptionP = require('../models/PreinscriptionP')
+const SuggestionP = require('../models/SuggestionP')
+const UserEntities = require('../models/UserEntities')
+const UserRoles = require('../models/UserRoles')
+const PreinscriptionFiles = require('../models/PreinscriptionFiles')
 
 require('dotenv').config()
 
@@ -423,4 +430,34 @@ module.exports.initPapers = async (req, res, next) => {
   //   } catch (err) {
   //     return next(err)
   //   }
+}
+
+module.exports.initEvents = async (req, res, next) => {
+  try {
+    const resetEvents = await EventP.sync({ force: true })
+    const resetUsers = await UserP.sync({ force: true })
+    const resetUserEntities = await UserEntities.sync({ force: true })
+    const resetUserRoles = await UserRoles.sync()
+    const resetDialogs = await DialogP.sync({ force: true })
+    const resetPreinscriptions = await PreinscriptionP.sync({ force: true })
+    const resetPreinscriptionsFiles = await PreinscriptionFiles.sync({
+      force: true,
+    })
+    const suggestions = await SuggestionP.sync({ force: true })
+
+    if (
+      resetUsers &&
+      resetEvents &&
+      resetDialogs &&
+      suggestions &&
+      resetUserEntities &&
+      resetUserRoles &&
+      resetPreinscriptions &&
+      resetPreinscriptionsFiles
+    )
+      return res.status(200).send('paper successfull reset')
+    return next('paper reset was not done')
+  } catch (err) {
+    return next(err)
+  }
 }

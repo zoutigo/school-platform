@@ -59,9 +59,6 @@ const UserP = db.define('user', {
   },
 })
 
-// UserP.hasMany(RoleP, { foreignKey: 'entityId' })
-// RoleP.belongsTo(UserP)
-
 UserP.belongsToMany(RoleP, { through: 'user_roles' })
 RoleP.belongsToMany(UserP, { through: 'user_roles' })
 
