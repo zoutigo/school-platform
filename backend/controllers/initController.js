@@ -28,7 +28,7 @@ const today = new Date().getTime()
 
 module.exports.initSyncModels = async (req, res, next) => {
   try {
-    const pages = PageP.findAll()
+    const pages = await PageP.findAll()
     if (pages.length < 1)
       return next('Une erreur est survenue ou alors aucune pas exitante')
     return res.status(200).send({ message: 'pages trouvées', data: pages })

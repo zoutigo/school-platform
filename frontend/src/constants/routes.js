@@ -1118,6 +1118,19 @@ const routes = [
               icon: null,
             },
           },
+          {
+            path: '/private/identification/init',
+            exact: true,
+            state: {
+              name: 'Initialisation',
+              alias: 'init',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
         ],
       },
       {

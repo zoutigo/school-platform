@@ -4,6 +4,12 @@ const LOCALHOST = 'http://localhost:3500'
 
 const PREFIX = process.env.NODE_ENV === 'production' ? '' : LOCALHOST
 
+export const apiInitialize = async ({ type }) => {
+  const URL = `${PREFIX}/inits/${type}`
+  const { data } = await axios.post(URL)
+  return data
+}
+
 export const apiCheckEmail = async (value) => {
   const data = { email: value }
 
