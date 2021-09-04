@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 const AlbumP = require('../models/AlbumP')
 const Entity = require('../models/Entity')
 const Paper = require('../models/Paper')
@@ -70,7 +71,7 @@ module.exports.initPages = async (req, res, next) => {
 }
 
 module.exports.initEntities = async (req, res, next) => {
-  res.status.send('ca marche')
+  return res.status.send('ca marche')
   //   try {
   //     const reset = await EntityP.sync({ force: true })
   //     if (reset) return res.status(200).send('successfull reset')
