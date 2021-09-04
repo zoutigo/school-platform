@@ -117,7 +117,7 @@ module.exports.initEntities = async (req, res, next) => {
 module.exports.initAlbums = async (req, res, next) => {
   try {
     const resetAlbum = await RoleP.sync({ alter: true })
-    const resetFile = await FileP.sync({ alter: true })
+    const resetFile = await FileP.sync({ force: true })
     const resetEntity = await EntityP.sync({ alter: true })
     if (resetAlbum && resetEntity && resetFile)
       return res.status(200).send('Album successfull reset')
