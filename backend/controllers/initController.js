@@ -39,13 +39,18 @@ module.exports.initSyncModels = async (req, res, next) => {
 
 module.exports.initPages = async (req, res, next) => {
   const errors = []
+  try {
+    await PageP.sync({ force: true })
+  } catch (err) {
+    return next(err)
+  }
 
   pagesDatas.forEach(async (page) => {
     try {
       const newPage = await PageP.create({
         title: page.title,
         alias: page.alias,
-        content: pageRawContent,
+        content: JSON.stringify(page.content),
       })
       if (newPage) console.log(`${page.title} have been created`)
     } catch (err) {
@@ -53,15 +58,13 @@ module.exports.initPages = async (req, res, next) => {
     }
   })
 
-  if (errors.length > 0) {
-    // return next(errors.join())
-    console.log('erreurs creation pages:', errors.join())
-  } else {
-    const createdPages = await PageP.findAll()
-    console.log('pages crées:', createdPages)
-  }
+  if (errors.length > 0) return next(errors.join())
 
-  // return res.status(200).send({ message: 'updates pages successfull' })
+  const createdPages = await PageP.findAll()
+
+  return res
+    .status(200)
+    .send({ message: 'updates pages successfull', datas: createdPages })
 }
 
 module.exports.initEntities = async (req, res, next) => {
