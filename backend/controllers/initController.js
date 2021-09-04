@@ -71,7 +71,9 @@ module.exports.initPages = async (req, res, next) => {
 
 module.exports.initEntities = async (req, res, next) => {
   try {
-    await EntityP.sync({ force: true })
+    const reset = await EntityP.sync({ force: true })
+    if (reset) return res.status(200).send('successfull reset')
+    return next('reset was not done')
   } catch (err) {
     return next(err)
   }
