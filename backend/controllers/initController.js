@@ -174,35 +174,43 @@ module.exports.initAlbums = async (req, res, next) => {
 }
 
 module.exports.initRoles = async (req, res, next) => {
-  const roles = await Role.find().populate('entity')
-
   try {
-    roles.forEach(async (role) => {
-      const { name, mission, entity } = role
-      const [{ id: entityId }] = await EntityP.findAll({
-        where: { alias: entity.alias },
-      })
-
-      const newRole = await RoleP.create({
-        name,
-        mission,
-        entityId,
-      })
-
-      if (newRole) return null
-    })
+    const resetRole = await RoleP.sync()
+    const resetEntity = await EntityP.sync({ alter: true })
+    if (resetRole && resetEntity)
+      return res.status(200).send('Rolesuccessfull reset')
+    return next('role reset was not done')
   } catch (err) {
     return next(err)
   }
+  //   try {
+  //     const roles = await Role.find().populate('entity')
+  //     roles.forEach(async (role) => {
+  //       const { name, mission, entity } = role
+  //       const [{ id: entityId }] = await EntityP.findAll({
+  //         where: { alias: entity.alias },
+  //       })
 
-  try {
-    const Roles = await RoleP.findAll({
-      include: EntityP,
-    })
-    if (Roles) return res.status(200).send({ datas: Roles })
-  } catch (err) {
-    return next(err)
-  }
+  //       const newRole = await RoleP.create({
+  //         name,
+  //         mission,
+  //         entityId,
+  //       })
+
+  //       if (newRole) return null
+  //     })
+  //   } catch (err) {
+  //     return next(err)
+  //   }
+
+  //   try {
+  //     const Roles = await RoleP.findAll({
+  //       include: EntityP,
+  //     })
+  //     if (Roles) return res.status(200).send({ datas: Roles })
+  //   } catch (err) {
+  //     return next(err)
+  //   }
 }
 
 module.exports.initUsers = async (req, res, next) => {
