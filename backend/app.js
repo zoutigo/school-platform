@@ -29,7 +29,6 @@ const initRouter = require('./routes/inits')
 const db = require('./config/database')
 
 // const datasRouter = require("./routes/datas");
-
 // const filesRouter = require('./routes/files')
 
 dotenv.config()

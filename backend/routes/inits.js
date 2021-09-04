@@ -12,6 +12,11 @@ const {
 
 const { tokenVerify } = require('../utils/tokenverify')
 
+// Get
+router.get('/', (req, res) => {
+  res.status(200).send('get is ok')
+})
+
 // Pages
 router.post('/models', initSyncModels)
 
