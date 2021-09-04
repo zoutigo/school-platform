@@ -117,8 +117,9 @@ module.exports.initEntities = async (req, res, next) => {
 module.exports.initAlbums = async (req, res, next) => {
   try {
     const resetAlbum = await RoleP.sync({ alter: true })
+    const resetFile = await FileP.sync({ alter: true })
     const resetEntity = await EntityP.sync({ alter: true })
-    if (resetAlbum && resetEntity)
+    if (resetAlbum && resetEntity && resetFile)
       return res.status(200).send('Album successfull reset')
     return next('album reset was not done')
   } catch (err) {
@@ -158,7 +159,7 @@ module.exports.initAlbums = async (req, res, next) => {
   //       where: { alias: entity.alias },
   //     })
 
-  //     /// create album
+  /// create album
   //     const { id: albumId } = await AlbumP.create({
   //       name,
   //       alias,
@@ -175,7 +176,7 @@ module.exports.initAlbums = async (req, res, next) => {
   //     }
   //   })
 
-  //   /// return the resukt
+  /// return the resukt
 
   //   const ALBUMS = await AlbumP.findAll({
   //     include: FileP,

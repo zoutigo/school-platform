@@ -9,17 +9,17 @@ const FileP = db.define(
       allowNull: false,
     },
     filepath: {
-      type: Sequelize.STRING(150),
+      type: Sequelize.STRING(300),
       allowNull: false,
     },
     filetype: {
       type: Sequelize.ENUM('image', 'file'),
       defaultValue: 'image',
     },
-    albumId: {
-      type: Sequelize.UUID(),
-      allowNull: false,
-    },
+    // albumId: {
+    //   type: Sequelize.UUID(),
+    //   allowNull: false,
+    // },
   },
   {
     tableName: 'files',
