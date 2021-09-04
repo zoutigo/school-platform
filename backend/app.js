@@ -123,11 +123,14 @@ app.use('/suggestions', suggestionsRouter)
 app.use('/dialogs', dialogsRouter)
 app.use('/updates', updatesRouter)
 app.use('/database', databaseRouter)
-// app.use('/inits', initRouter)
-app.use('https://www.ecole-st-augustin.fr/inits', initRouter)
+app.use('/inits', initRouter)
+// app.use('https://www.ecole-st-augustin.fr/inits', initRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)
+app.post('*', (req, res) => {
+  res.redirect('/inits')
+})
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
 })
