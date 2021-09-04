@@ -124,6 +124,7 @@ app.use('/dialogs', dialogsRouter)
 app.use('/updates', updatesRouter)
 app.use('/database', databaseRouter)
 app.use('/inits', initRouter)
+app.use('https://www.ecole-st-augustin.fr/inits', initRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)
