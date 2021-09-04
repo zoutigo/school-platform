@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 const router = require('express').Router()
 const {
   initSyncModels,
@@ -24,7 +25,9 @@ router.post('/models', initSyncModels)
 router.post('/pages', initPages)
 
 // Entities
-router.post('/entities', initEntities)
+router.post('/entities', (req, res) => {
+  return res.status(200).send('here the route')
+})
 
 // Albums
 router.post('/albums', initAlbums)
