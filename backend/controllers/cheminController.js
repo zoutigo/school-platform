@@ -149,28 +149,19 @@ module.exports.getChemins = async (req, res, next) => {
   }
 
   try {
-    await TestP.sync({ force: true })
-    await TestP.create({
-      name: 'New one',
-      alias: 'dnew',
+    const chemins = await CardP.findAll({
+      where: req.query,
+      attributes: ['id', 'path', 'description', 'alias'],
+      include: [
+        {
+          model: FileP,
+          attributes: ['filename', 'filepath'],
+        },
+      ],
     })
 
-    const tests = await TestP.findAll()
-
-    // const chemins = await CardP.findAll({
-    //   where: req.query,
-    //   attributes: ['id', 'path', 'description', 'alias'],
-    //   include: [
-    //     {
-    //       model: FileP,
-    //       attributes: ['filename', 'filepath'],
-    //     },
-    //   ],
-    // })
-
-    // if (chemins.length < 1) return next(new NotFound('Pas de chemin trouvé'))
-    // return res.status(200).send(chemins)
-    return res.status(200).send(tests)
+    if (chemins.length < 1) return next(new NotFound('Pas de chemin trouvé'))
+    return res.status(200).send(chemins)
   } catch (err) {
     return next(err)
   }

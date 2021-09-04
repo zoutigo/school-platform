@@ -281,38 +281,51 @@ module.exports.initUsers = async (req, res, next) => {
 
 module.exports.initChemins = async (req, res, next) => {
   try {
-    const chemins = await Chemin.find()
-    const [administrationEntity] = await EntityP.findAll({
-      where: { alias: 'admin' },
-    })
+    const resetCard = await CardP.sync({ force: true })
+    const resetFile = await FileP.sync({ alter: true })
 
-    const [cardsalbum] = await AlbumP.findOrCreate({
-      where: { ...cardsAlbum, entityId: administrationEntity.id },
-    })
-
-    chemins.forEach(async (chemin) => {
-      const { alias, path, description, filepath, filename } = chemin
-      const [card] = await CardP.findOrCreate({
-        where: { alias, path, description },
-      })
-      const [image] = await FileP.findOrCreate({
-        where: {
-          filename,
-          filepath,
-          filetype: 'image',
-          albumId: cardsalbum.id,
-        },
-      })
-
-      await card.addFile(image)
-    })
-
-    const cards = await CardP.findAll({ include: [FileP] })
-
-    return res.status(200).send(cards)
+    if (resetCard && resetFile)
+      return res.status(200).send('Card successfull reset')
+    return next('Card reset was not done')
   } catch (err) {
     return next(err)
   }
+
+  // create album for cards
+
+  //   try {
+  //     const chemins = await Chemin.find()
+  //     const [administrationEntity] = await EntityP.findAll({
+  //       where: { alias: 'admin' },
+  //     })
+
+  //     const [cardsalbum] = await AlbumP.findOrCreate({
+  //       where: { ...cardsAlbum, entityId: administrationEntity.id },
+  //     })
+
+  //     chemins.forEach(async (chemin) => {
+  //       const { alias, path, description, filepath, filename } = chemin
+  //       const [card] = await CardP.findOrCreate({
+  //         where: { alias, path, description },
+  //       })
+  //       const [image] = await FileP.findOrCreate({
+  //         where: {
+  //           filename,
+  //           filepath,
+  //           filetype: 'image',
+  //           albumId: cardsalbum.id,
+  //         },
+  //       })
+
+  //       await card.addFile(image)
+  //     })
+
+  //     const cards = await CardP.findAll({ include: [FileP] })
+
+  //     return res.status(200).send(cards)
+  //   } catch (err) {
+  //     return next(err)
+  //   }
 }
 
 module.exports.initPapers = async (req, res, next) => {
