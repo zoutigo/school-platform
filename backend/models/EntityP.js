@@ -12,9 +12,12 @@ const EntityP = db.define(
   {
     name: {
       type: Sequelize.STRING,
+      allowNull: false,
     },
     alias: {
       type: Sequelize.STRING,
+      allowNull: false,
+      unique: true,
     },
     content: {
       type: Sequelize.STRING(10000),
@@ -22,6 +25,7 @@ const EntityP = db.define(
     },
     email: {
       type: Sequelize.STRING,
+      allowNull: false,
     },
   },
   {

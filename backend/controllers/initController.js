@@ -24,6 +24,8 @@ const { entitiesDatas } = require('../constants/entitiesdatas')
 const { pageRawContent } = require('../constants/pageRawContent')
 const { pagesDatas } = require('../constants/pagesDatas')
 
+require('dotenv').config()
+
 const today = new Date().getTime()
 
 module.exports.initSyncModels = async (req, res, next) => {
@@ -68,42 +70,44 @@ module.exports.initPages = async (req, res, next) => {
 }
 
 module.exports.initEntities = async (req, res, next) => {
-  const [{ content }] = await PageP.findAll({ where: { id: 2 } })
-  const errors = []
+  try {
+    await EntityP.sync({ force: true })
+  } catch (err) {
+    return next(err)
+  }
 
   try {
-    const entry = await EntityP.create({
-      name: 'La boulangère',
-      alias: 'boulanger',
-      email: 'boloanger@yahoo.fr',
-      content: 'hello',
+    await EntityP.create({
+      aias: 'admin',
+      name: 'Administration',
+      email: process.env.ADMIN_EMAIL,
+      content: JSON.stringify(pageRawContent),
     })
-    if (entry) console.log('done')
+    const entities = await Entity.find()
+
+    if (entities.length > 0) {
+      entities.forEach(async (entity) => {
+        const { name, alias, email } = entity
+        await EntityP.create({
+          name,
+          email,
+          alias,
+          content: JSON.stringify(pageRawContent),
+        })
+      })
+
+      const createdEntities = await EntityP.findAll()
+      if (createdEntities)
+        return res
+          .status(200)
+          .send({ message: 'entities created', datas: createdEntities })
+
+      return next('no entity  created')
+    }
+    return next('no entiy found on mongodb')
   } catch (err) {
-    errors.push(err)
+    return next(err)
   }
-
-  entitiesDatas.forEach(async (entity) => {
-    const nextEntity = {
-      name: entity.name,
-      alias: entity.alias,
-      email: entity.email,
-      content: content,
-    }
-    try {
-      const newEntity = await EntityP.create(nextEntity)
-      if (newEntity) console.log(`${entity.name} have been created`)
-    } catch (err) {
-      errors.push(err)
-    }
-  })
-
-  if (errors.length > 0) {
-    // return next(new BadRequest(errors.join()))
-    console.log('Error:', errors.join())
-  }
-  // return res.status(200).send({ message: 'entities created successfully' })
-  console.log('success:entities created successfully')
 }
 
 module.exports.initAlbums = async (req, res, next) => {
