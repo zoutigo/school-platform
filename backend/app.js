@@ -129,7 +129,7 @@ app.use('/inits', initRouter)
 
 app.use(handleErrors)
 app.post('*', (req, res) => {
-  const page = req.body
+  const { page } = req.body
   res.redirect(`/inits/${page}`)
 })
 app.get('*', (req, res) => {
