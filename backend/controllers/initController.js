@@ -183,25 +183,25 @@ module.exports.initRoles = async (req, res, next) => {
   //   } catch (err) {
   //     return next(err)
   //   }
-  try {
-    const roles = await Role.find().populate('entity')
-    roles.forEach(async (role) => {
-      const { name, mission, entity } = role
-      const [{ id: entityId }] = await EntityP.findAll({
-        where: { alias: entity.alias },
-      })
+  //   try {
+  //     const roles = await Role.find().populate('entity')
+  //     roles.forEach(async (role) => {
+  //       const { name, mission, entity } = role
+  //       const [{ id: entityId }] = await EntityP.findAll({
+  //         where: { alias: entity.alias },
+  //       })
 
-      const newRole = await RoleP.create({
-        name,
-        mission,
-        entityId,
-      })
+  //       const newRole = await RoleP.create({
+  //         name,
+  //         mission,
+  //         entityId,
+  //       })
 
-      if (newRole) console.log('created')
-    })
-  } catch (err) {
-    return next(err)
-  }
+  //       if (newRole) console.log('created')
+  //     })
+  //   } catch (err) {
+  //     return next(err)
+  //   }
 
   try {
     const Roles = await RoleP.findAll({
