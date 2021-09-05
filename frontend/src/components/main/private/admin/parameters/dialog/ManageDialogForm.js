@@ -131,7 +131,7 @@ function ManageDialogForm({
           format="dddd Do MMMM yyyy"
           initialDate={
             currentModal && formAction === 'update'
-              ? new Date(Number(currentModal.startdate))
+              ? new Date(Number(currentModal.enddate))
               : new Date()
           }
         />

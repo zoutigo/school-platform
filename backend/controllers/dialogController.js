@@ -51,7 +51,7 @@ module.exports.postDialog = async (req, res, next) => {
             .status(200)
             .send({ message: 'Modale correctement modifiée' })
         }
-        return res.status(200).send(updatedDialog)
+        return res.status(200).send({ message: 'Modale correctement modifiée' })
       }
     } catch (err) {
       return next(err)
