@@ -462,40 +462,40 @@ module.exports.initEvents = async (req, res, next) => {
 
 module.exports.initRepair = async (req, res, next) => {
   try {
-    // const cardImages = await PaperP.sync({ fore: true })
+    const cardImages = await CardImages.sync({ alter: true })
+    const cards = await CardP.sync({ alter: true })
 
-    // if (cardImages) {
-    //   const chemins = await Chemin.find()
-    //   const [administrationEntity] = await EntityP.findAll({
-    //     where: { alias: 'admin' },
-    //   })
+    if (cardImages && cards) {
+      const chemins = await Chemin.find()
+      const [administrationEntity] = await EntityP.findAll({
+        where: { alias: 'admin' },
+      })
 
-    //   const [cardsalbum] = await AlbumP.findOrCreate({
-    //     where: { ...cardsAlbum, entityId: administrationEntity.id },
-    //   })
+      const [cardsalbum] = await AlbumP.findOrCreate({
+        where: { ...cardsAlbum, entityId: administrationEntity.id },
+      })
 
-    //   chemins.forEach(async (chemin) => {
-    //     const { alias, path, description, filepath, filename } = chemin
-    //     const [card] = await CardP.findOrCreate({
-    //       where: { alias, path, description },
-    //     })
-    //     const [image] = await FileP.findOrCreate({
-    //       where: {
-    //         filename,
-    //         filepath,
-    //         filetype: 'image',
-    //         albumId: cardsalbum.id,
-    //       },
-    //     })
+      chemins.forEach(async (chemin) => {
+        const { alias, path, description, filepath, filename } = chemin
+        const [card] = await CardP.findOrCreate({
+          where: { alias, path, description },
+        })
+        const [image] = await FileP.findOrCreate({
+          where: {
+            filename,
+            filepath,
+            filetype: 'image',
+            albumId: cardsalbum.id,
+          },
+        })
 
-    //     await card.addFile(image)
-    //   })
+        await card.addFile(image)
+      })
 
-    await CardImages.drop()
+      const cardsCreated = await CardP.findAll()
 
-    const cards = await CardP.findAll()
-
-    return res.status(200).send(cards)
+      return res.status(200).send(cardsCreated)
+    }
   } catch (err) {
     return next(err)
   }
