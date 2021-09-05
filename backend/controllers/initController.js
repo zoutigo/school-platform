@@ -461,42 +461,41 @@ module.exports.initEvents = async (req, res, next) => {
 }
 
 module.exports.initRepair = async (req, res, next) => {
-  await CardImages.sync({ force: true })
   try {
-    const cardImages = await PaperP.sync({ fore: true })
+    // const cardImages = await PaperP.sync({ fore: true })
 
-    if (cardImages) {
-      const chemins = await Chemin.find()
-      const [administrationEntity] = await EntityP.findAll({
-        where: { alias: 'admin' },
-      })
+    // if (cardImages) {
+    //   const chemins = await Chemin.find()
+    //   const [administrationEntity] = await EntityP.findAll({
+    //     where: { alias: 'admin' },
+    //   })
 
-      const [cardsalbum] = await AlbumP.findOrCreate({
-        where: { ...cardsAlbum, entityId: administrationEntity.id },
-      })
+    //   const [cardsalbum] = await AlbumP.findOrCreate({
+    //     where: { ...cardsAlbum, entityId: administrationEntity.id },
+    //   })
 
-      chemins.forEach(async (chemin) => {
-        const { alias, path, description, filepath, filename } = chemin
-        const [card] = await CardP.findOrCreate({
-          where: { alias, path, description },
-        })
-        const [image] = await FileP.findOrCreate({
-          where: {
-            filename,
-            filepath,
-            filetype: 'image',
-            albumId: cardsalbum.id,
-          },
-        })
+    //   chemins.forEach(async (chemin) => {
+    //     const { alias, path, description, filepath, filename } = chemin
+    //     const [card] = await CardP.findOrCreate({
+    //       where: { alias, path, description },
+    //     })
+    //     const [image] = await FileP.findOrCreate({
+    //       where: {
+    //         filename,
+    //         filepath,
+    //         filetype: 'image',
+    //         albumId: cardsalbum.id,
+    //       },
+    //     })
 
-        await card.addFile(image)
-      })
+    //     await card.addFile(image)
+    //   })
 
-      const cards = await CardP.findAll({ include: [FileP] })
+    await CardImages.drop()
 
-      return res.status(200).send(cards)
-    }
-    return next('card reset was not done')
+    const cards = await CardP.findAll()
+
+    return res.status(200).send(cards)
   } catch (err) {
     return next(err)
   }
