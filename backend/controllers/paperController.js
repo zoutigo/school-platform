@@ -133,9 +133,6 @@ module.exports.postPaper = async (req, res, next) => {
         await savedPaper.addFile(savedFile)
       }
       if (savedPaper) {
-        if (process.env.NODE_ENV === 'production') {
-          return res.status(201).send({ message: 'Document correctement crée' })
-        }
         return res.status(201).send({ message: 'Document correctement créee' })
       }
     } catch (err) {
