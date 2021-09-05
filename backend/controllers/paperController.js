@@ -80,15 +80,17 @@ module.exports.postPaper = async (req, res, next) => {
         deleteFile(filepath, new BadRequest("l'utilisateur n'existe pas"))
       )
 
-    const [administrationEntity] = await EntityP.findOrCreate({
-      where: adminEntity,
-    })
+    // const administrationEntity = await EntityP.findOne({
+    //   where: { alias: 'admin' },
+    // })
 
-    if (!administrationEntity) return next('internal error on admin album')
-
-    const [papersAlbum] = await AlbumP.findOrCreate({
-      where: { ...papersAlbumDatas, entityId: administrationEntity.id },
+    // if (!administrationEntity) return next('internal error on admin album')
+    const papersAlbum = await AlbumP.findOne({
+      where: { alias: 'papers' },
     })
+    // const [papersAlbum] = await AlbumP.findOrCreate({
+    //   where: { ...papersAlbumDatas, entityId: administrationEntity.id },
+    // })
 
     if (!papersAlbum) return next('internal error on paper album')
 
