@@ -106,9 +106,6 @@ module.exports.getEvents = async (req, res, next) => {
     const events = await EventP.findAll({
       where: {
         ...req.query,
-        date: {
-          [Op.gt]: today,
-        },
       },
       include: [
         {
@@ -122,8 +119,10 @@ module.exports.getEvents = async (req, res, next) => {
       ],
     })
 
-    if (events.length < 1) return next(new NotFound('event not found'))
-    return res.status(200).send(events)
+    const filteredEvents = events.filter((event) => Number(event.date) > today)
+
+    if (filteredEvents.length < 1) return next(new NotFound('event not found'))
+    return res.status(200).send(filteredEvents)
   } catch (err) {
     next(err)
   }

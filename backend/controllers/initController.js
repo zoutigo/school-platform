@@ -35,6 +35,7 @@ const SuggestionP = require('../models/SuggestionP')
 const UserEntities = require('../models/UserEntities')
 const UserRoles = require('../models/UserRoles')
 const PreinscriptionFiles = require('../models/PreinscriptionFiles')
+const db = require('../config/database')
 
 require('dotenv').config()
 
@@ -462,21 +463,16 @@ module.exports.initEvents = async (req, res, next) => {
 }
 
 module.exports.initRepair = async (req, res, next) => {
-  const admineEntity = await EntityP.findOne({
-    where: { alias: 'admin' },
-  })
-  try {
-    const [papersAlbum] = await AlbumP.findOrCreate({
-      where: { ...papersAlbumDatas, entityId: admineEntity.id },
-    })
-    const [editorAlbum] = await AlbumP.findOrCreate({
-      where: { ...editorAlbumDatas, entityId: admineEntity.id },
-    })
+  const t = await db.transaction()
 
-    if (papersAlbum && editorAlbum) {
-      return res.status(200).send('albums created')
+  try {
+    const revisedEvents = await EventP.sync({ force: true })
+
+    if (revisedEvents) {
+      return res.status(200).send('events table changed')
     }
   } catch (err) {
+    await t.rollback()
     return next(err)
   }
 }

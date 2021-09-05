@@ -5,7 +5,7 @@ const EventP = db.define(
   'event',
   {
     title: {
-      type: Sequelize.STRING(100),
+      type: Sequelize.STRING,
       allowNull: false,
     },
     content: {
@@ -13,11 +13,11 @@ const EventP = db.define(
       allowNull: false,
     },
     place: {
-      type: Sequelize.STRING(50),
+      type: Sequelize.STRING,
       allowNull: false,
     },
     date: {
-      type: Sequelize.STRING(14),
+      type: Sequelize.STRING,
       allowNull: false,
     },
 
