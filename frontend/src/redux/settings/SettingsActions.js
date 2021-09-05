@@ -4,6 +4,7 @@ import {
   SET_MAIN_DIALOG_DATAS,
   SET_MAIN_DIALOG_COUNT,
   SET_VARIABLES,
+  SET_CHEMINS,
 } from './SettingsActionsTypes'
 
 /* eslint-disable */
@@ -28,5 +29,9 @@ export const setMainDialogCount = (value = 1) => ({
 
 export const setVariables = (value) => ({
   type: SET_VARIABLES,
+  payload: value,
+})
+export const setChemins = (value) => ({
+  type: SET_CHEMINS,
   payload: value,
 })

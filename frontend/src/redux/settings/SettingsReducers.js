@@ -6,6 +6,7 @@ const initialState = {
   MainDialogDatas: '',
   MainDialogCount: 0,
   Variables: null,
+  Chemins: [],
 }
 
 /* eslint-disable */
@@ -27,6 +28,9 @@ const settingsReducers = createReducer(initialState, {
   },
   SET_VARIABLES: (state, action) => {
     state.Variables = action.payload
+  },
+  SET_CHEMINS: (state, action) => {
+    state.Chemins = action.payload
   },
 })
 

@@ -88,17 +88,12 @@ export const useRouteParams = (arg) => {
 
 export const useRoutesInfos = () => {
   const { User } = useSelector((state) => state.user)
+  const { Chemins: chemins } = useSelector((state) => state.settings)
   const { isAdmin, isModerator, isManager, isTeacher, exp, id } = User
   const TokenIsValid = exp && id ? new Date().getTime() / 1000 < exp : false
 
   const { pathname } = useLocation()
   const rights = useRigths()
-
-  // const fetchChemin = useQuery(['liste-chemins'], () => apiFetchChemin(), {
-  //   retry: false,
-  // })
-
-  const { data: chemins } = useCallback(apiFetchChemin(), [pathname])
 
   // routes list
 
@@ -161,7 +156,7 @@ export const useRoutesInfos = () => {
       return null
     })
     return list
-  }, [pathname])
+  }, [pathname, chemins])
 
   const rubricsListe = useCallback(() => {
     const visitorExcludedCats = ['account', 'administration']

@@ -2,10 +2,11 @@ import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useDispatch } from 'react-redux'
 import {
+  setChemins,
   setUrlPrefix,
   setVariables,
 } from '../../redux/settings/SettingsActions'
-import { apiFetchVariables } from '../../utils/api'
+import { apiFetchChemin, apiFetchVariables } from '../../utils/api'
 
 function WindowLoad() {
   const dispatch = useDispatch()
@@ -19,6 +20,7 @@ function WindowLoad() {
   const { isLoading, isError, data, error } = useQuery(['variables'], () =>
     apiFetchVariables()
   )
+  const { data: chemins } = useQuery(['liste-chemins'], () => apiFetchChemin())
 
   useEffect(() => {
     if (data) {
@@ -26,6 +28,14 @@ function WindowLoad() {
     }
     return () => {
       setVariables(null)
+    }
+  }, [data])
+  useEffect(() => {
+    if (chemins && Array.isArray(chemins)) {
+      dispatch(setChemins(chemins))
+    }
+    return () => {
+      setChemins([])
     }
   }, [data])
 
