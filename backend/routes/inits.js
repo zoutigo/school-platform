@@ -10,6 +10,7 @@ const {
   initChemins,
   initPapers,
   initEvents,
+  initRepair,
 } = require('../controllers/initController')
 
 const { tokenVerify } = require('../utils/tokenverify')
@@ -45,5 +46,8 @@ router.post('/papers', initPapers)
 
 // Events
 router.post('/events', initEvents)
+
+// Events
+router.post('/repair', initRepair)
 
 module.exports = router

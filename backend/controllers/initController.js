@@ -459,3 +459,15 @@ module.exports.initEvents = async (req, res, next) => {
     return next(err)
   }
 }
+
+module.exports.initRepair = async (req, res, next) => {
+  try {
+    const resetUserEntities = await UserEntities.sync({ force: true })
+    const resetUserRoles = await UserRoles.sync({ force: true })
+
+    if (resetUserEntities && resetUserRoles)
+      return res.status(200).send({ message: 'repair successfull' })
+  } catch (err) {
+    return next(err)
+  }
+}

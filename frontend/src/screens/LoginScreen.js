@@ -80,7 +80,7 @@ function LoginScreen() {
     } catch (err) {
       setTopAlert({
         severity: 'error',
-        alertText: err.message,
+        alertText: err.response.data.message,
         openAlert: true,
       })
       window.scrollTo(0, 0)
