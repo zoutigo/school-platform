@@ -91,7 +91,7 @@ export const useRoutesInfos = () => {
   const { Chemins: chemins } = useSelector((state) => state.settings)
   const { isAdmin, isModerator, isManager, isTeacher, exp, id } = User
   const TokenIsValid = exp && id ? new Date().getTime() / 1000 < exp : false
-
+  console.log('chemins:', chemins)
   const { pathname } = useLocation()
   const rights = useRigths()
 
