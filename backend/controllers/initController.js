@@ -461,6 +461,7 @@ module.exports.initEvents = async (req, res, next) => {
 }
 
 module.exports.initRepair = async (req, res, next) => {
+  await CardImages.sync({ force: true })
   try {
     const cardImages = await PaperP.sync({ fore: true })
 
