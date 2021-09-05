@@ -72,170 +72,178 @@ module.exports.postPaper = async (req, res, next) => {
     return next(new BadRequest(errors.join()))
   }
 
-  // check if user exits
-  const user = await UserP.findOne({ where: { id: userId } })
-  if (!user)
-    return next(
-      deleteFile(filepath, new BadRequest("l'utilisateur n'existe pas"))
-    )
-
-  const [administrationEntity] = await EntityP.findOrCreate({
-    where: adminEntity,
-  })
-
-  if (!administrationEntity) return next('internal error on admin album')
-
-  const [papersAlbum] = await AlbumP.findOrCreate({
-    where: { ...papersAlbumDatas, entityId: administrationEntity.id },
-  })
-
-  if (!papersAlbum) return next('internal error on paper album')
-
-  if (action === 'create') {
-    // const paper = { ...req.body }
-    // eslint-disable-next-line prefer-object-spread
-    const paper = Object.assign({}, req.body)
-
-    // if (filepath) {
-    //   paper.filepath = filepath
-    //   paper.filename = filename
-    // }
-
-    const { type, title, entityAlias } = req.body
-
-    if (!type || !title || !entityAlias)
+  try {
+    // check if user exits
+    const user = await UserP.findOne({ where: { id: userId } })
+    if (!user)
       return next(
-        deleteFile(
-          filepath,
-          new BadRequest(
-            'une ou plusieurs données manquante: type,title,entityAlias'
-          )
-        )
+        deleteFile(filepath, new BadRequest("l'utilisateur n'existe pas"))
       )
 
-    // check the entity
-    const checkedEntity = await EntityP.findOne({
-      where: { alias: entityAlias },
+    const [administrationEntity] = await EntityP.findOrCreate({
+      where: adminEntity,
     })
-    if (!checkedEntity)
-      return next(deleteFile(filepath, new BadRequest('mauvaise entité')))
 
-    paper.entityId = checkedEntity.id
-    delete paper.entityAlias
+    if (!administrationEntity) return next('internal error on admin album')
 
-    paper.userId = userId
-
-    try {
-      const savedPaper = await PaperP.create(paper)
-
-      if (filepath) {
-        const savedFile = await FileP.create({
-          filename,
-          filepath,
-          filetype: 'file',
-          albumId: papersAlbum.id,
-        })
-        await savedPaper.addFile(savedFile)
-      }
-      if (savedPaper) {
-        return res.status(201).send({ message: 'Document correctement créee' })
-      }
-    } catch (err) {
-      return next(deleteFile(filepath, err))
-    }
-  } else if (action === 'update' && paperId) {
-    // case update
-
-    const currentPaper = await PaperP.findOne({
-      where: { id: paperId },
-      include: [FileP],
+    const [papersAlbum] = await AlbumP.findOrCreate({
+      where: { ...papersAlbumDatas, entityId: administrationEntity.id },
     })
-    if (!currentPaper)
-      return next(deleteFile(filepath, new BadRequest("L'entité nexiste pas")))
 
-    if (req.file) {
-      // delete previous file
-      // add new file
-      currentPaper.files.forEach(async (fichier) => {
-        fs.unlink(fichier.filepath, async (err) => {
-          if (err) return next(err)
-          const toRemoveFile = await FileP.findOne({
-            where: { filepath: fichier.filepath },
+    if (!papersAlbum) return next('internal error on paper album')
+
+    if (action === 'create') {
+      // const paper = { ...req.body }
+      // eslint-disable-next-line prefer-object-spread
+      const paper = Object.assign({}, req.body)
+
+      // if (filepath) {
+      //   paper.filepath = filepath
+      //   paper.filename = filename
+      // }
+
+      const { type, title, entityAlias } = req.body
+
+      if (!type || !title || !entityAlias)
+        return next(
+          deleteFile(
+            filepath,
+            new BadRequest(
+              'une ou plusieurs données manquante: type,title,entityAlias'
+            )
+          )
+        )
+
+      // check the entity
+      const checkedEntity = await EntityP.findOne({
+        where: { alias: entityAlias },
+      })
+      if (!checkedEntity)
+        return next(deleteFile(filepath, new BadRequest('mauvaise entité')))
+
+      paper.entityId = checkedEntity.id
+      delete paper.entityAlias
+
+      paper.userId = userId
+
+      try {
+        const savedPaper = await PaperP.create(paper)
+
+        if (filepath) {
+          const savedFile = await FileP.create({
+            filename,
+            filepath,
+            filetype: 'file',
+            albumId: papersAlbum.id,
           })
-          await currentPaper.removeFile(toRemoveFile)
-        })
-      })
-
-      // fs.unlink(currentPaper.files.filepath, async (err) => {
-      //   const toRemoveFile = await FileP.findOne({
-      //     where: { filepath: currentPaper.files.filepath },
-      //   })
-      //   await currentPaper.removeFile(toRemoveFile)
-      //   if (err) return next(err)
-      // })
-
-      // req.body.filename = filename
-      // req.body.filepath = filepath
-    }
-    try {
-      // add files
-      if (filepath) {
-        const modifiedPaper = await PaperP.findOne({
-          where: { id: paperId },
-          include: [FileP],
-        })
-        const savedFile = await FileP.create({
-          filename,
-          filepath,
-          filetype: 'file',
-          albumId: papersAlbum.id,
-        })
-        await modifiedPaper.addFile(savedFile)
-      }
-      const updatedPaper = await PaperP.update(req.body, {
-        where: { id: paperId },
-      })
-
-      if (updatedPaper) {
-        if (process.env.NODE_ENV === 'production') {
-          return res.status(200).send('Document correctement modifié')
+          await savedPaper.addFile(savedFile)
         }
-        return res.status(200).send({
-          message: 'Document correctement modifié',
-          data: updatedPaper,
-        })
+        if (savedPaper) {
+          return res
+            .status(201)
+            .send({ message: 'Document correctement créee' })
+        }
+      } catch (err) {
+        return next(deleteFile(filepath, err))
       }
-    } catch (err) {
-      return next(deleteFile(filepath, err))
-    }
-  } else if (action === 'delete' && paperId) {
-    try {
-      const toDeletePaper = await PaperP.findOne({
+    } else if (action === 'update' && paperId) {
+      // case update
+
+      const currentPaper = await PaperP.findOne({
         where: { id: paperId },
         include: [FileP],
       })
-      const { filepath: toDeletePath } = toDeletePaper
+      if (!currentPaper)
+        return next(
+          deleteFile(filepath, new BadRequest("L'entité nexiste pas"))
+        )
 
-      if (toDeletePath) {
-        fs.unlink(toDeletePath, async (err) => {
-          const toRemoveFile = await FileP.findOne({
-            where: { filepath: toDeletePath },
+      if (req.file) {
+        // delete previous file
+        // add new file
+        currentPaper.files.forEach(async (fichier) => {
+          fs.unlink(fichier.filepath, async (err) => {
+            if (err) return next(err)
+            const toRemoveFile = await FileP.findOne({
+              where: { filepath: fichier.filepath },
+            })
+            await currentPaper.removeFile(toRemoveFile)
           })
-          await toDeletePaper.removeFile(toRemoveFile)
-          if (err) return next(err)
         })
-      }
-      const deletedPaper = await PaperP.destroy({ where: { id: paperId } })
 
-      if (deletedPaper) {
-        return res
-          .status(200)
-          .send({ message: 'Document correctement supprimé' })
+        // fs.unlink(currentPaper.files.filepath, async (err) => {
+        //   const toRemoveFile = await FileP.findOne({
+        //     where: { filepath: currentPaper.files.filepath },
+        //   })
+        //   await currentPaper.removeFile(toRemoveFile)
+        //   if (err) return next(err)
+        // })
+
+        // req.body.filename = filename
+        // req.body.filepath = filepath
       }
-    } catch (err) {
-      return next(err)
+      try {
+        // add files
+        if (filepath) {
+          const modifiedPaper = await PaperP.findOne({
+            where: { id: paperId },
+            include: [FileP],
+          })
+          const savedFile = await FileP.create({
+            filename,
+            filepath,
+            filetype: 'file',
+            albumId: papersAlbum.id,
+          })
+          await modifiedPaper.addFile(savedFile)
+        }
+        const updatedPaper = await PaperP.update(req.body, {
+          where: { id: paperId },
+        })
+
+        if (updatedPaper) {
+          if (process.env.NODE_ENV === 'production') {
+            return res.status(200).send('Document correctement modifié')
+          }
+          return res.status(200).send({
+            message: 'Document correctement modifié',
+            data: updatedPaper,
+          })
+        }
+      } catch (err) {
+        return next(deleteFile(filepath, err))
+      }
+    } else if (action === 'delete' && paperId) {
+      try {
+        const toDeletePaper = await PaperP.findOne({
+          where: { id: paperId },
+          include: [FileP],
+        })
+        const { filepath: toDeletePath } = toDeletePaper
+
+        if (toDeletePath) {
+          fs.unlink(toDeletePath, async (err) => {
+            const toRemoveFile = await FileP.findOne({
+              where: { filepath: toDeletePath },
+            })
+            await toDeletePaper.removeFile(toRemoveFile)
+            if (err) return next(err)
+          })
+        }
+        const deletedPaper = await PaperP.destroy({ where: { id: paperId } })
+
+        if (deletedPaper) {
+          return res
+            .status(200)
+            .send({ message: 'Document correctement supprimé' })
+        }
+      } catch (err) {
+        return next(err)
+      }
+    } else {
+      return next(new BadRequest('action or paper id missing'))
     }
-  } else {
-    return next(new BadRequest('action or paper id missing'))
+  } catch (err) {
+    return next(err)
   }
 }
