@@ -1,24 +1,12 @@
 const router = require('express').Router()
-const TestP = require('../models/TestP')
+
+require('dotenv').config()
 
 router.get('/', async (req, res, next) => {
-  try {
-    // await UserP.sync({ force: true })
-    await TestP.sync({ force: true })
-    const test = await TestP.create({
-      name: 'Difficult one',
-      alias: 'difficult',
-    })
-
-    if (test) {
-      res.status(200).send({
-        TINYMCE_KEY: process.env.TINYMCE_KEY,
-        SITE_ADRESS: process.env.SITE_ADRESS,
-      })
-    }
-  } catch (err) {
-    return next(err)
-  }
+  res.status(200).send({
+    TINYMCE_KEY: process.env.TINYMCE_KEY,
+    SITE_ADRESS: process.env.SITE_ADRESS,
+  })
 })
 
 module.exports = router

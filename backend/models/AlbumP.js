@@ -23,7 +23,6 @@ const AlbumP = db.define(
       type: Sequelize.STRING,
       defaulValue: 'Il faut une description',
     },
-
     isActive: {
       type: Sequelize.BOOLEAN,
       defaulValue: true,

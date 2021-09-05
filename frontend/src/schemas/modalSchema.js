@@ -18,11 +18,12 @@ const modalSchema = yup.object().shape({
     .string()
     .required('Veillez donner une description de évènement')
     .min(10, 'au moins 10 caractères')
-    .max(500, 'au plus 500 caractères'),
+    .max(10000, 'au plus 10000 caractères'),
   title: yup
     .string()
     .required('Veillez indiquer un titre')
-    .min(5, 'au moins 5 caractères'),
+    .min(5, 'au moins 5 caractères')
+    .max(300, 'au maxi 300 caractères'),
 })
 
 export default modalSchema

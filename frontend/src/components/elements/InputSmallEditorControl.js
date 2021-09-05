@@ -69,6 +69,7 @@ function InputSmallEditorControl({
       })
     }
     if (data) {
+      console.log('data', data)
       setTinyKey(data.TINYMCE_KEY)
       setAlert({
         alertText: '',

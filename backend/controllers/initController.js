@@ -466,9 +466,25 @@ module.exports.initRepair = async (req, res, next) => {
   const t = await db.transaction()
 
   try {
-    const revisedEvents = await EventP.sync({ force: true })
+    const dialogs = await DialogP.findAll()
 
-    if (revisedEvents) {
+    const revisedDialogs = await DialogP.sync(
+      { force: true },
+      { transaction: t }
+    )
+
+    if (revisedDialogs) {
+      if (dialogs.length > 0) {
+        dialogs.forEach(async (dialog) => {
+          await DialogP.create({
+            title: dialog.title,
+            text: dialog.text,
+            startdate: dialog.startdate,
+            enddate: dialog.enddate,
+          })
+        })
+      }
+      t.commit()
       return res.status(200).send('events table changed')
     }
   } catch (err) {

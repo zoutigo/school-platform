@@ -1,7 +1,6 @@
 const fs = require('fs')
 const sharp = require('sharp')
 const path = require('path')
-const AlbumImage = require('../models/AlbumImage')
 const AlbumP = require('../models/AlbumP')
 const EntityP = require('../models/EntityP')
 const FileP = require('../models/FileP')
@@ -26,8 +25,6 @@ module.exports.postAlbum = async (req, res, next) => {
   const { id: albumId, action, entityAlias } = req.query
   const filename = req.file ? req.file.filename : null
   const filepath = req.file ? req.file.path : null
-
-  console.log('reqbody:', req.body)
 
   if (action !== 'delete' && !entityAlias)
     return next(new BadRequest('entityAlias missing'))
@@ -91,15 +88,11 @@ module.exports.postAlbum = async (req, res, next) => {
         )
       )
 
-    // const newAlbum = await AlbumP.build({ ...req.body, entityId: entity.id })
-    console.log('album saved')
-    console.log('entityId:', entity.id)
-    const savedAlbum = await AlbumP.create({
-      ...req.body,
-      entityId: entity.id,
-    })
-
     try {
+      const savedAlbum = await AlbumP.create({
+        ...req.body,
+        entityId: entity.id,
+      })
       if (savedAlbum) {
         const albumFolder = '/images/albums/'
         const directory = path.join('.', albumFolder, alias, '/')

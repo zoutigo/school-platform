@@ -41,7 +41,7 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
 }))
 
 function DialogItem({ dialog, queryKey }) {
-  const { text, title, startdate, enddate, _id: dialogId } = dialog
+  const { text, title, startdate, enddate, id: dialogId } = dialog
   const [showText, setShowText] = useState(false)
   const [showUpdateForm, setShowUpdateForm] = useState(false)
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = useState(false)
@@ -151,7 +151,7 @@ DialogItem.defaultProps = null
 DialogItem.propTypes = {
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
   dialog: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
     text: PropTypes.string,
     title: PropTypes.string,
     startdate: PropTypes.number.isRequired,

@@ -5,11 +5,11 @@ const DialogP = db.define(
   'dialog',
   {
     title: {
-      type: Sequelize.STRING(100),
+      type: Sequelize.STRING(300),
       allowNull: false,
     },
     text: {
-      type: Sequelize.STRING(2000),
+      type: Sequelize.STRING(10000),
       allowNull: false,
       unique: true,
     },
