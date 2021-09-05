@@ -27,6 +27,8 @@ module.exports.postAlbum = async (req, res, next) => {
   const filename = req.file ? req.file.filename : null
   const filepath = req.file ? req.file.path : null
 
+  console.log('reqbody:', req.body)
+
   if (action !== 'delete' && !entityAlias)
     return next(new BadRequest('entityAlias missing'))
   const entity =
@@ -89,10 +91,15 @@ module.exports.postAlbum = async (req, res, next) => {
         )
       )
 
-    const newAlbum = AlbumP.build(req.body)
-    newAlbum.entityId = entity.id
+    // const newAlbum = await AlbumP.build({ ...req.body, entityId: entity.id })
+    console.log('album saved')
+    console.log('entityId:', entity.id)
+    const savedAlbum = await AlbumP.create({
+      ...req.body,
+      entityId: entity.id,
+    })
+
     try {
-      const savedAlbum = await newAlbum.save()
       if (savedAlbum) {
         const albumFolder = '/images/albums/'
         const directory = path.join('.', albumFolder, alias, '/')
@@ -126,6 +133,7 @@ module.exports.postAlbum = async (req, res, next) => {
     }
   } else if (action === 'update' && albumId) {
     // case update
+    console.log('albumiD:', albumId)
 
     const currentAlbum = await AlbumP.findOne({
       where: { id: albumId },

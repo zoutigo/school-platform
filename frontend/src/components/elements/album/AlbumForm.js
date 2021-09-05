@@ -72,7 +72,7 @@ function AlbumForm({
       file: file ? file[0] : null,
       alias: currentAlbum
         ? currentAlbum.alias
-        : `${(await new Date().getTime()) / 1000}`,
+        : `${await new Date().getTime()}`,
     }
 
     const options = {
@@ -83,7 +83,7 @@ function AlbumForm({
 
     try {
       await mutateAsync({
-        id: formAction === 'update' ? currentAlbum._id : null,
+        id: formAction === 'update' ? currentAlbum.id : null,
         action: formAction,
         options: options,
         body: finalDatas,
@@ -213,7 +213,7 @@ AlbumForm.propTypes = {
   setCurrentAlbum: PropTypes.func.isRequired,
   entityAlias: PropTypes.string.isRequired,
   currentAlbum: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
     isPrivate: PropTypes.bool,
     name: PropTypes.string,
     description: PropTypes.string,
