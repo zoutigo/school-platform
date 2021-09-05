@@ -461,12 +461,14 @@ module.exports.initEvents = async (req, res, next) => {
 }
 
 module.exports.initRepair = async (req, res, next) => {
-  //   try {
-  //     const resetUserEntities = await UserEntities.sync({ force: true })
-  //     const resetUserRoles = await UserRoles.sync({ force: true })
-  //     if (resetUserEntities && resetUserRoles)
-  //       return res.status(200).send({ message: 'repair successfull' })
-  //   } catch (err) {
-  //     return next(err)
-  //   }
+  try {
+    const resetPapers = await PaperP.sync({ force: true })
+    const resetPaperFiles = await PaperFiles.sync({ force: true })
+
+    if (resetPapers && resetPaperFiles)
+      return res.status(200).send('papers successfull reset')
+    return next('Paper reset was not done')
+  } catch (err) {
+    return next(err)
+  }
 }
