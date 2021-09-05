@@ -87,18 +87,6 @@ export const useRouteParams = (arg) => {
 }
 
 export const useRoutesInfos = () => {
-  const initialRouteInfos = {
-    rubric: null,
-    rubricCategories: [],
-    categories: [],
-    category: null,
-    current: null,
-    chapters: [],
-    categoryAlias: null,
-    rubricsList: [],
-    routesList: [],
-  }
-
   const { User } = useSelector((state) => state.user)
   const { isAdmin, isModerator, isManager, isTeacher, exp, id } = User
   const TokenIsValid = exp && id ? new Date().getTime() / 1000 < exp : false
@@ -106,13 +94,11 @@ export const useRoutesInfos = () => {
   const { pathname } = useLocation()
   const rights = useRigths()
 
-  const { data: chemins } = useQuery(
-    ['liste-chemins'],
-    () => apiFetchChemin(),
-    {
-      staleTime: Infinity,
-    }
-  )
+  // const fetchChemin = useQuery(['liste-chemins'], () => apiFetchChemin(), {
+  //   retry: false,
+  // })
+
+  const { data: chemins } = useCallback(apiFetchChemin(), [pathname])
 
   // routes list
 
