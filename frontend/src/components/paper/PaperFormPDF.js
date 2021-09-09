@@ -83,7 +83,7 @@ function PaperFormPDF({
   })
 
   const onSubmit = async (datas) => {
-    const { startdate, enddate, file, isPrivate } = datas
+    const { startdate, enddate, file, isPrivate, classeFourniture } = datas
 
     const finalDatas = async (type) => {
       switch (type) {
@@ -112,7 +112,7 @@ function PaperFormPDF({
             type: paper.paperType,
             file: file ? file[0] : null,
             entityAlias: paper.entityAlias,
-            clientEntityAlias: datas.clientEntityAlias.value,
+            classe_fourniture: classeFourniture.value,
           }
         case 'newsletter':
           return {
@@ -128,6 +128,8 @@ function PaperFormPDF({
           return null
       }
     }
+
+    console.log(await finalDatas(paper.paperType))
 
     try {
       await mutateAsync({
@@ -193,7 +195,7 @@ function PaperFormPDF({
           <InputSelectControl
             control={control}
             options={selectOptions}
-            name="classe_fourniture"
+            name="classeFourniture"
             label="Choisir la classe"
             helperText="Les fournitures sont pour quelle classe ?"
             initialValue={

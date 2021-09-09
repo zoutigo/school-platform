@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 import { testFileSize } from '../constants/filetests'
 
-const entitiesAlias = [
+const classesFourniture = [
   'ps',
   'ms',
   'gs',
@@ -38,11 +38,11 @@ const fournitureSchema = yup.object().shape({
       ),
     otherwise: yup.mixed(),
   }),
-  clientEntityAlias: yup
+  classeFourniture: yup
     .mixed()
-    .test('EntitiesAlias', 'Doit apprtenir à la table des entités', (value) => {
+    .test('classe_fourniture', 'Doit etre une classe', (value) => {
       if (!value) return false
-      return entitiesAlias.includes(value.value)
+      return classesFourniture.includes(value.value)
     }),
 })
 

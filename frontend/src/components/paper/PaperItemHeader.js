@@ -24,7 +24,7 @@ function PaperItemHeader({
         return (
           <>
             <StyledTypo variant="body1">
-              {`${paperItem.clientEntity.name}  `}
+              {`${paperItem.classe_fourniture}  `}
             </StyledTypo>
             <Typography variant="caption">
               {`Année Scolaire ${moment(Number(paperItem.startdate)).format(
@@ -72,7 +72,7 @@ function PaperItemHeader({
   }, [])
 
   const handleClick = () => {
-    if (currentDocumentId && currentDocumentId === paperItem._id) {
+    if (currentDocumentId && currentDocumentId === paperItem.id) {
       setCurrentDocument(null)
     } else {
       setCurrentDocument(paperItem)
@@ -133,12 +133,13 @@ PaperItemHeader.propTypes = {
   paper: PropTypes.shape({
     paperType: PropTypes.string,
   }).isRequired,
-  currentDocumentId: PropTypes.string,
+  currentDocumentId: PropTypes.number,
   paperItem: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.number,
     place: PropTypes.string,
     text: PropTypes.string,
     name: PropTypes.string,
+    classe_fourniture: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.number,
     startdate: PropTypes.number,

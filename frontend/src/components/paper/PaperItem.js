@@ -96,7 +96,7 @@ PaperItem.propTypes = {
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
   currentDocument: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.number,
   }),
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.func.isRequired,

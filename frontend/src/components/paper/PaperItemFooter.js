@@ -1,5 +1,5 @@
 /* eslint-disable import/named */
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useTheme, ButtonGroup, Tooltip } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
@@ -32,6 +32,7 @@ function PaperItemFooter({
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openUpdateModal, setOpenUpdateModal] = useState(false)
   const { Token } = useSelector((state) => state.user)
+  const { URL_PREFIX } = useSelector((state) => state.settings)
   useSelector((state) => state.settings)
 
   const { mutateAsync } = useMutation(
@@ -62,6 +63,8 @@ function PaperItemFooter({
     setFormAction('update')
   }
 
+  const fileUrl = useCallback((file) => `${URL_PREFIX}/${file.filepath}`, [])
+
   return (
     <StyledPaperFooter item container>
       <ModalValidation
@@ -83,7 +86,8 @@ function PaperItemFooter({
             <Tooltip title="Telecharger" placement="bottom">
               <StyledIconButton bgcolor={theme.palette.secondary.main}>
                 <a
-                  href={file}
+                  // href={`${URL_PREFIX}/${file.filepath}`}
+                  href={fileUrl(file)}
                   download
                   style={{ color: 'inherit' }}
                   target="blank"
@@ -133,9 +137,7 @@ PaperItemFooter.propTypes = {
     paperName: PropTypes.string.isRequired,
     paperFormat: PropTypes.string.isRequired,
     paperType: PropTypes.string.isRequired,
-    entityAlias: PropTypes.shape({
-      id: PropTypes.string,
-    }),
+
     poster: PropTypes.func,
     isAllowedToChange: PropTypes.bool.isRequired,
   }).isRequired,

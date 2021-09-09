@@ -64,7 +64,6 @@ import PrivateAdminParametersScreen from '../screens/PrivateAdminParametersScree
 import PrivateIdentificationScreen from '../screens/PrivateIdentificationScreen'
 import PrivateIdentificationLosspassScreen from '../screens/PrivateIdentificationLosspassScreen'
 import PrivateIdentificationEmailValidationScreen from '../screens/PrivateIdentificationEmailValidationScreen'
-import Initialisation from '../components/elements/Initialisation'
 
 const routesComponents = [
   {
@@ -388,10 +387,7 @@ const routesComponents = [
     path: '/private/identification/register',
     component: RegisterScreen,
   },
-  {
-    path: '/private/identification/init',
-    component: Initialisation,
-  },
+
   {
     path: '/private/identification/losspass/:token',
     component: PrivateIdentificationLosspassScreen,

@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-const Entity = require('../models/Entity')
+
 const EntityP = require('../models/EntityP')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { entityValidator } = require('../validators/entityValidator')

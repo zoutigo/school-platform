@@ -47,6 +47,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "dev": "NODE_ENV=development CHOKIDAR_USEPOLLING=true FAST_REFRESH=false npm start",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

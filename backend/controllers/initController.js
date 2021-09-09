@@ -1,4 +1,5 @@
 /* eslint-disable arrow-body-style */
+const { Op } = require('sequelize')
 const AlbumP = require('../models/AlbumP')
 const Album = require('../models/Album')
 const Entity = require('../models/Entity')
@@ -465,30 +466,99 @@ module.exports.initEvents = async (req, res, next) => {
 module.exports.initRepair = async (req, res, next) => {
   const t = await db.transaction()
 
+  //   try {
+  //     const dialogs = await DialogP.findAll()
+
+  //     const revisedDialogs = await DialogP.sync(
+  //       { force: true },
+  //       { transaction: t }
+  //     )
+
+  //     if (revisedDialogs) {
+  //       if (dialogs.length > 0) {
+  //         dialogs.forEach(async (dialog) => {
+  //           await DialogP.create({
+  //             title: dialog.title,
+  //             text: dialog.text,
+  //             startdate: dialog.startdate,
+  //             enddate: dialog.enddate,
+  //           })
+  //         })
+  //       }
+  //       t.commit()
+  //       return res.status(200).send('events table changed')
+  //     }
+  //   } catch (err) {
+  //     await t.rollback()
+  //     return next(err)
+  //   }
   try {
-    const dialogs = await DialogP.findAll()
+    const { id: secretariatEntityId } = await EntityP.findOne({
+      where: {
+        alias: 'secretariat',
+      },
+    })
 
-    const revisedDialogs = await DialogP.sync(
-      { force: true },
-      { transaction: t }
+    const fournitures = await Paper.find({ type: 'fourniture' }).populate(
+      'clientEntity'
     )
+    const papersAlbum = await AlbumP.findOne({
+      where: { alias: 'papers' },
+    })
+    const { id: managerId } = await UserP.findOne({
+      where: { isManager: true },
+    })
 
-    if (revisedDialogs) {
-      if (dialogs.length > 0) {
-        dialogs.forEach(async (dialog) => {
-          await DialogP.create({
-            title: dialog.title,
-            text: dialog.text,
-            startdate: dialog.startdate,
-            enddate: dialog.enddate,
-          })
-        })
-      }
-      t.commit()
-      return res.status(200).send('events table changed')
+    if (fournitures) {
+      fournitures.forEach(async (fourniture) => {
+        const tr = await db.transaction()
+        const {
+          title,
+          date,
+          startdate,
+          enddate,
+          type,
+          entity,
+          isPrivate,
+          clientEntity,
+          filename,
+          filepath,
+        } = fourniture
+
+        const newPaper = await PaperP.create(
+          {
+            entityId: secretariatEntityId,
+            type,
+            title,
+            isPrivate,
+            date,
+            startdate,
+            enddate,
+            classe_fourniture: clientEntity.alias,
+            userId: managerId,
+          },
+          { transaction: tr }
+        )
+
+        const newFile = await FileP.create(
+          {
+            filename,
+            filepath,
+            filetype: 'file',
+            albumId: papersAlbum.id,
+          },
+          { transaction: tr }
+        )
+        if (newPaper && newFile) {
+          await tr.commit()
+        } else {
+          await tr.rollback()
+        }
+      })
     }
+
+    return res.status(200).send(fournitures)
   } catch (err) {
-    await t.rollback()
     return next(err)
   }
 }
