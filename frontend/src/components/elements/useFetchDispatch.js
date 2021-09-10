@@ -17,10 +17,8 @@ function useFetchDispatch(isLoading, isError, error, data, action) {
         value = initialAlertCollapse
       }
       if (isError) {
-        if (error.response.status === 404) {
-          value = errorAlertCollapse(
-            "Il n'y a pas d'enregistrement pour le moment"
-          )
+        if (error.response.status === 404 || error.response.status === 204) {
+          value = errorAlertCollapse("Il n'y a pas d'enregistrement ")
         } else {
           value = errorAlertCollapse(error.response.data.message)
         }

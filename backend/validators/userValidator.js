@@ -73,7 +73,7 @@ module.exports.userValidator = (datas) => {
 
       case 'roles':
         return Joi.object({
-          roles: Joi.array().items(Joi.objectId()),
+          roles: Joi.array().items(Joi.number()),
         }).validate(data)
 
       case 'isAdmin':

@@ -150,6 +150,7 @@ module.exports.updateUser = async (req, res, next) => {
     newPassword,
     newPasswordConfirm,
     role,
+    roles,
     phone,
     childrenClasses,
   } = req.body
@@ -292,11 +293,32 @@ module.exports.updateUser = async (req, res, next) => {
     }
   }
   /// to be reworked
-  if (role) {
+  if (roles) {
     if (requesterIsAdmin || requesterIsManager || requesterIsModerator) {
-      if (!roleAction) return next(new BadRequest('missing roleAction'))
+      // destroy previous associations
+      const previousRoles = toUpdateuser.roles
+      if (previousRoles) {
+        previousRoles.forEach(async (prevRole) => {
+          const oldRole = await RoleP.findOne({
+            where: { id: prevRole.id },
+          })
+          await toUpdateuser.removeEntity(oldRole)
+        })
+      }
 
-      newUserDatas.roles = updateArray(toUpdateuser.roles, roleAction, role)
+      // create new associations
+      roles.forEach(async (newRoleId) => {
+        const newRole = await RoleP.findOne({
+          where: { id: newRoleId },
+        })
+        const update = await toUpdateuser.addRole(newRole)
+
+        if (!update) {
+          console.log('error')
+        } else {
+          console.log('success')
+        }
+      })
     } else {
       return next(new Unauthorized('only manager or admin can define teacher'))
     }
@@ -337,13 +359,20 @@ module.exports.updateUser = async (req, res, next) => {
 }
 
 module.exports.listUsers = async (req, res, next) => {
+  if (req.query) {
+    const errors = userValidator(req.query)
+    if (errors.length > 0) return next(new BadRequest(errors.join()))
+  }
+
   try {
     const users = await UserP.findAll({
+      where: req.query,
       include: [RoleP, EntityP],
       attributes: ['id', 'email', 'lastname', 'firstname', 'gender', 'isAdmin'],
     })
 
-    if (!users) return res.status(204).send('no user found')
+    if (!users || users.length < 1)
+      return res.status(204).send({ message: 'no user found' })
     return res.status(200).send(users)
   } catch (err) {
     return next(err)

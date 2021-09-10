@@ -98,10 +98,12 @@ module.exports.getRoles = async (req, res, next) => {
 
   try {
     // const roles = await Roles.find(req.query).populate('entity')
-    const roles = await RoleP.findAll({
-      where: req.query,
-      include: EntityP,
-    })
+    const roles = req.query
+      ? await RoleP.findAll({
+          where: req.query,
+          include: EntityP,
+        })
+      : await RoleP.findAll({ include: EntityP })
 
     if (roles.length < 1) return next(new NotFound('role not found'))
     return res.status(200).send(roles)

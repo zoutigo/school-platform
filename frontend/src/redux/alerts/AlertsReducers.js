@@ -21,6 +21,8 @@ const initialState = {
   fetch: initialAlert,
   parametersFetch: initialAlert,
   parametersMutate: initialAlert,
+  membresFetch: initialAlert,
+  membresMutate: initialAlert,
 }
 
 /* eslint-disable */
@@ -78,6 +80,12 @@ const actionsReducers = createReducer(initialState, {
   },
   SET_PARAMETERS_MUTATE_ALERT: (state, action) => {
     state.parametersMutate = action.payload
+  },
+  SET_MEMBRES_FETCH_ALERT: (state, action) => {
+    state.membresFetch = action.payload
+  },
+  SET_MEMBRES_MUTATE_ALERT: (state, action) => {
+    state.membresMutate = action.payload
   },
 })
 

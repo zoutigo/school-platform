@@ -397,3 +397,15 @@ export const apiPostEditorImage = async ({ file, Token }) => {
 
   return data
 }
+
+export const apiFetchMembres = async (params) => {
+  const URL = `${PREFIX}/users?${params}`
+
+  const { data } = await axios.get(URL)
+  return data
+}
+export const apiFetchRoles = async () => {
+  const URL = `${PREFIX}/roles`
+  const { data } = await axios.get(URL)
+  return data
+}

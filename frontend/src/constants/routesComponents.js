@@ -64,6 +64,7 @@ import PrivateAdminParametersScreen from '../screens/PrivateAdminParametersScree
 import PrivateIdentificationScreen from '../screens/PrivateIdentificationScreen'
 import PrivateIdentificationLosspassScreen from '../screens/PrivateIdentificationLosspassScreen'
 import PrivateIdentificationEmailValidationScreen from '../screens/PrivateIdentificationEmailValidationScreen'
+import PrivateAdminMembresScreen from '../screens/PrivateAdminMembresScreen'
 
 const routesComponents = [
   {
@@ -415,6 +416,10 @@ const routesComponents = [
   {
     path: '/private/administration/chemins',
     component: PrivateAdminCheminsScreen,
+  },
+  {
+    path: '/private/administration/membres',
+    component: PrivateAdminMembresScreen,
   },
   {
     path: '/private/administration/parametres',

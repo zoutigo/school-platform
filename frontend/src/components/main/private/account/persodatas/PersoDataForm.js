@@ -140,11 +140,6 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
         }
       })
     } catch (err) {
-      console.log('Err:', err)
-      console.log('ErrResponse:', err.response)
-      console.log('ErrMessage:', err.message)
-      console.log('ErrRespoData:', err.response.data)
-      console.log('ErrRespoDataMessage:', err.response.data)
       const message = err.response.data.message || err.message
 
       dispatch(

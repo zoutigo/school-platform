@@ -1175,6 +1175,19 @@ const routes = [
         },
         routes: [
           {
+            path: '/private/administration/membres',
+            exact: true,
+            state: {
+              name: 'Membres',
+              alias: 'adminmembres',
+              access: 'manager',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+          {
             path: '/private/administration/chemins',
             exact: true,
             state: {

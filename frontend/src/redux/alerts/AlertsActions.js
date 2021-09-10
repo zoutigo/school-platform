@@ -18,6 +18,8 @@ import {
   SET_PAGE_MUTATE_ALERT,
   SET_PARAMETERS_FETCH_ALERT,
   SET_PARAMETERS_MUTATE_ALERT,
+  SET_MEMBRES_MUTATE_ALERT,
+  SET_MEMBRES_FETCH_ALERT,
 } from './AlertsActionsTypes'
 
 export const setPrivateAccountDataAlert = (value = initialAlertCollapse) => ({
@@ -93,5 +95,13 @@ export const setParametersFetchAlert = (value = initialAlertCollapse) => ({
 })
 export const setParametersMutateAlert = (value = initialAlertCollapse) => ({
   type: SET_PARAMETERS_MUTATE_ALERT,
+  payload: value,
+})
+export const setMembresMutateAlert = (value = initialAlertCollapse) => ({
+  type: SET_MEMBRES_MUTATE_ALERT,
+  payload: value,
+})
+export const setMembresFetchAlert = (value = initialAlertCollapse) => ({
+  type: SET_MEMBRES_FETCH_ALERT,
   payload: value,
 })

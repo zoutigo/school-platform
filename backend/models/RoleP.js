@@ -10,10 +10,6 @@ const RoleP = db.define(
     mission: {
       type: Sequelize.STRING(200),
     },
-    // entityId: {
-    //   type: Sequelize.INTEGER,
-    //   allowNull: false,
-    // },
   },
   {
     tableName: 'roles',
