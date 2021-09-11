@@ -10,15 +10,6 @@ import {
 
 function RolesDatas({ roles }) {
   const text = `Je n'ai pas de role`
-  const Roles = ({ roleslist }) => {
-    if (!roleslist || roleslist.length < 1)
-      return <StyledPersoDataValueTypo>{text}</StyledPersoDataValueTypo>
-    return roleslist.map((role) => (
-      <div key={role._id}>
-        <StyledPersoDataValueTypo>{role.name}</StyledPersoDataValueTypo>
-      </div>
-    ))
-  }
 
   return (
     <StyledPersoDataContainer>
@@ -27,7 +18,17 @@ function RolesDatas({ roles }) {
           <StyledPersoDataEntryTypo> Mes roles :</StyledPersoDataEntryTypo>
         </Grid>
         <Grid item sm={6}>
-          <Roles roleslist={roles} />
+          {roles && roles.length > 0 ? (
+            roles.map((role) => (
+              <div key={role.id}>
+                <StyledPersoDataValueTypo>
+                  {role.name} - {role.entity.alias}
+                </StyledPersoDataValueTypo>
+              </div>
+            ))
+          ) : (
+            <StyledPersoDataValueTypo>{text}</StyledPersoDataValueTypo>
+          )}
         </Grid>
       </StyledPersoDataFieldGrid>
     </StyledPersoDataContainer>
@@ -39,6 +40,9 @@ RolesDatas.propTypes = {
   roles: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
+      entity: PropTypes.shape({
+        alias: PropTypes.string,
+      }),
     })
   ),
 }

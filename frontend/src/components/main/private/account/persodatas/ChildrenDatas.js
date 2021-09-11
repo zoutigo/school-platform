@@ -21,6 +21,14 @@ function ChildrenDatas({ childrenClasses, toggle, setToggle, setForm }) {
     ))
   }
 
+  Classrooms.propTypes = {
+    classrooms: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+      })
+    ).isRequired,
+  }
+
   const handleClick = () => {
     setToggle('form')
     setForm({

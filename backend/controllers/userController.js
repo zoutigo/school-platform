@@ -297,12 +297,12 @@ module.exports.updateUser = async (req, res, next) => {
     if (requesterIsAdmin || requesterIsManager || requesterIsModerator) {
       // destroy previous associations
       const previousRoles = toUpdateuser.roles
-      if (previousRoles) {
+      if (previousRoles && previousRoles.length > 0) {
         previousRoles.forEach(async (prevRole) => {
           const oldRole = await RoleP.findOne({
             where: { id: prevRole.id },
           })
-          await toUpdateuser.removeEntity(oldRole)
+          await toUpdateuser.removeRole(oldRole)
         })
       }
 
@@ -314,9 +314,9 @@ module.exports.updateUser = async (req, res, next) => {
         const update = await toUpdateuser.addRole(newRole)
 
         if (!update) {
-          console.log('error')
+          console.log('erroron:', newRole.name)
         } else {
-          console.log('success')
+          console.log('successon', newRole.name)
         }
       })
     } else {
@@ -367,8 +367,30 @@ module.exports.listUsers = async (req, res, next) => {
   try {
     const users = await UserP.findAll({
       where: req.query,
-      include: [RoleP, EntityP],
-      attributes: ['id', 'email', 'lastname', 'firstname', 'gender', 'isAdmin'],
+      include: [
+        {
+          model: RoleP,
+          include: [
+            {
+              model: EntityP,
+              attributes: ['id', 'alias', 'name'],
+            },
+          ],
+        },
+        { model: EntityP },
+      ],
+      attributes: [
+        'id',
+        'email',
+        'lastname',
+        'firstname',
+        'gender',
+        'isAdmin',
+        'isTeacher',
+        'isManager',
+        'isModerator',
+        'isVerified',
+      ],
     })
 
     if (!users || users.length < 1)
@@ -386,7 +408,18 @@ module.exports.viewUser = async (req, res, next) => {
 
   const user = await UserP.findOne({
     where: { id },
-    include: [RoleP, EntityP],
+    include: [
+      {
+        model: RoleP,
+        include: [
+          {
+            model: EntityP,
+            attributes: ['id', 'alias', 'name'],
+          },
+        ],
+      },
+      { model: EntityP },
+    ],
     attributes: [
       'id',
       'firstname',
@@ -394,7 +427,9 @@ module.exports.viewUser = async (req, res, next) => {
       'gender',
       'isAdmin',
       'isManager',
+      'isModerator',
       'isTeacher',
+      'isVerified',
       'email',
       'phone',
     ],

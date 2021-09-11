@@ -25,7 +25,7 @@ function PersoDataList({
   const {
     User: { id },
   } = useSelector((state) => state.user)
-  const queryKey = [`datas-${id}`]
+  const queryKey = [`data-${id}`]
 
   const { credentialsform, rolesform, passwordform, childrenform, gradeform } =
     form

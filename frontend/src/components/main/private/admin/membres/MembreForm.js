@@ -1,21 +1,24 @@
+/* eslint-disable import/named */
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from 'react-query'
-import { Grid, styled } from '@material-ui/core'
+import { Grid, styled, useTheme } from '@material-ui/core'
 import InputSelectMultiControl from '../../../../elements/InputSelectMultiControl'
 import { apiFetchRoles, apiUpdateUser } from '../../../../../utils/api'
 import CustomButton from '../../../../elements/CustomButton'
 import { useUpdateMutationOptions } from '../../../../../utils/hooks'
 import { setMembresMutateAlert } from '../../../../../redux/alerts/AlertsActions'
+import { membreUserSchema } from '../../../../../schemas/membreSchema'
 
 const StyledForm = styled('form')(() => ({
   width: '100%',
 }))
-function MembreForm({ setShowMembreForm, user }) {
+function MembreForm({ setShowMembreForm, user, queryKey }) {
+  const theme = useTheme()
   const rolesQueryKey = ['listes-roles']
-  const userQueryKey = [`${user.id}`]
   const dispatch = useDispatch()
   const { Token } = useSelector((state) => state.user)
   const {
@@ -24,7 +27,7 @@ function MembreForm({ setShowMembreForm, user }) {
     formState: { isSubmitting, isValid },
   } = useForm({
     mode: 'onChange',
-    // resolver: yupResolver(schema()),
+    resolver: yupResolver(membreUserSchema),
   })
 
   const { isLoading, isError, data, error } = useQuery(rolesQueryKey, () =>
@@ -32,7 +35,7 @@ function MembreForm({ setShowMembreForm, user }) {
   )
   const { mutateAsync } = useMutation(
     apiUpdateUser,
-    useUpdateMutationOptions(userQueryKey)
+    useUpdateMutationOptions(queryKey)
   )
 
   const rolesOptions = useCallback(() => {
@@ -45,10 +48,13 @@ function MembreForm({ setShowMembreForm, user }) {
   }, [data])
 
   const initialRoles = useCallback(
-    user.roles && user.roles.length > 1
-      ? user.roles.map(({ name, id }) => ({ value: id, label: name }))
+    user && user.roles && user.roles.length > 1
+      ? user.roles.map((role) => ({
+          value: role.id,
+          label: `${role.name}-${role.entity.name}`,
+        }))
       : '',
-    [user.roles]
+    [user]
   )
 
   const onSubmit = async (datas) => {
@@ -66,7 +72,7 @@ function MembreForm({ setShowMembreForm, user }) {
 
     try {
       await mutateAsync({
-        id: user.id,
+        id: user ? user.id : null,
         action: 'update',
         options: options,
         body: finalDatas,
@@ -101,7 +107,11 @@ function MembreForm({ setShowMembreForm, user }) {
 
   return (
     <StyledForm on onSubmit={handleSubmit(onSubmit)}>
-      <Grid container className="form-fields-container">
+      <Grid
+        container
+        className="form-fields-container"
+        style={{ paddingLeft: '1rem' }}
+      >
         <InputSelectMultiControl
           name="roles"
           options={rolesOptions()}
@@ -111,20 +121,27 @@ function MembreForm({ setShowMembreForm, user }) {
         />
       </Grid>
       <Grid item container>
-        <CustomButton type="submit" text="Je valide la modification" />
+        <CustomButton
+          type="submit"
+          text="Je valide la modification"
+          disabled={isSubmitting}
+          action="post"
+          bgcolor={theme.palette.success.main}
+          style={{ color: theme.palette.secondary.main }}
+          width="300px"
+        />
       </Grid>
     </StyledForm>
   )
 }
 
 MembreForm.defaultProps = {
-  user: {
-    roles: null,
-  },
+  user: null,
 }
 
 MembreForm.propTypes = {
   setShowMembreForm: PropTypes.func.isRequired,
+  queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
   user: PropTypes.shape({
     id: PropTypes.string,
     roles: PropTypes.arrayOf(
@@ -136,4 +153,4 @@ MembreForm.propTypes = {
   }),
 }
 
-export default MembreForm
+export default React.memo(MembreForm)

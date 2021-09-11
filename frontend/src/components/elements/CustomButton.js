@@ -37,6 +37,10 @@ function CustomButton({ text, width, bgcolor, action, ...rest }) {
         return 'fa fa-times'
       case 'confirm':
         return 'fa fa-check-circle'
+      case 'toggle':
+        return 'fa fa-sort'
+      case 'search':
+        return 'fa fa-search'
 
       default:
         return 'fa fa-bell'

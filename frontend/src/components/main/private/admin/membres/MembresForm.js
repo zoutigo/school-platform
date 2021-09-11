@@ -1,9 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import PropTypes from 'prop-types'
-import { Grid, styled } from '@material-ui/core'
+import { Grid, styled, useTheme } from '@material-ui/core'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import membreSchema from '../../../../../schemas/membreSchema'
+import { membreSchema } from '../../../../../schemas/membreSchema'
 import CustomButton from '../../../../elements/CustomButton'
 import InputTextControl from '../../../../elements/InputTextControl'
 
@@ -16,6 +16,7 @@ const StyledForm = styled('form')(() => ({
   },
 }))
 function MembresForm({ setSearch }) {
+  const theme = useTheme()
   const {
     control,
     handleSubmit,
@@ -46,6 +47,7 @@ function MembresForm({ setSearch }) {
             text="rechercher"
             action="search"
             type="submit"
+            bgcolor={theme.palette.primary.main}
           />
         </Grid>
       </Grid>
