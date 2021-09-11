@@ -59,12 +59,6 @@ function LoginScreen() {
     try {
       await mutateAsync(datas).then((response) => {
         if (response.status === 200) {
-          // persistor.purge()
-          // const token = response.headers['x-access-token']
-
-          // const splittedToken = token.split('.')
-          // const tokenDatas = JSON.parse(atob(splittedToken[1]))
-
           const { newToken, newDatas } = tokenDatas(response)
 
           dispatch(setUserInfos(newDatas))

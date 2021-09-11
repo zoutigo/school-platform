@@ -46,9 +46,10 @@ export const useUpdateMutationOptions = (queryKey) => {
 }
 
 export const useIsTokenValid = () => {
-  const {
-    User: { exp, id, isVerified },
-  } = useSelector((state) => state.user)
+  const { User } = useSelector((state) => state.user)
+  if (!User) return false
+
+  const { exp, id, isVerified } = User
 
   // const tokenIsValid = (!exp ? false : exp > new Date().getTime() / 1000) && _id
   const valid = () => {

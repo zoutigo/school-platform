@@ -1,6 +1,8 @@
 /* eslint-disable consistent-return */
 
 const EntityP = require('../models/EntityP')
+const RoleP = require('../models/RoleP')
+const UserP = require('../models/UserP')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { entityValidator } = require('../validators/entityValidator')
 
@@ -86,7 +88,18 @@ module.exports.getEntities = async (req, res, next) => {
   }
 
   try {
-    const entities = await EntityP.findAll({ where: req.query })
+    const entities = await EntityP.findAll({
+      where: req.query,
+      include: [
+        {
+          model: RoleP,
+          include: {
+            model: UserP,
+            attributes: ['lastname', 'firstname', 'gender'],
+          },
+        },
+      ],
+    })
 
     if (entities.length < 1) return next(new NotFound('event not found'))
     return res.status(200).send(entities)

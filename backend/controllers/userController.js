@@ -7,13 +7,13 @@ const { Unauthorized, BadRequest, TokenInvalid } = require('../utils/errors')
 const { generateValidationToken } = require('../utils/generateValidationToken')
 const { generateToken } = require('../utils/generatetoken')
 const { losspassTokenVerify } = require('../utils/tokenverify')
-const { updateArray } = require('../utils/updateArray')
 
 const { userValidator } = require('../validators/userValidator')
 const UserP = require('../models/UserP')
 const RoleP = require('../models/RoleP')
 const EntityP = require('../models/EntityP')
-const UserEntities = require('../models/UserEntities')
+const { userInclude } = require('../constants/includes')
+const { userAttributes } = require('../constants/attributes')
 
 module.exports.registerUser = async (req, res, next) => {
   if (Object.keys(req.body).length < 1)
@@ -97,7 +97,7 @@ module.exports.loginUser = async (req, res, next) => {
   // check if email exists
   const userVerified = await UserP.findOne({
     where: { email },
-    include: RoleP,
+    include: userInclude,
   })
   if (!userVerified) return next(new BadRequest('invalid email or password'))
 
@@ -112,7 +112,7 @@ module.exports.loginUser = async (req, res, next) => {
     .send('successful login')
 }
 module.exports.updateUser = async (req, res, next) => {
-  const { id: toUpdateId, roleAction } = req.query
+  const { id: toUpdateId } = req.query
 
   const {
     id: requesterId,
@@ -130,14 +130,12 @@ module.exports.updateUser = async (req, res, next) => {
   // check if user exist
   const toUpdateuser = await UserP.findOne({
     where: { id: toUpdateId },
-    include: [RoleP, EntityP],
+    include: userInclude,
   })
   if (!toUpdateuser)
     return next(new BadRequest('user to update does not exist'))
 
   const isOwner = Number(toUpdateId) === requesterId
-
-  const newUserDatas = {}
 
   const {
     lastname,
@@ -149,7 +147,6 @@ module.exports.updateUser = async (req, res, next) => {
     password,
     newPassword,
     newPasswordConfirm,
-    role,
     roles,
     phone,
     childrenClasses,
@@ -336,16 +333,8 @@ module.exports.updateUser = async (req, res, next) => {
     const userId = isOwner ? toUpdateId : requesterId
     const user = await UserP.findOne({
       where: { id: userId },
-      include: [
-        {
-          model: EntityP,
-          attributes: ['id', 'name', 'alias'],
-        },
-        {
-          model: RoleP,
-          attributes: ['id', 'name'],
-        },
-      ],
+      include: userInclude,
+      attributes: userAttributes,
     })
     const message = { message: 'Modification correctement effectuée' }
 
@@ -367,30 +356,8 @@ module.exports.listUsers = async (req, res, next) => {
   try {
     const users = await UserP.findAll({
       where: req.query,
-      include: [
-        {
-          model: RoleP,
-          include: [
-            {
-              model: EntityP,
-              attributes: ['id', 'alias', 'name'],
-            },
-          ],
-        },
-        { model: EntityP },
-      ],
-      attributes: [
-        'id',
-        'email',
-        'lastname',
-        'firstname',
-        'gender',
-        'isAdmin',
-        'isTeacher',
-        'isManager',
-        'isModerator',
-        'isVerified',
-      ],
+      include: userInclude,
+      attributes: userAttributes,
     })
 
     if (!users || users.length < 1)
@@ -408,31 +375,8 @@ module.exports.viewUser = async (req, res, next) => {
 
   const user = await UserP.findOne({
     where: { id },
-    include: [
-      {
-        model: RoleP,
-        include: [
-          {
-            model: EntityP,
-            attributes: ['id', 'alias', 'name'],
-          },
-        ],
-      },
-      { model: EntityP },
-    ],
-    attributes: [
-      'id',
-      'firstname',
-      'lastname',
-      'gender',
-      'isAdmin',
-      'isManager',
-      'isModerator',
-      'isTeacher',
-      'isVerified',
-      'email',
-      'phone',
-    ],
+    include: userInclude,
+    attributes: userAttributes,
   })
 
   if (!user) return next(new BadRequest('no user found with that id'))
