@@ -51,7 +51,7 @@ export const apiFecthUserDatas = async (id) => {
 }
 
 export const apiFecthEntity = async (param) => {
-  const URL = `${PREFIX}/entities?${param}`
+  const URL = param ? `${PREFIX}/entities?${param}` : `${PREFIX}/entities`
   const { data } = await axios.get(URL)
 
   return data

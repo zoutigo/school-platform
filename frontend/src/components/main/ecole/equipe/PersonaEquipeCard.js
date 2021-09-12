@@ -28,18 +28,18 @@ const StyledFirstNameTypo = styled(StyledNameTypo)(() => ({
 }))
 
 function PersonaEquipeCard({ persona, classroomName }) {
-  const { genre, lastname, firstname, roles } = persona
+  const { gender, lastname, firstname, roles } = persona
   const theme = useTheme()
   return (
     <StyledUserCardGrid container>
       <Grid item>
         <StyledIcon
           bgcolor={
-            genre === 'monsieur'
+            gender === 'monsieur'
               ? theme.palette.secondary.main
               : theme.palette.primary.main
           }
-          className={genre === 'madame' ? 'fa fa-venus' : 'fa fa-mars'}
+          className={gender === 'madame' ? 'fa fa-venus' : 'fa fa-mars'}
           aria-hidden="true"
         />
       </Grid>
@@ -66,8 +66,8 @@ PersonaEquipeCard.defaultProps = {
 }
 
 PersonaEquipeCard.propTypes = {
-  persona: PropTypes.exact({
-    genre: PropTypes.string,
+  persona: PropTypes.shape({
+    gender: PropTypes.string,
     firstname: PropTypes.string,
     lastname: PropTypes.string,
     entites: PropTypes.arrayOf(PropTypes.string),

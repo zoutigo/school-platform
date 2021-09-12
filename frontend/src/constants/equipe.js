@@ -1,6 +1,6 @@
 const Equipe = [
   {
-    genre: 'monsieur',
+    gender: 'monsieur',
     firstname: 'Daniel',
     lastname: 'Lachal',
     entites: ['apel'],
@@ -11,7 +11,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Emmanuelle',
     lastname: 'rouard',
     entites: ['inspection academique'],
@@ -22,7 +22,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'monsieur',
+    gender: 'monsieur',
     firstname: 'frederic',
     lastname: 'cintas',
     entites: ['inspection academique', 'ogec'],
@@ -33,7 +33,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Stephanie',
     lastname: 'malet marechal',
     entites: ['inspection academique'],
@@ -44,7 +44,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Beatrice',
     lastname: 'bouvier',
     entites: ['inspection academique'],
@@ -55,7 +55,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Carine',
     lastname: 'budin',
     entites: ['inspection academique'],
@@ -66,7 +66,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Kelly',
     lastname: 'grosjean',
     entites: ['inspection academique'],
@@ -77,7 +77,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Patricia',
     lastname: 'guerin',
     entites: ['inspection academique'],
@@ -88,7 +88,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Flore',
     lastname: 'lheriteau',
     entites: ['inspection academique'],
@@ -99,7 +99,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Blandine',
     lastname: 'goujet',
     entites: ['inspection academique'],
@@ -110,7 +110,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Veronique',
     lastname: 'cretinon',
     entites: ['inspection academique'],
@@ -121,7 +121,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: '',
     lastname: 'geay',
     entites: ['ogec'],
@@ -132,7 +132,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: '',
     lastname: 'landry',
     entites: ['ogec'],
@@ -143,7 +143,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Sophie',
     lastname: 'marguet',
     entites: ['ogec'],
@@ -154,7 +154,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Carmen',
     lastname: 'saby',
     entites: ['ogec'],
@@ -165,7 +165,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Monique',
     lastname: 'duperron',
     entites: ['ogec'],
@@ -176,7 +176,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Corine',
     lastname: 'rius',
     entites: ['ogec'],
@@ -187,7 +187,7 @@ const Equipe = [
     isModerator: false,
   },
   {
-    genre: 'madame',
+    gender: 'madame',
     firstname: 'Christine',
     lastname: 'chaloin',
     entites: ['ogec'],
