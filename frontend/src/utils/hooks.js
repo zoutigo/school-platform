@@ -95,6 +95,76 @@ export const useRoutesInfos = () => {
   const { pathname } = useLocation()
   const rights = useRigths()
 
+  const level = useCallback(() => {
+    if (rights.adminLevel) return 'admin'
+    if (rights.managerLevel) return 'manager'
+    if (rights.moderatorLevel) return 'moderator'
+    if (rights.userLevel) return 'user'
+    return 'visitor'
+  }, [rights])
+
+  const userExclusions = useCallback(['identification'], [])
+
+  const userCond = useCallback(
+    (route) =>
+      (route.state.access === 'public' || route.state.access === 'user') &&
+      !userExclusions.includes(route.state.alias),
+    []
+  )
+  const visitorCond = useCallback(
+    (route) => route.state.access === 'public',
+    []
+  )
+
+  const moderatorCond = useCallback(
+    (route) =>
+      (route.state.access === 'public' ||
+        route.state.access === 'user' ||
+        route.state.access === 'moderator') &&
+      !userExclusions.includes(route.state.alias),
+    []
+  )
+
+  const managerCond = useCallback(
+    (route) =>
+      (route.state.access === 'public' ||
+        route.state.access === 'user' ||
+        route.state.access === 'moderator' ||
+        route.state.access === 'manager') &&
+      !userExclusions.includes(route.state.alias),
+    []
+  )
+
+  const adminCond = useCallback(
+    (route) =>
+      (route.state.access === 'public' ||
+        route.state.access === 'user' ||
+        route.state.access === 'moderator' ||
+        route.state.access === 'manager' ||
+        route.state.access === 'admin') &&
+      !userExclusions.includes(route.state.alias),
+    []
+  )
+
+  const filterRoute = useCallback(
+    (route) => {
+      switch (level()) {
+        case 'admin':
+          return adminCond(route)
+        case 'manager':
+          return managerCond(route)
+        case 'moderator':
+          return moderatorCond(route)
+        case 'user':
+          return userCond(route)
+
+        default:
+          return visitorCond(route)
+      }
+    },
+    [level]
+  )
+
   // routes list
 
   const routesList = useCallback(() => {
@@ -159,59 +229,17 @@ export const useRoutesInfos = () => {
   }, [pathname, chemins])
 
   const rubricsListe = useCallback(() => {
-    const visitorExcludedCats = ['account', 'administration']
-    const userExcludedCats = ['identification', 'administration']
-    const moderatorExcludedCats = ['administration', 'identification']
-
     const rubrics = routesList().filter(
       (route) => route.state.type === 'rubric'
     )
     const categories = routesList().filter((route) => {
       const catCond = route.state.type === 'category'
 
-      // const visitorCond =
-      //   !rights.userLevel && !visitorExcludedCats.includes(route.state.alias)
-      const visitorCond = !TokenIsValid && route.state.access === 'public'
-
-      // const userCond =
-      //   rights.userLevel && !userExcludedCats.includes(route.state.alias)
-
-      const userCond =
-        TokenIsValid &&
-        (route.state.access === 'public' || route.state.access === 'user')
-
-      // const moderatorCond =
-      //   rights.moderatorLevel &&
-      //   !moderatorExcludedCats.includes(route.state.alias)
-      const moderatorCond =
-        TokenIsValid &&
-        (route.state.access === 'public' ||
-          route.state.access === 'user' ||
-          route.state.access === 'moderator')
-
-      const managerCond =
-        TokenIsValid &&
-        (route.state.access === 'public' ||
-          route.state.access === 'user' ||
-          route.state.access === 'moderator' ||
-          route.state.access === 'manager')
-
-      const adminCond =
-        TokenIsValid &&
-        (route.state.access === 'public' ||
-          route.state.access === 'user' ||
-          route.state.access === 'moderator' ||
-          route.state.access === 'manager' ||
-          route.state.access === 'admin')
-
-      return (
-        catCond &&
-        (visitorCond || userCond || moderatorCond || managerCond || adminCond)
-      )
+      return catCond && filterRoute(route)
     })
 
     const chapters = routesList().filter(
-      (route) => route.state.type === 'chapter'
+      (route) => route.state.type === 'chapter' && filterRoute(route)
     )
 
     const categoriesChaptered = categories.map((category) => {

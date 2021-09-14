@@ -40,6 +40,8 @@ function LoginScreen() {
     alertText: '',
     openAlert: false,
   })
+  const { User } = useSelector((state) => state.user)
+  const [mutationResponse, setMutationResponse] = useState(null)
   const formTitle = `Connexion à lécole`
 
   const { mutateAsync } = useMutation(
@@ -58,18 +60,19 @@ function LoginScreen() {
   const onSubmit = async (datas) => {
     try {
       await mutateAsync(datas).then((response) => {
-        if (response.status === 200) {
-          const { newToken, newDatas } = tokenDatas(response)
+        setMutationResponse(response)
+        // if (response.status === 200) {
+        //   const { newToken, newDatas } = tokenDatas(response)
 
-          dispatch(setUserInfos(newDatas))
-          dispatch(setUserToken(newToken))
-          const { isAdmin, isVerified } = newDatas
-          if (isAdmin) {
-            history.push('/informations')
-          } else {
-            history.push('/')
-          }
-        }
+        //   dispatch(setUserInfos(newDatas))
+        //   dispatch(setUserToken(newToken))
+        //   const { isAdmin, isVerified } = newDatas
+        //   if (isAdmin) {
+        //     history.push('/informations')
+        //   } else {
+        //     history.push('/')
+        //   }
+        // }
       })
     } catch (err) {
       setTopAlert({
@@ -80,6 +83,25 @@ function LoginScreen() {
       window.scrollTo(0, 0)
     }
   }
+
+  useEffect(() => {
+    if (mutationResponse && mutationResponse.status === 200) {
+      const { newToken, newDatas } = tokenDatas(mutationResponse)
+      dispatch(setUserInfos(newDatas))
+      dispatch(setUserToken(newToken))
+      const { isAdmin, isVerified } = newDatas
+      if (isAdmin) {
+        history.push('/informations')
+      } else {
+        history.push('/')
+      }
+    }
+  }, [mutationResponse, dispatch])
+  // useEffect(() => {
+  //   if (!User) {
+  //     history.push('/login')
+  //   }
+  // }, [User])
 
   useEffect(() => {
     if (status && message) {
