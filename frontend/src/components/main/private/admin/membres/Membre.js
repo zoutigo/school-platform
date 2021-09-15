@@ -11,6 +11,9 @@ import { apiFecthUserDatas } from '../../../../../utils/api'
 const StyledValueTypo = styled(Typography)(() => ({
   fontWeight: 'bold',
 }))
+const StyledValueTypoUppercase = styled(StyledValueTypo)(() => ({
+  textTransform: 'uppercase',
+}))
 
 function Membre({ membre }) {
   const theme = useTheme()
@@ -83,9 +86,9 @@ function Membre({ membre }) {
             <Typography variant="h6">Nom</Typography>
           </Grid>
           <Grid item xs={8}>
-            <StyledValueTypo variant="body1">
-              {user ? user.lastname.toUpperCase() : null}
-            </StyledValueTypo>
+            <StyledValueTypoUppercase variant="body1">
+              {user && user.lastname ? user.lastname : null}
+            </StyledValueTypoUppercase>
           </Grid>
         </Grid>
       </Grid>

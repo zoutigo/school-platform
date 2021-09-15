@@ -152,6 +152,8 @@ module.exports.updateUser = async (req, res, next) => {
     childrenClasses,
   } = req.body
 
+  console.log('reqbody:', req.body)
+
   if (childrenClasses) {
     if (isOwner) {
       const entities = await EntityP.findAll({
@@ -192,7 +194,7 @@ module.exports.updateUser = async (req, res, next) => {
     }
   }
 
-  if (lastname || lastname !== 'undefined') {
+  if (lastname && lastname !== 'undefined') {
     if (isOwner) {
       if (!(lastname === toUpdateuser.lastname)) {
         toUpdateuser.lastname = lastname
