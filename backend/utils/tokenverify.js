@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const { Unauthorized, TokenInvalid, BadRequest } = require('./errors')
 const User = require('../models/User')
 const UserP = require('../models/UserP')
+const { userInclude } = require('../constants/includes')
 
 module.exports.tokenVerify = async (req, res, next) => {
   const token = req.headers['x-access-token']
@@ -14,7 +15,7 @@ module.exports.tokenVerify = async (req, res, next) => {
     if (!verified) return next(new BadRequest('Invalid Token'))
     const { id } = verified
 
-    const user = await UserP.findOne({ where: { id } })
+    const user = await UserP.findOne({ where: { id }, include: userInclude })
     if (!user) return res.status(400).send('user does not exist')
 
     req.user = verified

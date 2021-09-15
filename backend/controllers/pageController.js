@@ -1,12 +1,15 @@
 /* eslint-disable consistent-return */
 
+const EntityP = require('../models/EntityP')
 const PageP = require('../models/PageP')
 
 const { BadRequest, Unauthorized, NotFound } = require('../utils/errors')
 const { pageValidator } = require('../validators/pageValidator')
 
+require('dotenv').config()
+
 module.exports.postPage = async (req, res, next) => {
-  const { isAdmin, isManager, isModerator } = req.user
+  const { isAdmin, isManager, isModerator, id: requesterId } = req.user
   const { id: pageId, action } = req.query
 
   if (Object.keys(req.body).length < 1 && action !== 'delete') {
@@ -14,6 +17,7 @@ module.exports.postPage = async (req, res, next) => {
   }
 
   const userIsAllowed = isAdmin || isManager || isModerator
+
   if (!userIsAllowed)
     return next(
       new Unauthorized(

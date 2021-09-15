@@ -7,13 +7,33 @@ const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { entityValidator } = require('../validators/entityValidator')
 
 module.exports.postEntity = async (req, res, next) => {
-  const { isAdmin } = req.user
+  const {
+    isAdmin,
+    isManager,
+    isModerator,
+    id: requesterId,
+    roles: requesterRoles,
+  } = req.user
   const { id: entityId, action } = req.query
-  const userIsAllowed = isAdmin
 
   if (Object.keys(req.body).length < 1 && action !== 'delete') {
     return next(new BadRequest('datas missing'))
   }
+
+  const toUpdateEntity = entityId
+    ? await EntityP.findOne({ where: { id: entityId }, include: [RoleP] })
+    : null
+
+  const userAllowedRoles =
+    toUpdateEntity && toUpdateEntity.roles && toUpdateEntity.roles.length > 0
+      ? toUpdateEntity.roles.filter(
+          (entRole) => Number(entRole.entityId) === Number(entityId)
+        )
+      : []
+
+  const roleIsAllowed = userAllowedRoles.length > 0
+
+  const userIsAllowed = isAdmin || isManager || isModerator || roleIsAllowed
 
   if (!userIsAllowed)
     return next(
