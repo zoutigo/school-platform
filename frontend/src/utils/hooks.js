@@ -1,16 +1,11 @@
 // eslint-disable-next-line no-unused-vars
-import { useTheme } from '@material-ui/styles'
-import React, { useCallback, useState } from 'react'
-import { useQuery, useQueryClient } from 'react-query'
+
+import React, { useCallback } from 'react'
+import { useQueryClient } from 'react-query'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import routes from '../constants/routes'
 import theme from '../constants/theme'
-
-import { apiFetchChemin } from './api'
-import randomkey from './randomkey'
-import routeDatas from './routeDatas'
-import routesInfos from './routesInfos'
 
 export const useUpdateMutationOptions = (queryKey) => {
   const queryClient = useQueryClient()
@@ -88,20 +83,18 @@ export const useRouteParams = (arg) => {
 }
 
 export const useRoutesInfos = () => {
-  const { User } = useSelector((state) => state.user)
   const { Chemins: chemins } = useSelector((state) => state.settings)
-  const { isAdmin, isModerator, isManager, isTeacher, exp, id } = User
-  const TokenIsValid = exp && id ? new Date().getTime() / 1000 < exp : false
+
   const { pathname } = useLocation()
   const rights = useRigths()
 
-  const level = useCallback(() => {
+  const level = () => {
     if (rights.adminLevel) return 'admin'
     if (rights.managerLevel) return 'manager'
     if (rights.moderatorLevel) return 'moderator'
     if (rights.userLevel) return 'user'
     return 'visitor'
-  }, [rights])
+  }
 
   const userExclusions = useCallback(['identification'], [])
 
@@ -162,7 +155,7 @@ export const useRoutesInfos = () => {
           return visitorCond(route)
       }
     },
-    [level]
+    [level()]
   )
 
   // routes list

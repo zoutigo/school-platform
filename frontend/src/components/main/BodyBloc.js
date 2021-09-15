@@ -72,7 +72,9 @@ function BodyBloc() {
     />
   )
   AdminRoute.propTypes = {
-    component: PropTypes.func.isRequired,
+    component: PropTypes.shape({
+      component: PropTypes.element,
+    }).isRequired,
   }
 
   const Filter = React.memo((props) => {

@@ -101,12 +101,12 @@ function Chemin({ chemin, queryKey, setShowAddForm }) {
           {ReactHtmlParser(description)}{' '}
         </Grid>
         <Collapse in={showImage} timeout="auto">
-          <Grid item container justify="center">
+          <Grid item container justifyContent="center">
             <img src={`${URL_PREFIX}/${filepath}`} alt={alias} />
           </Grid>
         </Collapse>
       </Grid>
-      <Grid item container xs={3} justify="flex-end">
+      <Grid item container xs={3} justifyContent="flex-end">
         <Tooltip
           title="View"
           aria-label="view"

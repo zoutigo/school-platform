@@ -99,7 +99,7 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
   return (
     <Grid item container>
       <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
-        <Grid item container justify="center">
+        <Grid item container justifyContent="center">
           <Title title={formTitle} textcolor="whitesmoke" />
         </Grid>
         <Grid container className="form-fields-container">

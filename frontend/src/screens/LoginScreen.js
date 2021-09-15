@@ -99,7 +99,11 @@ function LoginScreen() {
   }, [mutationResponse, dispatch])
   useEffect(() => {
     if (!User) {
-      history.push('/login')
+      setTopAlert({
+        severity: 'error',
+        alertText: 'connectez vous',
+        openAlert: true,
+      })
     }
   }, [User])
 

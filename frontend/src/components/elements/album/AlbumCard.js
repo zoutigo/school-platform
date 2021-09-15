@@ -147,7 +147,7 @@ function AlbumCard({
       >
         {isAllowed ? (
           <Grid container>
-            <Grid item container justify="space-between">
+            <Grid item container justifyContent="space-between">
               <Button
                 size="small"
                 color="primary"

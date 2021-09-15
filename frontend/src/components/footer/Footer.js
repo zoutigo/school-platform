@@ -54,22 +54,22 @@ function Footer() {
   return (
     <StyledFooter>
       <StyledFooterInfos container>
-        <Grid item container xs={12} sm={6} md={4} justify="center">
+        <Grid item container xs={12} sm={6} md={4} justifyContent="center">
           <Contact />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} container justify="center">
+        <Grid item xs={12} sm={6} md={4} container justifyContent="center">
           <Suggestions />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} container justify="center">
+        <Grid item xs={12} sm={6} md={4} container justifyContent="center">
           <Partners />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} container justify="center">
+        <Grid item xs={12} sm={6} md={4} container justifyContent="center">
           <Timing />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} container justify="center">
+        <Grid item xs={12} sm={6} md={4} container justifyContent="center">
           <Share />
         </Grid>
-        <Grid item xs={12} sm={6} md={4} container justify="center">
+        <Grid item xs={12} sm={6} md={4} container justifyContent="center">
           <FooterCard items={[<FooterLogo key="footerlogo" />]} title="" />
         </Grid>
       </StyledFooterInfos>

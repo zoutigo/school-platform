@@ -50,7 +50,7 @@ function CredentialDatas({ credentialdatas, toggle, setToggle, setForm }) {
           </Grid>
         </StyledPersoDataFieldGrid>
       ))}
-      <Grid item container justify="flex-end">
+      <Grid item container justifyContent="flex-end">
         {toggle === 'list' ? (
           <ToolTipPrivateDatas
             callback={handleClick}

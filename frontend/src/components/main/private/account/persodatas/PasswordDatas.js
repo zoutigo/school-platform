@@ -45,7 +45,7 @@ function PasswordDatas({ toggle, setToggle, setForm }) {
           <StyledPersoDataValueTypo>XXXXXXXXXXXXXXXX</StyledPersoDataValueTypo>
         </Grid>
       </StyledPersoDataFieldGrid>
-      <Grid item container justify="flex-end">
+      <Grid item container justifyContent="flex-end">
         {toggle === 'list' ? (
           <ToolTipPrivateDatas
             callback={handleClick}

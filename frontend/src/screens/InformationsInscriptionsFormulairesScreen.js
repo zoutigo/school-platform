@@ -41,14 +41,14 @@ const StyledPaperForm = styled('form')(({ theme }) => ({
 function InformationsInscriptionsFormulairesScreen() {
   const {
     Token,
-    User: { _id },
+    User: { id },
   } = useSelector((state) => state.user)
   const { tokenIsValid } = useIsTokenValid()
 
   const dispatch = useDispatch()
   const theme = useTheme()
   const history = useHistory()
-  const userQueryKey = [`datas-${_id}`]
+  const userQueryKey = [`datas-${id}`]
   const queryKey = ['preinsciptions']
   const [userDataCompleted, setUserDataCompleted] = useState(false)
   const [addFile, setAddFile] = useState(false)
@@ -120,7 +120,7 @@ function InformationsInscriptionsFormulairesScreen() {
     }
   }
 
-  const { data } = useQuery(userQueryKey, () => apiFecthUserDatas(_id))
+  const { data } = useQuery(userQueryKey, () => apiFecthUserDatas(id))
 
   useEffect(() => {
     if (data) {

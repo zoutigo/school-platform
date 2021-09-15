@@ -95,7 +95,7 @@ function ClassroomForm({
 
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
-      <Grid item container justify="center">
+      <Grid item container justifyContent="center">
         <Title title={formTitle} textcolor="whitesmoke" />
       </Grid>
       <Grid container className="form-fields-container">

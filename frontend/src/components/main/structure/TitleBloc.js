@@ -7,6 +7,7 @@ import { StyledNavLink, StyledTitle } from '../../elements/styled'
 import Title from '../../elements/Title'
 
 import { useRoutesInfos } from '../../../utils/hooks'
+import theme from '../../../constants/theme'
 
 const StyledTitleBloc = styled(Grid)(() => ({
   background: 'whitesmoke',
@@ -30,17 +31,17 @@ const StyledMainTitle = styled(StyledTitle)(({ bordercolor }) => ({
   },
 }))
 
-const StyledSmallScreenTitleBloc = styled(Grid)(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
+const StyledSmallScreenTitleBloc = styled(Grid)(({ theme: thema }) => ({
+  [thema.breakpoints.up('md')]: {
     display: 'none',
   },
 }))
 
-const StyledLargeScreenTitleBloc = styled(Grid)(({ theme }) => ({
+const StyledLargeScreenTitleBloc = styled(Grid)(({ theme: themeb }) => ({
   '& >div': {
     marginRight: '0.2rem',
   },
-  [theme.breakpoints.down('sm')]: {
+  [themeb.breakpoints.down('sm')]: {
     display: 'none',
   },
 }))
@@ -56,20 +57,18 @@ const fakeState = {
 }
 
 function TitleBloc() {
-  const { rubricColors: rubriccolors } = useRoutesInfos()
+  const { rubricColors: rubriccolors, category, current } = useRoutesInfos()
 
   const { palette } = useTheme()
   const { pathname, state: locationState } = useLocation()
 
-  const { category, current } = useRoutesInfos()
+  const state = locationState || current?.state || fakeState
 
-  const state = useCallback(locationState || current?.state || fakeState, [
-    current,
-  ])
-
-  const TitleTab = ({ rubriccolors: tabcolors, tabpath, state: tabstate }) => (
+  const TitleTab = ({ tabcolors, tabpath, state: tabstate }) => (
     <StyledMainTitle
-      bgcolor={pathname === tabpath ? tabcolors.main : tabcolors.ligth}
+      bgcolor={
+        tabcolors && pathname === tabpath ? tabcolors.main : tabcolors.ligth
+      }
       bordercolor={tabcolors.dark}
     >
       <StyledNavLink
@@ -86,13 +85,14 @@ function TitleBloc() {
   TitleTab.defaultProps = {
     tabpath: '/',
     state: null,
+    tabcolors: palette.third,
   }
   TitleTab.propTypes = {
-    rubriccolors: PropTypes.shape({
+    tabcolors: PropTypes.shape({
       main: PropTypes.string,
       dark: PropTypes.string,
       ligth: PropTypes.string,
-    }).isRequired,
+    }),
     tabpath: PropTypes.string,
     state: PropTypes.shape({
       name: PropTypes.string,
@@ -102,16 +102,16 @@ function TitleBloc() {
   return (
     <StyledTitleBloc container>
       <StyledLargeScreenTitleBloc item container>
-        {state.type === 'rubric' && (
+        {state.type === 'rubric' && rubriccolors && (
           <TitleTab
-            rubriccolors={rubriccolors}
+            tabcolors={rubriccolors}
             state={state}
             tabpath={state.path}
           />
         )}
-        {state.type !== 'rubric' && category.current && (
+        {state.type !== 'rubric' && category.current && rubriccolors && (
           <TitleTab
-            rubriccolors={rubriccolors}
+            tabcolors={rubriccolors}
             tabpath={category.current.path}
             state={category.current.state}
           />
@@ -119,9 +119,10 @@ function TitleBloc() {
 
         {category &&
           category.chapters.length > 0 &&
+          rubriccolors &&
           category.chapters.map((chapter) => (
             <TitleTab
-              rubriccolors={rubriccolors}
+              tabcolors={rubriccolors}
               tabpath={chapter.path}
               state={chapter.state}
               key={chapter.path}
@@ -132,7 +133,9 @@ function TitleBloc() {
         <TitleTab rubriccolors={rubriccolors} state={state} />
       </StyledSmallScreenTitleBloc>
       <Grid item container>
-        <StyledLine bgcolor={rubriccolors.dark} />
+        <StyledLine
+          bgcolor={rubriccolors ? rubriccolors.dark : palette.third.dark}
+        />
       </Grid>
     </StyledTitleBloc>
   )
