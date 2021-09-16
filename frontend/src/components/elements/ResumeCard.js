@@ -19,9 +19,9 @@ const StyledCard = styled(Card)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'space-between',
   '& .area': {
-    '& .media': {
-      height: 180,
-    },
+    // '& .media': {
+    //   height: 180,
+    // },
     '& .title': {
       color: theme.palette.secondary.dark,
     },
@@ -38,7 +38,14 @@ function ResumeCard({ element }) {
   return (
     <StyledCard onClick={() => history.push({ pathname: path, state: state })}>
       <CardActionArea className="area">
-        <CardMedia className="media" image={image} title={name} />
+        <CardMedia
+          className="media"
+          image={image}
+          title={name}
+          component="img"
+          height="180"
+          alt={name}
+        />
         <CardContent className="title">
           <Typography gutterBottom variant="h5" component="h2">
             {name}
