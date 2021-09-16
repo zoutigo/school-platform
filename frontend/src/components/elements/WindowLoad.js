@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useDispatch } from 'react-redux'
+
 import {
   setChemins,
   setUrlPrefix,
@@ -24,6 +25,7 @@ function WindowLoad() {
 
   useEffect(() => {
     if (data) {
+      const { version } = data
       dispatch(setVariables(data))
     }
     return () => {

@@ -6,6 +6,7 @@ router.get('/', async (req, res, next) => {
   res.status(200).send({
     TINYMCE_KEY: process.env.TINYMCE_KEY,
     SITE_ADRESS: process.env.SITE_ADRESS,
+    SITE_version: '1.0',
   })
 })
 
