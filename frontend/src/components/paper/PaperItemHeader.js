@@ -5,6 +5,7 @@ import moment from 'moment'
 import { Grid, Box, Typography, styled } from '@material-ui/core'
 
 import { StyledPaperHeader } from '../elements/styled'
+import theme from '../../constants/theme'
 
 const StyledTypo = styled(Typography)(() => ({
   marginRight: '1rem',
@@ -78,6 +79,7 @@ function PaperItemHeader({
       setCurrentDocument(paperItem)
     }
   }
+
   return (
     <StyledPaperHeader
       item

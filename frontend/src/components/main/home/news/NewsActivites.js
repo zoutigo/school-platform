@@ -40,7 +40,7 @@ function NewsActivites() {
     for (let i = 0; i < 3; i += 1) {
       if (data[i]) {
         const { entity, date, title } = data[i]
-        const dateString = moment(date).format('DD/MM/YYYY')
+        const dateString = moment(Number(date)).format('DD/MM/YYYY')
         items.push(
           <CardItem
             title={title}

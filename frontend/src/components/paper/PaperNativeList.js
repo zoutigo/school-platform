@@ -3,7 +3,7 @@
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable import/no-named-as-default */
 import React, { useCallback } from 'react'
-import { Grid, styled } from '@material-ui/core'
+import { Grid, styled, Typography } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useQuery } from 'react-query'
 
@@ -12,6 +12,7 @@ import PaperItem from './PaperItem'
 import { setPaperFetchAlert } from '../../redux/alerts/AlertsActions'
 import useFetchDispatch from '../elements/useFetchDispatch'
 import { useRigths } from '../../utils/hooks'
+import theme from '../../constants/theme'
 
 const StyledGrid = styled(Grid)(() => ({
   padding: '0.5rem 0',
@@ -37,7 +38,7 @@ function PaperNativeList({
 
   // filter private datas
   const filteredPapers = useCallback(() => {
-    if (!data || !Array.isArray(data)) return null
+    if (!data || !Array.isArray(data)) return []
     if (userLevel) {
       return data
     }
@@ -47,7 +48,7 @@ function PaperNativeList({
 
   return (
     <StyledGrid item container>
-      {filteredPapers() &&
+      {filteredPapers().length > 0 ? (
         filteredPapers().map((paperItem, index) => {
           if (
             index === 0 &&
@@ -69,7 +70,19 @@ function PaperNativeList({
               paperItem={paperItem}
             />
           )
-        })}
+        })
+      ) : (
+        <Grid
+          item
+          container
+          justifyContent="center"
+          style={{ background: theme.palette.error.light }}
+        >
+          <Typography variant="h4">
+            Rien de nouveau actuellement pour le public
+          </Typography>
+        </Grid>
+      )}
     </StyledGrid>
   )
 }

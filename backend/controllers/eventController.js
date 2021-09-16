@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 const { Op } = require('sequelize')
+const moment = require('moment')
 const EntityP = require('../models/EntityP')
 const EventP = require('../models/EventP')
 const RoleP = require('../models/RoleP')
@@ -8,6 +9,9 @@ const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { eventValidator } = require('../validators/eventValidator')
 
 require('dotenv').config()
+
+const today = new Date().getTime()
+const yesterday = moment().add(-1, 'days')
 
 module.exports.postEvent = async (req, res, next) => {
   const {
@@ -116,8 +120,6 @@ module.exports.postEvent = async (req, res, next) => {
 }
 
 module.exports.getEvents = async (req, res, next) => {
-  const today = new Date().getTime()
-
   const errors = eventValidator(req.query)
   if (errors.length > 0) {
     return next(new BadRequest(errors.join()))
@@ -151,9 +153,11 @@ module.exports.getEvents = async (req, res, next) => {
       ],
     })
 
-    const filteredEvents = events.filter((event) => Number(event.date) > today)
+    const filteredEvents = events.filter(
+      (event) => moment(Number(event.date)) > yesterday
+    )
 
-    if (filteredEvents.length < 1) return next(new NotFound('event not found'))
+    // if (filteredEvents.length < 1) return next(new NotFound('event not found'))
     return res.status(200).send(filteredEvents)
   } catch (err) {
     next(err)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import MenuBookIcon from '@material-ui/icons/MenuBook'
 import DateRangeIcon from '@material-ui/icons/DateRange'
@@ -13,7 +13,7 @@ import Avatar from '@material-ui/core/Avatar'
 
 import Typography from '@material-ui/core/Typography'
 
-import { Box } from '@material-ui/core'
+import { Box, useTheme } from '@material-ui/core'
 import { styled } from '@material-ui/styles'
 import randomkey from '../../../../../utils/randomkey'
 
@@ -23,12 +23,13 @@ const StyledCardHeader = styled(CardHeader)(({ theme }) => ({
   height: '3.5rem',
 }))
 
-const StyledCardContent = styled(CardContent)(() => ({
-  background: 'whitesmoke',
+const StyledCardContent = styled(CardContent)(({ bgcolor }) => ({
+  background: bgcolor,
   padding: '0.5rem 1.8rem ',
 }))
 
-const StyledCard = styled(Card)(({ theme }) => ({
+const StyledCard = styled(Card)(({ theme, bgcolor }) => ({
+  background: bgcolor,
   marginTop: '1rem',
   width: '93%',
   [theme.breakpoints.down('sm')]: {
@@ -43,8 +44,9 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
   marginLeft: '2rem ',
 }))
 
-function NewsCard({ cardTitle, items, recipe }) {
-  const defineIcon = (cardtitle) => {
+function NewsCard({ cardTitle, items }) {
+  const theme = useTheme()
+  const defineIcon = useCallback((cardtitle) => {
     switch (cardtitle) {
       case "Actualités de l'école":
         return <MenuBookIcon />
@@ -58,8 +60,13 @@ function NewsCard({ cardTitle, items, recipe }) {
       default:
         return null
     }
-  }
-  const Title = (title) => <Typography variant="h4">{title}</Typography>
+  }, [])
+
+  const Title = useCallback(
+    (title) => <Typography variant="h4">{title}</Typography>,
+    []
+  )
+  // const Title = (title) => <Typography variant="h4">{title}</Typography>
   return (
     <StyledCard>
       <StyledCardHeader
@@ -73,8 +80,18 @@ function NewsCard({ cardTitle, items, recipe }) {
         // subheader="September 14, 2016"
       />
 
-      <StyledCardContent>
-        {items && items.map((item) => <Box key={randomkey(99999)}>{item}</Box>)}
+      <StyledCardContent
+        bgcolor={items.length > 0 ? 'whitesmoke' : theme.palette.error.light}
+      >
+        {items && items.length > 0 ? (
+          items.map((item) => <Box key={randomkey(99999)}>{item}</Box>)
+        ) : (
+          <Box>
+            <Typography variant="body1" component="div">
+              Rien pour le moment
+            </Typography>
+          </Box>
+        )}
       </StyledCardContent>
     </StyledCard>
   )
@@ -82,8 +99,7 @@ function NewsCard({ cardTitle, items, recipe }) {
 
 NewsCard.propTypes = {
   cardTitle: PropTypes.string.isRequired,
-  recipe: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(PropTypes.element).isRequired,
 }
 
-export default NewsCard
+export default React.memo(NewsCard)

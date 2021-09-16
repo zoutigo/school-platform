@@ -24,8 +24,6 @@ function PaperItem({
   setShowSearch,
 }) {
   const { id, content, files } = paperItem
-
-  console.log('paperitem', paperItem)
   const { URL_PREFIX } = useSelector((state) => state.settings)
 
   const transformedFiles = useCallback(
@@ -39,6 +37,17 @@ function PaperItem({
       : [],
     [files, URL_PREFIX]
   )
+  if (!paperItem)
+    return (
+      <Grid item container>
+        <PaperItemHeader
+          setCurrentDocument={setCurrentDocument}
+          currentDocumentId={currentDocument ? currentDocument.id : null}
+          paperItem={paperItem}
+          paper={paper}
+        />
+      </Grid>
+    )
 
   return (
     <StyledPaperItemGrid item container>
@@ -74,6 +83,7 @@ function PaperItem({
 
 PaperItem.defaultProps = {
   currentDocument: null,
+  paperItem: null,
   // paperItem: {
   //   files: [],
   //   id: null,
@@ -114,7 +124,7 @@ PaperItem.propTypes = {
       })
     ),
     createdat: PropTypes.number,
-  }).isRequired,
+  }),
 }
 
 export default React.memo(PaperItem)

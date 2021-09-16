@@ -44,4 +44,4 @@ CardItem.propTypes = {
   link: PropTypes.string,
 }
 
-export default CardItem
+export default React.memo(CardItem)

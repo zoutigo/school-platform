@@ -38,13 +38,14 @@ function NewsAgenda() {
   if (data && data.length > 0) {
     for (let i = 0; i < 3; i += 1) {
       if (data[i]) {
-        const { place, date, title } = data[i]
-        const dateString = moment(date).format('DD/MM/YYYY')
+        const { place, date, title, id } = data[i]
+        const dateString = moment(Number(date)).format('DD/MM/YYYY')
         items.push(
           <CardItem
             title={title}
             detail={`${place} - ${dateString}`}
             link="/informations/actualites/agenda"
+            id={id}
           />
         )
       }

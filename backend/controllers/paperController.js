@@ -44,7 +44,7 @@ module.exports.getPapers = async (req, res, next) => {
       limit: 10,
     })
 
-    if (papers.length < 1) return next(new NotFound('paper not found'))
+    // if (papers.length < 1) return next(new NotFound('paper not found'))
     return res.status(200).send(papers)
   } catch (err) {
     return next(err)
