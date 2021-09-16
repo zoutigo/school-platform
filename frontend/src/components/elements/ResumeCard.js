@@ -34,6 +34,7 @@ function ResumeCard({ element }) {
   const { path, state } = element
   const { name, description, filepath } = state
   const image = `${URL_PREFIX}/${filepath}`
+  console.log(image)
 
   return (
     <StyledCard onClick={() => history.push({ pathname: path, state: state })}>
@@ -51,6 +52,7 @@ function ResumeCard({ element }) {
           <Typography gutterBottom variant="h5" component="h2">
             {name}
           </Typography>
+          <Typography variant="caption">{image}</Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             {ReactHtmlParser(description)}
           </Typography>
