@@ -6,7 +6,7 @@ const initialState = {
   MainDialogDatas: '',
   MainDialogCount: 0,
   Variables: null,
-  Chemins: [],
+  Chemins: null,
 }
 
 /* eslint-disable */

@@ -35,7 +35,7 @@ function WindowLoad() {
       dispatch(setChemins(chemins))
     }
     return () => {
-      setChemins([])
+      setChemins(null)
     }
   }, [data])
 
