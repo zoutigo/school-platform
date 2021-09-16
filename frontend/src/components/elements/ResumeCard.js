@@ -40,6 +40,7 @@ function ResumeCard({ element }) {
       <CardActionArea className="area">
         <CardMedia
           className="media"
+          src={image}
           image={image}
           title={name}
           component="img"
