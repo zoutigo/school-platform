@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useDispatch } from 'react-redux'
+import { useCookies } from 'react-cookie'
 
 import {
   setChemins,
@@ -11,6 +12,7 @@ import { apiFetchChemin, apiFetchVariables } from '../../utils/api'
 
 function WindowLoad() {
   const dispatch = useDispatch()
+  const [cookies, setCookie, removeCookie] = useCookies(['appversion'])
 
   useEffect(() => {
     const PREFIX =
@@ -18,28 +20,37 @@ function WindowLoad() {
     dispatch(setUrlPrefix(PREFIX))
   }, [])
 
-  const { isLoading, isError, data, error } = useQuery(['variables'], () =>
-    apiFetchVariables()
-  )
-  // const { data: chemins } = useQuery(['liste-chemins'], () => apiFetchChemin())
+  const {
+    isLoading,
+    isError,
+    data: variablesData,
+    error,
+  } = useQuery(['variables'], () => apiFetchVariables())
+  const { data: chemins } = useQuery(['liste-chemins'], () => apiFetchChemin())
 
   useEffect(() => {
-    if (data) {
-      const { version } = data
-      dispatch(setVariables(data))
+    if (variablesData) {
+      const { version } = variablesData
+      if (cookies.appversion !== version) {
+        localStorage.removeItem('persist:root')
+        setCookie('appversion', version, { path: '/' })
+      }
+
+      dispatch(setVariables(variablesData))
     }
     return () => {
       setVariables(null)
     }
-  }, [data])
-  // useEffect(() => {
-  //   if (chemins && Array.isArray(chemins)) {
-  //     dispatch(setChemins(chemins))
-  //   }
-  //   return () => {
-  //     setChemins(null)
-  //   }
-  // }, [data])
+  }, [variablesData])
+
+  useEffect(() => {
+    if (chemins && Array.isArray(chemins)) {
+      dispatch(setChemins(chemins))
+    }
+    return () => {
+      setChemins(null)
+    }
+  }, [chemins])
 
   // useEffect(() => {
   //   if (newRoutes.length) {

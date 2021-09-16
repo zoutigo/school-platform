@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom'
 import MomentUtils from '@date-io/moment'
 import moment from 'moment'
 import 'moment/locale/fr'
+import { CookiesProvider } from 'react-cookie'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { ThemeProvider } from '@material-ui/styles'
 import { Provider } from 'react-redux'
@@ -26,7 +27,9 @@ ReactDOM.render(
       <React.StrictMode>
         <ThemeProvider theme={theme}>
           <MuiPickersUtilsProvider utils={MomentUtils} locale="fr">
-            <App />
+            <CookiesProvider>
+              <App />
+            </CookiesProvider>
           </MuiPickersUtilsProvider>
         </ThemeProvider>
       </React.StrictMode>

@@ -164,7 +164,10 @@ export const useRoutesInfos = () => {
     const list = []
     routes.map((rubricroute) => {
       const rubricmatch =
-        chemins && chemins.find((chemin) => rubricroute.path === chemin.path)
+        chemins && Array.isArray(chemins)
+          ? chemins.find((chemin) => rubricroute.path === chemin.path)
+          : null
+
       const {
         state: rubricstate,
         routes: categoryroutes,
@@ -180,9 +183,10 @@ export const useRoutesInfos = () => {
 
       if (categoryroutes && categoryroutes.length) {
         categoryroutes.map((categoryroute) => {
-          const categorymatch = chemins?.find(
-            (chemin) => categoryroute.path === chemin.path
-          )
+          const categorymatch =
+            chemins && Array.isArray(chemins)
+              ? chemins.find((chemin) => categoryroute.path === chemin.path)
+              : null
           const {
             state: categorystate,
             routes: chaptersroutes,
@@ -198,9 +202,10 @@ export const useRoutesInfos = () => {
           list.push({ state: { ...categorystate }, ...categoryrest })
           if (chaptersroutes && chaptersroutes.length) {
             chaptersroutes.map((chapterroute) => {
-              const chaptermatch = chemins?.find(
-                (chemin) => chapterroute.path === chemin.path
-              )
+              const chaptermatch =
+                chemins && Array.isArray(chemins)
+                  ? chemins.find((chemin) => chapterroute.path === chemin.path)
+                  : null
               const { state: chapterstate, ...chapterrest } = chapterroute
 
               if (chaptermatch) {
