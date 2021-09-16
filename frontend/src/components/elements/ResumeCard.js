@@ -33,7 +33,10 @@ function ResumeCard({ element }) {
   const { URL_PREFIX } = useSelector((state) => state.settings)
   const { path, state } = element
   const { name, description, filepath } = state
-  const image = `${URL_PREFIX}/${filepath}`
+  const image =
+    process.env.NODE_ENV === 'production'
+      ? filepath
+      : `${URL_PREFIX}/${filepath}`
   console.log(image)
 
   return (
