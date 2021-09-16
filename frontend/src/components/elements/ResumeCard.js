@@ -31,16 +31,18 @@ const StyledCard = styled(Card)(({ theme }) => ({
 function ResumeCard({ element }) {
   const history = useHistory()
   const { URL_PREFIX } = useSelector((state) => state.settings)
-  const { path, state } = element
-  const { name, description, filepath } = state
+  const { path, state: elementState } = element
+  const { name, description, filepath } = elementState
   const image =
     process.env.NODE_ENV === 'production'
       ? filepath
       : `${URL_PREFIX}/${filepath}`
-  console.log(image)
+  console.log('state:', elementState)
 
   return (
-    <StyledCard onClick={() => history.push({ pathname: path, state: state })}>
+    <StyledCard
+      onClick={() => history.push({ pathname: path, state: elementState })}
+    >
       <CardActionArea className="area">
         <CardMedia
           className="media"

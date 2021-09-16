@@ -6,6 +6,7 @@ import { useRoutesInfos } from '../utils/hooks'
 
 function ApelOgecScreen() {
   const { rubric } = useRoutesInfos()
+  console.log('rubricinfos:', rubric)
   return (
     <StyledCardPageGrid container>
       {rubric.routes &&
