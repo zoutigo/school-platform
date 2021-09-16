@@ -1,4 +1,3 @@
-import { useHistory } from 'react-router-dom'
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
@@ -11,17 +10,10 @@ import GradeDatas from './GradeDatas'
 import PasswordDatas from './PasswordDatas'
 import { StyledPersoDataCollapse } from './Style'
 import { apiFecthUserDatas } from '../../../../../utils/api'
+import useFetchDispatch from '../../../../elements/useFetchDispatch'
+import { setPrivateAccountFetchAlert } from '../../../../../redux/alerts/AlertsActions'
 
-function PersoDataList({
-  setForm,
-  form,
-  toggle,
-  setToggle,
-
-  setFetchAlert,
-  setData,
-}) {
-  const history = useHistory()
+function PersoDataList({ setForm, form, toggle, setToggle, setData }) {
   const {
     User: { id },
   } = useSelector((state) => state.user)
@@ -34,39 +26,14 @@ function PersoDataList({
     apiFecthUserDatas(id)
   )
 
+  // hook to dispatch alerts
+  useFetchDispatch(isLoading, isError, error, data, setPrivateAccountFetchAlert)
+
   useEffect(() => {
-    if (isLoading) {
-      setFetchAlert({
-        openAlert: true,
-        severity: 'warning',
-        alertText: 'Chargement de vos informations ...',
-      })
-    }
-    if (isError) {
-      setFetchAlert({
-        openAlert: true,
-        severity: 'error',
-        alertText: error.data.message,
-      })
-    }
     if (data) {
       setData(data)
-      setFetchAlert({
-        openAlert: false,
-        severity: 'success',
-        alertText: '',
-      })
-    } else {
-      history.push('/private/identification/login')
     }
-    return () => {
-      setFetchAlert({
-        openAlert: false,
-        severity: 'error',
-        alertText: '',
-      })
-    }
-  }, [isLoading, isError, data])
+  }, [data])
 
   const credentialdatas = {
     genre: data ? data.gender : null,
@@ -80,47 +47,52 @@ function PersoDataList({
     manager: data ? data.isManager : null,
     admin: data ? data.isAdmin : null,
   }
+
   return (
     <Grid item container>
-      <StyledPersoDataCollapse in={toggle === 'list' || credentialsform}>
-        <CredentialDatas
-          credentialdatas={credentialdatas}
-          toggle={toggle}
-          setForm={setForm}
-          setToggle={setToggle}
-        />
-      </StyledPersoDataCollapse>
-      <StyledPersoDataCollapse in={toggle === 'list' || childrenform}>
-        <ChildrenDatas
-          childrenClasses={data ? data.entities : []}
-          toggle={toggle}
-          setForm={setForm}
-          setToggle={setToggle}
-        />
-      </StyledPersoDataCollapse>
-      <StyledPersoDataCollapse in={toggle === 'list' || rolesform}>
-        <RolesDatas
-          roles={data ? data.roles : null}
-          toggle={toggle}
-          setForm={setForm}
-          setToggle={setToggle}
-        />
-      </StyledPersoDataCollapse>
-      <StyledPersoDataCollapse in={toggle === 'list' || gradeform}>
-        <GradeDatas
-          grades={grades}
-          toggle={toggle}
-          setForm={setForm}
-          setToggle={setToggle}
-        />
-      </StyledPersoDataCollapse>
-      <StyledPersoDataCollapse in={toggle === 'list' || passwordform}>
-        <PasswordDatas
-          toggle={toggle}
-          setForm={setForm}
-          setToggle={setToggle}
-        />
-      </StyledPersoDataCollapse>
+      {data && (
+        <>
+          <StyledPersoDataCollapse in={toggle === 'list' || credentialsform}>
+            <CredentialDatas
+              credentialdatas={credentialdatas}
+              toggle={toggle}
+              setForm={setForm}
+              setToggle={setToggle}
+            />
+          </StyledPersoDataCollapse>
+          <StyledPersoDataCollapse in={toggle === 'list' || childrenform}>
+            <ChildrenDatas
+              childrenClasses={data ? data.entities : []}
+              toggle={toggle}
+              setForm={setForm}
+              setToggle={setToggle}
+            />
+          </StyledPersoDataCollapse>
+          <StyledPersoDataCollapse in={toggle === 'list' || rolesform}>
+            <RolesDatas
+              roles={data ? data.roles : null}
+              toggle={toggle}
+              setForm={setForm}
+              setToggle={setToggle}
+            />
+          </StyledPersoDataCollapse>
+          <StyledPersoDataCollapse in={toggle === 'list' || gradeform}>
+            <GradeDatas
+              grades={grades}
+              toggle={toggle}
+              setForm={setForm}
+              setToggle={setToggle}
+            />
+          </StyledPersoDataCollapse>
+          <StyledPersoDataCollapse in={toggle === 'list' || passwordform}>
+            <PasswordDatas
+              toggle={toggle}
+              setForm={setForm}
+              setToggle={setToggle}
+            />
+          </StyledPersoDataCollapse>
+        </>
+      )}
     </Grid>
   )
 }
@@ -128,7 +100,6 @@ function PersoDataList({
 PersoDataList.propTypes = {
   setForm: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
-  setFetchAlert: PropTypes.func.isRequired,
   setToggle: PropTypes.func.isRequired,
   form: PropTypes.shape({
     credentialsform: PropTypes.bool,

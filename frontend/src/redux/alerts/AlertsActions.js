@@ -1,8 +1,8 @@
 import { initialAlertCollapse } from '../../constants/alerts'
 import {
-  SET_PRIVATE_ACCOUNT_DATA_ALERT,
-  SET_INFORMATIONS_INSCRIPTIONS_ALERT,
+  SET_PRIVATE_ACCOUNT_FETCH_ALERT,
   SET_PRIVATE_ACCOUNT_MUTATE_ALERT,
+  SET_INFORMATIONS_INSCRIPTIONS_ALERT,
   SET_ALBUM_MUTATE_ALERT,
   SET_ALBUM_FETCH_ALERT,
   SET_ALBUM_PAGE_FETCH_ALERT,
@@ -22,8 +22,12 @@ import {
   SET_MEMBRES_FETCH_ALERT,
 } from './AlertsActionsTypes'
 
-export const setPrivateAccountDataAlert = (value = initialAlertCollapse) => ({
-  type: SET_PRIVATE_ACCOUNT_DATA_ALERT,
+export const setPrivateAccountFetchAlert = (value = initialAlertCollapse) => ({
+  type: SET_PRIVATE_ACCOUNT_FETCH_ALERT,
+  payload: value,
+})
+export const setPrivateAccountMutateAlert = (value = initialAlertCollapse) => ({
+  type: SET_PRIVATE_ACCOUNT_MUTATE_ALERT,
   payload: value,
 })
 export const setInformationsInscriptionsAlert = (
@@ -32,10 +36,7 @@ export const setInformationsInscriptionsAlert = (
   type: SET_INFORMATIONS_INSCRIPTIONS_ALERT,
   payload: value,
 })
-export const setPrivateAccountMutateAlert = (value = initialAlertCollapse) => ({
-  type: SET_PRIVATE_ACCOUNT_MUTATE_ALERT,
-  payload: value,
-})
+
 export const setAlbumMutateAlert = (value = initialAlertCollapse) => ({
   type: SET_ALBUM_MUTATE_ALERT,
   payload: value,

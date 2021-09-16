@@ -25,9 +25,9 @@ module.exports.postEntity = async (req, res, next) => {
     : null
 
   const userAllowedRoles =
-    toUpdateEntity && toUpdateEntity.roles && toUpdateEntity.roles.length > 0
-      ? toUpdateEntity.roles.filter(
-          (entRole) => Number(entRole.entityId) === Number(entityId)
+    toUpdateEntity && requesterRoles && requesterRoles.length > 0
+      ? requesterRoles.filter(
+          (reqRole) => Number(reqRole.entityId) === Number(entityId)
         )
       : []
 
@@ -67,21 +67,14 @@ module.exports.postEntity = async (req, res, next) => {
       return next(err)
     }
   } else if (action === 'update' && entityId) {
-    // case update
-
-    const currentEntity = await EntityP.findOne({ where: { id: entityId } })
-    if (!currentEntity) return next(new BadRequest("L'entité nexiste pas"))
+    if (!toUpdateEntity) return next(new BadRequest("L'entité nexiste pas"))
     try {
       const updatedEntity = await EntityP.update(req.body, {
         where: { id: entityId },
       })
       if (updatedEntity) {
-        // if (process.env.NODE_ENV === 'production') {
-        //   return res.status(200).send('Entité correctement modifiée')
-        // }
         return res.status(200).send({
           message: 'Entité correctement modifiée',
-          // data: updatedEntity,
         })
       }
     } catch (err) {

@@ -16,9 +16,9 @@ module.exports.tokenVerify = async (req, res, next) => {
     const { id } = verified
 
     const user = await UserP.findOne({ where: { id }, include: userInclude })
-    if (!user) return res.status(400).send('user does not exist')
+    if (!user) return next(new BadRequest("Cet utilisateur n'existe plus"))
 
-    req.user = verified
+    req.user = user
     next()
   } catch (err) {
     return next(new TokenInvalid(err))

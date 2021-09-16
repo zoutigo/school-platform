@@ -30,8 +30,8 @@ const secondPara = `
   partenariat avec les parents ...).`
 
 const thirdPara = `
-  Je vous invite à découvrir les 8 classes de l'établissement (3 classes de maternelle et 5 classes de primaire) avec ce que vivent
-  ses 218 élèves, son équipe éducative, comprendre sa politique et son
+  Je vous invite à découvrir les 10 classes de l'établissement (5 classes de maternelle et 5 classes de primaire) avec ce que vivent
+  ses 220 élèves, son équipe éducative, comprendre sa politique et son
   organisation avec ses projets, son OGEC, son APEL...`
 
 const onText = `Compris. Je ferme.`

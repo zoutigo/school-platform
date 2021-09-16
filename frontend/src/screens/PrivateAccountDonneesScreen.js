@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import PersoDataForm from '../components/main/private/account/persodatas/PersoDataForm'
 import PersoDataList from '../components/main/private/account/persodatas/PersoDataList'
-import { setPrivateAccountMutateAlert } from '../redux/alerts/AlertsActions'
+import {
+  setPrivateAccountFetchAlert,
+  setPrivateAccountMutateAlert,
+} from '../redux/alerts/AlertsActions'
 import { initialAlertCollapse } from '../constants/alerts'
 
 const StyledGrid = styled(Grid)(() => ({
@@ -25,33 +28,35 @@ function PrivateAccountDonneesScreen() {
     gradeform: false,
   })
 
-  const { privateAccountDatasMutate } = useSelector((state) => state.alerts)
-
-  const [fetchAlert, setFetchAlert] = useState({
-    openAlert: false,
-    severity: 'error',
-    alertText: '',
-  })
+  const { privateAccountMutate, privateAccountFetch } = useSelector(
+    (state) => state.alerts
+  )
 
   const collapseMutateCallback = () => {
     dispatch(setPrivateAccountMutateAlert(initialAlertCollapse))
   }
+  const collapseFetchCallback = () => {
+    dispatch(setPrivateAccountFetchAlert(initialAlertCollapse))
+  }
 
   // eslint-disable-next-line arrow-body-style
   useEffect(() => {
-    return () => collapseMutateCallback()
+    return () => {
+      collapseMutateCallback()
+      collapseFetchCallback()
+    }
   }, [])
 
   return (
     <StyledGrid container>
       <Grid item container>
         <AlertCollapse
-          {...privateAccountDatasMutate}
+          {...privateAccountMutate}
           callback={collapseMutateCallback}
         />
       </Grid>
       <Grid item container>
-        <AlertCollapse {...fetchAlert} />
+        <AlertCollapse {...privateAccountFetch} />
       </Grid>
 
       <Grid item container>
@@ -60,7 +65,6 @@ function PrivateAccountDonneesScreen() {
           form={form}
           toggle={toggle}
           setToggle={setToggle}
-          setFetchAlert={setFetchAlert}
           setData={setData}
         />
 

@@ -65,6 +65,7 @@ import PrivateIdentificationScreen from '../screens/PrivateIdentificationScreen'
 import PrivateIdentificationLosspassScreen from '../screens/PrivateIdentificationLosspassScreen'
 import PrivateIdentificationEmailValidationScreen from '../screens/PrivateIdentificationEmailValidationScreen'
 import PrivateAdminMembresScreen from '../screens/PrivateAdminMembresScreen'
+import ClassesAgendaScreen from '../screens/ClassesAgendaScreen'
 
 const routesComponents = [
   {
@@ -188,6 +189,10 @@ const routesComponents = [
     component: Album,
   },
   {
+    path: '/classes/petite-section/agenda',
+    component: ClassesAgendaScreen,
+  },
+  {
     path: '/classes/moyenne-section',
     component: ClassesPresentationScreen,
   },
@@ -198,6 +203,10 @@ const routesComponents = [
   {
     path: '/classes/moyenne-section/albums',
     component: Album,
+  },
+  {
+    path: '/classes/moyenne-section/agenda',
+    component: ClassesAgendaScreen,
   },
   {
     path: '/classes/grande-section',
@@ -212,6 +221,10 @@ const routesComponents = [
     component: Album,
   },
   {
+    path: '/classes/grande-section/agenda',
+    component: ClassesAgendaScreen,
+  },
+  {
     path: '/classes/cp',
     component: ClassesPresentationScreen,
   },
@@ -222,6 +235,10 @@ const routesComponents = [
   {
     path: '/classes/cp/albums',
     component: Album,
+  },
+  {
+    path: '/classes/cp/agenda',
+    component: ClassesAgendaScreen,
   },
   {
     path: '/classes/ce1',
@@ -236,6 +253,10 @@ const routesComponents = [
     component: Album,
   },
   {
+    path: '/classes/ce1/agenda',
+    component: ClassesAgendaScreen,
+  },
+  {
     path: '/classes/ce2',
     component: ClassesPresentationScreen,
   },
@@ -246,6 +267,10 @@ const routesComponents = [
   {
     path: '/classes/ce2/albums',
     component: Album,
+  },
+  {
+    path: '/classes/ce2/agenda',
+    component: ClassesAgendaScreen,
   },
   {
     path: '/classes/cm1',
@@ -260,6 +285,10 @@ const routesComponents = [
     component: Album,
   },
   {
+    path: '/classes/cm1/agenda',
+    component: ClassesAgendaScreen,
+  },
+  {
     path: '/classes/cm2',
     component: ClassesPresentationScreen,
   },
@@ -272,6 +301,10 @@ const routesComponents = [
     component: Album,
   },
   {
+    path: '/classes/cm2/agenda',
+    component: ClassesAgendaScreen,
+  },
+  {
     path: '/classes/adaptation',
     component: ClassesPresentationScreen,
   },
@@ -282,6 +315,10 @@ const routesComponents = [
   {
     path: '/classes/adaptation/albums',
     component: Album,
+  },
+  {
+    path: '/classes/adaptation/agenda',
+    component: ClassesAgendaScreen,
   },
   {
     path: '/informations',

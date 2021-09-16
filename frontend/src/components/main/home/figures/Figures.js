@@ -24,7 +24,7 @@ const matrix = [
 
 function Figures() {
   const items = [
-    ['Eleves', 218, '#85C48E', matrix[0]],
+    ['Eleves', 220, '#85C48E', matrix[0]],
     ['Familles', 100, '#C389BC', matrix[1]],
     ['Enseignants', 10, '#EE701D', matrix[2]],
     ['Jeux', 49, '#F9CE46', matrix[3]],

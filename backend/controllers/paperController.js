@@ -9,6 +9,7 @@ const PaperP = require('../models/PaperP')
 const FileP = require('../models/FileP')
 const AlbumP = require('../models/AlbumP')
 const { adminEntity, papersAlbumDatas } = require('../constants/mainsrows')
+const RoleP = require('../models/RoleP')
 
 require('dotenv').config()
 
@@ -51,7 +52,15 @@ module.exports.getPapers = async (req, res, next) => {
 }
 
 module.exports.postPaper = async (req, res, next) => {
-  const { isAdmin, isManager, isModerator, isTeacher, id: userId } = req.user
+  const {
+    isAdmin,
+    isManager,
+    isModerator,
+    isTeacher,
+    id: userId,
+    roles: usersRoles,
+  } = req.user
+  const { entityAlias } = req.body
   const { id: paperId, action } = req.query
   const filename = req.file ? req.file.filename : null
   const filepath = req.file ? req.file.path : null
@@ -59,11 +68,40 @@ module.exports.postPaper = async (req, res, next) => {
   if (Object.keys(req.body).length < 1 && action !== 'delete') {
     return next(new BadRequest('datas missing'))
   }
-  const userIsAllowed = isAdmin || isManager || isTeacher || isModerator
+
+  if (!entityAlias) return next(new BadRequest('indiquez votre entité'))
+
+  // check the entity
+  const checkedEntity = await EntityP.findOne({
+    where: { alias: entityAlias },
+    include: [RoleP],
+  })
+
+  if (!checkedEntity)
+    return next(
+      deleteFile(
+        filepath,
+        new BadRequest(
+          `L'entité correspondant à l'alias ${entityAlias} n'existe pas`
+        )
+      )
+    )
+
+  const userAllowedRoles =
+    usersRoles && usersRoles.length > 0 && checkedEntity
+      ? usersRoles.filter(
+          (reqRole) => Number(reqRole.entityId) === Number(checkedEntity.id)
+        )
+      : []
+  const roleIsAllowed = userAllowedRoles.length > 0
+
+  const userIsAllowed =
+    isAdmin || isManager || isTeacher || isModerator || roleIsAllowed
+
   if (!userIsAllowed)
     return next(
       new Unauthorized(
-        'seuls admin,teacher,manager et moderator sont autorisés'
+        'Seuls les gradés ou le depositaire de cette categorie peuvent effectuer cette opération '
       )
     )
 
@@ -73,13 +111,6 @@ module.exports.postPaper = async (req, res, next) => {
   }
 
   try {
-    // check if user exits
-    const user = await UserP.findOne({ where: { id: userId } })
-    if (!user)
-      return next(
-        deleteFile(filepath, new BadRequest("l'utilisateur n'existe pas"))
-      )
-
     // const administrationEntity = await EntityP.findOne({
     //   where: { alias: 'admin' },
     // })
@@ -104,7 +135,7 @@ module.exports.postPaper = async (req, res, next) => {
       //   paper.filename = filename
       // }
 
-      const { type, title, entityAlias } = req.body
+      const { type, title } = req.body
 
       if (!type || !title || !entityAlias)
         return next(
@@ -115,13 +146,6 @@ module.exports.postPaper = async (req, res, next) => {
             )
           )
         )
-
-      // check the entity
-      const checkedEntity = await EntityP.findOne({
-        where: { alias: entityAlias },
-      })
-      if (!checkedEntity)
-        return next(deleteFile(filepath, new BadRequest('mauvaise entité')))
 
       paper.entityId = checkedEntity.id
       delete paper.entityAlias

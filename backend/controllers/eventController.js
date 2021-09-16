@@ -2,6 +2,7 @@
 const { Op } = require('sequelize')
 const EntityP = require('../models/EntityP')
 const EventP = require('../models/EventP')
+const RoleP = require('../models/RoleP')
 const UserP = require('../models/UserP')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { eventValidator } = require('../validators/eventValidator')
@@ -9,17 +10,50 @@ const { eventValidator } = require('../validators/eventValidator')
 require('dotenv').config()
 
 module.exports.postEvent = async (req, res, next) => {
-  const { isAdmin, isManager, isModerator, isTeacher, id: userId } = req.user
+  const {
+    isAdmin,
+    isManager,
+    isModerator,
+    id: userId,
+    roles: requesterRoles,
+  } = req.user
   const { id: eventId, action } = req.query
-  const userIsAllowed = isAdmin || isManager || isTeacher || isModerator
+  const { entityAlias } = req.body
 
   if (Object.keys(req.body).length < 1 && action !== 'delete') {
     return next(new BadRequest('datas missing'))
   }
 
+  if (!entityAlias) return next(new BadRequest('indiquez votre entité'))
+
+  // check the entity
+  const checkedEntity = await EntityP.findOne({
+    where: { alias: entityAlias },
+    include: [RoleP],
+  })
+
+  if (!checkedEntity)
+    return next(
+      new BadRequest(
+        `L'entité correspondant à l'alias ${entityAlias} n'existe pas`
+      )
+    )
+
+  const userAllowedRoles =
+    requesterRoles && requesterRoles.length > 0 && checkedEntity
+      ? requesterRoles.filter(
+          (reqRole) => Number(reqRole.entityId) === Number(checkedEntity.id)
+        )
+      : []
+  const roleIsAllowed = userAllowedRoles.length > 0
+
+  const userIsAllowed = isAdmin || isManager || isModerator || roleIsAllowed
+
   if (!userIsAllowed)
     return next(
-      new Unauthorized('only admin,teacher,manager and moderator are allowed ')
+      new Unauthorized(
+        'Seuls les gradés ou le depositaire de cette categorie peuvent effectuer cette opération '
+      )
     )
 
   const errors = eventValidator(req.body)
@@ -28,16 +62,14 @@ module.exports.postEvent = async (req, res, next) => {
   }
 
   if (action === 'create') {
-    const { entityAlias, title, content, date, place } = req.body
+    const { title, content, date, place } = req.body
 
-    if (!entityAlias || !title || !content || !date || !place)
-      return next(new BadRequest('datas missing again'))
-
-    // check the entity
-    const checkedEntity = await EntityP.findOne({
-      where: { alias: entityAlias },
-    })
-    if (!checkedEntity) return next(new BadRequest('mauvaise entité'))
+    if (!title || !content || !date || !place)
+      return next(
+        new BadRequest(
+          'Précisez toutes les informations requises: titre, contenu, date et lieu'
+        )
+      )
 
     const event = req.body
     event.entityId = checkedEntity.id

@@ -22,7 +22,7 @@ export const updateUserCredentialsSchema = yup.object().shape({
   phone: yup
     .string()
     .required('le telephone est obligatoire')
-    .matches(phoneRegex, 'Mot de pass non valide'),
+    .matches(phoneRegex, 'Non valide. ex: 0618679809'),
 })
 
 export const updateUserChildrenClassesSchema = yup.object().shape({

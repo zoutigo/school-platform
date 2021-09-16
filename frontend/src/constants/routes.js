@@ -408,6 +408,19 @@ const routes = [
               icon: null,
             },
           },
+          {
+            path: '/classes/petite-section/agenda',
+            exact: true,
+            state: {
+              name: 'Agenda',
+              alias: 'agenda-petite-section',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
         ],
       },
       {
@@ -442,6 +455,19 @@ const routes = [
             state: {
               name: 'Albums',
               alias: 'albums-moyenne-section',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+          {
+            path: '/classes/moyenne-section/agenda',
+            exact: true,
+            state: {
+              name: 'Agenda',
+              alias: 'agenda-moyenne-section',
               access: 'public',
               type: 'chapter',
               filepath: null,
@@ -490,6 +516,19 @@ const routes = [
               icon: null,
             },
           },
+          {
+            path: '/classes/grande-section/agenda',
+            exact: true,
+            state: {
+              name: 'Agenda',
+              alias: 'agenda-grande-section',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
         ],
       },
       {
@@ -524,6 +563,19 @@ const routes = [
             state: {
               name: 'Albums',
               alias: 'albums-cp',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+          {
+            path: '/classes/cp/agenda',
+            exact: true,
+            state: {
+              name: 'Agenda',
+              alias: 'agenda-cp',
               access: 'public',
               type: 'chapter',
               filepath: null,
@@ -572,6 +624,19 @@ const routes = [
               icon: null,
             },
           },
+          {
+            path: '/classes/ce1/agenda',
+            exact: true,
+            state: {
+              name: 'Agenda',
+              alias: 'agenda-ce1',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
         ],
       },
       {
@@ -606,6 +671,19 @@ const routes = [
             state: {
               name: 'Albums',
               alias: 'albums-ce2',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+          {
+            path: '/classes/ce2/agenda',
+            exact: true,
+            state: {
+              name: 'Agenda',
+              alias: 'agenda-ce2',
               access: 'public',
               type: 'chapter',
               filepath: null,
@@ -654,6 +732,19 @@ const routes = [
               icon: null,
             },
           },
+          {
+            path: '/classes/cm1/agenda',
+            exact: true,
+            state: {
+              name: 'Agenda',
+              alias: 'agenda-cm1',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
         ],
       },
       {
@@ -695,6 +786,19 @@ const routes = [
               icon: null,
             },
           },
+          {
+            path: '/classes/cm2/agenda',
+            exact: true,
+            state: {
+              name: 'Agenda',
+              alias: 'agenda-cm2',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
         ],
       },
       {
@@ -729,6 +833,19 @@ const routes = [
             state: {
               name: 'Albums',
               alias: 'albums-adaptation',
+              access: 'public',
+              type: 'chapter',
+              filepath: null,
+              description: null,
+              icon: null,
+            },
+          },
+          {
+            path: '/classes/adaptation/agenda',
+            exact: true,
+            state: {
+              name: 'Agenda',
+              alias: 'agenda-adaptation',
               access: 'public',
               type: 'chapter',
               filepath: null,

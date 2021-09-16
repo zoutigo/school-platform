@@ -4,9 +4,9 @@ import { initialAlertCollapse } from '../../constants/alerts'
 const initialAlert = initialAlertCollapse
 
 const initialState = {
-  privateAcccountData: initialAlert,
+  privateAccountMutate: initialAlert,
+  privateAccountFetch: initialAlert,
   informationsInscriptions: initialAlert,
-  privateAccountDatasMutate: initialAlert,
   albumMutate: initialAlert,
   albumFetch: initialAlert,
   albumPageMutate: initialAlert,
@@ -27,15 +27,16 @@ const initialState = {
 
 /* eslint-disable */
 const actionsReducers = createReducer(initialState, {
-  SET_PRIVATE_ACCOUNT_DATA_ALERT: (state, action) => {
-    state.privateAcccountData = action.payload
+  SET_PRIVATE_ACCOUNT_FETCH_ALERT: (state, action) => {
+    state.privateAccountFetch = action.payload
+  },
+  SET_PRIVATE_ACCOUNT_MUTATE_ALERT: (state, action) => {
+    state.privateAccountMutate = action.payload
   },
   SET_INFORMATIONS_INSCRIPTIONS_ALERT: (state, action) => {
     state.informationsInscriptions = action.payload
   },
-  SET_PRIVATE_ACCOUNT_MUTATE_ALERT: (state, action) => {
-    state.privateAccountDatasMutate = action.payload
-  },
+
   SET_ALBUM_MUTATE_ALERT: (state, action) => {
     state.albumMutate = action.payload
   },

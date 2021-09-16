@@ -26,7 +26,7 @@ function PaperItemFooter({
   setShowSearch,
 }) {
   const { id: paperId } = paperItem
-  const { isAllowedToChange, queryKey, poster } = paper
+  const { isAllowedToChange, queryKey, poster, entityAlias } = paper
   const theme = useTheme()
   const dispatch = useDispatch()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -46,6 +46,7 @@ function PaperItemFooter({
         id: paperId,
         action: 'delete',
         Token: Token,
+        body: { entityAlias },
       }).then((response) => {
         dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
       })
@@ -137,7 +138,7 @@ PaperItemFooter.propTypes = {
     paperName: PropTypes.string.isRequired,
     paperFormat: PropTypes.string.isRequired,
     paperType: PropTypes.string.isRequired,
-
+    entityAlias: PropTypes.string.isRequired,
     poster: PropTypes.func,
     isAllowedToChange: PropTypes.bool.isRequired,
   }).isRequired,
