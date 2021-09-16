@@ -1,4 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { apiFetchChemin } from '../../utils/api'
+
+const chemins = async () => {
+  const results = await apiFetchChemin()
+  if (results && Array.isArray(results)) return results
+  return null
+}
 
 const initialState = {
   SmallScreenNavIsOpened: false,
@@ -6,7 +13,7 @@ const initialState = {
   MainDialogDatas: '',
   MainDialogCount: 0,
   Variables: null,
-  Chemins: null,
+  Chemins: chemins(),
 }
 
 /* eslint-disable */

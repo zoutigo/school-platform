@@ -37,7 +37,6 @@ function ResumeCard({ element }) {
     process.env.NODE_ENV === 'production'
       ? filepath
       : `${URL_PREFIX}/${filepath}`
-  console.log('state:', elementState)
 
   return (
     <StyledCard

@@ -21,7 +21,7 @@ function WindowLoad() {
   const { isLoading, isError, data, error } = useQuery(['variables'], () =>
     apiFetchVariables()
   )
-  const { data: chemins } = useQuery(['liste-chemins'], () => apiFetchChemin())
+  // const { data: chemins } = useQuery(['liste-chemins'], () => apiFetchChemin())
 
   useEffect(() => {
     if (data) {
@@ -32,14 +32,14 @@ function WindowLoad() {
       setVariables(null)
     }
   }, [data])
-  useEffect(() => {
-    if (chemins && Array.isArray(chemins)) {
-      dispatch(setChemins(chemins))
-    }
-    return () => {
-      setChemins(null)
-    }
-  }, [data])
+  // useEffect(() => {
+  //   if (chemins && Array.isArray(chemins)) {
+  //     dispatch(setChemins(chemins))
+  //   }
+  //   return () => {
+  //     setChemins(null)
+  //   }
+  // }, [data])
 
   // useEffect(() => {
   //   if (newRoutes.length) {
