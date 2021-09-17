@@ -24,6 +24,8 @@ const { entitiesDatas } = require('../constants/entitiesdatas')
 const { pageRawContent } = require('../constants/pageRawContent')
 const { pagesDatas } = require('../constants/pagesDatas')
 
+require('dotenv').config()
+
 const today = new Date().getTime()
 
 module.exports.postUpdatePages = async (req, res, next) => {
@@ -364,4 +366,41 @@ module.exports.postUpdatePapers = async (req, res, next) => {
   })
 
   res.status(200).send(Papers)
+}
+
+module.exports.postUpdateAdaptation = async (req, res, next) => {
+  try {
+    const cm1Entity = await EntityP.findOne({
+      where: { alias: 'cm1' },
+    })
+
+    const entityAlias =
+      process.env.NODE_ENV !== 'production' ? 'test' : 'adaptation'
+
+    const newEntity = {
+      alias: entityAlias,
+      name: entityAlias,
+      content: cm1Entity.content,
+      email: cm1Entity.email,
+    }
+
+    const testAdaptationEntity = await EntityP.findOne({
+      where: { alias: 'test' },
+    })
+
+    if (!testAdaptationEntity) {
+      const adaptationEntity = await EntityP.create(newEntity)
+
+      const newRole = await RoleP.create({
+        name: 'enseignant',
+        mission: 'enseigner',
+        entityId: adaptationEntity.id,
+      })
+
+      return res.status(200).send(newRole)
+    }
+    return res.status(200).send(testAdaptationEntity)
+  } catch (err) {
+    return next(err)
+  }
 }

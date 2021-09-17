@@ -99,12 +99,21 @@ module.exports.loginUser = async (req, res, next) => {
     where: { email },
     include: userInclude,
   })
-  if (!userVerified) return next(new BadRequest('invalid email or password'))
+  if (!userVerified)
+    return next(new BadRequest('email ou mot de passs invalide'))
 
+  const { isVerified } = userVerified
+
+  if (!isVerified)
+    return next(
+      new BadRequest(
+        'Veillez valider votre compte grace au mail qui vous a été transmis lors de votre inscription'
+      )
+    )
   // check password
   const passwordVerified = await bcrypt.compare(password, userVerified.password)
   if (!passwordVerified)
-    return next(new BadRequest('invalid email or password'))
+    return next(new BadRequest('email ou mot de pass invalide'))
 
   return res
     .status(200)
@@ -151,8 +160,6 @@ module.exports.updateUser = async (req, res, next) => {
     phone,
     childrenClasses,
   } = req.body
-
-  console.log('reqbody:', req.body)
 
   if (childrenClasses) {
     if (isOwner) {
@@ -261,6 +268,10 @@ module.exports.updateUser = async (req, res, next) => {
   }
 
   if (isManager) {
+    if (!toUpdateuser.isVerified)
+      return next(
+        new BadRequest("Le mail de cet utilisateur n'est pas vérifié .")
+      )
     if (requesterIsAdmin) {
       if (!(isManager === toUpdateuser.isManager)) {
         toUpdateuser.isManager = isManager
@@ -271,6 +282,10 @@ module.exports.updateUser = async (req, res, next) => {
   }
 
   if (isModerator) {
+    if (!toUpdateuser.isVerified)
+      return next(
+        new BadRequest("Le mail de cet utilisateur n'est pas vérifié .")
+      )
     if (requesterIsAdmin || requesterIsManager) {
       if (!(isModerator === toUpdateuser.isModerator)) {
         toUpdateuser.isModerator = isModerator
@@ -283,6 +298,10 @@ module.exports.updateUser = async (req, res, next) => {
   }
 
   if (isTeacher) {
+    if (!toUpdateuser.isVerified)
+      return next(
+        new BadRequest("Le mail de cet utilisateur n'est pas vérifié .")
+      )
     if (requesterIsAdmin || requesterIsManager || requesterIsModerator) {
       if (!(isTeacher === toUpdateuser.isTeacher)) {
         toUpdateuser.isTeacher = isTeacher
@@ -293,6 +312,21 @@ module.exports.updateUser = async (req, res, next) => {
   }
   /// to be reworked
   if (roles) {
+    if (!toUpdateuser.isVerified)
+      return next(
+        new BadRequest("Le mail de cet utilisateur n'est pas vérifié .")
+      )
+    if (
+      !toUpdateuser.firstname ||
+      !toUpdateuser.lastname ||
+      !toUpdateuser.gender
+    )
+      return next(
+        new BadRequest(
+          "Cet utilisateur n'a pas renseigné ses informations personelles : nom, prénom, genre"
+        )
+      )
+
     if (requesterIsAdmin || requesterIsManager || requesterIsModerator) {
       // destroy previous associations
       const previousRoles = toUpdateuser.roles
@@ -323,10 +357,6 @@ module.exports.updateUser = async (req, res, next) => {
     }
   }
 
-  // insersion in database
-
-  // if (Object.keys(newUserDatas).length < 1)
-  //   return next(new BadRequest('something wrong happened'))
   try {
     const savedModifiedUser = await toUpdateuser.save()
 

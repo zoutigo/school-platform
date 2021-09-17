@@ -7,6 +7,7 @@ const {
   postUpdateUsers,
   postUpdateChemins,
   postUpdatePapers,
+  postUpdateAdaptation,
 } = require('../controllers/updateController')
 
 const { tokenVerify } = require('../utils/tokenverify')
@@ -30,6 +31,9 @@ const { tokenVerify } = require('../utils/tokenverify')
 // router.post('/chemins', postUpdateChemins)
 
 // Papers
-router.post('/papers', postUpdatePapers)
+// router.post('/papers', postUpdatePapers)
+
+// Create adaptation entities and adaptation roles
+router.post('/entities/adaptation', postUpdateAdaptation)
 
 module.exports = router

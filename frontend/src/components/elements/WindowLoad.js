@@ -20,12 +20,9 @@ function WindowLoad() {
     dispatch(setUrlPrefix(PREFIX))
   }, [])
 
-  const {
-    isLoading,
-    isError,
-    data: variablesData,
-    error,
-  } = useQuery(['variables'], () => apiFetchVariables())
+  const { data: variablesData } = useQuery(['variables'], () =>
+    apiFetchVariables()
+  )
   const { data: chemins } = useQuery(['liste-chemins'], () => apiFetchChemin())
 
   useEffect(() => {
