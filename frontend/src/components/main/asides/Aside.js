@@ -4,8 +4,9 @@ import { styled, withTheme } from '@material-ui/styles'
 import PropTypes from 'prop-types'
 import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { useRoutesInfos } from '../../../utils/hooks'
+import { useIsTokenValid, useRoutesInfos } from '../../../utils/hooks'
 import randomkey from '../../../utils/randomkey'
+import AsideError from './AsideError'
 
 import AsideItem from './AsideItem'
 import AsideTitle from './AsideTitle'
@@ -27,10 +28,13 @@ const StyledAsideBodyGrid = styled(Grid)(() => ({
   background: 'whitesmoke',
 }))
 
-function Aside({ datas }) {
+function Aside({ datas, module }) {
   const { current } = useRoutesInfos()
+  const tokenIsValid = useIsTokenValid()
 
   const { title, items } = datas
+
+  const itemsList = module === 'classroom' && tokenIsValid ? items : null
 
   if (current.state.type === 'rubric') return null
 
@@ -38,10 +42,13 @@ function Aside({ datas }) {
     <StyledAsideGrid item xs={false} md={title ? 3 : false} show={title}>
       <AsideTitle title={title || ''} />
       <StyledAsideBodyGrid container>
-        {items &&
+        {itemsList ? (
           items.map((asideitem) => (
             <AsideItem key={randomkey(9999999)} item={asideitem} />
-          ))}
+          ))
+        ) : (
+          <AsideError errortext="reservé aux inscrits" />
+        )}
       </StyledAsideBodyGrid>
     </StyledAsideGrid>
   )
@@ -50,6 +57,7 @@ function Aside({ datas }) {
 Aside.defaultProps = null
 
 Aside.propTypes = {
+  module: PropTypes.string,
   datas: PropTypes.shape({
     title: PropTypes.string.isRequired,
     items: PropTypes.arrayOf(

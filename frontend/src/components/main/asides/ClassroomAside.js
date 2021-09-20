@@ -37,9 +37,6 @@ function ClassroomAside() {
     }
   }, [data])
 
-  // if (!data || !Array.isArray(data)) return null
-  // const [result] = data
-
   // lister les roles
 
   const entityRoles = useCallback(
@@ -76,9 +73,7 @@ function ClassroomAside() {
     text: entity && entity.email ? entity.email : null,
   }
 
-  if (tokenIsValid) {
-    asideItems.push(contacts)
-  }
+  asideItems.push(contacts)
 
   const asideClassroom = {
     title: 'Infos Classe',
@@ -87,7 +82,7 @@ function ClassroomAside() {
 
   if (asideItems.length < 1) return null
 
-  return <Aside datas={asideClassroom} />
+  return <Aside datas={asideClassroom} module="classroom" />
 }
 
 export default ClassroomAside
