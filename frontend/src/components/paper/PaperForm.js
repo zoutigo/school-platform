@@ -31,19 +31,31 @@ function PaperForm({
       : `Ajout ${paper.paperType}`,
     [formAction, paper]
   )
-  const handleBack = useCallback(() => {
-    setCurrentDocument(null)
-    setShowTooltip(true)
+  const handleBack = () => {
     setShowPaperList(true)
     setShowPaperForm(false)
     setFormAction(null)
-  }, [])
+    setCurrentDocument(null)
+    setShowTooltip(true)
+  }
 
   const isPrivateDefaultValue = useCallback(() => {
-    if (formAction === 'create') return 'oui'
-    if (currentDocument?.isPrivate) return 'oui'
-    return 'non'
+    switch (formAction) {
+      case 'create':
+        return 'oui'
+      case 'update':
+        return currentDocument && currentDocument.isPrivate ? 'oui' : 'non'
+
+      default:
+        return 'non'
+    }
   }, [formAction, currentDocument])
+
+  console.log(
+    'isPrivateDefaultValue',
+    isPrivateDefaultValue(),
+    currentDocument?.isPrivate
+  )
 
   const isPrivateOptions = useCallback(
     [
@@ -63,7 +75,7 @@ function PaperForm({
     return () => {
       handleBack()
     }
-  }, [currentDocument])
+  }, [])
 
   return (
     <Grid item container justify="center">

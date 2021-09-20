@@ -73,8 +73,8 @@ DatePickerControl.defaultProps = {
 }
 
 DatePickerControl.propTypes = {
-  initialDate: PropTypes.string,
-  control: PropTypes.func.isRequired,
+  initialDate: PropTypes.instanceOf(Date),
+  control: PropTypes.shape({}).isRequired,
   name: PropTypes.string.isRequired,
 }
 

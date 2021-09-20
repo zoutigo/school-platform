@@ -84,7 +84,7 @@ function PaperItemFooter({
       <ButtonGroup>
         {files &&
           files.map((file) => (
-            <Tooltip title="Telecharger" placement="bottom">
+            <Tooltip title="Telecharger" placement="bottom" key={file.filepath}>
               <StyledIconButton bgcolor={theme.palette.secondary.main}>
                 <a
                   // href={`${URL_PREFIX}/${file.filepath}`}

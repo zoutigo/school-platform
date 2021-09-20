@@ -1,13 +1,12 @@
 /* eslint-disable import/named */
 import { styled, Grid, useTheme, Collapse } from '@material-ui/core'
 import moment from 'moment'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMutation } from 'react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form'
-import Title from '../elements/Title'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { apiPostPaper } from '../../utils/api'
 import { useUpdateMutationOptions } from '../../utils/hooks'
 import CostumButton from '../elements/CustomButton'
@@ -47,7 +46,7 @@ function PaperFormPDF({
 }) {
   const theme = useTheme()
   const dispatch = useDispatch()
-  const [addFile, setAddFile] = useState(false)
+  const [addFile, setAddFile] = useState(formAction === 'create')
 
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync } = useMutation(
@@ -73,18 +72,13 @@ function PaperFormPDF({
         return null
     }
   }
-  const {
-    control,
-    handleSubmit,
-    formState: { isSubmitting, isValid },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema(paper.paperType)),
   })
 
   const onSubmit = async (datas) => {
     const { startdate, enddate, file, isPrivate, classeFourniture } = datas
-
     const finalDatas = async (type) => {
       switch (type) {
         case 'menu':
@@ -128,8 +122,6 @@ function PaperFormPDF({
           return null
       }
     }
-
-    console.log(await finalDatas(paper.paperType))
 
     try {
       await mutateAsync({
@@ -188,6 +180,7 @@ function PaperFormPDF({
       value: 'adaptation',
     },
   ]
+
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
       <Grid container className="form-fields-container">
@@ -253,15 +246,16 @@ function PaperFormPDF({
               { labelOption: 'Non', optionvalue: 'non' },
             ]}
             name="addFile"
-            defaultValue="oui"
+            defaultValue={formAction === 'update' ? 'non' : 'oui'}
             callback={setAddFile}
             control={control}
             radioGroupProps={{ row: true }}
           />
         </Collapse>
 
-        {(formAction === 'create' || (formAction === 'update' && addFile)) && (
+        {(formAction === 'create' || formAction === 'update') && (
           <InputFileControl
+            show={addFile}
             control={control}
             label="Pièce jointe"
             name="file"
@@ -282,7 +276,7 @@ function PaperFormPDF({
           action="post"
           width="300px"
           type="submit"
-          disabled={!isValid || isSubmitting}
+          // disabled={formState.isDirty || formState.isSubmitting}
         />
       </Grid>
     </StyledPaperForm>
@@ -319,10 +313,6 @@ PaperFormPDF.propTypes = {
     date: PropTypes.number,
     startdate: PropTypes.number,
     enddate: PropTypes.number,
-    // clientEntity: PropTypes.shape({
-    //   name: PropTypes.string,
-    //   alias: PropTypes.string,
-    // }),
   }),
   handleBack: PropTypes.func.isRequired,
   isPrivateDatas: PropTypes.shape({

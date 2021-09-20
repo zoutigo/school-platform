@@ -111,7 +111,7 @@ PaperItem.propTypes = {
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.func.isRequired,
   paperItem: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.number,
     content: PropTypes.string,
     title: PropTypes.string,
     entity: PropTypes.shape({

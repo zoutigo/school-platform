@@ -1,5 +1,5 @@
-import { Grid, styled, Collapse, TextField } from '@material-ui/core'
-import React from 'react'
+import { Grid, styled, Collapse, TextField, withTheme } from '@material-ui/core'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useController } from 'react-hook-form'
 import { Alert } from '@material-ui/lab'
@@ -38,6 +38,12 @@ const StyledGrid = styled(Grid)(({ theme, width, bgcolor }) => ({
     },
   },
 }))
+
+const StyledShowGrid = withTheme(
+  styled(({ show, ...rest }) => <StyledGrid {...rest} />)({
+    display: ({ show }) => (show ? 'block' : 'none'),
+  })
+)
 const StyledAlert = styled(Alert)(({ theme }) => ({
   minWidth: '100%',
   color: theme.palette.error.main,
@@ -49,6 +55,7 @@ function InputFileControl({
   accept,
   multiple,
   initialValue,
+  show,
   ...rest
 }) {
   const [value, setValue] = React.useState('')
@@ -64,8 +71,9 @@ function InputFileControl({
   })
 
   const { ref, ...inputProps } = field
+
   return (
-    <StyledGrid width="100%">
+    <StyledShowGrid width="100%" show={show}>
       <Grid item container>
         <TextField
           {...inputProps}
@@ -87,12 +95,13 @@ function InputFileControl({
           <StyledAlert severity="error">{error && error.message}</StyledAlert>
         </Grid>
       </Collapse>
-    </StyledGrid>
+    </StyledShowGrid>
   )
 }
 InputFileControl.defaultProps = {
   initialValue: null,
   multiple: false,
+  show: false,
 }
 InputFileControl.propTypes = {
   name: PropTypes.string.isRequired,
@@ -103,5 +112,6 @@ InputFileControl.propTypes = {
   initialValue: PropTypes.string,
   accept: PropTypes.string.isRequired,
   multiple: PropTypes.bool,
+  show: PropTypes.bool,
 }
 export default InputFileControl

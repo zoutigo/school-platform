@@ -223,6 +223,7 @@ module.exports.postPaper = async (req, res, next) => {
           })
           await modifiedPaper.addFile(savedFile)
         }
+        console.log('reqbody', req.body)
         const updatedPaper = await PaperP.update(req.body, {
           where: { id: paperId },
         })

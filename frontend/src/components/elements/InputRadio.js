@@ -25,7 +25,7 @@ function InputRadio({
   name,
   display,
 }) {
-  const [value, setValue] = React.useState(defaultValue)
+  // const [value, setValue] = React.useState(defaultValue)
 
   const {
     field,
@@ -36,15 +36,6 @@ function InputRadio({
     defaultValue: defaultValue,
   })
 
-  const handleRadioChange = (event) => {
-    field.onChange(event.target.value)
-    setValue(event.target.value)
-    if (callback) {
-      const state = event.target.value === 'oui'
-      callback(state)
-    }
-  }
-
   return (
     <StyledGrid item container alignItems="center" display={display}>
       <Grid item xs={6}>
@@ -54,13 +45,18 @@ function InputRadio({
         <Controller
           control={control}
           name={name}
-          render={() => (
+          render={({ field: { onChange, value } }) => (
             <RadioGroup
-              value={value}
               aria-label={name}
-              {...field}
+              value={value}
               {...radioGroupProps}
-              onChange={(event) => handleRadioChange(event)}
+              onChange={(event) => {
+                onChange(event.target.value)
+                if (callback) {
+                  const state = event.target.value === 'oui'
+                  callback(state)
+                }
+              }}
             >
               {options.map(({ labelOption, optionvalue }) => (
                 <FormControlLabel
@@ -75,12 +71,16 @@ function InputRadio({
           )}
         />
       </Grid>
+      <Grid item container>
+        {formerror}
+      </Grid>
     </StyledGrid>
   )
 }
 
 InputRadio.defaultProps = {
   display: 'block',
+  callback: null,
 }
 
 InputRadio.propTypes = {
@@ -94,7 +94,7 @@ InputRadio.propTypes = {
       optionvalue: PropTypes.string,
     })
   ).isRequired,
-  callback: PropTypes.func.isRequired,
+  callback: PropTypes.func,
   control: PropTypes.shape({
     updateIsValid: PropTypes.func,
   }).isRequired,
@@ -103,4 +103,4 @@ InputRadio.propTypes = {
   }).isRequired,
 }
 
-export default InputRadio
+export default React.memo(InputRadio)

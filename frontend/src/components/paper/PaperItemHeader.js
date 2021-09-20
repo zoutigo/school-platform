@@ -5,7 +5,6 @@ import moment from 'moment'
 import { Grid, Box, Typography, styled } from '@material-ui/core'
 
 import { StyledPaperHeader } from '../elements/styled'
-import theme from '../../constants/theme'
 
 const StyledTypo = styled(Typography)(() => ({
   marginRight: '1rem',
@@ -144,8 +143,8 @@ PaperItemHeader.propTypes = {
     classe_fourniture: PropTypes.string,
     title: PropTypes.string,
     date: PropTypes.number,
-    startdate: PropTypes.number,
-    enddate: PropTypes.number,
+    startdate: PropTypes.string,
+    enddate: PropTypes.string,
     entity: PropTypes.shape({
       name: PropTypes.string,
       alias: PropTypes.string,

@@ -33,6 +33,7 @@ const fournitureSchema = yup.object().shape({
     is: 'oui',
     then: yup
       .mixed()
+      .required('Veillez inserer un fichier, sinon decocher modifier fichier')
       .test('fileSize', 'Le fichier est trop large', (value) =>
         testFileSize(value)
       ),
