@@ -97,6 +97,7 @@ app.all('', (req, res, next) => {
 app.use(express.static(path.join(__dirname, '..', 'public')))
 app.use('/images', express.static(path.join(__dirname, '..', '/images')))
 app.use('/files', express.static(path.join(__dirname, '..', '/files')))
+app.use('/styles', express.static(path.join(__dirname, '..', '/styles')))
 
 app.use(logger('dev'))
 app.use(express.json({ limit: '50mb', extended: true, inflate: true }))

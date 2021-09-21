@@ -3,11 +3,12 @@ const Entity = require('../models/Entity')
 const Suggestion = require('../models/Suggestion')
 const SuggestionP = require('../models/SuggestionP')
 const UserP = require('../models/UserP')
+const { userSuggestionEmail } = require('../service/mailer')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 const { suggestionValidator } = require('../validators/suggestionValidator')
 
 module.exports.postSuggestion = async (req, res, next) => {
-  const { id: userId } = req.user
+  const { id: userId, email: userEmail, firstname: userFirstname } = req.user
   const { id: suggestionId, action } = req.query
   const userIsAllowed = userId
 
@@ -31,7 +32,16 @@ module.exports.postSuggestion = async (req, res, next) => {
     try {
       const savedsuggestion = await SuggestionP.create(suggestion)
       if (savedsuggestion) {
-        return res.status(201).send({ message: 'Suggestion prise en compte' })
+        const user = { email: userEmail, firstName: userFirstname }
+        const { topic } = savedsuggestion
+        const { transporter, options } = userSuggestionEmail(suggestion, user)
+
+        await transporter.sendMail(options, (error, info) => {
+          if (error) {
+            return next(error)
+          }
+          return res.status(201).send({ message: 'Suggestion prise en compte' })
+        })
       }
     } catch (err) {
       return next(err)

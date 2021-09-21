@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <title>Suggestion - {{topic}}</title>
+    <meta
+      name='viewport'
+      content='width=device-width, initial-scale=1.0, viewport-fit=cover'
+    />
+    <link
+      href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css'
+      rel='stylesheet'
+      integrity='sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU'
+      crossorigin='anonymous'
+    />
+    <link
+      rel='stylesheet'
+      type='text/css'
+      href='../../styles/emailstyles.css'
+    />
+  </head>
+
+  <body class='suggestion-user-email-message'>
+    <header>
+      <div class='logo'><img src={{logo}} /></div>
+      <div class='header-text'>
+        <h3>Ecole Saint Augustin Crémieu</h3>
+      </div>
+    </header>
+    <main>
+      <section class='introduction'>
+        <p>
+          L'ecole Saint Augustin vous remercie pour votre suggestion:
+        </p>
+
+      </section>
+      <section class='suggestion-user-email-message'>
+        <h2>{{title}}</h2>
+        <p>{{message}} </p>
+      </section>
+      <section>
+        <p>
+          Nous allons l'analyser dans les plus bref délais et pour apporter une
+          réponse.
+        </p>
+      </section>
+    </main>
+    <footer>
+      <p> A tres bientot sur le site de l'école</p>
+    </footer>
+  </body>
+</html>

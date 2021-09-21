@@ -1,5 +1,9 @@
 const nodemailer = require('nodemailer')
 const HTMLParser = require('node-html-parser')
+const handlebars = require('handlebars')
+const path = require('path')
+const fs = require('fs')
+
 require('dotenv').config()
 
 const transporter = nodemailer.createTransport({
@@ -23,6 +27,8 @@ const URL =
   process.env.NODE_ENV === 'production'
     ? SERVER_ONLINE_ADRESS
     : process.env.SERVER_ADRESS
+
+const logopath = path.join('./images', 'logo.svg')
 
 module.exports.emailConfirmMail = (user) => {
   const options = {
@@ -178,6 +184,26 @@ module.exports.emailPreincriptionToManager = (datas) => {
         path: `${URL}/${datas.filepath}`,
       },
     ]
+  }
+
+  return { transporter, options }
+}
+
+module.exports.userSuggestionEmail = (suggestion, user) => {
+  const emailUserSuggestionTemplateSource = fs.readFileSync(
+    path.join('./backend', 'templates', 'email.hbs'),
+    'utf8'
+  )
+
+  const template = handlebars.compile(emailUserSuggestionTemplateSource)
+
+  const htmlToSend = template({ ...suggestion, logo: logopath })
+
+  const options = {
+    from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
+    to: user.email,
+    subject: `Suggestion reçue: ${suggestion.title}`,
+    html: htmlToSend,
   }
 
   return { transporter, options }
