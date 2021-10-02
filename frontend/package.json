@@ -17,9 +17,6 @@
     "@react-page/plugins-slate": "^3.2.1",
     "@react-page/plugins-spacer": "^3.2.1",
     "@reduxjs/toolkit": "^1.5.1",
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
     "@tinymce/tinymce-react": "^3.12.6",
     "axios": "^0.21.1",
     "faker": "^5.5.3",
@@ -45,6 +42,11 @@
     "redux-persist": "^6.0.0",
     "web-vitals": "^1.1.2",
     "yup": "^0.32.9"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3"
   },
   "scripts": {
     "start": "react-scripts start",
