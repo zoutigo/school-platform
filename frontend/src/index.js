@@ -6,6 +6,7 @@ import MomentUtils from '@date-io/moment'
 import moment from 'moment'
 import 'moment/locale/fr'
 import { CookiesProvider } from 'react-cookie'
+import { SnackbarProvider } from 'notistack'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { ThemeProvider } from '@material-ui/styles'
 import { Provider } from 'react-redux'
@@ -28,7 +29,11 @@ ReactDOM.render(
         <ThemeProvider theme={theme}>
           <MuiPickersUtilsProvider utils={MomentUtils} locale="fr">
             <CookiesProvider>
-              <App />
+              <SnackbarProvider
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+              >
+                <App />
+              </SnackbarProvider>
             </CookiesProvider>
           </MuiPickersUtilsProvider>
         </ThemeProvider>

@@ -118,7 +118,7 @@ module.exports.loginUser = async (req, res, next) => {
   return res
     .status(200)
     .header('x-access-token', generateToken(userVerified))
-    .send('successful login')
+    .send({ message: 'connection effectuée avec succès' })
 }
 module.exports.updateUser = async (req, res, next) => {
   const { id: toUpdateId } = req.query

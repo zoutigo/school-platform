@@ -30,5 +30,6 @@ describe('components/elements/InputTextControl', () => {
     // render(<Input />)
     // const inputElement = screen.getByPlaceholderText(/test@test.com/i)
     // expect(inputElement).toBeVisible()
+    expect(1).toEqual(1)
   })
 })
