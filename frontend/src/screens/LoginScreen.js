@@ -26,6 +26,7 @@ import tokenDatas from '../utils/tokenDatas'
 import getError from '../utils/error'
 import { passwordRegex } from '../constants/regex'
 import useLogin from '../components/hooks/useLogin'
+import StyledNavLink from '../components/styled-components/StyledNavLink'
 
 const loginSchema = yup.object().shape({
   email: yup
@@ -153,15 +154,21 @@ function LoginScreen() {
           </ListItem>
           <ListItem>
             Pas de compte ? &nbsp;
-            <NavLink to="/private/identification/register" className="nav-link">
+            <StyledNavLink
+              to="/private/identification/register"
+              className="nav-link"
+            >
               <span>Enregistrez vous</span>
-            </NavLink>
+            </StyledNavLink>
           </ListItem>
           <ListItem>
             Pass perdu ? &nbsp;
-            <NavLink to="/private/identification/register" className="nav-link">
+            <StyledNavLink
+              to="/private/identification/losspass/:token"
+              className="nav-link"
+            >
               <span>Réinitialiser </span>
-            </NavLink>
+            </StyledNavLink>
           </ListItem>
         </List>
       </StyledForm>

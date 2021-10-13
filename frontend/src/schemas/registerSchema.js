@@ -15,11 +15,17 @@ const registerSchema = yup.object().shape({
   password: yup
     .string()
     .required('le mot de pass est obligatoire')
-    .matches(passwordRegex, 'Mot de pass non valide'),
+    .matches(
+      passwordRegex,
+      'au moins 8 caractères, dont 1 chiffre, 1 majuscule, 1 minuscule'
+    ),
 
   passwordConfirm: yup
     .string()
-    .oneOf([yup.ref('password'), null], 'La saisie ne correspond pas')
+    .oneOf(
+      [yup.ref('password'), null],
+      'La saisie ne correspond pas au mot de pass précédent'
+    )
     .required('Veillez confirmer le mot de pass'),
 })
 

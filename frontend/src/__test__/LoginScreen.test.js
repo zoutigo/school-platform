@@ -182,8 +182,6 @@ describe('LoginScreen', () => {
   describe('button behaviour', () => {
     beforeEach(() => {
       useLogin.mockImplementation(() => ({}))
-    })
-    beforeEach(() => {
       render(<LoginScreen />)
     })
     afterEach(() => {
@@ -322,7 +320,6 @@ describe('LoginScreen', () => {
       })
       await waitFor(() => {
         expect(mockedResponse).toHaveBeenCalledTimes(1)
-        // console.log(mockedResponse())
         expect(mockedTokenDatas).toHaveBeenCalledTimes(1)
       })
     })
@@ -365,13 +362,32 @@ describe('LoginScreen', () => {
         expect(mockUseDispatch).toHaveBeenCalledTimes(6)
         expect(mockDispatch).toHaveBeenCalledTimes(1)
         expect(mockSetUserInfos).toHaveBeenCalledTimes(1)
-        // expect(mockSetUserToken).toHaveBeenCalledTimes(1)
       })
     })
     it.todo('should call history when server response is success')
   })
   describe('links', () => {
-    it.todo('should call navlink 1 time when register it is clicked')
-    it.todo('should call navlink 1 time when initialisation it is clicked')
+    beforeEach(() => {
+      useLogin.mockImplementation(() => ({}))
+      render(<LoginScreen />)
+    })
+    it('should have attribute href /private/identification/register', async () => {
+      const registerLink = screen.getByRole('link', {
+        name: /Enregistrez vous/i,
+      })
+      expect(registerLink).toHaveAttribute(
+        'href',
+        '/private/identification/register'
+      )
+    })
+    it('should have attribute href /private/identification/losspass/:token', async () => {
+      const losspassLink = screen.getByRole('link', {
+        name: /Réinitialiser/i,
+      })
+      expect(losspassLink).toHaveAttribute(
+        'href',
+        '/private/identification/losspass/:token'
+      )
+    })
   })
 })
