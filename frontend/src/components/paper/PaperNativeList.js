@@ -4,15 +4,16 @@
 /* eslint-disable import/no-named-as-default */
 import React, { useCallback } from 'react'
 import { Grid, styled, Typography } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
 import PropTypes from 'prop-types'
-import { useQuery } from 'react-query'
 
 import PaperItem from './PaperItem'
 
-import { setPaperFetchAlert } from '../../redux/alerts/AlertsActions'
-import useFetchDispatch from '../elements/useFetchDispatch'
 import { useRigths } from '../../utils/hooks'
 import theme from '../../constants/theme'
+import useFetch from '../hooks/useFetch'
+import AlertMessage from '../elements/AlertMessage'
 
 const StyledGrid = styled(Grid)(() => ({
   padding: '0.5rem 0',
@@ -29,12 +30,12 @@ function PaperNativeList({
 }) {
   const { userLevel } = useRigths()
   const { queryKey, queryParams, fetcher } = paper
-  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    fetcher(queryParams)
-  )
 
-  // hook to dispatch alerts
-  useFetchDispatch(isLoading, isError, error, data, setPaperFetchAlert)
+  const { isLoading, isError, data, errorMessage } = useFetch(
+    queryKey,
+    queryParams,
+    fetcher
+  )
 
   // filter private datas
   const filteredPapers = useCallback(() => {
@@ -48,6 +49,8 @@ function PaperNativeList({
 
   return (
     <StyledGrid item container>
+      {isError && <AlertMessage severity="error" message={errorMessage} />}
+      {isLoading && <CircularProgress color="secondary" />}
       {filteredPapers().length > 0 ? (
         filteredPapers().map((paperItem, index) => {
           if (
