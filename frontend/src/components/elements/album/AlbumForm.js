@@ -173,15 +173,16 @@ function AlbumForm({
             radioGroupProps={{ row: true }}
             display="block"
           />
-          hello
+
           {addFile && (
             <InputFileControl
               control={control}
               label="Image de couverture"
               name="file"
               type="file"
-              accept="image/jpg,image/jpeg,image/gif,image/png "
+              accept="image/jpg,image/jpeg,image/gif,image/png"
               helperText="maximum 10Mo"
+              show
             />
           )}
         </Grid>
