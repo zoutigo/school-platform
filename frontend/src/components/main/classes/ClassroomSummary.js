@@ -1,22 +1,23 @@
 import { Grid, styled } from '@material-ui/core'
 import React, { useEffect } from 'react'
-import { useQuery } from 'react-query'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
 import PropTypes from 'prop-types'
 import PageScreen from '../../elements/reactpage/PageScreen'
 import { apiFecthEntity } from '../../../utils/api'
-import useFetchDispatch from '../../elements/useFetchDispatch'
-import { setFetchAlert } from '../../../redux/alerts/AlertsActions'
+import useFetch from '../../hooks/useFetch'
+import AlertMessage from '../../elements/AlertMessage'
 
 const StyledClassroomContainer = styled(Grid)(() => ({
   padding: '1rem 0',
 }))
 
 function ClassroomSummary({ queryParams, queryKey, setCurrentClassroom }) {
-  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFecthEntity(queryParams)
+  const { isLoading, isError, data, errorMessage } = useFetch(
+    queryKey,
+    queryParams,
+    apiFecthEntity
   )
-
-  useFetchDispatch(isLoading, isError, error, data, setFetchAlert)
 
   useEffect(() => {
     if (data && Array.isArray(data)) {
@@ -27,6 +28,8 @@ function ClassroomSummary({ queryParams, queryKey, setCurrentClassroom }) {
 
   return (
     <StyledClassroomContainer item container className="react-editor-read">
+      {isError && <AlertMessage severity="error" message={errorMessage} />}
+      {isLoading && <CircularProgress color="secondary" />}
       {data && Array.isArray(data) && <PageScreen content={data[0].content} />}
     </StyledClassroomContainer>
   )

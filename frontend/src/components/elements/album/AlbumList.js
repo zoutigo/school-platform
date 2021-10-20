@@ -2,12 +2,13 @@
 import React, { useCallback } from 'react'
 import { Grid } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import { useQuery } from 'react-query'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
 import { apiFetchAlbum } from '../../../utils/api'
-import { setAlbumFetchAlert } from '../../../redux/alerts/AlertsActions'
 import AlbumCard from './AlbumCard'
-import useFetchDispatch from '../useFetchDispatch'
 import { useRigths } from '../../../utils/hooks'
+import AlertMessage from '../AlertMessage'
+import useFetch from '../../hooks/useFetch'
 
 function AlbumList({
   queryKey,
@@ -19,11 +20,11 @@ function AlbumList({
   entityAlias,
 }) {
   const { userLevel } = useRigths()
-  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFetchAlbum(queryParams)
+  const { isLoading, isError, data, errorMessage } = useFetch(
+    queryKey,
+    queryParams,
+    apiFetchAlbum
   )
-
-  useFetchDispatch(isLoading, isError, error, data, setAlbumFetchAlert)
 
   const filteredAlbums = useCallback(() => {
     if (!data || !Array.isArray(data)) return null
@@ -36,6 +37,8 @@ function AlbumList({
 
   return (
     <Grid item container>
+      {isError && <AlertMessage severity="error" message={errorMessage} />}
+      {isLoading && <CircularProgress color="secondary" />}
       {filteredAlbums() &&
         filteredAlbums().map((album) => (
           <AlbumCard

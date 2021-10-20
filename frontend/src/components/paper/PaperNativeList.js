@@ -79,7 +79,9 @@ function PaperNativeList({
         style={{ background: theme.palette.error.light }}
       >
         <Typography variant="h4">
-          Rien de nouveau actuellement pour le public
+          {userLevel
+            ? 'Rien de nouveau'
+            : ' Rien de nouveau actuellement pour le public'}
         </Typography>
       </Grid>
     )

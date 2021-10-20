@@ -1,16 +1,14 @@
 import { Grid, styled, Typography } from '@material-ui/core'
-import React, { useCallback, useEffect } from 'react'
-import { useQuery } from 'react-query'
-import { useSelector } from 'react-redux'
+import React, { useCallback } from 'react'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
 import Equipe from '../constants/equipe'
 import Title from '../components/elements/Title'
 import PersonaEquipeCard from '../components/main/ecole/equipe/PersonaEquipeCard'
 import { apiFecthEntity } from '../utils/api'
-import AlertCollapse from '../components/elements/AlertCollapse'
-import { initialAlertCollapse } from '../constants/alerts'
-import { setFetchAlert } from '../redux/alerts/AlertsActions'
-import useFetchDispatch from '../components/elements/useFetchDispatch'
 import randomkey from '../utils/randomkey'
+import useFetch from '../components/hooks/useFetch'
+import AlertMessage from '../components/elements/AlertMessage'
 
 const ClassroomNameGrid = styled(Grid)(() => ({
   textTransform: 'uppercase',
@@ -44,20 +42,12 @@ function EquipeScreen() {
     ['cm2', 'cm1', 'ce2', 'ce1', 'cp', 'gs', 'ms', 'ps', 'adaptation'],
     []
   )
-  const { fetchAlert } = useSelector((state) => state.alerts)
-  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFecthEntity()
+  const queryParams = ''
+  const { isLoading, isError, data, errorMessage } = useFetch(
+    queryKey,
+    queryParams,
+    apiFecthEntity
   )
-
-  // hook to dispatch alerts
-  useFetchDispatch(isLoading, isError, error, data, setFetchAlert)
-
-  useEffect(() => {
-    setFetchAlert(initialAlertCollapse)
-    return () => {
-      setFetchAlert(initialAlertCollapse)
-    }
-  }, [])
 
   const classroomsEntities = useCallback(
     Array.isArray(data) && data.length > 0
@@ -103,9 +93,8 @@ function EquipeScreen() {
 
   return (
     <Grid container>
-      <Grid item container>
-        <AlertCollapse {...fetchAlert} />
-      </Grid>
+      {isError && <AlertMessage severity="error" message={errorMessage} />}
+      {isLoading && <CircularProgress color="secondary" />}
       {Array.isArray(data) && data.length > 0 && (
         <StyledBlocGrid
           item

@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { useQuery } from 'react-query'
 import { Grid } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
 import CredentialDatas from './CredentialDatas'
 import ChildrenDatas from './ChildrenDatas'
 import RolesDatas from './RolesDatas'
@@ -10,24 +11,24 @@ import GradeDatas from './GradeDatas'
 import PasswordDatas from './PasswordDatas'
 import { StyledPersoDataCollapse } from './Style'
 import { apiFecthUserDatas } from '../../../../../utils/api'
-import useFetchDispatch from '../../../../elements/useFetchDispatch'
-import { setPrivateAccountFetchAlert } from '../../../../../redux/alerts/AlertsActions'
+import useFetch from '../../../../hooks/useFetch'
+import AlertMessage from '../../../../elements/AlertMessage'
 
 function PersoDataList({ setForm, form, toggle, setToggle, setData }) {
   const {
     User: { id },
   } = useSelector((state) => state.user)
   const queryKey = [`data-${id}`]
+  const queryParams = id
 
   const { credentialsform, rolesform, passwordform, childrenform, gradeform } =
     form
 
-  const { isLoading, isError, error, data } = useQuery(queryKey, () =>
-    apiFecthUserDatas(id)
+  const { isLoading, isError, data, errorMessage } = useFetch(
+    queryKey,
+    queryParams,
+    apiFecthUserDatas
   )
-
-  // hook to dispatch alerts
-  useFetchDispatch(isLoading, isError, error, data, setPrivateAccountFetchAlert)
 
   useEffect(() => {
     if (data) {
@@ -50,6 +51,8 @@ function PersoDataList({ setForm, form, toggle, setToggle, setData }) {
 
   return (
     <Grid item container>
+      {isError && <AlertMessage severity="error" message={errorMessage} />}
+      {isLoading && <CircularProgress color="secondary" />}
       {data && (
         <>
           <StyledPersoDataCollapse in={toggle === 'list' || credentialsform}>
