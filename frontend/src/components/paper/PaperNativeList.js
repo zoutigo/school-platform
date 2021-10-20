@@ -47,45 +47,48 @@ function PaperNativeList({
     return result
   }, [data, userLevel])
 
+  const Screen = () =>
+    filteredPapers().length > 0 ? (
+      filteredPapers().map((paperItem, index) => {
+        if (
+          index === 0 &&
+          !currentDocument &&
+          paper.paperType !== 'fourniture'
+        ) {
+          setCurrentDocument(paperItem)
+        }
+        return (
+          <PaperItem
+            key={paperItem.id}
+            paper={paper}
+            setShowPaperForm={setShowPaperForm}
+            setShowPaperList={setShowPaperList}
+            setCurrentDocument={setCurrentDocument}
+            currentDocument={currentDocument}
+            setFormAction={setFormAction}
+            setShowSearch={setShowSearch}
+            paperItem={paperItem}
+          />
+        )
+      })
+    ) : (
+      <Grid
+        item
+        container
+        justifyContent="center"
+        style={{ background: theme.palette.error.light }}
+      >
+        <Typography variant="h4">
+          Rien de nouveau actuellement pour le public
+        </Typography>
+      </Grid>
+    )
+
   return (
     <StyledGrid item container>
       {isError && <AlertMessage severity="error" message={errorMessage} />}
       {isLoading && <CircularProgress color="secondary" />}
-      {filteredPapers().length > 0 ? (
-        filteredPapers().map((paperItem, index) => {
-          if (
-            index === 0 &&
-            !currentDocument &&
-            paper.paperType !== 'fourniture'
-          ) {
-            setCurrentDocument(paperItem)
-          }
-          return (
-            <PaperItem
-              key={paperItem.id}
-              paper={paper}
-              setShowPaperForm={setShowPaperForm}
-              setShowPaperList={setShowPaperList}
-              setCurrentDocument={setCurrentDocument}
-              currentDocument={currentDocument}
-              setFormAction={setFormAction}
-              setShowSearch={setShowSearch}
-              paperItem={paperItem}
-            />
-          )
-        })
-      ) : (
-        <Grid
-          item
-          container
-          justifyContent="center"
-          style={{ background: theme.palette.error.light }}
-        >
-          <Typography variant="h4">
-            Rien de nouveau actuellement pour le public
-          </Typography>
-        </Grid>
-      )}
+      {data && <Screen />}
     </StyledGrid>
   )
 }
