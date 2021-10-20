@@ -444,7 +444,7 @@ module.exports.verifyEmail = async (req, res, next) => {
     }
 
     user.emailToken = null
-    user.isverified = true
+    user.isVerified = true
     await user.save()
     const successMessage = `Votre email a bien été validé . vous pouvez desormais vous connecter et profiter des actulités de l'école saint augustin`
     return res.redirect(
