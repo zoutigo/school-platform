@@ -148,7 +148,6 @@ function AlbumForm({
             width="100%"
             height={100}
           />
-
           <InputRadio
             question="Modifier l'image de couverture ?"
             options={[
@@ -174,7 +173,7 @@ function AlbumForm({
             radioGroupProps={{ row: true }}
             display="block"
           />
-
+          hello
           {addFile && (
             <InputFileControl
               control={control}
@@ -203,10 +202,13 @@ function AlbumForm({
   )
 }
 
-AlbumForm.defaultProps = null
+AlbumForm.defaultProps = {
+  formAction: 'create',
+  currentAlbum: null,
+}
 
 AlbumForm.propTypes = {
-  formAction: PropTypes.string.isRequired,
+  formAction: PropTypes.string,
   setFormAction: PropTypes.func.isRequired,
   setShow: PropTypes.func.isRequired,
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,

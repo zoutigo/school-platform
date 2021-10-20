@@ -3,23 +3,18 @@
 /* eslint-disable import/named */
 import { Grid } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setAlbumMutateAlert } from '../../../redux/alerts/AlertsActions'
 import { useRigths, useRoutesInfos } from '../../../utils/hooks'
-import AlertCollapse from '../AlertCollapse'
 import AlbumForm from './AlbumForm'
 import AlbumList from './AlbumList'
 import AlbumPage from './AlbumPage'
 import CustomSimpleTooltip from '../CustomSimpleTooltip'
 import useRoles from '../../../utils/roles'
-import { initialAlertCollapse } from '../../../constants/alerts'
 import redefineAlias from '../../../utils/redefineAlias'
 
 function Album() {
   const { current, category } = useRoutesInfos()
   // const { current, categoryAlias } = useRouteDatas()
-  const dispatch = useDispatch()
-  const { albumMutate, albumFetch } = useSelector((state) => state.alerts)
+
   const [currentAlbum, setCurrentAlbum] = useState('')
   const [formAction, setFormAction] = useState('create')
 
@@ -89,7 +84,6 @@ function Album() {
   // eslint-disable-next-line arrow-body-style
   useEffect(() => {
     return () => {
-      dispatch(setAlbumMutateAlert(initialAlertCollapse))
       setCurrentAlbum('')
     }
   }, [])
@@ -115,8 +109,6 @@ function Album() {
 
   return (
     <Grid item container>
-      <AlertCollapse {...albumMutate} />
-      <AlertCollapse {...albumFetch} />
       {show.list && (
         <AlbumList
           queryKey={queryKey}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useQuery } from 'react-query'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
 import { Editor } from '@tinymce/tinymce-react'
 import { useController, Controller } from 'react-hook-form'
 import PropTypes from 'prop-types'
@@ -9,6 +10,8 @@ import { apiFetchVariables } from '../../utils/api'
 import tinyMceColors from '../../constants/tinyMceColors'
 import AlertCollapse from './AlertCollapse'
 import { StyledAlert } from './styled'
+import useFetch from '../hooks/useFetch'
+import AlertMessage from './AlertMessage'
 
 const StyledGrid = styled(Grid)(() => ({
   margin: '1rem 0px',
@@ -28,11 +31,6 @@ function InputSmallEditorControl({
   label,
   ...rest
 }) {
-  const [alert, setAlert] = useState({
-    alertText: 'null',
-    severity: 'error',
-    openAlert: false,
-  })
   const [tinyKey, setTinyKey] = useState(null)
   const {
     field,
@@ -49,43 +47,30 @@ function InputSmallEditorControl({
   const { URL_PREFIX } = useSelector((state) => state.settings)
   const URL = `${URL_PREFIX}/images/tinymce`
 
-  const { isLoading, isError, data, error } = useQuery(['TinyPageKey'], () =>
-    apiFetchVariables()
+  const queryParams = ''
+  const queryKey = ['TinyPageKey']
+
+  const { isLoading, isError, data, errorMessage } = useFetch(
+    queryKey,
+    queryParams,
+    apiFetchVariables
   )
 
   useEffect(() => {
-    if (isLoading) {
-      setAlert({
-        alertText: 'Telechargement de la clé ....',
-        severity: 'warning',
-        openAlert: true,
-      })
-    }
-    if (isError) {
-      setAlert({
-        alertText: error.data.message,
-        severity: 'error',
-        openAlert: true,
-      })
-    }
     if (data) {
-      console.log('data', data)
       setTinyKey(data.TINYMCE_KEY)
-      setAlert({
-        alertText: '',
-        severity: 'success',
-        openAlert: false,
-      })
     }
     return () => {
-      setAlert({
-        alertText: 'null',
-        severity: 'error',
-        openAlert: false,
-      })
       setTinyKey(null)
     }
-  }, [isLoading, isError, data, error])
+  }, [data])
+
+  if (isError) {
+    return <AlertMessage severity="error" message={errorMessage} />
+  }
+  if (isLoading) {
+    return <CircularProgress color="secondary" />
+  }
 
   return (
     <StyledGrid item container className="field">
