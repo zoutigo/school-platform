@@ -3,7 +3,7 @@ import { Grid } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import AlertCollapse from '../components/elements/AlertCollapse'
-import MembresForm from '../components/main/private/admin/membres/MembresForm'
+import MembreSearchForm from '../components/main/private/admin/membres/MembreSearchForm'
 import MembresList from '../components/main/private/admin/membres/MembresList'
 import { initialAlertCollapse } from '../constants/alerts'
 import {
@@ -53,7 +53,7 @@ function PrivateAdminMembresScreen() {
       <Grid item container>
         <AlertCollapse {...membresMutate} callback={collapseMutateCallback} />
       </Grid>
-      <MembresForm setSearch={setSearch} />
+      <MembreSearchForm setSearch={setSearch} />
       {search && (
         <MembresList
           search={search}

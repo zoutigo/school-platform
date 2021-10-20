@@ -95,3 +95,11 @@ body {
 .cursor {
   cursor: pointer;
 }
+
+.nav-link {
+  color: inherit;
+  text-decoration: inherit;
+}
+.nav-link span {
+  color: rgba(255, 196, 155, 1);
+}

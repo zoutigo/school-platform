@@ -13,9 +13,12 @@ import { NavLink } from 'react-router-dom'
 
 /* eslint-disable */
 
-export const StyledNavLink = styled(NavLink)(() => ({
+export const StyledNavLink = styled(NavLink)(({ theme }) => ({
   color: 'inherit',
   textDecoration: 'inherit',
+  '& span': {
+    color: theme.palette.primary.main,
+  },
 }))
 
 export const StyledIconBox = withTheme(

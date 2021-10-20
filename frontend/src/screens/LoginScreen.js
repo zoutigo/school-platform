@@ -1,28 +1,44 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable import/named */
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Grid, styled } from '@material-ui/core'
-import { useTheme } from '@material-ui/styles'
-import { useHistory } from 'react-router-dom'
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useMutation } from 'react-query'
-import { useDispatch, useSelector } from 'react-redux'
-import InputTextControl from '../components/elements/InputTextControl'
-import loginSchema from '../schemas/loginSchema'
 import {
-  StyledNavLink,
-  StyledStandardForm,
-} from '../components/elements/styled'
-import CostumButton from '../components/elements/CustomButton'
-import Title from '../components/elements/Title'
-import AlertCollapse from '../components/elements/AlertCollapse'
-import { useRouteParams, useUpdateMutationOptions } from '../utils/hooks'
-import { apiLogin } from '../utils/api'
+  Grid,
+  List,
+  ListItem,
+  TextField,
+  Typography,
+  Button,
+} from '@material-ui/core'
+import { styled } from '@material-ui/styles'
+import { useHistory } from 'react-router-dom'
+import { useSnackbar } from 'notistack'
+import React from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
+import * as yup from 'yup'
+
+import StyledForm from '../components/styled-components/StyledForm'
+// import AlertCollapse from '../components/elements/AlertCollapse'
+import { useRouteParams } from '../utils/hooks'
 import { setUserInfos, setUserToken } from '../redux/user/UserActions'
-import { setLoginAlert } from '../redux/alerts/AlertsActions'
-import { initialAlertCollapse } from '../constants/alerts'
-import returnStoreAndPersistor from '../redux/store'
+
 import tokenDatas from '../utils/tokenDatas'
+import getError from '../utils/error'
+import { passwordRegex } from '../constants/regex'
+import useLogin from '../components/hooks/useLogin'
+import StyledNavLink from '../components/styled-components/StyledNavLink'
+
+const loginSchema = yup.object().shape({
+  email: yup
+    .string()
+    .required('le mail est obligatoire')
+    .email(`ce format mail n'est pas valide`),
+
+  password: yup
+    .string()
+    .required('le mot de pass est obligatoire')
+    .matches(passwordRegex, 'Mot de pass non valide'),
+})
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
@@ -31,180 +47,131 @@ function LoginScreen() {
   const history = useHistory()
   const message = useRouteParams('message')
   const status = useRouteParams('status')
-  const { persistor } = returnStoreAndPersistor()
-  const { login: loginAlert } = useSelector((state) => state.alerts)
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const dispatch = useDispatch()
-  const theme = useTheme()
-  const [topAlert, setTopAlert] = useState({
-    severity: 'error',
-    alertText: '',
-    openAlert: false,
-  })
-  const { User } = useSelector((state) => state.user)
-  const [mutationResponse, setMutationResponse] = useState(null)
-  const formTitle = `Connexion à lécole`
 
-  const { mutateAsync } = useMutation(
-    apiLogin,
-    useUpdateMutationOptions(['login'])
-  )
+  const { mutateAsync } = useLogin()
+
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    formState: { isSubmitting, isValid, errors },
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(loginSchema),
   })
 
   const onSubmit = async (datas) => {
+    closeSnackbar()
     try {
       await mutateAsync(datas).then((response) => {
-        setMutationResponse(response)
-        // if (response.status === 200) {
-        //   const { newToken, newDatas } = tokenDatas(response)
-
-        //   dispatch(setUserInfos(newDatas))
-        //   dispatch(setUserToken(newToken))
-        //   const { isAdmin, isVerified } = newDatas
-        //   if (isAdmin) {
-        //     history.push('/informations')
-        //   } else {
-        //     history.push('/')
-        //   }
-        // }
+        if (response && response.status === 200) {
+          const { newToken, newDatas } = tokenDatas(response)
+          dispatch(setUserInfos(newDatas))
+          dispatch(setUserToken(newToken))
+          const { isAdmin } = newDatas
+          if (isAdmin) {
+            history.push('/informations')
+          } else {
+            history.push('/')
+          }
+        }
       })
     } catch (err) {
-      setTopAlert({
-        severity: 'error',
-        alertText: err.response.data.message,
-        openAlert: true,
-      })
+      enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
   }
 
-  useEffect(() => {
-    if (mutationResponse && mutationResponse.status === 200) {
-      const { newToken, newDatas } = tokenDatas(mutationResponse)
-      dispatch(setUserInfos(newDatas))
-      dispatch(setUserToken(newToken))
-      const { isAdmin, isVerified } = newDatas
-      if (isAdmin) {
-        history.push('/informations')
-      } else {
-        history.push('/')
-      }
-    }
-  }, [mutationResponse, dispatch])
-  useEffect(() => {
-    if (!User) {
-      setTopAlert({
-        severity: 'error',
-        alertText: 'connectez vous',
-        openAlert: true,
-      })
-    }
-  }, [User])
-
-  useEffect(() => {
-    if (status && message) {
-      setTopAlert({
-        severity: status,
-        alertText: message,
-        openAlert: true,
-      })
-    }
-    return () => {
-      setTopAlert({
-        severity: 'error',
-        alertText: '',
-        openAlert: false,
-      })
-    }
-  }, [])
+  const buttonText = `Je me connecte`
 
   return (
-    <StyledGrid container>
-      <Grid item container>
-        <AlertCollapse
-          {...loginAlert}
-          callback={() => dispatch(setLoginAlert(initialAlertCollapse))}
-        />
-        <AlertCollapse
-          alertText={topAlert.alertText}
-          openAlert={topAlert.openAlert}
-          severity={topAlert.severity}
-          callback={setTopAlert}
-        />
-      </Grid>
-
-      <StyledStandardForm onSubmit={handleSubmit(onSubmit)}>
-        <Grid item container justify="center" className="form-header">
-          <Title title={formTitle} textcolor="whitesmoke" />
-        </Grid>
-        <Grid container className="form-body">
-          <InputTextControl
-            name="email"
-            type="email"
-            label="Email"
-            // placeholder="geremy@gmail.com"
-            helperText="au moins 10 caractères"
-            width="100%"
-            control={control}
-          />
-          <InputTextControl
-            name="password"
-            type="password"
-            label="Mot de Pass"
-            placeholder="FureurVosgienne8854"
-            helperText="8 caractères minimum, dont au moins 1 majuscules, une majuscule 1 chiffre"
-            width="100%"
-            control={control}
-          />
-        </Grid>
-        <Grid
-          item
-          container
-          alignItems="center"
-          justify="center"
-          className="form-footer"
-        >
-          <Grid
-            item
-            container
-            justify="center"
-            alignItems="center"
-            className="form-footer-button"
-          >
-            <CostumButton
-              text="Je me connecte"
-              bgcolor={theme.palette.success.main}
-              action="post"
-              width="21rem"
-              type="submit"
-              disabled={!isValid || isSubmitting}
+    <StyledGrid container data-testid="login-screen">
+      <StyledForm onSubmit={handleSubmit(onSubmit)}>
+        <Typography component="h2" variant="h2">
+          Login
+        </Typography>
+        <List>
+          <ListItem>
+            <Controller
+              name="email"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: true,
+                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/,
+              }}
+              render={({ field }) => (
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  placeholder="Entrez votre email"
+                  inputProps={{ type: 'email' }}
+                  error={Boolean(errors.email)}
+                  helperText={errors.email ? errors.email.message : null}
+                  {...field}
+                />
+              )}
             />
-          </Grid>
-          <Grid
-            item
-            container
-            className="form-footer-mentions"
-            direction="column"
-            justify="space-between"
-            alignItems="center"
-          >
-            <StyledNavLink to="/private/identification/register">
-              {' '}
-              Pas de compte ? Incrivez vous
+          </ListItem>
+          <ListItem>
+            <Controller
+              name="password"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: true,
+                minLength: 8,
+              }}
+              render={({ field }) => (
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  id="password"
+                  placeholder="Entrez votre password"
+                  label="Mot de Pass"
+                  inputProps={{ type: 'password' }}
+                  error={Boolean(errors.password)}
+                  helperText={errors.password ? errors.password.message : null}
+                  {...field}
+                />
+              )}
+            />
+          </ListItem>
+          <ListItem>
+            <Button
+              role="button"
+              variant="contained"
+              type="submit"
+              fullWidth
+              color="primary"
+              disabled={!isValid || isSubmitting}
+            >
+              {buttonText}
+            </Button>
+          </ListItem>
+          <ListItem>
+            Pas de compte ? &nbsp;
+            <StyledNavLink
+              to="/private/identification/register"
+              className="nav-link"
+            >
+              <span>Enregistrez vous</span>
             </StyledNavLink>
-            <StyledNavLink to="/private/identification/losspass/:token">
-              {' '}
-              Pass perdu ? Réinitialiser
+          </ListItem>
+          <ListItem>
+            Pass perdu ? &nbsp;
+            <StyledNavLink
+              to="/private/identification/losspass/:token"
+              className="nav-link"
+            >
+              <span>Réinitialiser </span>
             </StyledNavLink>
-          </Grid>
-        </Grid>
-      </StyledStandardForm>
+          </ListItem>
+        </List>
+      </StyledForm>
     </StyledGrid>
   )
 }

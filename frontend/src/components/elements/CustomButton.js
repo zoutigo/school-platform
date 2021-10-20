@@ -1,19 +1,20 @@
-import { Icon, styled, Typography } from '@material-ui/core'
+import { Icon, styled, Typography, Button } from '@material-ui/core'
 import React from 'react'
 import { withTheme } from '@material-ui/styles'
 import PropTypes from 'prop-types'
-import { StyledBaseButton } from './styled'
 
 const StyledCustomButton = withTheme(
-  styled(({ width, bgcolor, ...rest }) => <StyledBaseButton {...rest} />)({
+  styled(({ width, bgcolor, ...rest }) => <Button {...rest} />)({
     width: ({ width }) => (width === '100%' ? '99%' : width || '11rem'),
-    background: ({ bgcolor }) => bgcolor || 'red',
+    background: ({ bgcolor }) => bgcolor || 'gray',
     radius: '5px',
     display: 'flex',
+    height: '3rem',
+    margin: '0.3rem',
   })
 )
 const StyledIconDiv = withTheme(
-  styled(({ text, bgcolor, ...rest }) => <div {...rest} />)({
+  styled(({ text, ...rest }) => <div {...rest} />)({
     width: ({ text }) => (text ? '20%' : '90%'),
     flex: 1,
     '& >svg': {
@@ -49,6 +50,7 @@ function CustomButton({ text, width, bgcolor, action, ...rest }) {
 
   return (
     <StyledCustomButton
+      data-testid="element-custombutton"
       variant="outlined"
       type="button"
       width={width}
