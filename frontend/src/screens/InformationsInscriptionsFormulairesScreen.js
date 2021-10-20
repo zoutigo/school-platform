@@ -142,11 +142,9 @@ function InformationsInscriptionsFormulairesScreen() {
         aurons besoin de vos coordonnées.
       </p>
       <p>
-        <Link to="/private/identification/login">
-          Connectez vous. Ou assurez verifiez le mail de validation qui vous a
-          été adressé.
-        </Link>
+        <Link to="/private/identification/login">Connectez vous.</Link>
       </p>
+      <p>Ou verifiez le mail de validation qui vous a été adressé.</p>
       <p>
         <Link to="/private/identification/register">Créez votre compte :</Link>{' '}
         <strong>Ca ne prend que une minute.</strong>
