@@ -1,17 +1,10 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prefer-promise-reject-errors */
 import React from 'react'
-import user from '@testing-library/user-event'
-import {
-  render,
-  screen,
-  cleanup,
-  fireEvent,
-  waitFor,
-} from '../utils/tests-utils'
+// eslint-disable-next-line import/no-unresolved
+import { render, screen, cleanup, fireEvent, waitFor } from 'test-utils'
 import RegisterScreen from '../screens/RegisterScreen'
 
-import * as api from '../utils/api'
 import useRegister from '../components/hooks/useRegister'
 
 jest.mock('../components/elements/LazyMessage', () => ({
@@ -288,7 +281,7 @@ describe('RegisterScreen', () => {
   })
   describe('onsubmit', () => {
     afterEach(() => cleanup())
-    it('should be able to catch server error and notify it', async () => {
+    it.skip('should be able to catch server error and notify it', async () => {
       mutateAsync.mockImplementation(() =>
         Promise.reject({ message: 'une erreur est survenue' })
       )

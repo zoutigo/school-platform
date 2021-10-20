@@ -10,7 +10,7 @@ import {
   Button,
 } from '@material-ui/core'
 import { styled } from '@material-ui/styles'
-import { NavLink, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'

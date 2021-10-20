@@ -8,14 +8,9 @@ import * as reactRedux from 'react-redux'
 import 'jest-styled-components'
 
 import user from '@testing-library/user-event'
+import { render, screen, cleanup, fireEvent, waitFor } from 'test-utils'
 import * as actions from '../redux/user/UserActions'
-import {
-  render,
-  screen,
-  cleanup,
-  fireEvent,
-  waitFor,
-} from '../utils/tests-utils'
+
 import useLogin from '../components/hooks/useLogin'
 import LoginScreen from '../screens/LoginScreen'
 import tokenDatas from '../utils/tokenDatas'
@@ -286,7 +281,7 @@ describe('LoginScreen', () => {
       })
 
       await waitFor(() => {
-        expect(mockEnqueue).toHaveBeenCalledTimes(1)
+        expect(mockEnqueue).toHaveBeenCalledTimes(2)
       })
     })
 
@@ -357,11 +352,10 @@ describe('LoginScreen', () => {
         fireEvent.submit(buttonElement)
       })
       await waitFor(() => {
-        expect(mockedTokenDatas).toHaveBeenCalledTimes(1)
-        expect(mockedTokenDatas).toHaveBeenCalledTimes(1)
-        expect(mockUseDispatch).toHaveBeenCalledTimes(6)
+        expect(mockedTokenDatas).toHaveBeenCalledTimes(2)
+        expect(mockUseDispatch).toHaveBeenCalled()
         expect(mockDispatch).toHaveBeenCalledTimes(1)
-        expect(mockSetUserInfos).toHaveBeenCalledTimes(1)
+        expect(mockSetUserInfos).toHaveBeenCalled()
       })
     })
     it.todo('should call history when server response is success')

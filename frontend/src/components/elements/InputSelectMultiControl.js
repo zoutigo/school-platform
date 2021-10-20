@@ -1,40 +1,21 @@
 import React from 'react'
-import { Grid, styled, Collapse } from '@material-ui/core'
+import { Grid, styled, Collapse, Typography } from '@material-ui/core'
 import { useController, Controller } from 'react-hook-form'
 import Select from 'react-select'
 import PropTypes from 'prop-types'
 import { Alert } from '@material-ui/lab'
+import customStyles from '../../constants/selectMultiCostumStyles'
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
   minWidth: '100%',
   color: theme.palette.error.main,
 }))
 
-const customStyles = {
-  option: (provided, state) => ({
-    ...provided,
-    borderBottom: '1px dotted pink',
-    color: state.isSelected ? 'red' : 'blue',
-    padding: 20,
-  }),
-  control: () => ({
-    // none of react-select's styles are passed to <Control />
-    width: 400,
-  }),
-  singleValue: (provided, state) => {
-    const opacity = state.isDisabled ? 0.5 : 1
-    const transition = 'opacity 300ms'
-
-    return { ...provided, opacity, transition }
-  },
-}
-
 function InputSelectMultiControl({
   control,
   label,
   name,
   width,
-
   initialValue,
   options,
   ...rest
@@ -49,9 +30,8 @@ function InputSelectMultiControl({
 
   return (
     <Grid item container className="field">
-      <Grid item container className="label">
-        {' '}
-        {label}
+      <Grid item container className="label" style={{ margin: '1rem' }}>
+        <Typography variant="body1">{label}</Typography>
       </Grid>
       <Grid item container>
         <Controller
@@ -65,6 +45,8 @@ function InputSelectMultiControl({
               isMulti
               styles={customStyles}
               defaultValue={initialValue}
+              defaultOptions
+              maxMenuHeight={200}
             />
           )}
         />

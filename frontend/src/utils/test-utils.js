@@ -165,22 +165,22 @@ const theme = createTheme({
   },
 })
 
-// const AllTheProviders = ({ children }) => (
-//   <QueryClientProvider client={queryClient}>
-//     <Provider store={store}>
-//       <ThemeProvider theme={theme}>
-//         <BrowserRouter>{children}</BrowserRouter>
-//       </ThemeProvider>
-//     </Provider>
-//   </QueryClientProvider>
-// )
 const AllTheProviders = ({ children }) => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>{children}</BrowserRouter>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>{children}</BrowserRouter>
+      </ThemeProvider>
+    </Provider>
   </QueryClientProvider>
 )
+// const AllTheProviders = ({ children }) => (
+//   <QueryClientProvider client={queryClient}>
+//     <ThemeProvider theme={theme}>
+//       <BrowserRouter>{children}</BrowserRouter>
+//     </ThemeProvider>
+//   </QueryClientProvider>
+// )
 
 const customRender = (ui, options) => {
   render(ui, { wrapper: AllTheProviders, ...options })
