@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react'
+import useRigths from '../components/hooks/useRigths'
+import useRoles from '../components/hooks/useRoles'
+import useRoutesInfos from '../components/hooks/useRoutesInfos'
 import Paper from '../components/paper/Paper'
 import { apiFetchEvents, apiPostEvents } from '../utils/api'
-import { useRigths, useRoutesInfos } from '../utils/hooks'
 import redefineAlias from '../utils/redefineAlias'
-import useRoles from '../utils/roles'
 
 function ClassesAgendaScreen() {
   const { category } = useRoutesInfos()

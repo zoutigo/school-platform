@@ -6,9 +6,10 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { apiFetchAlbum } from '../../../utils/api'
 import AlbumCard from './AlbumCard'
-import { useRigths } from '../../../utils/hooks'
+
 import AlertMessage from '../AlertMessage'
 import useFetch from '../../hooks/useFetch'
+import useRigths from '../../hooks/useRigths'
 
 function AlbumList({
   queryKey,

@@ -19,7 +19,7 @@ import * as yup from 'yup'
 
 import StyledForm from '../components/styled-components/StyledForm'
 // import AlertCollapse from '../components/elements/AlertCollapse'
-import { useRouteParams } from '../utils/hooks'
+
 import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 
 import tokenDatas from '../utils/tokenDatas'
@@ -27,6 +27,7 @@ import getError from '../utils/error'
 import { passwordRegex } from '../constants/regex'
 import useLogin from '../components/hooks/useLogin'
 import StyledNavLink from '../components/styled-components/StyledNavLink'
+import useRouteParams from '../components/hooks/useRouteParams'
 
 const loginSchema = yup.object().shape({
   email: yup

@@ -1,12 +1,13 @@
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable import/named */
 import React from 'react'
+import useRigths from '../components/hooks/useRigths'
+import useRoles from '../components/hooks/useRoles'
 import Paper from '../components/paper/Paper'
 import { apiFetchPaper, apiPostPaper } from '../utils/api'
-import { useRigths } from '../utils/hooks'
+
 // eslint-disable-next-line import/no-named-as-default
 // eslint-disable-next-line import/no-named-as-default-member
-import useRoles from '../utils/roles'
 
 function ApelOgecApelActivitesScreen() {
   const { moderatorLevel } = useRigths()

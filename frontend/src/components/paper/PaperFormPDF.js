@@ -1,14 +1,13 @@
 /* eslint-disable import/named */
 import { styled, Grid, useTheme, Collapse } from '@material-ui/core'
+import { useSnackbar } from 'notistack'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
-import { useMutation } from 'react-query'
+import { useSelector } from 'react-redux'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { apiPostPaper } from '../../utils/api'
-import { useUpdateMutationOptions } from '../../utils/hooks'
 import CostumButton from '../elements/CustomButton'
 import DatePickerControl from '../elements/DatePickerControl'
 import InputFileControl from '../elements/InputFileControl'
@@ -17,12 +16,10 @@ import menuSchema from '../../schemas/menuSchema'
 import breveSchema from '../../schemas/breveSchema'
 import fournitureSchema from '../../schemas/fournitureSchema'
 import InputSelectControl from '../elements/InputSelectControl'
-import { setPaperMutateAlert } from '../../redux/alerts/AlertsActions'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../constants/alerts'
 import InputRadio from '../elements/InputRadio'
+import useMutate from '../hooks/useMutate'
+import MutateCircularProgress from '../elements/MutateCircularProgress'
+import getError from '../../utils/error'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -45,14 +42,10 @@ function PaperFormPDF({
   isPrivateDatas,
 }) {
   const theme = useTheme()
-  const dispatch = useDispatch()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [addFile, setAddFile] = useState(formAction === 'create')
-
   const { Token } = useSelector((state) => state.user)
-  const { mutateAsync } = useMutation(
-    apiPostPaper,
-    useUpdateMutationOptions(paper.queryKey)
-  )
+  const { mutateAsync, isMutating } = useMutate(paper.queryKey, apiPostPaper)
 
   const schema = (mypapertype) => {
     switch (mypapertype) {
@@ -122,6 +115,7 @@ function PaperFormPDF({
           return null
       }
     }
+    closeSnackbar()
 
     try {
       await mutateAsync({
@@ -130,12 +124,12 @@ function PaperFormPDF({
         body: await finalDatas(paper.paperType),
         Token: Token,
       }).then((response) => {
-        dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
+        enqueueSnackbar(response.message, { variant: 'success' })
         handleBack()
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      setPaperMutateAlert(errorAlertCollapse(err.response.data.message))
+      enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
   }
@@ -183,6 +177,7 @@ function PaperFormPDF({
 
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
+      {isMutating && <MutateCircularProgress />}
       <Grid container className="form-fields-container">
         {paper.paperType === 'fourniture' && (
           <InputSelectControl

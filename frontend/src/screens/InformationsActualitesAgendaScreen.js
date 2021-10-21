@@ -1,7 +1,8 @@
 import React from 'react'
 import { apiFetchEvents, apiPostEvents } from '../utils/api'
-import { useRigths } from '../utils/hooks'
+
 import Paper from '../components/paper/Paper'
+import useRigths from '../components/hooks/useRigths'
 
 function InformationsActualitesAgendaScreen() {
   const { moderatorLevel } = useRigths()

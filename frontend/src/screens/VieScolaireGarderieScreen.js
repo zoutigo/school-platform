@@ -5,7 +5,7 @@ import React from 'react'
 import Page from '../components/page/Page'
 
 import { StyledPageGrid } from '../components/elements/styled'
-import { useRigths } from '../utils/hooks'
+import useRigths from '../components/hooks/useRigths'
 
 function VieScolaireGarderieScreen() {
   const pageName = 'La garderie'

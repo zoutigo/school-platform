@@ -1,8 +1,9 @@
 /* eslint-disable import/named */
 import React from 'react'
 import { apiFetchPaper, apiPostPaper } from '../utils/api'
-import { useRigths } from '../utils/hooks'
+
 import Paper from '../components/paper/Paper'
+import useRigths from '../components/hooks/useRigths'
 
 function InformationsActualitesInfoParentsScreen() {
   const { moderatorLevel } = useRigths()

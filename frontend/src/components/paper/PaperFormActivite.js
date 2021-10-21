@@ -1,35 +1,27 @@
 /* eslint-disable import/named */
 import { styled, Grid, useTheme } from '@material-ui/core'
+import { useSnackbar } from 'notistack'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
-import { useMutation } from 'react-query'
+import { useSelector } from 'react-redux'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import InputTextControl from '../elements/InputTextControl'
 import { apiPostPaper } from '../../utils/api'
-import { useUpdateMutationOptions } from '../../utils/hooks'
 import paperActiviteSchema from '../../schemas/paperActiviteSchema'
 import TinyPageEditor from '../elements/TinyPageEditor'
 import CostumButton from '../elements/CustomButton'
-import { setPaperMutateAlert } from '../../redux/alerts/AlertsActions'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../constants/alerts'
 import InputEditorControl from '../elements/editor/InputEditorControl'
 import InputReactPageControl from '../elements/InputReactPageControl'
 import InputRadio from '../elements/InputRadio'
-
-// import InputCKEditorControl from '../elements/editor/InputCKEditorControl'
+import MutateCircularProgress from '../elements/MutateCircularProgress'
+import useMutate from '../hooks/useMutate'
+import getError from '../../utils/error'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
   margin: '1rem auto',
   background: 'gray',
-  //   [theme.breakpoints.up('md')]: {
-  //     width: '60%',
-  //   },
   '& .form-fields-container': {
     background: 'whitesmoke',
     padding: '0.5rem 0.2rem',
@@ -47,12 +39,10 @@ function PaperFormActivite({
   isPrivateDatas,
 }) {
   const theme = useTheme()
-  const dispatch = useDispatch()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
-  const { mutateAsync } = useMutation(
-    apiPostPaper,
-    useUpdateMutationOptions(paper.queryKey)
-  )
+
+  const { mutateAsync, isMutating } = useMutate(paper.queryKey, apiPostPaper)
   const {
     control,
     handleSubmit,
@@ -72,7 +62,7 @@ function PaperFormActivite({
       type: paper.paperType,
       entityAlias: paper.entityAlias,
     }
-
+    closeSnackbar()
     try {
       await mutateAsync({
         id: currentDocument ? currentDocument.id : null,
@@ -80,11 +70,11 @@ function PaperFormActivite({
         body: finalDatas,
         Token: Token,
       }).then((response) => {
-        dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
+        enqueueSnackbar(response.message, { variant: 'success' })
         handleBack()
       })
     } catch (err) {
-      setPaperMutateAlert(errorAlertCollapse(err.response.data.message))
+      enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
   }
@@ -93,6 +83,7 @@ function PaperFormActivite({
 
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
+      {isMutating && <MutateCircularProgress />}
       <Grid container className="form-fields-container">
         <InputTextControl
           name="title"

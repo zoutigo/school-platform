@@ -7,14 +7,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useRigths } from '../utils/hooks'
 import ClassroomSummary from '../components/main/classes/ClassroomSummary'
-import useRoles from '../utils/roles'
 import ClassroomForm from '../components/main/classes/ClassroomForm'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import ToggleToolTip from '../components/elements/ToggleToolTip'
 import { setFetchAlert, setMutateAlert } from '../redux/alerts/AlertsActions'
 import { initialAlertCollapse } from '../constants/alerts'
+import useRigths from '../components/hooks/useRigths'
+import useRoles from '../components/hooks/useRoles'
 
 function ClassesPresentationScreen() {
   const dispatch = useDispatch()

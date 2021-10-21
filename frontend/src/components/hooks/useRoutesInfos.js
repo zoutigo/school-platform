@@ -1,93 +1,14 @@
-// eslint-disable-next-line no-unused-vars
-
 import React, { useCallback } from 'react'
-import { useQueryClient } from 'react-query'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import routes from '../constants/routes'
-import theme from '../constants/theme'
+import routes from '../../constants/routes'
+import theme from '../../constants/theme'
+import useRigths from './useRigths'
 
-export const useUpdateMutationOptions = (queryKey) => {
-  const queryClient = useQueryClient()
-  return {
-    onMutate: (newData) => {
-      queryClient.cancelQueries(queryKey)
-
-      const current = queryClient.getQueryData(queryKey)
-
-      // eslint-disable-next-line no-unused-vars
-      queryClient.setQueryData(queryKey, (prev) => newData)
-
-      // in case there is no id , for post, it could be
-      // queryCache.setQueryData(name, (prev)=> [...prev, {...newData, id:new Date().toISOString()}])
-      return current
-    },
-    onSuccess: (newData) => {
-      // eslint-disable-next-line no-unused-vars
-      window.scrollTo(0, 0)
-      queryClient.setQueryData(queryKey, (prev) => newData)
-    },
-    // eslint-disable-next-line no-unused-vars
-    onError: (error, variables, context, newData, rollback) => {
-      // dispatch(setMutationError(error.message))
-      // rollback()
-      window.scrollTo(0, 0)
-      queryClient.setQueryData(queryKey, (prev) => prev)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(queryKey)
-    },
-  }
-}
-
-export const useIsTokenValid = () => {
-  const { User } = useSelector((state) => state.user)
-  if (!User) return false
-
-  const { exp, id, isVerified } = User
-
-  // const tokenIsValid = (!exp ? false : exp > new Date().getTime() / 1000) && _id
-  const valid = () => {
-    if (!exp || !isVerified) return false
-    if (exp > new Date().getTime() / 1000 && id) return true
-    return false
-  }
-  const tokenIsValid = valid()
-  return { tokenIsValid }
-}
-
-export const useRigths = () => {
-  const { User } = useSelector((state) => state.user)
-
-  const setRigths = useCallback(() => {
-    const { isAdmin, isModerator, isManager, isTeacher, exp, id } = User
-    const TokenIsValid = exp && id ? new Date().getTime() / 1000 < exp : false
-
-    const userLevel = TokenIsValid
-    const teacherLevel =
-      TokenIsValid && (isAdmin || isManager || isModerator || isTeacher)
-    const managerLevel = TokenIsValid && (isAdmin || isManager)
-    const adminLevel = TokenIsValid && isAdmin
-    const moderatorLevel = TokenIsValid && (isAdmin || isManager || isModerator)
-    return { userLevel, teacherLevel, managerLevel, adminLevel, moderatorLevel }
-  }, [User])
-
-  return { ...setRigths() }
-}
-
-export const useRouteParams = (arg) => {
-  const useQueryP = () => new URLSearchParams(useLocation().search)
-  const query = useQueryP()
-
-  return query.get(arg)
-}
-
-export const useRoutesInfos = () => {
+const useRoutesInfos = () => {
   const { Chemins: chemins } = useSelector((state) => state.settings)
-
   const { pathname } = useLocation()
   const rights = useRigths()
-
   const level = () => {
     if (rights.adminLevel) return 'admin'
     if (rights.managerLevel) return 'manager'
@@ -332,3 +253,5 @@ export const useRoutesInfos = () => {
     routesList: routesList(),
   }
 }
+
+export default useRoutesInfos

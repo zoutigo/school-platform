@@ -1,4 +1,4 @@
-import { Grid, useTheme } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { styled } from '@material-ui/styles'
 import Alert from '@material-ui/lab/Alert'
 import React from 'react'
@@ -19,7 +19,6 @@ const StyledGrid = styled(Grid)(() => ({
 }))
 
 function InformationsContactsLocalisationScreen() {
-  const theme = useTheme()
   const text = `
   L'école Saint Augustin est située au coeur de la cité médiévale de
           Crémieu, sur la place principale,guarantissant un accès sécurisé à vos

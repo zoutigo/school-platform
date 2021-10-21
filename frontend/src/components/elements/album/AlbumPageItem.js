@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { useMutation } from 'react-query'
+import { useSnackbar } from 'notistack'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Button, styled } from '@material-ui/core'
 // eslint-disable-next-line import/named
-import { useUpdateMutationOptions } from '../../../utils/hooks'
-import { setAlbumMutateAlert } from '../../../redux/alerts/AlertsActions'
 import { apiPostAlbumImages } from '../../../utils/api'
+import useMutate from '../../hooks/useMutate'
+import MutateCircularProgress from '../MutateCircularProgress'
+import getError from '../../../utils/error'
 
 const StyledDeleteButton = styled(Button)(({ theme }) => ({
   background: theme.palette.warning.main,
@@ -18,7 +19,7 @@ const StyledConfirmDeleteButton = styled(Button)(({ theme }) => ({
 }))
 
 function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
-  const dispatch = useDispatch()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [showButton, setShowButton] = useState(false)
   const [showImage, setShowImage] = useState(true)
   const [showConfirmButton, setShowConfirmButton] = useState(false)
@@ -34,12 +35,10 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
   const { Token } = useSelector((state) => state.user)
   useSelector((state) => state.settings)
 
-  const { mutateAsync } = useMutation(
-    apiPostAlbumImages,
-    useUpdateMutationOptions(queryKey)
-  )
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostAlbumImages)
 
   const mutateAlbum = async () => {
+    closeSnackbar()
     try {
       await mutateAsync({
         id: albumId,
@@ -48,25 +47,13 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
         Token: Token,
         filepath: image.filepath,
       }).then((response) => {
-        dispatch(
-          setAlbumMutateAlert({
-            openAlert: true,
-            severity: 'success',
-            alertText: response.message,
-          })
-        )
+        enqueueSnackbar(response.message, { variant: 'success' })
         setShowImage(false)
         setShowButton(false)
         setShowConfirmButton(false)
       })
     } catch (err) {
-      dispatch(
-        setAlbumMutateAlert({
-          openAlert: true,
-          severity: 'error',
-          alertText: err.message,
-        })
-      )
+      enqueueSnackbar(getError(err), { variant: 'error' })
       setShowButton(false)
       setShowConfirmButton(false)
     }
@@ -74,6 +61,7 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
 
   return (
     <div className="pics">
+      {isMutating && <MutateCircularProgress />}
       {showImage && (
         <div className="pic">
           <img

@@ -3,22 +3,18 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { styled, Grid, useTheme } from '@material-ui/core'
 import { useForm, Controller } from 'react-hook-form'
+import { useSnackbar } from 'notistack'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import { useMutation } from 'react-query'
 import Title from '../elements/Title'
 import pageSchema from '../../schemas/pageSchema'
-import TinyPageEditor from '../elements/TinyPageEditor'
 import CostumButton from '../elements/CustomButton'
 import { apiPostPage } from '../../utils/api'
-import { useUpdateMutationOptions } from '../../utils/hooks'
-import { setPageMutateAlert } from '../../redux/alerts/AlertsActions'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../constants/alerts'
 import InputReactPageControl from '../elements/InputReactPageControl'
+import useMutate from '../hooks/useMutate'
+import MutateCircularProgress from '../elements/MutateCircularProgress'
+import getError from '../../utils/error'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -36,14 +32,11 @@ const StyledPaperForm = styled('form')(() => ({
 function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
   const { pageName, queryKey, isAllowedToChange } = pageParams
   const theme = useTheme()
-  const dispatch = useDispatch()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
   const formTitle = `Modification de la page ${pageName}`
 
-  const { mutateAsync } = useMutation(
-    apiPostPage,
-    useUpdateMutationOptions(queryKey)
-  )
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostPage)
 
   const {
     control,
@@ -60,7 +53,7 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
       headers: { 'x-access-token': Token },
     }
     const finalDatas = { content: JSON.stringify(content) }
-
+    closeSnackbar()
     try {
       await mutateAsync({
         id: page ? page.id : null,
@@ -68,15 +61,13 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
         options: options,
         body: finalDatas,
       }).then((response) => {
-        dispatch(setPageMutateAlert(successAlertCollapse(response.message)))
+        enqueueSnackbar(response.message, { variant: 'success' })
         setShowEditToolTip(true)
         setShowPageForm(false)
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      dispatch(
-        setPageMutateAlert(errorAlertCollapse(err.response.data.message))
-      )
+      enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
   }
@@ -94,6 +85,7 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
       <Grid item container justify="center">
         <Title title={formTitle} textcolor="whitesmoke" />
       </Grid>
+      {isMutating && <MutateCircularProgress />}
       <Grid container className="form-fields-container">
         <InputReactPageControl
           control={control}

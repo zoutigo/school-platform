@@ -4,20 +4,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation } from 'react-query'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSnackbar } from 'notistack'
+import { useSelector } from 'react-redux'
 import InputTextControl from '../../../../elements/InputTextControl'
 import CustomButton from '../../../../elements/CustomButton'
 import TinyPageEditor from '../../../../elements/TinyPageEditor'
 import cheminSchema from '../../../../../schemas/cheminSchema'
 import InputFileControl from '../../../../elements/InputFileControl'
 import { apiPostChemin } from '../../../../../utils/api'
-import { useUpdateMutationOptions } from '../../../../../utils/hooks'
-import { setMutateAlert } from '../../../../../redux/alerts/AlertsActions'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../../../../constants/alerts'
+import useMutate from '../../../../hooks/useMutate'
+import MutateCircularProgress from '../../../../elements/MutateCircularProgress'
+import getError from '../../../../../utils/error'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -36,13 +33,12 @@ const StyledPaperForm = styled('form')(() => ({
 }))
 
 function CheminForm({ queryKey, formAction, chemin, setShowAddForm }) {
-  const dispatch = useDispatch()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const theme = useTheme()
   const { Token } = useSelector((state) => state.user)
-  const { mutateAsync } = useMutation(
-    apiPostChemin,
-    useUpdateMutationOptions(queryKey)
-  )
+
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostChemin)
+
   const {
     control,
     handleSubmit,
@@ -66,6 +62,8 @@ function CheminForm({ queryKey, formAction, chemin, setShowAddForm }) {
       description,
     }
 
+    closeSnackbar()
+
     try {
       await mutateAsync({
         id: chemin ? chemin._id : null,
@@ -74,17 +72,17 @@ function CheminForm({ queryKey, formAction, chemin, setShowAddForm }) {
         body: finalDatas,
         token: Token,
       }).then((response) => {
-        dispatch(setMutateAlert(successAlertCollapse(response.statusText)))
+        enqueueSnackbar(response.statusText, { variant: 'success' })
         setShowAddForm(false)
       })
     } catch (err) {
-      dispatch(setMutateAlert(errorAlertCollapse(err.message)))
-
+      enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
   }
   return (
     <Grid container>
+      {isMutating && <MutateCircularProgress />}
       <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
         <Grid container className="form-fields-container">
           <InputTextControl

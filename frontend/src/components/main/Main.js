@@ -6,9 +6,10 @@ import { styled } from '@material-ui/styles'
 import React, { useCallback } from 'react'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import HomeScreen from '../../screens/HomeScreen'
-import { useRoutesInfos } from '../../utils/hooks'
+
 import Navigator from '../elements/Navigator'
 import { StyledCentralScreen, StyledMainApp } from '../elements/styled'
+import useRoutesInfos from '../hooks/useRoutesInfos'
 
 import asidesList from './asides/asidesList'
 import BodyBloc from './BodyBloc'

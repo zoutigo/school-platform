@@ -1,41 +1,28 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
-import { useQuery } from 'react-query'
 import { Grid } from '@material-ui/core'
-import ReactHtmlParser from 'react-html-parser'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { apiFecthPage } from '../../utils/api'
-import { setPageFetchAlert } from '../../redux/alerts/AlertsActions'
-import {
-  errorAlertCollapse,
-  initialAlertCollapse,
-  loadingAlertCollapse,
-} from '../../constants/alerts'
+
 import PageScreen from '../elements/reactpage/PageScreen'
+import AlertMessage from '../elements/AlertMessage'
+import useFetch from '../hooks/useFetch'
 
 function PageList({ queryKey, queryParams, setPage }) {
-  const dispatch = useDispatch()
-  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFecthPage(queryParams)
+  const { isLoading, isError, data, errorMessage } = useFetch(
+    queryKey,
+    queryParams,
+    apiFecthPage
   )
 
   useEffect(() => {
-    if (isLoading) {
-      dispatch(setPageFetchAlert(loadingAlertCollapse))
-    }
-    if (isError) {
-      dispatch(
-        setPageFetchAlert(errorAlertCollapse(error.response.data.message))
-      )
-    }
     if (data) {
-      dispatch(setPageFetchAlert(initialAlertCollapse))
       if (Array.isArray(data)) {
         const [result] = data
         setPage(result)
       }
     }
-  }, [isLoading, isError, data])
+  }, [data])
 
   if (!data || !Array.isArray(data)) {
     return null
@@ -46,8 +33,9 @@ function PageList({ queryKey, queryParams, setPage }) {
 
   return (
     <Grid item container className="react-editor-read">
-      <PageScreen content={content} />
-      {/* {ReactHtmlParser(text) || "il n'y a pas plus de détails pour le moment"} */}
+      {isError && <AlertMessage severity="error" message={errorMessage} />}
+      {isLoading && <CircularProgress color="secondary" />}
+      {data && Array.isArray(data) && <PageScreen content={content} />}
     </Grid>
   )
 }

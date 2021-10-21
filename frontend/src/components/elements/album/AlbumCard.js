@@ -1,7 +1,7 @@
 /* eslint-disable import/named */
 import React, { useState } from 'react'
-import { useMutation } from 'react-query'
 import { styled, useTheme } from '@material-ui/core/styles'
+import { useSnackbar } from 'notistack'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import CardActions from '@material-ui/core/CardActions'
@@ -10,17 +10,15 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import ReactHtmlParser from 'react-html-parser'
 import { Collapse, Grid } from '@material-ui/core'
 import { apiPostAlbum } from '../../../utils/api'
-import { useUpdateMutationOptions } from '../../../utils/hooks'
-import { setAlbumMutateAlert } from '../../../redux/alerts/AlertsActions'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../../constants/alerts'
+
 import CustomButton from '../CustomButton'
+import useMutate from '../../hooks/useMutate'
+import MutateCircularProgress from '../MutateCircularProgress'
+import getError from '../../../utils/error'
 
 const StyledCard = styled(Card)(({ theme }) => ({
   margin: '1rem auto',
@@ -56,7 +54,7 @@ function AlbumCard({
   isAllowed,
   queryKey,
 }) {
-  const dispatch = useDispatch()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const theme = useTheme()
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showUpdateConfirm, setShowUpdateConfirm] = useState(false)
@@ -66,10 +64,7 @@ function AlbumCard({
   const image =
     files && files.length > 0 ? `${URL_PREFIX}/${files[0].filepath}` : null
 
-  const { mutateAsync } = useMutation(
-    apiPostAlbum,
-    useUpdateMutationOptions(queryKey)
-  )
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostAlbum)
 
   const handleClick = () => {
     setCurrentAlbum(album)
@@ -90,6 +85,8 @@ function AlbumCard({
     setShowDeleteConfirm(false)
   }
 
+  closeSnackbar()
+
   const handleDelete = async () => {
     try {
       await mutateAsync({
@@ -98,13 +95,11 @@ function AlbumCard({
         Token,
         entityAlias,
       }).then((response) => {
-        dispatch(setAlbumMutateAlert(successAlertCollapse(response.message)))
+        enqueueSnackbar(response.message, { variant: 'success' })
         setShowDeleteConfirm(false)
       })
     } catch (err) {
-      dispatch(
-        setAlbumMutateAlert(errorAlertCollapse(err.response.data.message))
-      )
+      enqueueSnackbar(getError(err), { variant: 'error' })
     }
   }
 
@@ -117,6 +112,8 @@ function AlbumCard({
       form: true,
     })
   }
+
+  if (isMutating) return <MutateCircularProgress />
 
   return (
     <StyledCard>

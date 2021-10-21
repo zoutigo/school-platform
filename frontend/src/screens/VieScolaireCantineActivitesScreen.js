@@ -1,9 +1,8 @@
 import React from 'react'
+import useRigths from '../components/hooks/useRigths'
+import useRoles from '../components/hooks/useRoles'
 import Paper from '../components/paper/Paper'
 import { apiFetchPaper, apiPostPaper } from '../utils/api'
-import { useRigths } from '../utils/hooks'
-// eslint-disable-next-line import/no-named-as-default
-import useRoles from '../utils/roles'
 
 function VieScolaireCantineActivitesScreen() {
   const { moderatorLevel } = useRigths()

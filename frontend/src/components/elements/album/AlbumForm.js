@@ -1,24 +1,21 @@
 /* eslint-disable import/named */
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Grid, styled, useTheme } from '@material-ui/core'
+import { useSnackbar } from 'notistack'
 import PropTypes from 'prop-types'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useMutation } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../../constants/alerts'
-import { setAlbumMutateAlert } from '../../../redux/alerts/AlertsActions'
 import albumSchema from '../../../schemas/albumSchema'
 import { apiPostAlbum } from '../../../utils/api'
-import { useUpdateMutationOptions } from '../../../utils/hooks'
+import getError from '../../../utils/error'
+import useMutate from '../../hooks/useMutate'
 import CostumButton from '../CustomButton'
 import InputFileControl from '../InputFileControl'
 import InputRadio from '../InputRadio'
 import InputSmallEditorControl from '../InputSmallEditorControl'
 import InputTextControl from '../InputTextControl'
+import MutateCircularProgress from '../MutateCircularProgress'
 import Title from '../Title'
 
 const StyledPaperForm = styled('form')(() => ({
@@ -44,15 +41,12 @@ function AlbumForm({
   entityAlias,
 }) {
   const theme = useTheme()
-
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const dispatch = useDispatch()
   const { Token } = useSelector((state) => state.user)
   const [addFile, setAddFile] = useState(true)
 
-  const { mutateAsync } = useMutation(
-    apiPostAlbum,
-    useUpdateMutationOptions(queryKey)
-  )
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostAlbum)
   const {
     control,
     handleSubmit,
@@ -80,7 +74,7 @@ function AlbumForm({
         'x-access-token': Token,
       },
     }
-
+    closeSnackbar()
     try {
       await mutateAsync({
         id: formAction === 'update' ? currentAlbum.id : null,
@@ -90,7 +84,7 @@ function AlbumForm({
         Token: Token,
         entityAlias: entityAlias,
       }).then((response) => {
-        dispatch(setAlbumMutateAlert(successAlertCollapse(response.message)))
+        enqueueSnackbar(response.message, { variant: 'success' })
         setShow({
           page: false,
           form: false,
@@ -99,9 +93,7 @@ function AlbumForm({
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      dispatch(
-        setAlbumMutateAlert(errorAlertCollapse(err.response.data.message))
-      )
+      dispatch(enqueueSnackbar(getError(err), { variant: 'error' }))
       window.scrollTo(0, 0)
     }
   }
@@ -133,6 +125,7 @@ function AlbumForm({
         <Grid item container justifyContent="center">
           <Title title={formTitle} textcolor="whitesmoke" />
         </Grid>
+        {isMutating && <MutateCircularProgress />}
         <Grid container className="form-fields-container">
           <InputTextControl
             control={control}

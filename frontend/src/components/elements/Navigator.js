@@ -1,8 +1,6 @@
 import { Grid, styled } from '@material-ui/core'
 import React from 'react'
-
-import { useRoutesInfos } from '../../utils/hooks'
-
+import useRoutesInfos from '../hooks/useRoutesInfos'
 import NavigatorCategory from './NavigatorCategory'
 import NavigatorChapter from './NavigatorChapter'
 import NavigatorRubric from './NavigatorRubric'

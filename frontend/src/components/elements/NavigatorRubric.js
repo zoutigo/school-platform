@@ -1,6 +1,8 @@
 /* eslint-disable import/named */
 import React, { useCallback } from 'react'
-import { useRigths, useRoutesInfos } from '../../utils/hooks'
+
+import useRigths from '../hooks/useRigths'
+import useRoutesInfos from '../hooks/useRoutesInfos'
 import NavFieldset from './NavFieldset'
 import { StyledNavigatorGrid } from './styled'
 

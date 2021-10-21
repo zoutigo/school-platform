@@ -2,7 +2,7 @@
 import React from 'react'
 import ResumeCard from '../components/elements/ResumeCard'
 import { StyledCardPageGrid } from '../components/elements/styled'
-import { useRoutesInfos } from '../utils/hooks'
+import useRoutesInfos from '../components/hooks/useRoutesInfos'
 
 function InformationsScreen() {
   const { rubric } = useRoutesInfos()

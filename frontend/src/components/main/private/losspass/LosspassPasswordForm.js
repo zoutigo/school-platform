@@ -6,33 +6,29 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { styled, useTheme } from '@material-ui/styles'
 import { Grid } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
-import { useMutation } from 'react-query'
+import { useSnackbar } from 'notistack'
 import { apiPostLosspass } from '../../../../utils/api'
-import { useUpdateMutationOptions } from '../../../../utils/hooks'
 import { lossPassPasswordSchema } from '../../../../schemas/losspassSchema'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../../../constants/alerts'
-import { setMutateAlert } from '../../../../redux/alerts/AlertsActions'
 import CustomButton from '../../../elements/CustomButton'
 import { StyledStandardForm } from '../../../elements/styled'
 import Title from '../../../elements/Title'
 import InputTextControl from '../../../elements/InputTextControl'
+import useMutate from '../../../hooks/useMutate'
+import MutateCircularProgress from '../../../elements/MutateCircularProgress'
+import getError from '../../../../utils/error'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
 }))
 
 function LosspassPasswordForm({ setPasswordSent, token }) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const theme = useTheme()
-  const dispatch = useDispatch()
-  const formTitle = `2/2: Re-Initialisation du mot de pass`
 
-  const { mutateAsync } = useMutation(
-    apiPostLosspass,
-    useUpdateMutationOptions(['losspass'])
-  )
+  const formTitle = `2/2: Re-Initialisation du mot de pass`
+  const queryKey = ['losspass']
+
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostLosspass)
 
   const {
     control,
@@ -50,23 +46,25 @@ function LosspassPasswordForm({ setPasswordSent, token }) {
       passwordConfirm,
       token: token,
     }
+    closeSnackbar()
     try {
       await mutateAsync({
         action: 'losspass_updatepass',
         body: finalDatas,
       }).then((response) => {
         if (response.status === 200) {
-          dispatch(setMutateAlert(successAlertCollapse(response.data.message)))
+          enqueueSnackbar(response.data.message, { variant: 'success' })
           setPasswordSent(true)
         }
       })
     } catch (err) {
-      dispatch(setMutateAlert(errorAlertCollapse(err.response.data.message)))
+      enqueueSnackbar(getError(err), { variant: 'error' })
     }
   }
 
   return (
     <StyledGrid container>
+      {isMutating && <MutateCircularProgress />}
       <StyledStandardForm onSubmit={handleSubmit(onSubmit)}>
         <Grid item container justify="center" className="form-header">
           <Title title={formTitle} textcolor="whitesmoke" />

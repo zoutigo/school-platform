@@ -19,8 +19,9 @@ import DialogContent from '@material-ui/core/DialogContent'
 import { styled } from '@material-ui/styles'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
-import { useRigths, useRoutesInfos } from '../../utils/hooks'
+
 import { StyledNavLink } from './styled'
+import useRoutesInfos from '../hooks/useRoutesInfos'
 
 const RubricTypo = styled(Typography)(({ theme }) => ({
   // background: theme.palette.primary.light,

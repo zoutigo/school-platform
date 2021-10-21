@@ -10,10 +10,10 @@ import PropTypes from 'prop-types'
 
 import PaperItem from './PaperItem'
 
-import { useRigths } from '../../utils/hooks'
 import theme from '../../constants/theme'
 import useFetch from '../hooks/useFetch'
 import AlertMessage from '../elements/AlertMessage'
+import useRigths from '../hooks/useRigths'
 
 const StyledGrid = styled(Grid)(() => ({
   padding: '0.5rem 0',

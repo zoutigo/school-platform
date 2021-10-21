@@ -3,14 +3,13 @@ import { useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDispatch, useSelector } from 'react-redux'
-import { useMutation } from 'react-query'
+import { useSnackbar } from 'notistack'
 import { Grid, useTheme } from '@material-ui/core'
 import { StyledPersoDataContainer, StyledPersoDataForm } from './Style'
 import CustomButton from '../../../../elements/CustomButton'
 
 import InputTextControl from '../../../../elements/InputTextControl'
 // eslint-disable-next-line import/named
-import { useUpdateMutationOptions } from '../../../../../utils/hooks'
 import { apiUpdateUser } from '../../../../../utils/api'
 import {
   updateUserChildrenClassesSchema,
@@ -24,13 +23,16 @@ import {
   setUserToken,
 } from '../../../../../redux/user/UserActions'
 import tokenDatas from '../../../../../utils/tokenDatas'
-import { setPrivateAccountMutateAlert } from '../../../../../redux/alerts/AlertsActions'
 import {
   classroomsOptions,
   genderOptions,
 } from '../../../../../constants/options'
+import useMutate from '../../../../hooks/useMutate'
+import MutateCircularProgress from '../../../../elements/MutateCircularProgress'
+import getError from '../../../../../utils/error'
 
 function PersoDataForm({ setForm, setToggle, form, data }) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const theme = useTheme()
   const dispatch = useDispatch()
   const {
@@ -38,10 +40,9 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
     Token,
   } = useSelector((state) => state.user)
   const queryKey = [`datas-${id}`]
-  const { mutateAsync } = useMutation(
-    apiUpdateUser,
-    useUpdateMutationOptions(queryKey)
-  )
+
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiUpdateUser)
+
   const { credentialsform, childrenform, passwordform } = form
 
   const type = Object.entries(form).find(([, value]) => value)
@@ -105,7 +106,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
         'x-access-token': Token,
       },
     }
-
+    closeSnackbar()
     try {
       await mutateAsync({
         id: id,
@@ -118,13 +119,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
           const { newToken, newDatas } = tokenDatas(response)
           dispatch(setUserInfos(newDatas))
           dispatch(setUserToken(newToken))
-          dispatch(
-            setPrivateAccountMutateAlert({
-              openAlert: true,
-              severity: 'success',
-              alertText: response.data.message,
-            })
-          )
+          enqueueSnackbar(response.data.message, { variant: 'success' })
 
           setToggle('list')
           setForm({
@@ -140,16 +135,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
         }
       })
     } catch (err) {
-      const message = err.response.data.message || err.message
-
-      dispatch(
-        setPrivateAccountMutateAlert({
-          openAlert: true,
-          severity: 'error',
-          alertText: message,
-        })
-      )
-
+      enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
   }
@@ -170,6 +156,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
 
   return (
     <StyledPersoDataContainer container>
+      {isMutating && <MutateCircularProgress />}
       <StyledPersoDataForm onSubmit={handleSubmit(onSubmit)}>
         {credentialsform && (
           <Grid container className="form-fields-container">

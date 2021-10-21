@@ -3,8 +3,10 @@ import React, { useCallback } from 'react'
 import { useQuery } from 'react-query'
 import AlbumPage from '../components/elements/album/AlbumPage'
 import AlertCollapse from '../components/elements/AlertCollapse'
+import useRigths from '../components/hooks/useRigths'
+import useRoutesInfos from '../components/hooks/useRoutesInfos'
 import { apiFetchAlbum } from '../utils/api'
-import { useRigths, useRoutesInfos } from '../utils/hooks'
+
 import redefineAlias from '../utils/redefineAlias'
 
 function EcoleInfrastructuresScreen() {

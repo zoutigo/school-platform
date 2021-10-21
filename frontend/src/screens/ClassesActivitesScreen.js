@@ -2,11 +2,12 @@
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable import/no-named-as-default */
 import React, { useCallback } from 'react'
-import useRoles from '../utils/roles'
-import { useRigths, useRoutesInfos } from '../utils/hooks'
 import Paper from '../components/paper/Paper'
 import { apiFetchPaper, apiPostPaper } from '../utils/api'
 import redefineAlias from '../utils/redefineAlias'
+import useRigths from '../components/hooks/useRigths'
+import useRoles from '../components/hooks/useRoles'
+import useRoutesInfos from '../components/hooks/useRoutesInfos'
 
 function ClassesActivitesScreen() {
   const { category } = useRoutesInfos()

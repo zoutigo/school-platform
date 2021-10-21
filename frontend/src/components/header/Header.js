@@ -11,8 +11,10 @@ import Logo from './Logo'
 import { StyledIconBox } from '../elements/styled'
 import NavBloc from './NavBloc'
 import { openSmallScreenNav } from '../../redux/settings/SettingsActions'
-import { useRigths, useRoutesInfos } from '../../utils/hooks'
+
 import MainDialog from '../elements/MainDialog'
+import useRigths from '../hooks/useRigths'
+import useRoutesInfos from '../hooks/useRoutesInfos'
 
 const StyledHeader = styled('header')(() => ({
   zIndex: 10,

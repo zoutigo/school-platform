@@ -1,5 +1,5 @@
 import { Grid, styled, Collapse, TextField, withTheme } from '@material-ui/core'
-import React, { useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { useController } from 'react-hook-form'
 import { Alert } from '@material-ui/lab'

@@ -3,7 +3,7 @@ import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
 import { apiFecthEntity } from '../../../utils/api'
-import { useIsTokenValid } from '../../../utils/hooks'
+import useIsTokenValid from '../../hooks/useIsTokenValid'
 
 import Aside from './Aside'
 

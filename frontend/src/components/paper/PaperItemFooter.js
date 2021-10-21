@@ -2,19 +2,16 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useTheme, ButtonGroup, Tooltip } from '@material-ui/core'
+import { useSnackbar } from 'notistack'
 import { useDispatch, useSelector } from 'react-redux'
-import { useMutation } from 'react-query'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import EditIcon from '@material-ui/icons/Edit'
 import { StyledPaperFooter, StyledIconButton } from '../elements/styled'
-import { useUpdateMutationOptions } from '../../utils/hooks'
 import ModalValidation from '../elements/ModalValidation'
-import { setPaperMutateAlert } from '../../redux/alerts/AlertsActions'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../constants/alerts'
+import useMutate from '../hooks/useMutate'
+import MutateCircularProgress from '../elements/MutateCircularProgress'
+import getError from '../../utils/error'
 
 function PaperItemFooter({
   paperItem,
@@ -28,19 +25,17 @@ function PaperItemFooter({
   const { id: paperId } = paperItem
   const { isAllowedToChange, queryKey, poster, entityAlias } = paper
   const theme = useTheme()
-  const dispatch = useDispatch()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openUpdateModal, setOpenUpdateModal] = useState(false)
   const { Token } = useSelector((state) => state.user)
   const { URL_PREFIX } = useSelector((state) => state.settings)
   useSelector((state) => state.settings)
 
-  const { mutateAsync } = useMutation(
-    poster,
-    useUpdateMutationOptions(queryKey)
-  )
+  const { mutateAsync, isMutating } = useMutate(queryKey, poster)
 
   const mutatePaper = async () => {
+    closeSnackbar()
     try {
       await mutateAsync({
         id: paperId,
@@ -48,12 +43,10 @@ function PaperItemFooter({
         Token: Token,
         body: { entityAlias },
       }).then((response) => {
-        dispatch(setPaperMutateAlert(successAlertCollapse(response.message)))
+        enqueueSnackbar(response.message, { variant: 'success' })
       })
     } catch (err) {
-      dispatch(
-        setPaperMutateAlert(errorAlertCollapse(err.response.data.message))
-      )
+      enqueueSnackbar(getError(err), { variant: 'error' })
     }
   }
 
@@ -68,6 +61,7 @@ function PaperItemFooter({
 
   return (
     <StyledPaperFooter item container>
+      {isMutating && <MutateCircularProgress />}
       <ModalValidation
         modaltype="delete"
         open={openDeleteModal}

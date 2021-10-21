@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import AsideSubTitle from './AsideSubTitle'
 import AsideUser from './AsideUser'
 import AsideItemText from './AsideItemText'
-import { useRoutesInfos } from '../../../utils/hooks'
+import useRoutesInfos from '../../hooks/useRoutesInfos'
 
 export const StyledAsideItem = styled(Grid)(({ rubriccolors }) => ({
   textAlign: 'center',

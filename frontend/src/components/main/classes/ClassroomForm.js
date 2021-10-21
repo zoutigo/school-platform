@@ -1,26 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useSnackbar } from 'notistack'
 import { styled, Grid, useTheme } from '@material-ui/core'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useDispatch, useSelector } from 'react-redux'
-import { useMutation } from 'react-query'
+import { useSelector } from 'react-redux'
 import Title from '../../elements/Title'
-import TinyPageEditor from '../../elements/TinyPageEditor'
 import CostumButton from '../../elements/CustomButton'
-import { useRigths, useUpdateMutationOptions } from '../../../utils/hooks'
 import { apiPostEntity } from '../../../utils/api'
 import classroomSchema from '../../../schemas/classroomSchema'
-import ResizeFile from '../../../utils/resizefile'
-import InputFileControl from '../../elements/InputFileControl'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../../constants/alerts'
 import InputReactPageControl from '../../elements/InputReactPageControl'
 import InputTextControl from '../../elements/InputTextControl'
 import InputRadio from '../../elements/InputRadio'
-import { setMutateAlert } from '../../../redux/alerts/AlertsActions'
+import useRigths from '../../hooks/useRigths'
+import useMutate from '../../hooks/useMutate'
+import MutateCircularProgress from '../../elements/MutateCircularProgress'
+import getError from '../../../utils/error'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -47,15 +42,12 @@ function ClassroomForm({
   currentClassroom,
 }) {
   const theme = useTheme()
-  const dispatch = useDispatch()
+
   const { moderatorLevel } = useRigths()
   const { Token } = useSelector((state) => state.user)
   const formTitle = `Modification de classe ${currentClassroom?.name}`
-
-  const { mutateAsync } = useMutation(
-    apiPostEntity,
-    useUpdateMutationOptions(queryKey)
-  )
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostEntity)
 
   const {
     control,
@@ -72,9 +64,8 @@ function ClassroomForm({
     const options = {
       headers: { 'x-access-token': Token },
     }
-    // const finalDatas = { content, image: await ResizeFile(image[0]) }
     const finalDatas = { content: JSON.stringify(content), email }
-
+    closeSnackbar()
     try {
       await mutateAsync({
         id: currentClassroom.id,
@@ -82,13 +73,12 @@ function ClassroomForm({
         options: options,
         body: finalDatas,
       }).then((response) => {
-        dispatch(setMutateAlert(successAlertCollapse(response.message)))
+        enqueueSnackbar(response.message, { variant: 'success' })
         setShowClassroomForm(false)
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      dispatch(setMutateAlert(errorAlertCollapse(err.response.message)))
-
+      enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
   }
@@ -98,6 +88,7 @@ function ClassroomForm({
       <Grid item container justifyContent="center">
         <Title title={formTitle} textcolor="whitesmoke" />
       </Grid>
+      {isMutating && <MutateCircularProgress />}
       <Grid container className="form-fields-container">
         {moderatorLevel && (
           <InputTextControl
@@ -127,25 +118,6 @@ function ClassroomForm({
             display="block"
           />
         </StyledRadioDiv>
-
-        {/* <InputFileControl
-          control={control}
-          name="image"
-          type="file"
-          label="Image d'acceuil"
-          helperText="maximum 5Mo"
-          accept="image/jpg,image/jpeg,image/gif,image/png "
-        /> */}
-        {/* <Grid item container>
-          <Controller
-            name="summary"
-            control={control}
-            defaultValue={currentClassroom ? currentClassroom.name : null}
-            render={({ field: { onChange, value } }) => (
-              <TinyPageEditor onChange={onChange} value={value} />
-            )}
-          />
-        </Grid> */}
       </Grid>
       <Grid item container alignItems="center" justify="flex-end">
         <CostumButton

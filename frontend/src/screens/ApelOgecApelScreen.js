@@ -2,10 +2,11 @@
 import { Grid } from '@material-ui/core'
 import React, { useCallback, useState } from 'react'
 
-import { useRigths } from '../utils/hooks'
 import Page from '../components/page/Page'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
+import useRigths from '../components/hooks/useRigths'
+import useRoles from '../components/hooks/useRoles'
 
 function ApelOgecApelScreen() {
   const pageName = 'APEL'
@@ -19,10 +20,12 @@ function ApelOgecApelScreen() {
     openAlert: false,
   })
   const { moderatorLevel } = useRigths()
+  const { apelMembre } = useRoles()
+  const isAllowedToChange = moderatorLevel || apelMembre
 
   const pageParams = useCallback(
     {
-      isAllowedToChange: moderatorLevel,
+      isAllowedToChange,
       alias,
       queryKey,
       queryParams,

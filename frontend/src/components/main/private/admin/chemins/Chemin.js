@@ -1,19 +1,20 @@
 /* eslint-disable import/named */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useSnackbar } from 'notistack'
 import { Grid, Collapse, styled } from '@material-ui/core'
+import { useSelector } from 'react-redux'
 import EditIcon from '@material-ui/icons/Edit'
 import Fab from '@material-ui/core/Fab'
 import DeleteIcon from '@material-ui/icons/Delete'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import Tooltip from '@material-ui/core/Tooltip'
-import { useSelector } from 'react-redux'
-import { useMutation } from 'react-query'
 import ReactHtmlParser from 'react-html-parser'
-import { useUpdateMutationOptions } from '../../../../../utils/hooks'
 import { apiPostChemin } from '../../../../../utils/api'
-import AlertCollapse from '../../../../elements/AlertCollapse'
 import CheminForm from './CheminForm'
+import useMutate from '../../../../hooks/useMutate'
+import MutateCircularProgress from '../../../../elements/MutateCircularProgress'
+import getError from '../../../../../utils/error'
 
 const StyledDeleteFab = styled(Fab)(({ theme }) => ({
   margin: theme.spacing(1),
@@ -35,59 +36,39 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
 }))
 
 function Chemin({ chemin, queryKey, setShowAddForm }) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { alias, filepath, description, path, _id: cheminId } = chemin
   const [showImage, setShowImage] = useState(false)
   const [showEditCheminForm, setShowEditCheminForm] = useState(false)
-  const [alert, setAlert] = useState({
-    openAlert: false,
-    severity: 'error',
-    alertText: '',
-  })
 
   const { URL_PREFIX } = useSelector((state) => state.settings)
 
   const { Token } = useSelector((state) => state.user)
   useSelector((state) => state.settings)
 
-  const { mutateAsync } = useMutation(
-    apiPostChemin,
-    useUpdateMutationOptions(queryKey)
-  )
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostChemin)
 
   const mutateChemin = async () => {
     const options = {
       headers: { 'x-access-token': Token },
     }
+    closeSnackbar()
     try {
       await mutateAsync({
         id: cheminId,
         action: 'delete',
         options: options,
       }).then((response) => {
-        setAlert({
-          severity: 'success',
-          alertText: response.message,
-          openAlert: true,
-        })
+        enqueueSnackbar(response.message, { variant: 'success' })
       })
     } catch (err) {
-      setAlert({
-        openAlert: true,
-        severity: 'error',
-        alertText: err.message,
-      })
+      enqueueSnackbar(getError(err), { variant: 'error' })
     }
   }
 
   return (
     <StyledGrid item container>
-      <Grid item container>
-        <AlertCollapse
-          openAlert={alert.openAlert}
-          severity={alert.severity}
-          alerttext={alert.alertText}
-        />
-      </Grid>
+      {isMutating && <MutateCircularProgress />}
       <Grid item container xs={9}>
         <Grid item container>
           <Grid item xs={4}>

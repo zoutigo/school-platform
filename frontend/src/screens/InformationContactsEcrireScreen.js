@@ -1,27 +1,23 @@
 /* eslint-disable import/named */
 import { Grid, styled, useTheme } from '@material-ui/core'
-import { useDispatch, useSelector } from 'react-redux'
-import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import React from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation } from 'react-query'
+import { useSnackbar } from 'notistack'
 import { Link, useLocation } from 'react-router-dom'
 import Title from '../components/elements/Title'
 import TinyPageEditor from '../components/elements/TinyPageEditor'
 import InputTextControl from '../components/elements/InputTextControl'
 import suggestionSchema from '../schemas/suggestionSchema'
 import CustomButton from '../components/elements/CustomButton'
-import AlertCollapse from '../components/elements/AlertCollapse'
-import { useRigths, useUpdateMutationOptions } from '../utils/hooks'
 import LazyMessage from '../components/elements/LazyMessage'
 import InputSelectControl from '../components/elements/InputSelectControl'
 import { apiPostSuggestion } from '../utils/api'
-import {
-  errorAlertCollapse,
-  initialAlertCollapse,
-  successAlertCollapse,
-} from '../constants/alerts'
-import { setMutateAlert } from '../redux/alerts/AlertsActions'
+import useRigths from '../components/hooks/useRigths'
+import useMutate from '../components/hooks/useMutate'
+import MutateCircularProgress from '../components/elements/MutateCircularProgress'
+import getError from '../utils/error'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -38,13 +34,10 @@ const StyledPaperForm = styled('form')(() => ({
 
 function InformationContactsEcrireScreen() {
   const theme = useTheme()
-
-  const dispatch = useDispatch()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { state: ecrireState } = useLocation()
   const queryKey = ['suggestions']
   const { Token } = useSelector((state) => state.user)
-  const { mutate } = useSelector((state) => state.alerts)
-
   const { userLevel } = useRigths()
   const {
     control,
@@ -55,9 +48,9 @@ function InformationContactsEcrireScreen() {
     resolver: yupResolver(suggestionSchema),
   })
 
-  const { mutateAsync, isSuccess: mutationIsSuccessfull } = useMutation(
-    apiPostSuggestion,
-    useUpdateMutationOptions(queryKey)
+  const { mutateAsync, isMutating, mutationIsSuccessfull } = useMutate(
+    queryKey,
+    apiPostSuggestion
   )
 
   const onSubmit = async (datas) => {
@@ -73,6 +66,8 @@ function InformationContactsEcrireScreen() {
       headers: { 'x-access-token': Token },
     }
 
+    closeSnackbar()
+
     try {
       await mutateAsync({
         id: null,
@@ -80,12 +75,11 @@ function InformationContactsEcrireScreen() {
         options: options,
         body: finalDatas,
       }).then((response) => {
-        dispatch(setMutateAlert(successAlertCollapse(response.message)))
+        enqueueSnackbar(response.message, { variant: 'success' })
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      setMutateAlert(errorAlertCollapse(err.response.data.message))
-
+      enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
   }
@@ -137,19 +131,9 @@ function InformationContactsEcrireScreen() {
 
   const initial = initialTopic || otherTopic
 
-  useEffect(() => {
-    dispatch(setMutateAlert(initialAlertCollapse))
-    return () => {
-      dispatch(setMutateAlert(initialAlertCollapse))
-    }
-  }, [])
-
   return (
     <Grid container>
-      <AlertCollapse
-        {...mutate}
-        callback={() => dispatch(setMutateAlert(initialAlertCollapse))}
-      />
+      {isMutating && <MutateCircularProgress />}
       {!userLevel && (
         <LazyMessage severity="error">
           <NotTokenIsValidMessage />

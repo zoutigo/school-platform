@@ -25,11 +25,8 @@ function InputRadio({
   name,
   display,
 }) {
-  // const [value, setValue] = React.useState(defaultValue)
-
   const {
-    field,
-    fieldState: { invalid, error: formerror },
+    fieldState: { error: formerror },
   } = useController({
     name,
     control,

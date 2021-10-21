@@ -19,11 +19,12 @@ import {
   initialAlertCollapse,
   loadingAlertCollapse,
 } from '../../../constants/alerts'
-import { useRoutesInfos } from '../../../utils/hooks'
+
 import { apiFetchAlbum } from '../../../utils/api'
 import CustomButton from '../CustomButton'
 import Title from '../Title'
 import redefineAlias from '../../../utils/redefineAlias'
+import useRoutesInfos from '../../hooks/useRoutesInfos'
 
 const StyledAlbumHeaderGrid = styled(Grid)(() => ({
   marginLeft: '0.5rem',

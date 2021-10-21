@@ -6,8 +6,8 @@ import { useLocation } from 'react-router-dom'
 import { StyledNavLink, StyledTitle } from '../../elements/styled'
 import Title from '../../elements/Title'
 
-import { useRoutesInfos } from '../../../utils/hooks'
 import theme from '../../../constants/theme'
+import useRoutesInfos from '../../hooks/useRoutesInfos'
 
 const StyledTitleBloc = styled(Grid)(() => ({
   background: 'whitesmoke',

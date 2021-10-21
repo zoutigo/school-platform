@@ -1,8 +1,8 @@
 /* eslint-disable import/named */
 import React from 'react'
 import { StyledPageGrid } from '../components/elements/styled'
+import useRigths from '../components/hooks/useRigths'
 import Page from '../components/page/Page'
-import { useRigths } from '../utils/hooks'
 
 function VieScolaireHorairesFeriesScreen() {
   const pageName = 'La garderie'

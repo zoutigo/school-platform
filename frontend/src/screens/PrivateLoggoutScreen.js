@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 import returnStoreAndPersistor from '../redux/store'
-import { useRoutesInfos } from '../utils/hooks'
+import useRoutesInfos from '../components/hooks/useRoutesInfos'
 
 function PrivateLoggoutScreen() {
   const dispatch = useDispatch()

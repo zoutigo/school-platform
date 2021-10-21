@@ -4,19 +4,16 @@ import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import PropTypes from 'prop-types'
-import { useMutation } from 'react-query'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSnackbar } from 'notistack'
+import { useSelector } from 'react-redux'
 import { apiPostAlbumImages } from '../../../utils/api'
-import { useUpdateMutationOptions } from '../../../utils/hooks'
 import albumImagesSchema from '../../../schemas/albumImagesSchema'
 import Title from '../Title'
 import InputFileControl from '../InputFileControl'
 import CostumButton from '../CustomButton'
-import { setAlbumPageMutateAlert } from '../../../redux/alerts/AlertsActions'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../../constants/alerts'
+import useMutate from '../../hooks/useMutate'
+import MutateCircularProgress from '../MutateCircularProgress'
+import getError from '../../../utils/error'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -33,14 +30,9 @@ const StyledPaperForm = styled('form')(() => ({
 
 function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
   const theme = useTheme()
-
-  const dispatch = useDispatch()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
-
-  const { mutateAsync } = useMutation(
-    apiPostAlbumImages,
-    useUpdateMutationOptions(queryKey)
-  )
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostAlbumImages)
 
   const {
     control,
@@ -63,7 +55,7 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
         'x-access-token': Token,
       },
     }
-
+    closeSnackbar()
     try {
       await mutateAsync({
         id: currentAlbum.id,
@@ -73,9 +65,7 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
         Token: Token,
         entityAlias: entityAlias,
       }).then((response) => {
-        dispatch(
-          setAlbumPageMutateAlert(successAlertCollapse(response.message))
-        )
+        enqueueSnackbar(response.message, { variant: 'success' })
         setShowPage({
           imagesForm: false,
           imagesList: true,
@@ -83,9 +73,7 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      dispatch(
-        setAlbumPageMutateAlert(errorAlertCollapse(err.response.data.message))
-      )
+      enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
   }
@@ -102,6 +90,7 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
         <Grid item container justifyContent="center">
           <Title title={formTitle} textcolor="whitesmoke" />
         </Grid>
+        {isMutating && <MutateCircularProgress />}
         <Grid container className="form-fields-container">
           <InputFileControl
             control={control}

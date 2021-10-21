@@ -1,8 +1,8 @@
 /* eslint-disable import/named */
 import { Grid, styled, useTheme } from '@material-ui/core'
-import { useDispatch, useSelector } from 'react-redux'
-import { useMutation } from 'react-query'
+import { useSelector } from 'react-redux'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -11,14 +11,12 @@ import InputSmallEditorControl from '../../../../../elements/InputSmallEditorCon
 import InputTextControl from '../../../../../elements/InputTextControl'
 import Title from '../../../../../elements/Title'
 import CostumButton from '../../../../../elements/CustomButton'
-import { useUpdateMutationOptions } from '../../../../../../utils/hooks'
 import { apiPostDialog } from '../../../../../../utils/api'
 import modalSchema from '../../../../../../schemas/modalSchema'
-import { setParametersMutateAlert } from '../../../../../../redux/alerts/AlertsActions'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../../../../../constants/alerts'
+
+import useMutate from '../../../../../hooks/useMutate'
+import MutateCircularProgress from '../../../../../elements/MutateCircularProgress'
+import getError from '../../../../../../utils/error'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -44,13 +42,10 @@ function ManageDialogForm({
   currentModal,
   queryKey,
 }) {
-  const dispatch = useDispatch()
   const theme = useTheme()
   const { Token } = useSelector((state) => state.user)
-  const { mutateAsync } = useMutation(
-    apiPostDialog,
-    useUpdateMutationOptions(queryKey)
-  )
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostDialog)
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const {
     control,
     handleSubmit,
@@ -72,6 +67,8 @@ function ManageDialogForm({
       text,
     }
 
+    closeSnackbar()
+
     try {
       await mutateAsync({
         id: currentModal ? currentModal.id : null,
@@ -79,17 +76,14 @@ function ManageDialogForm({
         options: options,
         body: finalDatas,
       }).then((response) => {
-        dispatch(
-          setParametersMutateAlert(successAlertCollapse(response.message))
-        )
+        enqueueSnackbar(response.message, { variant: 'success' })
+
         setShowForm(false)
 
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      dispatch(
-        setParametersMutateAlert(errorAlertCollapse(err.response.data.message))
-      )
+      enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
   }
@@ -98,9 +92,11 @@ function ManageDialogForm({
     formAction === 'create' ? `Créer une modale` : `Modifier une modale`
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
-      <Grid item container justify="center">
+      <Grid item container justifyContent="center">
         <Title title={formTitle} textcolor="whitesmoke" />
       </Grid>
+      {isMutating && <MutateCircularProgress />}
+
       <Grid container className="form-fields-container">
         <InputTextControl
           name="title"

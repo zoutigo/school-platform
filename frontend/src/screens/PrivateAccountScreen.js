@@ -1,5 +1,5 @@
 import React from 'react'
-import { useRigths } from '../utils/hooks'
+import useRigths from '../components/hooks/useRigths'
 
 function PrivateAccountScreen() {
   const { userLevel, teacherLevel, managerLevel, adminLevel, moderatorLevel } =

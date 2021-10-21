@@ -1,8 +1,8 @@
 import React from 'react'
 import { apiFetchEvents, apiPostEvents } from '../utils/api'
-import { useRigths } from '../utils/hooks'
 import Paper from '../components/paper/Paper'
-import useRoles from '../utils/roles'
+import useRigths from '../components/hooks/useRigths'
+import useRoles from '../components/hooks/useRoles'
 
 function VieScolairePastoraleAgendaScreen() {
   const { catechiste } = useRoles()

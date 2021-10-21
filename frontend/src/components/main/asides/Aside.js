@@ -1,11 +1,12 @@
-/* eslint-disable import/named */
 import { Grid } from '@material-ui/core'
 import { styled, withTheme } from '@material-ui/styles'
 import PropTypes from 'prop-types'
-import React, { useCallback } from 'react'
-import { useSelector } from 'react-redux'
-import { useIsTokenValid, useRoutesInfos } from '../../../utils/hooks'
+import React from 'react'
+
 import randomkey from '../../../utils/randomkey'
+import useIsTokenValid from '../../hooks/useIsTokenValid'
+import useRoutesInfos from '../../hooks/useRoutesInfos'
+
 import AsideError from './AsideError'
 
 import AsideItem from './AsideItem'
@@ -34,7 +35,8 @@ function Aside({ datas, module }) {
 
   const { title, items } = datas
 
-  const itemsList = module === 'classroom' && tokenIsValid ? items : null
+  const itemsList =
+    (module === 'classroom' || module === 'apel') && tokenIsValid ? items : null
 
   if (current.state.type === 'rubric') return null
 

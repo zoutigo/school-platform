@@ -5,8 +5,9 @@ import { Redirect, Route } from 'react-router-dom'
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 
-import { useRigths, useRoutesInfos } from '../../utils/hooks'
 import routesComponents from '../../constants/routesComponents'
+import useRigths from '../hooks/useRigths'
+import useRoutesInfos from '../hooks/useRoutesInfos'
 
 function BodyBloc() {
   const { userLevel, managerLevel, moderatorLevel, adminLevel } = useRigths()

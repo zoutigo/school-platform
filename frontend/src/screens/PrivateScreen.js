@@ -1,7 +1,7 @@
 /* eslint-disable import/named */
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { useRigths } from '../utils/hooks'
+import useRigths from '../components/hooks/useRigths'
 
 function PrivateScreen() {
   const { userLevel } = useRigths()

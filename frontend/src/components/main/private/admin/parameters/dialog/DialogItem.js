@@ -4,22 +4,20 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 import { Collapse, Grid, styled } from '@material-ui/core'
 import ReactHtmlParser from 'react-html-parser'
-import { useMutation } from 'react-query'
 import EditIcon from '@material-ui/icons/Edit'
 import Fab from '@material-ui/core/Fab'
 import DeleteIcon from '@material-ui/icons/Delete'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import Tooltip from '@material-ui/core/Tooltip'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { useSnackbar } from 'notistack'
 import { apiPostDialog } from '../../../../../../utils/api'
-import { useUpdateMutationOptions } from '../../../../../../utils/hooks'
-import { setParametersMutateAlert } from '../../../../../../redux/alerts/AlertsActions'
-import {
-  errorAlertCollapse,
-  successAlertCollapse,
-} from '../../../../../../constants/alerts'
+
 import ManageDialogForm from './ManageDialogForm'
 import ConfirmationDialog from '../../../../../elements/ConfirmationDialog'
+import useMutate from '../../../../../hooks/useMutate'
+import MutateCircularProgress from '../../../../../elements/MutateCircularProgress'
+import getError from '../../../../../../utils/error'
 
 const StyledDeleteFab = styled(Fab)(({ theme }) => ({
   margin: theme.spacing(1),
@@ -35,44 +33,38 @@ const StyledViewFab = styled(Fab)(({ theme }) => ({
   background: theme.palette.info.light,
   color: 'white',
 }))
-const StyledGrid = styled(Grid)(({ theme }) => ({
-  margin: theme.spacing(1),
-  background: 'whitesmoke',
-}))
 
 function DialogItem({ dialog, queryKey }) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { text, title, startdate, enddate, id: dialogId } = dialog
   const [showText, setShowText] = useState(false)
   const [showUpdateForm, setShowUpdateForm] = useState(false)
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = useState(false)
-  const dispatch = useDispatch()
 
   const { Token } = useSelector((state) => state.user)
   useSelector((state) => state.settings)
 
-  const { mutateAsync } = useMutation(
-    apiPostDialog,
-    useUpdateMutationOptions(queryKey)
-  )
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostDialog)
 
   const mutateDialog = async () => {
     const options = {
       headers: { 'x-access-token': Token },
     }
+    closeSnackbar()
     try {
       await mutateAsync({
         id: dialogId,
         action: 'delete',
         options: options,
       }).then((response) => {
+        enqueueSnackbar(response.message, { variant: 'success' })
         setShowUpdateForm(false)
-        dispatch(
-          setParametersMutateAlert(successAlertCollapse(response.message))
-        )
+
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      dispatch(setParametersMutateAlert(errorAlertCollapse(err.message)))
+      enqueueSnackbar(getError(err), { variant: 'error' })
+      // dispatch(setParametersMutateAlert(errorAlertCollapse(err.message)))
       window.scrollTo(0, 0)
     }
   }
@@ -80,8 +72,10 @@ function DialogItem({ dialog, queryKey }) {
   const ConfirmDeleteDialogContent = () => (
     <div>Souhaitez vous vraiment supprimer cette modale ?</div>
   )
+
   return (
     <Grid container alignItems="center">
+      {isMutating && <MutateCircularProgress />}
       <ConfirmationDialog
         open={openConfirmDeleteDialog}
         title="Confirmation de suppression."

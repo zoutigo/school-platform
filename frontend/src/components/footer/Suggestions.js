@@ -1,7 +1,8 @@
 import { Typography } from '@material-ui/core'
 import React, { useCallback } from 'react'
-import { useRoutesInfos } from '../../utils/hooks'
+
 import { StyledNavLink } from '../elements/styled'
+import useRoutesInfos from '../hooks/useRoutesInfos'
 
 import FooterCard from './card/FooterCard'
 import { StyledFooterElementText } from './styles'

@@ -1,9 +1,10 @@
 /* eslint-disable import/named */
 import { useDispatch, useSelector } from 'react-redux'
+import { useSnackbar } from 'notistack'
 import { Grid, styled, useTheme } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useMutation, useQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link, useHistory } from 'react-router-dom'
 import Title from '../components/elements/Title'
@@ -12,15 +13,17 @@ import CustomButton from '../components/elements/CustomButton'
 import InputFileControl from '../components/elements/InputFileControl'
 import InputSmallEditorControl from '../components/elements/InputSmallEditorControl'
 import preinscriptionSchema from '../schemas/preinscriptionSchema'
-import { useIsTokenValid, useUpdateMutationOptions } from '../utils/hooks'
 import { apiFecthUserDatas, apiPostPreInscription } from '../utils/api'
-import AlertCollapse from '../components/elements/AlertCollapse'
 import InputSelectControl from '../components/elements/InputSelectControl'
 import { classroomsOptions } from '../constants/options'
 import InputRadio from '../components/elements/InputRadio'
 import LazyMessage from '../components/elements/LazyMessage'
 import { setLoginAlert } from '../redux/alerts/AlertsActions'
 import { initialAlertCollapse } from '../constants/alerts'
+import useIsTokenValid from '../components/hooks/useIsTokenValid'
+import useMutate from '../components/hooks/useMutate'
+import MutateCircularProgress from '../components/elements/MutateCircularProgress'
+import getError from '../utils/error'
 
 const StyledPaperForm = styled('form')(({ theme }) => ({
   width: '100%',
@@ -44,7 +47,7 @@ function InformationsInscriptionsFormulairesScreen() {
     User: { id },
   } = useSelector((state) => state.user)
   const { tokenIsValid } = useIsTokenValid()
-
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const dispatch = useDispatch()
   const theme = useTheme()
   const history = useHistory()
@@ -54,14 +57,10 @@ function InformationsInscriptionsFormulairesScreen() {
   const [addFile, setAddFile] = useState(false)
   const [addMessage, setAddMessage] = useState(false)
   const [showMutateMessage, setShowMutateMessage] = useState(false)
-  const [alert, setAlert] = useState({
-    openAlert: false,
-    severity: 'error',
-    alertText: '',
-  })
-  const { mutateAsync, isSuccess: mutationIsSuccessfull } = useMutation(
-    apiPostPreInscription,
-    useUpdateMutationOptions(queryKey)
+
+  const { mutateAsync, isMutating, mutationIsSuccessfull } = useMutate(
+    queryKey,
+    apiPostPreInscription
   )
   const {
     control,
@@ -83,6 +82,8 @@ function InformationsInscriptionsFormulairesScreen() {
       message,
     }
 
+    closeSnackbar()
+
     try {
       await mutateAsync({
         id: null,
@@ -91,30 +92,19 @@ function InformationsInscriptionsFormulairesScreen() {
         Token: Token,
       }).then((response) => {
         if (response.status === 201) {
-          setAlert({
-            openAlert: true,
-            severity: 'success',
-            alertText: response.data.message,
-          })
+          enqueueSnackbar(response.data.message, { variant: 'success' })
         }
       })
     } catch (err) {
       if (err.response.status === 498) {
-        dispatch(
-          setLoginAlert({
-            openAlert: true,
-            alertText:
-              'Il semblerait que votre jeton de connexion soit arrivé à expiration',
-            severity: 'error',
-          })
+        enqueueSnackbar(
+          'Il semblerait que votre jeton de connexion soit arrivé à expiration',
+          { variant: 'error' }
         )
         history.push('/private/identification/login')
+      } else {
+        enqueueSnackbar(getError(err), { variant: 'error' })
       }
-      setAlert({
-        openAlert: true,
-        severity: 'error',
-        alertText: err.response.message,
-      })
 
       window.scrollTo(0, 0)
     }
@@ -123,11 +113,11 @@ function InformationsInscriptionsFormulairesScreen() {
   const { data } = useQuery(userQueryKey, () => apiFecthUserDatas(id))
 
   useEffect(() => {
+    closeSnackbar()
     if (data) {
       const { phone, firstname, lastname } = data
       if (phone && firstname && lastname) {
         setUserDataCompleted(true)
-        dispatch(setLoginAlert(initialAlertCollapse))
       }
     }
     return () => {
@@ -206,10 +196,10 @@ function InformationsInscriptionsFormulairesScreen() {
       )}
       {tokenIsValid && userDataCompleted && !mutationIsSuccessfull && (
         <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
-          <AlertCollapse {...alert} />
           <Grid item container justify="center">
             <Title title={formTitle} textcolor="whitesmoke" />
           </Grid>
+          {isMutating && <MutateCircularProgress />}
           <Grid container className="form-fields-container">
             <InputSelectControl
               control={control}

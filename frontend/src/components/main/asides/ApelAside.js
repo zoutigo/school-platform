@@ -17,7 +17,7 @@ function ApelAside() {
     [APELTEAM]
   )
 
-  return <Aside datas={datas} />
+  return <Aside datas={datas} module="apel" />
 }
 
 export default ApelAside

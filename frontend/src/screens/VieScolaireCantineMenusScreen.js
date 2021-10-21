@@ -1,7 +1,7 @@
 import React from 'react'
+import useRigths from '../components/hooks/useRigths'
 import Paper from '../components/paper/Paper'
 import { apiFetchPaper, apiPostPaper } from '../utils/api'
-import { useRigths } from '../utils/hooks'
 
 function VieScolaireCantineMenusScreen() {
   const { moderatorLevel } = useRigths()

@@ -3,7 +3,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
-import CloseIcon from '@material-ui/icons/Close'
 import CancelIcon from '@material-ui/icons/Cancel'
 import BackspaceIcon from '@material-ui/icons/Backspace'
 

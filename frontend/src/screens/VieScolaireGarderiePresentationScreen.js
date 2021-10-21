@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Page from '../components/page/Page'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
-import { useRigths } from '../utils/hooks'
+import useRigths from '../components/hooks/useRigths'
 
 function VieScolaireGarderiePresentationScreen() {
   const pageName = 'presentation garderie'

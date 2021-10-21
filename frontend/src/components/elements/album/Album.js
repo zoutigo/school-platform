@@ -3,13 +3,16 @@
 /* eslint-disable import/named */
 import { Grid } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useRigths, useRoutesInfos } from '../../../utils/hooks'
+
 import AlbumForm from './AlbumForm'
 import AlbumList from './AlbumList'
 import AlbumPage from './AlbumPage'
 import CustomSimpleTooltip from '../CustomSimpleTooltip'
-import useRoles from '../../../utils/roles'
+
 import redefineAlias from '../../../utils/redefineAlias'
+import useRigths from '../../hooks/useRigths'
+import useRoutesInfos from '../../hooks/useRoutesInfos'
+import useRoles from '../../hooks/useRoles'
 
 function Album() {
   const { current, category } = useRoutesInfos()

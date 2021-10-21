@@ -3,7 +3,7 @@ import { Grid, styled, useTheme } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { StyledTitle } from '../../elements/styled'
 import Title from '../../elements/Title'
-import { useRoutesInfos } from '../../../utils/hooks'
+import useRoutesInfos from '../../hooks/useRoutesInfos'
 
 const StyledAsideGrid = styled(Grid)(() => ({
   height: '3rem',

@@ -12,12 +12,13 @@ import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { useSnackbar } from 'notistack'
-import { useRouteParams } from '../utils/hooks'
+
 import LazyMessage from '../components/elements/LazyMessage'
 import StyledForm from '../components/styled-components/StyledForm'
 import StyledNavLink from '../components/styled-components/StyledNavLink'
 import getError from '../utils/error'
 import useRegister from '../components/hooks/useRegister'
+import useRouteParams from '../components/hooks/useRouteParams'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',

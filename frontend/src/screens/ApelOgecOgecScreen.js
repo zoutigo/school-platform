@@ -2,9 +2,9 @@
 import { Grid } from '@material-ui/core'
 import React, { useCallback, useState } from 'react'
 
-import { useRigths } from '../utils/hooks'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
+import useRigths from '../components/hooks/useRigths'
 import Page from '../components/page/Page'
 
 function ApelOgecOgecScreen() {
