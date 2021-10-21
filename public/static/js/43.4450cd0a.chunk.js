@@ -1,0 +1,2 @@
+(this.webpackJsonpfrontend=this.webpackJsonpfrontend||[]).push([[43],{2992:function(e,t,a){"use strict";var n=a(35),c=a(36);Object.defineProperty(t,"__esModule",{value:!0}),t.default=void 0;var d=c(a(1)),l=(0,n(a(37)).default)(d.createElement("path",{d:"M23 18V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zM8.5 12.5l2.5 3.01L14.5 11l4.5 6H5l3.5-4.5z"}),"Panorama");t.default=l}}]);
+//# sourceMappingURL=43.4450cd0a.chunk.js.map
