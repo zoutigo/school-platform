@@ -11,7 +11,7 @@ import user from '@testing-library/user-event'
 import { render, screen, cleanup, fireEvent, waitFor } from 'test-utils'
 import * as actions from '../redux/user/UserActions'
 
-import useLogin from '../components/hooks/useLogin'
+import useMutate from '../components/hooks/useMutate'
 import LoginScreen from '../screens/LoginScreen'
 import tokenDatas from '../utils/tokenDatas'
 
@@ -21,9 +21,9 @@ const mockUseDispatch = jest.spyOn(reactRedux, 'useDispatch')
 const mockSetUserInfos = jest.spyOn(actions, 'setUserInfos')
 const mockSetUserToken = jest.spyOn(actions, 'setUserToken')
 
-jest.mock('../components/hooks/useLogin', () =>
+jest.mock('../components/hooks/useMutate', () =>
   jest.fn(() => ({
-    useLogin: jest.fn(),
+    useMutate: jest.fn(),
   }))
 )
 
@@ -74,7 +74,7 @@ describe('LoginScreen', () => {
   describe('rendering without bug', () => {
     const mutateAsync = jest.fn()
     beforeEach(() => {
-      useLogin.mockImplementation(() => {
+      useMutate.mockImplementation(() => {
         return jest.fn(() => mutateAsync)
       })
     })
@@ -112,7 +112,7 @@ describe('LoginScreen', () => {
   })
   describe('email input fonctionality', () => {
     beforeEach(() => {
-      useLogin.mockImplementation(() => ({}))
+      useMutate.mockImplementation(() => ({}))
     })
     afterEach(() => {
       cleanup()
@@ -142,7 +142,7 @@ describe('LoginScreen', () => {
   })
   describe('password input fonctionality', () => {
     beforeEach(() => {
-      useLogin.mockImplementation(() => ({}))
+      useMutate.mockImplementation(() => ({}))
     })
     afterEach(() => {
       cleanup()
@@ -176,7 +176,7 @@ describe('LoginScreen', () => {
   })
   describe('button behaviour', () => {
     beforeEach(() => {
-      useLogin.mockImplementation(() => ({}))
+      useMutate.mockImplementation(() => ({}))
       render(<LoginScreen />)
     })
     afterEach(() => {
@@ -222,7 +222,7 @@ describe('LoginScreen', () => {
     })
     it('should call the mutation', async () => {
       const mutateAsync = jest.fn()
-      useLogin.mockImplementation(() => ({ mutateAsync }))
+      useMutate.mockImplementation(() => ({ mutateAsync }))
 
       render(<LoginScreen />)
       const passwordElement = screen.getByPlaceholderText(
@@ -256,7 +256,7 @@ describe('LoginScreen', () => {
       const mutateAsync = jest.fn(() =>
         Promise.reject({ message: 'une erreur est survenue' })
       )
-      useLogin.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
 
@@ -288,7 +288,7 @@ describe('LoginScreen', () => {
     it('should call token decode when server response is success', async () => {
       mockedResponse.mockReturnValue(res1)
       const mutateAsync = jest.fn(() => Promise.resolve(mockedResponse()))
-      useLogin.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
 
@@ -326,7 +326,7 @@ describe('LoginScreen', () => {
       mockUseDispatch.mockReturnValue(mockDispatch())
       mockedResponse.mockReturnValue(res1)
       const mutateAsync = jest.fn(() => Promise.resolve(mockedResponse()))
-      useLogin.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
 
@@ -362,7 +362,7 @@ describe('LoginScreen', () => {
   })
   describe('links', () => {
     beforeEach(() => {
-      useLogin.mockImplementation(() => ({}))
+      useMutate.mockImplementation(() => ({}))
       render(<LoginScreen />)
     })
     it('should have attribute href /private/identification/register', async () => {

@@ -66,7 +66,7 @@ function CheminForm({ queryKey, formAction, chemin, setShowAddForm }) {
 
     try {
       await mutateAsync({
-        id: chemin ? chemin._id : null,
+        id: chemin ? chemin.id : null,
         action: formAction,
         options: options,
         body: finalDatas,
@@ -150,7 +150,7 @@ CheminForm.propTypes = {
   formAction: PropTypes.string.isRequired,
   setShowAddForm: PropTypes.func.isRequired,
   chemin: PropTypes.shape({
-    _id: PropTypes.string,
+    id: PropTypes.string,
     alias: PropTypes.string,
     path: PropTypes.string,
     description: PropTypes.string,

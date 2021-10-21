@@ -17,8 +17,10 @@ import LazyMessage from '../components/elements/LazyMessage'
 import StyledForm from '../components/styled-components/StyledForm'
 import StyledNavLink from '../components/styled-components/StyledNavLink'
 import getError from '../utils/error'
-import useRegister from '../components/hooks/useRegister'
 import useRouteParams from '../components/hooks/useRouteParams'
+import useMutate from '../components/hooks/useMutate'
+import MutateCircularProgress from '../components/elements/MutateCircularProgress'
+import { apiRegister } from '../utils/api'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
@@ -75,7 +77,7 @@ function RegisterScreen() {
   const message = useRouteParams('message')
   const status = useRouteParams('status')
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-
+  const queryKey = ['register']
   const [showForm, setshowForm] = useState(true)
   const formTitle = `Inscription au site de l'école`
   const submitButtonText = `Je m'inscris`
@@ -89,8 +91,7 @@ function RegisterScreen() {
   } = useForm({
     mode: 'onChange',
   })
-
-  const { mutateAsync } = useRegister()
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiRegister)
 
   const onSubmit = async (datas) => {
     closeSnackbar()
@@ -123,6 +124,7 @@ function RegisterScreen() {
           <Typography component="h2" variant="h2">
             {formTitle}
           </Typography>
+          {isMutating && <MutateCircularProgress />}
           <List>
             <ListItem>
               <Controller

@@ -5,7 +5,7 @@ import React from 'react'
 import { render, screen, cleanup, fireEvent, waitFor } from 'test-utils'
 import RegisterScreen from '../screens/RegisterScreen'
 
-import useRegister from '../components/hooks/useRegister'
+import useMutate from '../components/hooks/useMutate'
 
 jest.mock('../components/elements/LazyMessage', () => ({
   __esModule: true,
@@ -26,9 +26,9 @@ jest.mock('notistack', () => ({
   }),
 }))
 
-jest.mock('../components/hooks/useRegister', () =>
+jest.mock('../components/hooks/useMutate', () =>
   jest.fn(() => ({
-    useRegister: jest.fn(),
+    useMutate: jest.fn(),
   }))
 )
 
@@ -38,7 +38,7 @@ describe('RegisterScreen', () => {
   describe('rendering whithout bug', () => {
     afterEach(() => cleanup())
     beforeEach(() => {
-      useRegister.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
       render(<RegisterScreen />)
@@ -79,7 +79,7 @@ describe('RegisterScreen', () => {
   describe('email input fonctionality', () => {
     afterEach(() => cleanup())
     beforeEach(() => {
-      useRegister.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
       render(<RegisterScreen />)
@@ -108,7 +108,7 @@ describe('RegisterScreen', () => {
   describe('password input fonctionality', () => {
     afterEach(() => cleanup())
     beforeEach(() => {
-      useRegister.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
       render(<RegisterScreen />)
@@ -155,7 +155,7 @@ describe('RegisterScreen', () => {
   describe('passwordConfirm input fonctionality', () => {
     afterEach(() => cleanup())
     beforeEach(() => {
-      useRegister.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
       render(<RegisterScreen />)
@@ -196,7 +196,7 @@ describe('RegisterScreen', () => {
   describe('button behaviour', () => {
     afterEach(() => cleanup())
     beforeEach(() => {
-      useRegister.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
       render(<RegisterScreen />)
@@ -285,7 +285,7 @@ describe('RegisterScreen', () => {
       mutateAsync.mockImplementation(() =>
         Promise.reject({ message: 'une erreur est survenue' })
       )
-      useRegister.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
       mockEnqueue.mockReturnValue(mockedError())
@@ -331,7 +331,7 @@ describe('RegisterScreen', () => {
 
       const mockResponse = jest.fn().mockReturnValue(response)
       mutateAsync.mockImplementation(() => Promise.resolve(mockResponse()))
-      useRegister.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
 
@@ -365,7 +365,7 @@ describe('RegisterScreen', () => {
   })
   describe('bottom links', () => {
     beforeEach(() => {
-      useRegister.mockImplementation(() => ({
+      useMutate.mockImplementation(() => ({
         mutateAsync,
       }))
       render(<RegisterScreen />)
