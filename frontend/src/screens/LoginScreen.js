@@ -25,9 +25,11 @@ import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 import tokenDatas from '../utils/tokenDatas'
 import getError from '../utils/error'
 import { passwordRegex } from '../constants/regex'
-import useLogin from '../components/hooks/useLogin'
 import StyledNavLink from '../components/styled-components/StyledNavLink'
 import useRouteParams from '../components/hooks/useRouteParams'
+import useMutate from '../components/hooks/useMutate'
+import MutateCircularProgress from '../components/elements/MutateCircularProgress'
+import { apiLogin } from '../utils/api'
 
 const loginSchema = yup.object().shape({
   email: yup
@@ -48,10 +50,11 @@ function LoginScreen() {
   const history = useHistory()
   const message = useRouteParams('message')
   const status = useRouteParams('status')
+  const queryKey = ['login']
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const dispatch = useDispatch()
 
-  const { mutateAsync } = useLogin()
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiLogin)
 
   const {
     control,
@@ -92,6 +95,7 @@ function LoginScreen() {
         <Typography component="h2" variant="h2">
           Login
         </Typography>
+        {isMutating && <MutateCircularProgress />}
         <List>
           <ListItem>
             <Controller
