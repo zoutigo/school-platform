@@ -31,18 +31,42 @@ const today = new Date().getTime()
 module.exports.postUpdatePages = async (req, res, next) => {
   const errors = []
 
-  pagesDatas.forEach(async (page) => {
-    try {
-      const newPage = await PageP.create({
-        title: page.title,
-        alias: page.alias,
-        content: pageRawContent,
-      })
-      if (newPage) console.log(`${page.title} have been created`)
-    } catch (err) {
-      errors.push(err)
+  // pagesDatas.forEach(async (page) => {
+  //   try {
+  //     const newPage = await PageP.create({
+  //       title: page.title,
+  //       alias: page.alias,
+  //       content: pageRawContent,
+  //     })
+  //     if (newPage) console.log(`${page.title} have been created`)
+  //   } catch (err) {
+  //     errors.push(err)
+  //   }
+  // })
+
+  try {
+    const contactPage = await PageP.create({
+      title: 'contacts',
+      alias: 'contacts',
+      content: JSON.stringify(pageRawContent),
+    })
+    const administrationPage = await PageP.create({
+      title: 'administration',
+      alias: 'administration',
+      content: JSON.stringify(pageRawContent),
+    })
+    const accountPage = await PageP.create({
+      title: 'account',
+      alias: 'account',
+      content: JSON.stringify(pageRawContent),
+    })
+
+    if (contactPage && administrationPage && accountPage) {
+      console.log('les trois pages ont été crées')
     }
-  })
+  } catch (err) {
+    errors.push(err)
+  }
 
   if (errors.length > 0) {
     // return next(errors.join())
@@ -52,7 +76,7 @@ module.exports.postUpdatePages = async (req, res, next) => {
     console.log('pages crées:', createdPages)
   }
 
-  // return res.status(200).send({ message: 'updates pages successfull' })
+  return res.status(200).send({ message: 'updates pages successfull' })
 }
 
 module.exports.postUpdateEntities = async (req, res, next) => {
