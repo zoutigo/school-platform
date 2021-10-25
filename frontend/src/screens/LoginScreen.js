@@ -23,7 +23,7 @@ import StyledForm from '../components/styled-components/StyledForm'
 import { setUserInfos, setUserToken } from '../redux/user/UserActions'
 
 import tokenDatas from '../utils/tokenDatas'
-import getError from '../utils/error'
+import getError from '../utils/getError'
 import { passwordRegex } from '../constants/regex'
 import StyledNavLink from '../components/styled-components/StyledNavLink'
 import useRouteParams from '../components/hooks/useRouteParams'

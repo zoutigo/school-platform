@@ -1,12 +1,10 @@
 /* eslint-disable import/named */
 import { Grid, styled, useTheme } from '@material-ui/core'
-import React, { useCallback } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 import { StyledNavLink, StyledTitle } from '../../elements/styled'
 import Title from '../../elements/Title'
-
-import theme from '../../../constants/theme'
 import useRoutesInfos from '../../hooks/useRoutesInfos'
 
 const StyledTitleBloc = styled(Grid)(() => ({

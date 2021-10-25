@@ -16,7 +16,8 @@ import modalSchema from '../../../../../../schemas/modalSchema'
 
 import useMutate from '../../../../../hooks/useMutate'
 import MutateCircularProgress from '../../../../../elements/MutateCircularProgress'
-import getError from '../../../../../../utils/error'
+import getError from '../../../../../../utils/getError'
+import getResponse from '../../../../../../utils/getResponse'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -76,10 +77,8 @@ function ManageDialogForm({
         options: options,
         body: finalDatas,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
-
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
         setShowForm(false)
-
         window.scrollTo(0, 0)
       })
     } catch (err) {

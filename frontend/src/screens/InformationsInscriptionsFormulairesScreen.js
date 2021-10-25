@@ -18,12 +18,12 @@ import InputSelectControl from '../components/elements/InputSelectControl'
 import { classroomsOptions } from '../constants/options'
 import InputRadio from '../components/elements/InputRadio'
 import LazyMessage from '../components/elements/LazyMessage'
-import { setLoginAlert } from '../redux/alerts/AlertsActions'
-import { initialAlertCollapse } from '../constants/alerts'
+
 import useIsTokenValid from '../components/hooks/useIsTokenValid'
 import useMutate from '../components/hooks/useMutate'
 import MutateCircularProgress from '../components/elements/MutateCircularProgress'
-import getError from '../utils/error'
+import getError from '../utils/getError'
+import getResponse from '../utils/getResponse'
 
 const StyledPaperForm = styled('form')(({ theme }) => ({
   width: '100%',
@@ -48,7 +48,7 @@ function InformationsInscriptionsFormulairesScreen() {
   } = useSelector((state) => state.user)
   const { tokenIsValid } = useIsTokenValid()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  const dispatch = useDispatch()
+
   const theme = useTheme()
   const history = useHistory()
   const userQueryKey = [`datas-${id}`]
@@ -92,7 +92,7 @@ function InformationsInscriptionsFormulairesScreen() {
         Token: Token,
       }).then((response) => {
         if (response.status === 201) {
-          enqueueSnackbar(response.data.message, { variant: 'success' })
+          enqueueSnackbar(getResponse(response), { variant: 'success' })
         }
       })
     } catch (err) {

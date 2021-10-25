@@ -15,7 +15,8 @@ import InputRadio from '../../elements/InputRadio'
 import useRigths from '../../hooks/useRigths'
 import useMutate from '../../hooks/useMutate'
 import MutateCircularProgress from '../../elements/MutateCircularProgress'
-import getError from '../../../utils/error'
+import getError from '../../../utils/getError'
+import getResponse from '../../../utils/getResponse'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -73,7 +74,7 @@ function ClassroomForm({
         options: options,
         body: finalDatas,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
         setShowClassroomForm(false)
         window.scrollTo(0, 0)
       })

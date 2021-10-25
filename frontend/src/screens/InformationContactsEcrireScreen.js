@@ -17,7 +17,8 @@ import { apiPostSuggestion } from '../utils/api'
 import useRigths from '../components/hooks/useRigths'
 import useMutate from '../components/hooks/useMutate'
 import MutateCircularProgress from '../components/elements/MutateCircularProgress'
-import getError from '../utils/error'
+import getError from '../utils/getError'
+import getResponse from '../utils/getResponse'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -75,7 +76,7 @@ function InformationContactsEcrireScreen() {
         options: options,
         body: finalDatas,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
         window.scrollTo(0, 0)
       })
     } catch (err) {

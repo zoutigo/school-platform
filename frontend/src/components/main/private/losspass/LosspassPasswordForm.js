@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { styled, useTheme } from '@material-ui/styles'
 import { Grid } from '@material-ui/core'
-import { useDispatch } from 'react-redux'
 import { useSnackbar } from 'notistack'
 import { apiPostLosspass } from '../../../../utils/api'
 import { lossPassPasswordSchema } from '../../../../schemas/losspassSchema'
@@ -15,7 +14,8 @@ import Title from '../../../elements/Title'
 import InputTextControl from '../../../elements/InputTextControl'
 import useMutate from '../../../hooks/useMutate'
 import MutateCircularProgress from '../../../elements/MutateCircularProgress'
-import getError from '../../../../utils/error'
+import getError from '../../../../utils/getError'
+import getResponse from '../../../../utils/getResponse'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
@@ -53,6 +53,7 @@ function LosspassPasswordForm({ setPasswordSent, token }) {
         body: finalDatas,
       }).then((response) => {
         if (response.status === 200) {
+          enqueueSnackbar(getResponse(response), { variant: 'success' })
           enqueueSnackbar(response.data.message, { variant: 'success' })
           setPasswordSent(true)
         }

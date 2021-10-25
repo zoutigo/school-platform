@@ -10,13 +10,11 @@ import {
 
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-
 import { useSnackbar } from 'notistack'
-
 import LazyMessage from '../components/elements/LazyMessage'
 import StyledForm from '../components/styled-components/StyledForm'
 import StyledNavLink from '../components/styled-components/StyledNavLink'
-import getError from '../utils/error'
+import getError from '../utils/getError'
 import useRouteParams from '../components/hooks/useRouteParams'
 import useMutate from '../components/hooks/useMutate'
 import MutateCircularProgress from '../components/elements/MutateCircularProgress'

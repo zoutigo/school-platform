@@ -14,7 +14,8 @@ import { apiPostPage } from '../../utils/api'
 import InputReactPageControl from '../elements/InputReactPageControl'
 import useMutate from '../hooks/useMutate'
 import MutateCircularProgress from '../elements/MutateCircularProgress'
-import getError from '../../utils/error'
+import getError from '../../utils/getError'
+import getResponse from '../../utils/getResponse'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -61,7 +62,7 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
         options: options,
         body: finalDatas,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
         setShowEditToolTip(true)
         setShowPageForm(false)
         window.scrollTo(0, 0)

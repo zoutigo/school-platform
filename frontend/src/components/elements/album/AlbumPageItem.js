@@ -7,7 +7,8 @@ import { Button, styled } from '@material-ui/core'
 import { apiPostAlbumImages } from '../../../utils/api'
 import useMutate from '../../hooks/useMutate'
 import MutateCircularProgress from '../MutateCircularProgress'
-import getError from '../../../utils/error'
+import getError from '../../../utils/getError'
+import getResponse from '../../../utils/getResponse'
 
 const StyledDeleteButton = styled(Button)(({ theme }) => ({
   background: theme.palette.warning.main,
@@ -47,7 +48,7 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
         Token: Token,
         filepath: image.filepath,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
         setShowImage(false)
         setShowButton(false)
         setShowConfirmButton(false)

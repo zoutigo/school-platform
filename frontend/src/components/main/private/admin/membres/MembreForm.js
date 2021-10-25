@@ -12,16 +12,16 @@ import { Controller, useForm } from 'react-hook-form'
 
 import { styled } from '@material-ui/styles'
 
-import { Grid, Typography, Collapse } from '@material-ui/core'
-import InputSelectMultiControl from '../../../../elements/InputSelectMultiControl'
+import { Grid, Collapse } from '@material-ui/core'
 import useMutate from '../../../../hooks/useMutate'
 import { apiFetchRoles, apiUpdateUser } from '../../../../../utils/api'
 import { membreUserSchema } from '../../../../../schemas/membreSchema'
 import StyledBasicButton from '../../../../styled-components/StyledBasicButton'
 import useFetch from '../../../../hooks/useFetch'
 import AlertMessage from '../../../../elements/AlertMessage'
-import getError from '../../../../../utils/error'
+import getError from '../../../../../utils/getError'
 import customStyles from '../../../../../constants/selectMultiCostumStyles'
+import getResponse from '../../../../../utils/getResponse'
 
 const StyledForm = styled('form')(() => ({
   width: '100%',
@@ -97,6 +97,7 @@ function MembreForm({ setShowMembreForm, user, queryKey }) {
         token: Token,
       }).then((response) => {
         if (response.status === 200) {
+          enqueueSnackbar(getResponse(response), { variant: 'success' })
           enqueueSnackbar(response.data.message, { variant: 'success' })
           setValue('roles', [])
           setShowMembreForm(false)

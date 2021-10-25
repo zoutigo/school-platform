@@ -18,7 +18,8 @@ import { apiPostAlbum } from '../../../utils/api'
 import CustomButton from '../CustomButton'
 import useMutate from '../../hooks/useMutate'
 import MutateCircularProgress from '../MutateCircularProgress'
-import getError from '../../../utils/error'
+import getError from '../../../utils/getError'
+import getResponse from '../../../utils/getResponse'
 
 const StyledCard = styled(Card)(({ theme }) => ({
   margin: '1rem auto',
@@ -95,7 +96,7 @@ function AlbumCard({
         Token,
         entityAlias,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
         setShowDeleteConfirm(false)
       })
     } catch (err) {

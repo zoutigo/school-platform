@@ -14,7 +14,8 @@ import { apiPostChemin } from '../../../../../utils/api'
 import CheminForm from './CheminForm'
 import useMutate from '../../../../hooks/useMutate'
 import MutateCircularProgress from '../../../../elements/MutateCircularProgress'
-import getError from '../../../../../utils/error'
+import getError from '../../../../../utils/getError'
+import getResponse from '../../../../../utils/getResponse'
 
 const StyledDeleteFab = styled(Fab)(({ theme }) => ({
   margin: theme.spacing(1),
@@ -59,7 +60,7 @@ function Chemin({ chemin, queryKey, setShowAddForm }) {
         action: 'delete',
         options: options,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
       })
     } catch (err) {
       enqueueSnackbar(getError(err), { variant: 'error' })

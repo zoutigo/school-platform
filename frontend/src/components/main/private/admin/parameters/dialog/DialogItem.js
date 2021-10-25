@@ -17,7 +17,8 @@ import ManageDialogForm from './ManageDialogForm'
 import ConfirmationDialog from '../../../../../elements/ConfirmationDialog'
 import useMutate from '../../../../../hooks/useMutate'
 import MutateCircularProgress from '../../../../../elements/MutateCircularProgress'
-import getError from '../../../../../../utils/error'
+import getError from '../../../../../../utils/getError'
+import getResponse from '../../../../../../utils/getResponse'
 
 const StyledDeleteFab = styled(Fab)(({ theme }) => ({
   margin: theme.spacing(1),
@@ -57,7 +58,7 @@ function DialogItem({ dialog, queryKey }) {
         action: 'delete',
         options: options,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
         setShowUpdateForm(false)
 
         window.scrollTo(0, 0)

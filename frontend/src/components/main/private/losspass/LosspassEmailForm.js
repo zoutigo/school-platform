@@ -14,7 +14,8 @@ import InputTextControl from '../../../elements/InputTextControl'
 import CustomButton from '../../../elements/CustomButton'
 import useMutate from '../../../hooks/useMutate'
 import MutateCircularProgress from '../../../elements/MutateCircularProgress'
-import getError from '../../../../utils/error'
+import getError from '../../../../utils/getError'
+import getResponse from '../../../../utils/getResponse'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
@@ -49,6 +50,7 @@ function LosspassEmailForm({ setEmailSent }) {
         body: finalDatas,
       }).then((response) => {
         if (response.status === 200) {
+          enqueueSnackbar(getResponse(response), { variant: 'success' })
           enqueueSnackbar(response.data.message, { variant: 'success' })
           setEmailSent(true)
         }

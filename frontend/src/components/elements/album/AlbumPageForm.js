@@ -13,7 +13,8 @@ import InputFileControl from '../InputFileControl'
 import CostumButton from '../CustomButton'
 import useMutate from '../../hooks/useMutate'
 import MutateCircularProgress from '../MutateCircularProgress'
-import getError from '../../../utils/error'
+import getError from '../../../utils/getError'
+import getResponse from '../../../utils/getResponse'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -65,7 +66,7 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
         Token: Token,
         entityAlias: entityAlias,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
         setShowPage({
           imagesForm: false,
           imagesList: true,

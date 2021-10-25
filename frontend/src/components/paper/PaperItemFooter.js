@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useTheme, ButtonGroup, Tooltip } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import EditIcon from '@material-ui/icons/Edit'
@@ -11,7 +11,8 @@ import { StyledPaperFooter, StyledIconButton } from '../elements/styled'
 import ModalValidation from '../elements/ModalValidation'
 import useMutate from '../hooks/useMutate'
 import MutateCircularProgress from '../elements/MutateCircularProgress'
-import getError from '../../utils/error'
+import getError from '../../utils/getError'
+import getResponse from '../../utils/getResponse'
 
 function PaperItemFooter({
   paperItem,
@@ -43,7 +44,7 @@ function PaperItemFooter({
         Token: Token,
         body: { entityAlias },
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
       })
     } catch (err) {
       enqueueSnackbar(getError(err), { variant: 'error' })
@@ -142,11 +143,11 @@ PaperItemFooter.propTypes = {
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.func.isRequired,
   paperItem: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.number,
     text: PropTypes.string,
     title: PropTypes.string,
     entity: PropTypes.shape({
-      id: PropTypes.string,
+      id: PropTypes.number,
     }),
     createdat: PropTypes.number,
   }).isRequired,

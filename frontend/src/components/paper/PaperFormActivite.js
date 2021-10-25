@@ -16,7 +16,8 @@ import InputReactPageControl from '../elements/InputReactPageControl'
 import InputRadio from '../elements/InputRadio'
 import MutateCircularProgress from '../elements/MutateCircularProgress'
 import useMutate from '../hooks/useMutate'
-import getError from '../../utils/error'
+import getError from '../../utils/getError'
+import getResponse from '../../utils/getResponse'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -70,7 +71,7 @@ function PaperFormActivite({
         body: finalDatas,
         Token: Token,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
         handleBack()
       })
     } catch (err) {
@@ -173,12 +174,12 @@ PaperFormActivite.propTypes = {
   }).isRequired,
   formAction: PropTypes.string.isRequired,
   currentDocument: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.number,
     content: PropTypes.string,
     isPrivate: PropTypes.bool,
     title: PropTypes.string,
     entity: PropTypes.shape({
-      id: PropTypes.string,
+      id: PropTypes.number,
     }),
     createdat: PropTypes.number,
   }),

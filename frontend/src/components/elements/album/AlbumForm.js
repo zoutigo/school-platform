@@ -8,7 +8,8 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import albumSchema from '../../../schemas/albumSchema'
 import { apiPostAlbum } from '../../../utils/api'
-import getError from '../../../utils/error'
+import getError from '../../../utils/getError'
+import getResponse from '../../../utils/getResponse'
 import useMutate from '../../hooks/useMutate'
 import CostumButton from '../CustomButton'
 import InputFileControl from '../InputFileControl'
@@ -84,7 +85,7 @@ function AlbumForm({
         Token: Token,
         entityAlias: entityAlias,
       }).then((response) => {
-        enqueueSnackbar(response.message, { variant: 'success' })
+        enqueueSnackbar(getResponse(response), { variant: 'success' })
         setShow({
           page: false,
           form: false,

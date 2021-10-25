@@ -29,7 +29,8 @@ import {
 } from '../../../../../constants/options'
 import useMutate from '../../../../hooks/useMutate'
 import MutateCircularProgress from '../../../../elements/MutateCircularProgress'
-import getError from '../../../../../utils/error'
+import getError from '../../../../../utils/getError'
+import getResponse from '../../../../../utils/getResponse'
 
 function PersoDataForm({ setForm, setToggle, form, data }) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -119,7 +120,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
           const { newToken, newDatas } = tokenDatas(response)
           dispatch(setUserInfos(newDatas))
           dispatch(setUserToken(newToken))
-          enqueueSnackbar(response.data.message, { variant: 'success' })
+          enqueueSnackbar(getResponse(response), { variant: 'success' })
 
           setToggle('list')
           setForm({
