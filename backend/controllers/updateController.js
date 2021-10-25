@@ -62,7 +62,7 @@ module.exports.postUpdatePages = async (req, res, next) => {
     })
 
     if (contactPage && administrationPage && accountPage) {
-      console.log('les trois pages ont été crées')
+      console.log('les trois pages ont été crées recemment')
     }
   } catch (err) {
     errors.push(err)
