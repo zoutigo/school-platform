@@ -13,7 +13,7 @@ const {
 const { tokenVerify } = require('../utils/tokenverify')
 
 // Post pages updates
-// router.post('/pages', tokenVerify, postUpdatePages)
+router.post('/pages', tokenVerify, postUpdatePages)
 
 // Post pages updates
 // router.post('/entities', postUpdateEntities)

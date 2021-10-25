@@ -1,18 +1,28 @@
 import React from 'react'
+import { StyledPageGrid } from '../components/elements/styled'
 import useRigths from '../components/hooks/useRigths'
+import Page from '../components/page/Page'
 
 function PrivateAccountScreen() {
-  const { userLevel, teacherLevel, managerLevel, adminLevel, moderatorLevel } =
-    useRigths()
+  const pageName = 'Mon Compte'
+  const alias = `account`
+  const queryKey = [pageName, `page-${alias}`]
+  const queryParams = `alias=${alias}`
 
+  const { moderatorLevel } = useRigths()
+  const isAllowedToChange = moderatorLevel
+
+  const pageParams = {
+    alias,
+    queryKey,
+    queryParams,
+    pageName,
+    isAllowedToChange,
+  }
   return (
-    <div>
-      {userLevel && <div>User</div>}
-      {teacherLevel && <div>Teatcher</div>}
-      {managerLevel && <div>Manager</div>}
-      {moderatorLevel && <div>Moderator</div>}
-      {adminLevel && <div>Admin</div>}
-    </div>
+    <StyledPageGrid container>
+      <Page pageParams={pageParams} />
+    </StyledPageGrid>
   )
 }
 
