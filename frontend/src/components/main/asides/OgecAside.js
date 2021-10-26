@@ -17,7 +17,7 @@ function OgecAside() {
     [OGECTEAM]
   )
 
-  return <Aside datas={datas} />
+  return <Aside datas={datas} module="ogec" />
 }
 
 export default OgecAside

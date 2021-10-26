@@ -36,7 +36,10 @@ function Aside({ datas, module }) {
   const { title, items } = datas
 
   const itemsList =
-    (module === 'classroom' || module === 'apel') && tokenIsValid ? items : null
+    (module === 'classroom' || module === 'apel' || module === 'ogec') &&
+    tokenIsValid
+      ? items
+      : null
 
   if (current.state.type === 'rubric') return null
 

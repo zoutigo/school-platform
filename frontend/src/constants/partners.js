@@ -8,7 +8,7 @@ const PARTNERS = [
     link: 'https://ec38.org/',
   },
   {
-    name: 'Le federation des OGEC',
+    name: 'La Féderation des OGEC',
     link: 'https://www.fnogec.org/',
   },
 ]

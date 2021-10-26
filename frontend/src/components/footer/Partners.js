@@ -1,7 +1,6 @@
 import { Link, Typography } from '@material-ui/core'
 import React from 'react'
 import PARTNERS from '../../constants/partners'
-
 import FooterCard from './card/FooterCard'
 import { StyledFooterElementText } from './styles'
 
