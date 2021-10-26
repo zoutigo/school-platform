@@ -40,7 +40,7 @@ module.exports.getPapers = async (req, res, next) => {
         },
         FileP,
       ],
-      sort: ['createdAt', 'DESC'],
+      sort: ['createdAt', 'ASC'],
       limit: 10,
     })
 

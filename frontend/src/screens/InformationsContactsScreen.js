@@ -8,7 +8,6 @@ function InformationsContactsScreen() {
   const alias = `account`
   const queryKey = [pageName, `page-${alias}`]
   const queryParams = `alias=${alias}`
-
   const { moderatorLevel } = useRigths()
   const isAllowedToChange = moderatorLevel
 
