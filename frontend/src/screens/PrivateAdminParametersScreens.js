@@ -52,9 +52,9 @@ function PrivateAdminParametersScreens() {
       </Grid>
       <Grid item container>
         {showParams.dialog && <ManageDialog setShowParams={setShowParams} />}
-        {/* {showParams.parameters && (
+        {showParams.parameters && (
           <ManageParams setShowparams={setShowParams} />
-        )} */}
+        )}
       </Grid>
     </StyledGrid>
   )

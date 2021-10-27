@@ -5,27 +5,12 @@ import { Grid, Collapse, Tooltip, styled, Fab } from '@material-ui/core'
 import ManageDialogList from './ManageDialogList'
 import ManageDialogForm from './ManageDialogForm'
 import Title from '../../../../../elements/Title'
+import StyledParametresGrid from '../../../../../styled-components/StyledPrametresGrid'
 
 const StyledDeleteFab = styled(Fab)(({ theme }) => ({
   margin: theme.spacing(1),
   color: theme.palette.secondary.main,
   background: 'white',
-}))
-
-const StyledGrid = styled(Grid)(({ theme }) => ({
-  border: `solid 1px ${theme.palette.secondary.main}`,
-  padding: '0.5rem',
-  borderRadius: '5px',
-  '& >:first-child': {
-    background: theme.palette.secondary.light,
-    '& .title': {
-      cursor: 'pointer',
-      padding: '0px 0.5rem',
-      '& :hover': {
-        opacity: '0.2',
-      },
-    },
-  },
 }))
 
 function ManageDialog({ setShowParams }) {
@@ -34,8 +19,8 @@ function ManageDialog({ setShowParams }) {
   const queryKey = ['dialogs']
 
   return (
-    <StyledGrid item container>
-      <Grid item container justify="space-between">
+    <StyledParametresGrid item container>
+      <Grid item container justifyContent="space-between">
         <Grid
           item
           xs={11}
@@ -74,7 +59,7 @@ function ManageDialog({ setShowParams }) {
           </Grid>
         )}
       </Collapse>
-    </StyledGrid>
+    </StyledParametresGrid>
   )
 }
 
