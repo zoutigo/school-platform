@@ -168,5 +168,22 @@ describe('PageForm', () => {
       ).toBeInTheDocument()
     })
   })
-  it.todo('should render without crashing')
+  it.skip('should render typed text', async () => {
+    render(
+      <PageForm
+        page={page}
+        pageParams={pageParams}
+        setShowPageForm={setShowPageForm}
+        setShowEditToolTip={setShowEditToolTip}
+      />
+    )
+
+    fireEvent.change(screen.getByTestId('page-editor'), {
+      target: { value: 'ceci est un test relatif' },
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText(/ceci est un test relatif/i)).toBeInTheDocument()
+    })
+  })
 })

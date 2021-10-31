@@ -35,7 +35,7 @@ const StyledPaperForm = styled('form')(() => ({
 }))
 
 function PageForm({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
-  const { pageName, queryKey, isAllowedToChange, type } = pageParams
+  const { pageName, queryKey, type } = pageParams
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
   const formTitle = `Modification de la page ${pageName}`
@@ -72,6 +72,7 @@ function PageForm({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
         window.scrollTo(0, 0)
       })
     } catch (err) {
+      console.log('err', err)
       enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }
@@ -124,16 +125,17 @@ function PageForm({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
             defaultValue={page ? JSON.parse(page.content) : null}
             rules={{
               required: 'il veillez ajouter un texte',
-              validate: (value) => {
-                const datas = getTextContents(value, {
-                  cellPlugins,
-                  lang: 'fr',
-                })
-                console.log(datas)
-              },
+              // validate: (value) => {
+              //   const datas = getTextContents(value, {
+              //     cellPlugins,
+              //     lang: 'fr',
+              //   })
+              //   console.log(value)
+              // },
             }}
             render={({ field }) => (
               <Editor
+                data-testid="page-editor"
                 {...field}
                 cellPlugins={cellPlugins}
                 cellSpacing={cellSpacing}
