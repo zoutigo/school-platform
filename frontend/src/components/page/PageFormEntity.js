@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { styled, Grid, useTheme } from '@material-ui/core'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useSelector } from 'react-redux'
@@ -10,7 +10,7 @@ import { Redirect } from 'react-router-dom'
 import Title from '../elements/Title'
 import pageSchema from '../../schemas/pageSchema'
 import CostumButton from '../elements/CustomButton'
-import { apiPostPage } from '../../utils/api'
+import { apiPostEntity } from '../../utils/api'
 import InputReactPageControl from '../elements/InputReactPageControl'
 import useMutate from '../hooks/useMutate'
 import MutateCircularProgress from '../elements/MutateCircularProgress'
@@ -30,14 +30,18 @@ const StyledPaperForm = styled('form')(() => ({
   },
 }))
 
-function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
+function PageFormEntity({
+  entity,
+  pageParams,
+  setShowPageForm,
+  setShowEditToolTip,
+}) {
   const { pageName, queryKey, isAllowedToChange } = pageParams
   const theme = useTheme()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
   const formTitle = `Modification de la page ${pageName}`
-
-  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostPage)
+  const { mutateAsync, isMutating } = useMutate(queryKey, apiPostEntity)
 
   const {
     control,
@@ -54,10 +58,11 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
       headers: { 'x-access-token': Token },
     }
     const finalDatas = { content: JSON.stringify(content) }
+
     closeSnackbar()
     try {
       await mutateAsync({
-        id: page ? page.id : null,
+        id: entity ? entity.id : null,
         action: 'update',
         options: options,
         body: finalDatas,
@@ -91,7 +96,7 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
         <InputReactPageControl
           control={control}
           name="content"
-          initialValue={page ? page.content : null}
+          initialValue={entity ? entity.content : null}
           label="Contenu de la page"
         />
       </Grid>
@@ -109,7 +114,7 @@ function PageForms({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
   )
 }
 
-PageForms.propTypes = {
+PageFormEntity.propTypes = {
   setShowPageForm: PropTypes.func.isRequired,
   setShowEditToolTip: PropTypes.func.isRequired,
   pageParams: PropTypes.exact({
@@ -119,10 +124,10 @@ PageForms.propTypes = {
     pageName: PropTypes.string.isRequired,
     isAllowedToChange: PropTypes.bool.isRequired,
   }).isRequired,
-  page: PropTypes.shape({
+  entity: PropTypes.shape({
     id: PropTypes.number.isRequired,
     content: PropTypes.string.isRequired,
   }).isRequired,
 }
 
-export default PageForms
+export default PageFormEntity

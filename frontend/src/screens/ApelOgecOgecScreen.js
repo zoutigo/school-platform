@@ -1,50 +1,35 @@
 /* eslint-disable import/named */
-import { Grid } from '@material-ui/core'
-import React, { useCallback, useState } from 'react'
-
-import AlertCollapse from '../components/elements/AlertCollapse'
+import React, { useCallback } from 'react'
 import { StyledPageGrid } from '../components/elements/styled'
 import useRigths from '../components/hooks/useRigths'
+import useRoles from '../components/hooks/useRoles'
 import Page from '../components/page/Page'
 
 function ApelOgecOgecScreen() {
   const pageName = 'OGEC'
-  const alias = `apel-ogec-ogec`
+  const alias = `ogec`
   const queryKey = [pageName, `page-${alias}`]
   const queryParams = `alias=${alias}`
 
-  const [topAlert, setTopAlert] = useState({
-    severity: '',
-    alertText: '',
-    openAlert: false,
-  })
-
   const { moderatorLevel } = useRigths()
+  const { ogecMembre } = useRoles()
+  const isAllowedToChange = moderatorLevel || ogecMembre
 
   const pageParams = useCallback(
     {
-      isAllowedToChange: moderatorLevel,
+      isAllowedToChange,
       alias,
       queryKey,
       queryParams,
       pageName,
-      setTopAlert,
+      type: 'entity',
+      initialFormState: false,
     },
     []
   )
 
   return (
     <StyledPageGrid container>
-      {topAlert.openAlert && (
-        <Grid item container>
-          <AlertCollapse
-            alertText={topAlert.alertText}
-            openAlert
-            severity={topAlert.severity}
-            callback={setTopAlert}
-          />
-        </Grid>
-      )}
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

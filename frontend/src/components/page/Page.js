@@ -1,59 +1,41 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable import/named */
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Grid } from '@material-ui/core'
-
-import PageForms from './PageForms'
 import ToggleToolTip from '../elements/ToggleToolTip'
-import AlertCollapse from '../elements/AlertCollapse'
-import {
-  setPageFetchAlert,
-  setPageMutateAlert,
-} from '../../redux/alerts/AlertsActions'
-import { initialAlertCollapse } from '../../constants/alerts'
 import PageList from './PageList'
+import PageListEntity from './PageListEntity'
+import PageFormEntity from './PageFormEntity'
+import PageForm from './PageForm'
 
 function Page({ pageParams }) {
-  const dispatch = useDispatch()
-  const [showPageForm, setShowPageForm] = useState(false)
   const [page, setPage] = useState('')
-  const { pageFetch, pageMutate } = useSelector((state) => state.alerts)
-
+  const [entity, setEntity] = useState('')
   const [showEditToolTip, setShowEditToolTip] = useState(true)
 
-  const { queryKey, queryParams, isAllowedToChange } = pageParams
-
-  useEffect(() => {
-    return () => {
-      dispatch(setPageFetchAlert(initialAlertCollapse))
-      dispatch(setPageMutateAlert(initialAlertCollapse))
-    }
-  }, [])
-
+  if (!pageParams) return null
+  const { isAllowedToChange, initialFormState } = pageParams
+  const [showPageForm, setShowPageForm] = useState(initialFormState)
   return (
-    <Grid container>
+    <Grid container data-testid="page">
       <Grid item container>
-        <AlertCollapse
-          {...pageFetch}
-          callback={() => dispatch(setPageFetchAlert(initialAlertCollapse))}
-        />
-        <AlertCollapse
-          {...pageMutate}
-          callback={() => dispatch(setPageMutateAlert(initialAlertCollapse))}
-        />
-      </Grid>
-      <Grid item container>
-        {!showPageForm && (
-          <PageList
-            queryKey={queryKey}
-            queryParams={queryParams}
-            setPage={setPage}
+        {!showPageForm && pageParams.type === 'entity' && (
+          <PageListEntity pageParams={pageParams} setEntity={setEntity} />
+        )}
+        {!showPageForm && pageParams.type === 'page' && (
+          <PageList pageParams={pageParams} setPage={setPage} />
+        )}
+        {isAllowedToChange && showPageForm && pageParams.type === 'entity' && (
+          <PageFormEntity
+            entity={entity}
+            setShowPageForm={setShowPageForm}
+            setShowEditToolTip={setShowEditToolTip}
+            pageParams={pageParams}
           />
         )}
-        {showPageForm && (
-          <PageForms
+        {isAllowedToChange && showPageForm && pageParams.type === 'page' && (
+          <PageForm
             page={page}
             setShowPageForm={setShowPageForm}
             setShowEditToolTip={setShowEditToolTip}
@@ -76,6 +58,18 @@ function Page({ pageParams }) {
   )
 }
 
+Page.defaultProps = {
+  pageParams: {
+    alias: 'fake',
+    pageName: 'fake',
+    queryKey: ['fake'],
+    queryParams: 'fake',
+    isAllowedToChange: false,
+    type: 'page',
+    initialFormState: false,
+  },
+}
+
 Page.propTypes = {
   pageParams: PropTypes.shape({
     alias: PropTypes.string.isRequired,
@@ -83,7 +77,9 @@ Page.propTypes = {
     queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
     queryParams: PropTypes.string.isRequired,
     isAllowedToChange: PropTypes.bool.isRequired,
-  }).isRequired,
+    type: PropTypes.string.isRequired,
+    initialFormState: PropTypes.bool.isRequired,
+  }),
 }
 
 export default React.memo(Page)
