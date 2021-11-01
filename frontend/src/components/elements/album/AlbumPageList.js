@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react'
-
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { styled } from '@material-ui/core'
-
+import CircularProgress from '@material-ui/core/CircularProgress'
 import AlbumPageItem from './AlbumPageItem'
+import useFetch from '../../hooks/useFetch'
+import { apiFetchAlbum } from '../../../utils/api'
+import AlertMessage from '../AlertMessage'
 
-const StyledGrid = styled('div')(({ theme }) => ({
+const StyledDiv = styled('div')(({ theme }) => ({
   WebkitColumnCount: 3,
   MozColumnCount: 3,
   columnCount: 3,
@@ -47,19 +49,28 @@ function AlbumPageList({
   entityAlias,
   isAllowed,
 }) {
-  const [images, setImages] = useState([])
+  const { isLoading, isError, data, errorMessage } = useFetch(
+    queryKey,
+    queryParams,
+    apiFetchAlbum
+  )
 
   useEffect(() => {
-    setImages(currentAlbum ? currentAlbum.files : null)
-    return () => {
-      setImages([])
+    if (data && data[0] && data[0].files && Array.isArray(data[0].files)) {
+      console.log(data)
+      console.log(data[0].files.length)
     }
-  }, [])
+  }, [data])
 
   return (
-    <StyledGrid>
-      {images &&
-        images.map((image) => (
+    <StyledDiv container>
+      {isError && <AlertMessage severity="error" message={errorMessage} />}
+      {isLoading && <CircularProgress color="secondary" />}
+      {data &&
+        data[0] &&
+        data[0].files &&
+        Array.isArray(data[0].files) &&
+        data[0].files.map((image) => (
           <AlbumPageItem
             key={image.filepath}
             isAllowed={isAllowed}
@@ -69,7 +80,7 @@ function AlbumPageList({
             albumId={currentAlbum ? currentAlbum.id : null}
           />
         ))}
-    </StyledGrid>
+    </StyledDiv>
   )
 }
 

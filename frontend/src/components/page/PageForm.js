@@ -72,7 +72,6 @@ function PageForm({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
         window.scrollTo(0, 0)
       })
     } catch (err) {
-      console.log('err', err)
       enqueueSnackbar(getError(err), { variant: 'error' })
       window.scrollTo(0, 0)
     }

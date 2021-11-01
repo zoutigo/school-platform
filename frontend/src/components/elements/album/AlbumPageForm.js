@@ -1,15 +1,12 @@
 /* eslint-disable import/named */
-import { Grid, styled, useTheme } from '@material-ui/core'
+import { Grid, styled, useTheme, TextField } from '@material-ui/core'
 import React, { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { Controller, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { useSnackbar } from 'notistack'
 import { useSelector } from 'react-redux'
 import { apiPostAlbumImages } from '../../../utils/api'
-import albumImagesSchema from '../../../schemas/albumImagesSchema'
 import Title from '../Title'
-import InputFileControl from '../InputFileControl'
 import CostumButton from '../CustomButton'
 import useMutate from '../../hooks/useMutate'
 import MutateCircularProgress from '../MutateCircularProgress'
@@ -38,15 +35,13 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    formState: { isSubmitting, isValid, errors },
   } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(albumImagesSchema),
   })
 
   const onSubmit = async (datas) => {
     const { files } = datas
-
     const finalDatas = {
       files: files,
     }
@@ -79,7 +74,7 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
     }
   }
 
-  const formTitle = 'Ajouter des images ?'
+  const formTitle = 'Ajouter des images'
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -93,17 +88,46 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
         </Grid>
         {isMutating && <MutateCircularProgress />}
         <Grid container className="form-fields-container">
-          <InputFileControl
-            control={control}
-            label="Image"
+          <Controller
             name="files"
-            type="file"
-            multiple
-            accept="image/jpg,image/jpeg,image/gif,image/png "
-            helperText="maximum 10Mo"
+            control={control}
+            defaultValue=""
+            rules={{
+              validate: {
+                minlenght: (value) =>
+                  value.length > 0 || '1 fichier au moins est requis',
+                maxlenght: (value) =>
+                  value.length < 16 ||
+                  'Vous ne pouvez telecharger que 15 fichiers maximum en meme temps',
+                filesize: (value) =>
+                  value[0].size <= 1024 * 1024 * 10 ||
+                  'Chacune des images doit faire moins de 10Mo',
+              },
+            }}
+            render={({ field }) => (
+              <TextField
+                variant="outlined"
+                fullWidth
+                type="file"
+                id="images"
+                label="Images"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  multiple: true,
+                  accept: 'image/jpg,image/jpeg,image/gif,image/png',
+                }}
+                onChange={(e) => {
+                  field.onChange(e.target.files)
+                }}
+                error={Boolean(errors.files)}
+                helperText={errors.files ? errors.files.message : ''}
+              />
+            )}
           />
         </Grid>
-        <Grid item container alignItems="center" justify="flex-end">
+        <Grid item container alignItems="center" justifyContent="flex-end">
           <CostumButton
             text="J'envoie mes images"
             bgcolor={theme.palette.success.main}

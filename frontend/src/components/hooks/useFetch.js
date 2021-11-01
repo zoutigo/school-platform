@@ -7,9 +7,7 @@ function useFetch(queryKey, queryParams, fetcher) {
   const { isLoading, isError, error, data } = useQuery(queryKey, () =>
     fetcher(queryParams)
   )
-
   const errorMessage = error ? getError(error) : null
-
   return { isLoading, isError, errorMessage, data }
 }
 

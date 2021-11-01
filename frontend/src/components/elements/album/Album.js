@@ -16,7 +16,6 @@ import useRoles from '../../hooks/useRoles'
 
 function Album() {
   const { current, category } = useRoutesInfos()
-  // const { current, categoryAlias } = useRouteDatas()
 
   const [currentAlbum, setCurrentAlbum] = useState('')
   const [formAction, setFormAction] = useState('create')

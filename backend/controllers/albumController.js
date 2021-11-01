@@ -250,7 +250,7 @@ module.exports.postAlbumImages = async (req, res, next) => {
   let roleIsAllowed = false
 
   roles.map((role) => {
-    if (JSON.stringify(entity.id === role.entity.id)) {
+    if (JSON.stringify(entity?.id === role.entity.id)) {
       roleIsAllowed = true
     }
   })
