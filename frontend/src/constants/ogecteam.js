@@ -2,26 +2,20 @@ const OGECTEAM = [
   {
     role: 'president',
     gender: 'monsieur',
-    firstname: 'Adriana',
+    firstname: 'Emmanuel',
     lastname: 'Gerilli',
   },
   {
     role: 'vice-president',
     gender: 'madame',
-    firstname: 'Beatrice',
+    firstname: 'Barbara',
     lastname: 'Manugal',
   },
   {
     role: 'tresorier',
     gender: 'madame',
-    firstname: 'Isabelle',
-    lastname: 'Drescher',
-  },
-  {
-    role: 'secretaire',
-    gender: 'madame',
-    firstname: 'Roberta',
-    lastname: 'Will',
+    firstname: 'Alain',
+    lastname: 'Mullot',
   },
 ]
 
