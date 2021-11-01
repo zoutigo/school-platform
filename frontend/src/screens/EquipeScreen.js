@@ -1,42 +1,96 @@
-import { Grid, styled, Typography } from '@material-ui/core'
+import {
+  Grid,
+  Typography,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@material-ui/core'
+import { styled, withStyles } from '@material-ui/styles'
 import React, { useCallback } from 'react'
 import CircularProgress from '@material-ui/core/CircularProgress'
-
-import Equipe from '../constants/equipe'
-import Title from '../components/elements/Title'
-import PersonaEquipeCard from '../components/main/ecole/equipe/PersonaEquipeCard'
 import { apiFecthEntity } from '../utils/api'
-import randomkey from '../utils/randomkey'
 import useFetch from '../components/hooks/useFetch'
 import AlertMessage from '../components/elements/AlertMessage'
 
-const ClassroomNameGrid = styled(Grid)(() => ({
-  textTransform: 'uppercase',
+const StyledTable = styled(Table)(({ theme }) => ({
+  background: theme.palette.action.hover,
 }))
-const StyledBlocGrid = styled(Grid)(() => ({
-  padding: '1rem 2rem ',
-  '& :nth-child(2)': {
-    background: 'whitesmoke',
-    paddingLeft: '0.2rem',
-    borderRadius: '5px',
-  },
+const StyledTableRowHead = styled(TableRow)(() => ({
+  background: 'white',
 }))
 
-const StyledClaroomNameTypo = styled(Typography)(() => ({
-  fontSize: '1.3rem',
-  letterSpacing: '1px',
-  lineHeight: 1.1,
+const StyledLastNameTypo = styled(Typography)(() => ({
   textTransform: 'uppercase',
 }))
+const StyledFirstNameTypo = styled(StyledLastNameTypo)(() => ({
+  // textTransform: 'capitalize',
+  marginRight: '1.5rem',
+}))
+const StyledRoleTypo = styled(Typography)(() => ({
+  textTransform: 'capitalize',
+}))
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow)
+
+const ogecs = [
+  {
+    id: 0,
+    lastname: 'cintas',
+    firstname: 'Fréderic',
+    roles: ['directeur détablissement'],
+  },
+  {
+    id: 1,
+    lastname: 'chaloin',
+    firstname: 'Christine',
+    roles: ['sécrétaire', 'surveillante'],
+  },
+  {
+    id: 2,
+    lastname: 'marguet',
+    firstname: 'Sophie',
+    roles: ['aide maternelle', 'surveillante'],
+  },
+  {
+    id: 3,
+    lastname: 'geay',
+    firstname: 'Valérie',
+    roles: ['aide maternelle', 'surveillante'],
+  },
+  {
+    id: 4,
+    lastname: 'landry',
+    firstname: 'Véronique',
+    roles: ['aide pédagogique', 'surveillante'],
+  },
+  {
+    id: 5,
+    lastname: 'rius',
+    firstname: 'corinne',
+    roles: ['surveillante'],
+  },
+  {
+    id: 6,
+    lastname: 'gouffrand',
+    firstname: 'cheyenne',
+    roles: ['agent polyvalent'],
+  },
+  {
+    id: 7,
+    lastname: 'Nachaiti',
+    firstname: 'rachida',
+    roles: ['agent polyvalent'],
+  },
+]
 
 function EquipeScreen() {
-  const personnelsOgec = useCallback(
-    Equipe.filter(
-      ({ entites, roles }) => entites.includes('ogec') && roles.length > 0
-    ),
-    [Equipe]
-  )
-
   const queryKey = useCallback(['liste-entites'], [])
   const classroomsAliases = useCallback(
     ['cm2', 'cm1', 'ce2', 'ce1', 'cp', 'gs', 'ms', 'ps', 'adaptation'],
@@ -60,7 +114,7 @@ function EquipeScreen() {
     const personas = []
     if (classroomsEntities) {
       for (let i = 0; i < classroomsEntities.length; i += 1) {
-        const { roles, alias } = classroomsEntities[i]
+        const { roles, alias, name } = classroomsEntities[i]
 
         if (roles && roles.length > 0) {
           for (let j = 0; j < roles.length; j += 1) {
@@ -68,7 +122,8 @@ function EquipeScreen() {
             for (let k = 0; k < users.length; k += 1) {
               const { firstname, lastname, gender } = users[k]
               personas.push({
-                classroomName: alias,
+                classroomName: name,
+                classroomAlias: alias,
                 persona: { firstname, lastname, gender },
               })
             }
@@ -85,51 +140,53 @@ function EquipeScreen() {
     [createPersonas()]
   )
 
-  const entityPersons = useCallback(
-    (alias) =>
-      !persons ? null : persons.filter((pers) => alias === pers.classroomName),
-    [persons]
-  )
-
   return (
-    <Grid container>
+    <Grid container spacing={2}>
       {isError && <AlertMessage severity="error" message={errorMessage} />}
       {isLoading && <CircularProgress color="secondary" />}
       {Array.isArray(data) && data.length > 0 && (
-        <StyledBlocGrid
-          item
-          container
-          xs={12}
-          md={6}
-          justifyContent="flex-start"
-        >
-          <Grid container style={{ height: '10%' }}>
-            <Title title="Les enseignants" />
-          </Grid>
-          <Grid container style={{ height: '90%' }}>
-            {classroomsEntities &&
-              classroomsEntities.map((classroom) => (
-                <Grid container alignItems="center">
-                  <ClassroomNameGrid item xs={4}>
-                    <StyledClaroomNameTypo>
-                      {classroom.alias}
-                    </StyledClaroomNameTypo>
-                  </ClassroomNameGrid>
-                  <Grid item xs={8} style={{ marginBottom: '0.75rem' }}>
-                    {persons &&
-                      entityPersons(classroom.alias).map((person) => (
-                        <PersonaEquipeCard
-                          {...person}
-                          key={randomkey(999999)}
-                        />
-                      ))}
-                  </Grid>
-                </Grid>
+        <Grid item container xs={12} md={6} justifyContent="flex-start">
+          <StyledTable>
+            <TableHead>
+              <StyledTableRowHead>
+                <TableCell variant="head" colspan="2">
+                  <Typography variant="h2" color="secondary">
+                    Les enseignants
+                  </Typography>
+                </TableCell>
+              </StyledTableRowHead>
+            </TableHead>
+            <TableBody>
+              {classroomsAliases.map((classroom) => (
+                <StyledTableRow key={classroom}>
+                  <TableCell>
+                    <Typography variant="h2" color="secondary">
+                      {classroom}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="h2">
+                      {persons
+                        .filter((person) => classroom === person.classroomAlias)
+                        .map((user) => (
+                          <div key={user.firstname}>
+                            <StyledFirstNameTypo component="span">
+                              {user.persona.firstname}
+                            </StyledFirstNameTypo>
+                            <StyledLastNameTypo component="span">
+                              {user.persona.lastname}
+                            </StyledLastNameTypo>
+                          </div>
+                        ))}
+                    </Typography>
+                  </TableCell>
+                </StyledTableRow>
               ))}
-          </Grid>
-        </StyledBlocGrid>
+            </TableBody>
+          </StyledTable>
+        </Grid>
       )}
-      <StyledBlocGrid
+      <Grid
         item
         container
         xs={12}
@@ -137,15 +194,37 @@ function EquipeScreen() {
         direction="column"
         alignItems="flex-start"
       >
-        <Grid container>
-          <Title title="Le personnel OGEC" />
-        </Grid>
-        <Grid container>
-          {personnelsOgec.map((persona) => (
-            <PersonaEquipeCard persona={persona} />
-          ))}
-        </Grid>
-      </StyledBlocGrid>
+        <StyledTable>
+          <TableHead>
+            <StyledTableRowHead>
+              <TableCell variant="head" colspan="3">
+                <Typography variant="h2" color="secondary">
+                  Le personnel OGEC
+                </Typography>
+              </TableCell>
+            </StyledTableRowHead>
+          </TableHead>
+          <TableBody>
+            {ogecs.map((persona) => (
+              <StyledTableRow key={persona.id}>
+                <TableCell>
+                  <Typography variant="h2">{persona.firstname}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="h2">{persona.lastname}</Typography>
+                </TableCell>
+                <TableCell>
+                  {persona.roles.map((role) => (
+                    <StyledRoleTypo variant="body2" color="secondary">
+                      {role}
+                    </StyledRoleTypo>
+                  ))}
+                </TableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </StyledTable>
+      </Grid>
     </Grid>
   )
 }
