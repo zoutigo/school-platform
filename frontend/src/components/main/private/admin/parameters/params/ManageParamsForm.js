@@ -1,7 +1,7 @@
 /* eslint-disable arrow-body-style */
 import { useForm, Controller } from 'react-hook-form'
 import React, { useEffect } from 'react'
-import { Grid, List, ListItem, TextField } from '@material-ui/core'
+import { Grid, List, ListItem, TextField, Button } from '@material-ui/core'
 import { styled } from '@material-ui/styles'
 
 const datas = {
@@ -11,9 +11,9 @@ const datas = {
   addressZipcode: '38230',
   addressCity: 'Tignieu Jameyzieu',
   nbrStudents: 210,
-  nbreTeachers: 10,
-  nbreFamilies: 350,
-  nbreActivities: 600,
+  nbrTeachers: 10,
+  nbrFamilies: 350,
+  nbrActivities: 600,
   email: 'test@gmail.com',
   phone: '0434512390',
   secret: 'OGEPI-20890',
@@ -195,6 +195,360 @@ function ManageParamsForm() {
                     inputProps={{ type: 'email' }}
                     error={Boolean(errors.email)}
                     helperText={errors.email ? errors.email.message : ''}
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+            <ListItem>
+              <Controller
+                control={control}
+                name="secret"
+                rules={{
+                  required: 'Le mot de pass secret est obligatoire',
+                  pattern: /^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/,
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="secret"
+                    label="Mot de pass secret"
+                    placeholder="secret"
+                    error={Boolean(errors.secret)}
+                    helperText={errors.secret ? errors.secret.message : ''}
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+          </List>
+        </Grid>
+        <Grid item xs={12} md={6} style={{ background: 'green' }}>
+          <List>
+            <ListItem>
+              <Controller
+                control={control}
+                name="nbrStudents"
+                rules={{
+                  required: "le nombre d'élèves est obligatoire",
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="nbrStudents"
+                    label="Nombre d'élèves"
+                    placeholder="Nom de la rue"
+                    error={Boolean(errors.nbrStudents)}
+                    helperText={
+                      errors.nbrStudents ? errors.nbrStudents.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+            <ListItem>
+              <Controller
+                control={control}
+                name="nbrTeachers"
+                rules={{
+                  required: "Le nombre d'enseignants est obligatoire",
+                  validate: (value) => value,
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="nbrTeachers"
+                    label="Nombre d'enseignants"
+                    placeholder="Nombre d'enseignants"
+                    error={Boolean(errors.nbrTeachers)}
+                    helperText={
+                      errors.nbrTeachers ? errors.nbrTeachers.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+            <ListItem>
+              <Controller
+                control={control}
+                name="nbrFamilies"
+                rules={{
+                  required: 'Le nombre de familles est obligatoire',
+                  validate: (value) => value > 0,
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="nbrFamilies"
+                    label="Nombre de familles"
+                    placeholder="Nombre de familles"
+                    error={Boolean(errors.nbrFamilies)}
+                    helperText={
+                      errors.nbrFamilies ? errors.nbrFamilies.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+            <ListItem>
+              <Controller
+                control={control}
+                name="nbrActivities"
+                rules={{
+                  required: "Le nombre d'activités est obligatoire",
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="nbrActivities"
+                    label="Nombre d'activités"
+                    placeholder="Nombre d'activités"
+                    error={Boolean(errors.nbrActivities)}
+                    helperText={
+                      errors.nbrActivities ? errors.nbrActivities.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+
+            <ListItem>
+              <Controller
+                control={control}
+                name="schoolYearStartdate"
+                rules={{
+                  required: 'La date de rentrée scolaire est obligatoire',
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="schoolYearStartdate"
+                    label="La date de rentrée scolaire"
+                    placeholder="La date de rentrée scolaire"
+                    error={Boolean(errors.schoolYearStartdate)}
+                    helperText={
+                      errors.schoolYearStartdate
+                        ? errors.schoolYearStartdate.message
+                        : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+            <ListItem>
+              <Controller
+                control={control}
+                name="schoolYearEnddate"
+                rules={{
+                  required: "La date de fin d'année scolaire est obligatoire",
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="schoolYearEnddate"
+                    label="La date de fin d'année scolaire"
+                    placeholder="La date de fin d'année scolaire"
+                    error={Boolean(errors.schoolYearEnddate)}
+                    helperText={
+                      errors.schoolYearEnddate
+                        ? errors.schoolYearEnddate.message
+                        : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+          </List>
+        </Grid>
+      </Grid>
+      <Grid item container>
+        <Grid item container>
+          <Button type="submit" fullWidth color="secondary" variant="contained">
+            Je modifie les paramètres
+          </Button>
+        </Grid>
+      </Grid>
+      <Grid item container spacing={5} style={{ background: 'blue' }}>
+        <Grid item xs={12} md={6}>
+          <List style={{ background: 'skyblue', margin: '0.5rem 0px' }}>
+            <ListItem>
+              <Controller
+                control={control}
+                name="partner1Name"
+                rules={{
+                  required: 'Le nom du partenaire est obligatoire',
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="partner1Name"
+                    label="Nom du partenaire 1"
+                    placeholder="Nom du partenaire 1"
+                    error={Boolean(errors.partner1Name)}
+                    helperText={
+                      errors.partner1Name ? errors.partner1Name.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />{' '}
+            </ListItem>
+            <ListItem>
+              <Controller
+                control={control}
+                name="partner1Link"
+                rules={{
+                  required: 'Le lien du partenaire est obligatoire',
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="partner1Link"
+                    label="Lien du partenaire 1"
+                    placeholder="Lien du partenaire 1"
+                    error={Boolean(errors.partner1Link)}
+                    helperText={
+                      errors.partner1Link ? errors.partner1Link.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+          </List>
+          <List style={{ background: 'skyblue', margin: '0.5rem 0px' }}>
+            <ListItem>
+              <Controller
+                control={control}
+                name="partner2Name"
+                rules={{
+                  required: 'Le nom du partenaire est obligatoire',
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="partner2Name"
+                    label="Nom du partenaire 2"
+                    placeholder="Nom du partenaire 2"
+                    error={Boolean(errors.partner2Name)}
+                    helperText={
+                      errors.partner2Name ? errors.partner2Name.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />{' '}
+            </ListItem>
+            <ListItem>
+              <Controller
+                control={control}
+                name="partner2Link"
+                rules={{
+                  required: 'Le lien du partenaire est obligatoire',
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="partner2Link"
+                    label="Lien du partenaire 2"
+                    placeholder="Lien du partenaire 2"
+                    error={Boolean(errors.partner2Link)}
+                    helperText={
+                      errors.partner2Link ? errors.partner2Link.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+          </List>
+          <List style={{ background: 'skyblue', margin: '0.5rem 0px' }}>
+            <ListItem>
+              <Controller
+                control={control}
+                name="partner3Name"
+                rules={{
+                  required: 'Le nom du partenaire est obligatoire',
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="partner3Name"
+                    label="Nom du partenaire 3"
+                    placeholder="Nom du partenaire 3"
+                    error={Boolean(errors.partner3Name)}
+                    helperText={
+                      errors.partner3Name ? errors.partner3Name.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />{' '}
+            </ListItem>
+            <ListItem>
+              <Controller
+                control={control}
+                name="partner3Link"
+                rules={{
+                  required: 'Le lien du partenaire est obligatoire',
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="partner3Link"
+                    label="Lien du partenaire 3"
+                    placeholder="Lien du partenaire 3"
+                    error={Boolean(errors.partner3Link)}
+                    helperText={
+                      errors.partner3Link ? errors.partner3Link.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+          </List>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <List>
+            <ListItem>
+              <Controller
+                control={control}
+                name="managerMessage"
+                rules={{
+                  required: 'Le mot du directeur est obligatoire',
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    multiline
+                    id="managerMessage"
+                    label="Mot du directeur"
+                    placeholder="Mot du directeur"
+                    error={Boolean(errors.managerMessage)}
+                    helperText={
+                      errors.managerMessage ? errors.managerMessage.message : ''
+                    }
                     {...field}
                   />
                 )}

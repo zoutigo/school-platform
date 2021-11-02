@@ -16,9 +16,9 @@ const data = {
   addressZipcode: '38230',
   addressCity: 'Tignieu Jameyzieu',
   nbrStudents: 210,
-  nbreTeachers: 10,
-  nbreFamilies: 350,
-  nbreActivities: 600,
+  nbrTeachers: 10,
+  nbrFamilies: 350,
+  nbrActivities: 600,
   email: 'test@gmail.com',
   phone: '0434512390',
   secret: 'OGEPI-20890',
@@ -90,15 +90,15 @@ function ManageParamsList() {
             </TableRow>
             <TableRow>
               <TableCell> Nombre d enseignants</TableCell>
-              <TableCell> {data.nbreTeachers}</TableCell>
+              <TableCell> {data.nbrTeachers}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell> Nombre de familles</TableCell>
-              <TableCell> {data.nbreFamilies}</TableCell>
+              <TableCell> {data.nbrFamilies}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell> Nombre activites</TableCell>
-              <TableCell> {data.nbreActivities}</TableCell>
+              <TableCell> {data.nbrActivities}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
