@@ -26,6 +26,7 @@ const dialogsRouter = require('./routes/dialogs')
 const updatesRouter = require('./routes/updates')
 const databaseRouter = require('./routes/databases')
 const initRouter = require('./routes/inits')
+const parametresRouter = require('./routes/parametres')
 const db = require('./config/database')
 
 // const datasRouter = require("./routes/datas");
@@ -125,6 +126,7 @@ app.use('/dialogs', dialogsRouter)
 app.use('/updates', updatesRouter)
 app.use('/database', databaseRouter)
 app.use('/inits', initRouter)
+app.use('/parametres', parametresRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)

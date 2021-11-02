@@ -18,6 +18,7 @@ function ManageParams({ setShowParams }) {
   const [showParametresDetails, setShowParametresDetails] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const queryKey = ['parametres']
+  const queryParams = `alias=initial`
   return (
     <StyledParametresGrid item container>
       <Grid item container justifyContent="space-between">
@@ -47,7 +48,11 @@ function ManageParams({ setShowParams }) {
       <Collapse in={showParametresDetails} style={{ width: '100%' }}>
         {!showForm ? (
           <Grid item container>
-            <ManageParamsList setShowForm={setShowForm} queryKey={queryKey} />
+            <ManageParamsList
+              setShowForm={setShowForm}
+              queryKey={queryKey}
+              queryParams={queryParams}
+            />
           </Grid>
         ) : (
           <Grid item container>
@@ -55,6 +60,7 @@ function ManageParams({ setShowParams }) {
               setShowForm={setShowForm}
               setShowParams={setShowParams}
               queryKey={queryKey}
+              queryParams={queryParams}
             />
           </Grid>
         )}

@@ -1,38 +1,46 @@
 /* eslint-disable arrow-body-style */
 import { useForm, Controller } from 'react-hook-form'
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Grid, List, ListItem, TextField, Button } from '@material-ui/core'
 import { styled } from '@material-ui/styles'
+import { apiFecthParametres } from '../../../../../../utils/api'
+import useFetch from '../../../../../hooks/useFetch'
 
-const datas = {
-  id: 1,
-  addressNumber: '144B',
-  addressStreet: 'route de Cremieu',
-  addressZipcode: '38230',
-  addressCity: 'Tignieu Jameyzieu',
-  nbrStudents: 210,
-  nbrTeachers: 10,
-  nbrFamilies: 350,
-  nbrActivities: 600,
-  email: 'test@gmail.com',
-  phone: '0434512390',
-  secret: 'OGEPI-20890',
-  schoolYearStartdate: '01/09/2019',
-  schoolYearEnddate: '31/06/2020',
-  managerMessage: 'hello',
-  partner1Name: 'La paroisse Saint Martin',
-  partner1Link: 'www.st-martin.com',
-  partner2Name: 'La paroisse Saint Martin',
-  partner2Link: 'www.st-martin.com',
-  partner3Name: 'La paroisse Saint Martin',
-  partner3Link: 'www.st-martin.com',
-}
+// const data = {
+//   id: 1,
+//   addressNumber: '144B',
+//   addressStreet: 'route de Cremieu',
+//   addressZipcode: '38230',
+//   addressCity: 'Tignieu Jameyzieu',
+//   nbrStudents: 210,
+//   nbrTeachers: 10,
+//   nbrFamilies: 350,
+//   nbrActivities: 600,
+//   email: 'test@gmail.com',
+//   phone: '0434512390',
+//   secret: 'OGEPI-20890',
+//   schoolYearStartdate: '01/09/2019',
+//   schoolYearEnddate: '31/06/2020',
+//   managerMessage: 'hello',
+//   partner1Name: 'La paroisse Saint Martin',
+//   partner1Link: 'www.st-martin.com',
+//   partner2Name: 'La paroisse Saint Martin',
+//   partner2Link: 'www.st-martin.com',
+//   partner3Name: 'La paroisse Saint Martin',
+//   partner3Link: 'www.st-martin.com',
+// }
 
 const StyledParamsForm = styled('form')(() => ({
   width: '100%',
   margin: '2.5rem 0',
 }))
-function ManageParamsForm() {
+function ManageParamsForm({ queryKey, queryParams }) {
+  const { isLoading, isError, data, errorMessage } = useFetch(
+    queryKey,
+    queryParams,
+    apiFecthParametres
+  )
   const {
     control,
     handleSubmit,
@@ -41,12 +49,12 @@ function ManageParamsForm() {
     setValue,
   } = useForm({
     mode: 'onChange',
-    defaultValues: datas,
+    defaultValues: data,
   })
 
   useEffect(() => {
     return () => {
-      setValue('addressStreet', datas.addressStreet)
+      setValue('addressStreet', data.addressStreet)
     }
   }, [setValue])
   return (
@@ -559,6 +567,11 @@ function ManageParamsForm() {
       </Grid>
     </StyledParamsForm>
   )
+}
+
+ManageParamsForm.propTypes = {
+  queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
+  queryParams: PropTypes.string.isRequired,
 }
 
 export default ManageParamsForm
