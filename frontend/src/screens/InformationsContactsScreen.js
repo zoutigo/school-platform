@@ -17,6 +17,8 @@ function InformationsContactsScreen() {
     queryParams,
     pageName,
     isAllowedToChange,
+    type: 'page',
+    initialFormState: false,
   }
   return (
     <StyledPageGrid container>

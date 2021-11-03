@@ -19,6 +19,8 @@ function EcoleProjetsEducatifScreen() {
     queryKey,
     queryParams,
     pageName,
+    type: 'page',
+    initialFormState: false,
   }
 
   return (
