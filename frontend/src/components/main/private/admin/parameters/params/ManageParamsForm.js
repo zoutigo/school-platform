@@ -1,9 +1,10 @@
 /* eslint-disable arrow-body-style */
 import { useForm, Controller } from 'react-hook-form'
+import { DatePicker } from '@material-ui/pickers'
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, List, ListItem, TextField, Button } from '@material-ui/core'
-import { styled } from '@material-ui/styles'
+import { styled, makeStyles } from '@material-ui/styles'
 import { apiFecthParametres } from '../../../../../../utils/api'
 import useFetch from '../../../../../hooks/useFetch'
 import AlertMessage from '../../../../../elements/AlertMessage'
@@ -13,7 +14,14 @@ const StyledParamsForm = styled('form')(() => ({
   width: '100%',
   margin: '2.5rem 0',
 }))
+
+const useHelperTextStyles = makeStyles((theme) => ({
+  root: {
+    color: theme.palette.error.main,
+  },
+}))
 function ManageParamsForm({ queryKey, queryParams }) {
+  const helperTextStyles = useHelperTextStyles()
   const { isLoading, isError, data, errorMessage } = useFetch(
     queryKey,
     queryParams,
@@ -80,7 +88,6 @@ function ManageParamsForm({ queryKey, queryParams }) {
                     name="addressNumber"
                     rules={{
                       required: 'le numéro de la voie est obligatoire',
-
                       maxLength: {
                         value: 10,
                         message:
@@ -111,13 +118,14 @@ function ManageParamsForm({ queryKey, queryParams }) {
                     name="addressZipcode"
                     rules={{
                       required: 'le code postal est obligatoire',
-                      minLength: [5, 'le code postal est obligatoire'],
-                      length: (value) =>
-                        value.length === 5 ||
-                        'le code potal doit avoir 5 chiffres',
-                      number: (value) =>
-                        Number.isInteger(value) ||
-                        'le code postal doit etre un nombre entier',
+                      validate: {
+                        length: (value) =>
+                          value.length === 5 ||
+                          'le code potal doit avoir 5 chiffres',
+                        number: (value) =>
+                          Number.isInteger(value) ||
+                          'le code postal doit etre un nombre entier',
+                      },
                     }}
                     render={({ field }) => (
                       <TextField
@@ -143,6 +151,14 @@ function ManageParamsForm({ queryKey, queryParams }) {
                     name="addressCity"
                     rules={{
                       required: 'La ville est obligatoire',
+                      minLength: {
+                        value: 5,
+                        message: 'la ville doit avoir au moins cinq caractères',
+                      },
+                      maxLength: {
+                        value: 20,
+                        message: 'la rue doit avoir au plus 20 caractères',
+                      },
                     }}
                     render={({ field }) => (
                       <TextField
@@ -166,7 +182,14 @@ function ManageParamsForm({ queryKey, queryParams }) {
                     name="email"
                     rules={{
                       required: 'La mail est obligatoire',
-                      pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/,
+                      maxLength: {
+                        value: 50,
+                        message: 'le mail doit avoir au plus 50 caractères',
+                      },
+                      pattern: {
+                        value: /^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/,
+                        message: 'le format mail est incorrect',
+                      },
                     }}
                     render={({ field }) => (
                       <TextField
@@ -189,18 +212,21 @@ function ManageParamsForm({ queryKey, queryParams }) {
                     name="phone"
                     rules={{
                       required: 'Le telephone est obligatoire',
-                      pattern: /^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/,
+                      pattern: {
+                        value: /^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/,
+                        message:
+                          "le format de telephone saisi n'est pas valide.",
+                      },
                     }}
                     render={({ field }) => (
                       <TextField
                         variant="outlined"
                         fullWidth
-                        id="email"
-                        label="Email"
-                        placeholder="email"
-                        inputProps={{ type: 'email' }}
-                        error={Boolean(errors.email)}
-                        helperText={errors.email ? errors.email.message : ''}
+                        id="phone"
+                        label="Telephone"
+                        placeholder="Telephone"
+                        error={Boolean(errors.phone)}
+                        helperText={errors.phone ? errors.phone.message : ''}
                         {...field}
                       />
                     )}
@@ -211,15 +237,19 @@ function ManageParamsForm({ queryKey, queryParams }) {
                     control={control}
                     name="secret"
                     rules={{
-                      required: 'Le mot de pass secret est obligatoire',
-                      pattern: /^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/,
+                      required: "Le mot de pass de l'école est obligatoire",
+                      maxLength: {
+                        value: 20,
+                        message:
+                          "Le mot de pass de l'école doit avoir au plus 20 caractères",
+                      },
                     }}
                     render={({ field }) => (
                       <TextField
                         variant="outlined"
                         fullWidth
                         id="secret"
-                        label="Mot de pass secret"
+                        label="Mot de pass de l'école"
                         placeholder="secret"
                         error={Boolean(errors.secret)}
                         helperText={errors.secret ? errors.secret.message : ''}
@@ -238,6 +268,21 @@ function ManageParamsForm({ queryKey, queryParams }) {
                     name="nbrStudents"
                     rules={{
                       required: "le nombre d'élèves est obligatoire",
+                      maxLength: {
+                        value: 5,
+                        message:
+                          "le nombre d'élèves doit avoir au plus 5 caractères",
+                      },
+                      validate: {
+                        number: (value) =>
+                          Number.isInteger(value) ||
+                          "le nombre d'élèves doit etre un nombre entier",
+                      },
+                      max: {
+                        value: 20000,
+                        message:
+                          "le nombre d'élèves doit etre inférieur à 20000",
+                      },
                     }}
                     render={({ field }) => (
                       <TextField
@@ -260,8 +305,17 @@ function ManageParamsForm({ queryKey, queryParams }) {
                     control={control}
                     name="nbrTeachers"
                     rules={{
-                      required: "Le nombre d'enseignants est obligatoire",
-                      validate: (value) => value,
+                      required: "le nombre d'enseignants est obligatoire",
+                      maxLength: {
+                        value: 2,
+                        message:
+                          "le nombre d'enseignants doit avoir au plus 2 caractères",
+                      },
+                      validate: {
+                        number: (value) =>
+                          Number.isInteger(value) ||
+                          "le nombre d'enseignants doit etre un nombre entier",
+                      },
                     }}
                     render={({ field }) => (
                       <TextField
@@ -284,8 +338,17 @@ function ManageParamsForm({ queryKey, queryParams }) {
                     control={control}
                     name="nbrFamilies"
                     rules={{
-                      required: 'Le nombre de familles est obligatoire',
-                      validate: (value) => value > 0,
+                      required: 'le nombre de familles est obligatoire',
+                      maxLength: {
+                        value: 3,
+                        message:
+                          'le nombre de familles doit avoir au plus 3 caractères',
+                      },
+                      validate: {
+                        number: (value) =>
+                          Number.isInteger(value) ||
+                          'le nombre de familles doit etre un nombre entier',
+                      },
                     }}
                     render={({ field }) => (
                       <TextField
@@ -308,7 +371,17 @@ function ManageParamsForm({ queryKey, queryParams }) {
                     control={control}
                     name="nbrActivities"
                     rules={{
-                      required: "Le nombre d'activités est obligatoire",
+                      required: "le nombre d'activités est obligatoire",
+                      maxLength: {
+                        value: 4,
+                        message:
+                          "le nombre d'activités doit avoir au plus 4 caractères",
+                      },
+                      validate: {
+                        number: (value) =>
+                          Number.isInteger(value) ||
+                          "le nombre d'activités doit etre un nombre entier",
+                      },
                     }}
                     render={({ field }) => (
                       <TextField
@@ -343,6 +416,10 @@ function ManageParamsForm({ queryKey, queryParams }) {
                         id="schoolYearStartdate"
                         label="La date de rentrée scolaire"
                         placeholder="La date de rentrée scolaire"
+                        type="date"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                         error={Boolean(errors.schoolYearStartdate)}
                         helperText={
                           errors.schoolYearStartdate
@@ -369,6 +446,10 @@ function ManageParamsForm({ queryKey, queryParams }) {
                         id="schoolYearEnddate"
                         label="La date de fin d'année scolaire"
                         placeholder="La date de fin d'année scolaire"
+                        type="date"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                         error={Boolean(errors.schoolYearEnddate)}
                         helperText={
                           errors.schoolYearEnddate
@@ -376,6 +457,39 @@ function ManageParamsForm({ queryKey, queryParams }) {
                             : ''
                         }
                         {...field}
+                      />
+                    )}
+                  />
+                </ListItem>
+                <ListItem>
+                  <Controller
+                    control={control}
+                    name="schoolYearEnddate"
+                    rules={{
+                      required:
+                        "La date de fin d'année scolaire est obligatoire",
+                    }}
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
+                        autoOk
+                        clearable
+                        minDate={new Date()}
+                        style={{ width: '100%' }}
+                        label="Date de l'évènement"
+                        format="dddd Do MMMM yyyy"
+                        inputVariant="outlined"
+                        FormHelperTextProps={{
+                          classes: {
+                            root: helperTextStyles.root,
+                          },
+                        }}
+                        helperText={
+                          errors.schoolYearEnddateTest
+                            ? errors.schoolYearEnddateTest.message
+                            : ''
+                        }
+                        onChange={(e) => field.onChange(e)}
                       />
                     )}
                   />
