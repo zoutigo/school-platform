@@ -409,3 +409,10 @@ export const apiFetchRoles = async () => {
   const { data } = await axios.get(URL)
   return data
 }
+
+export const apiFecthParametres = async (params) => {
+  const url = `${PREFIX}/parametres?${params}`
+  const { data } = await axios.get(url)
+
+  return data
+}
