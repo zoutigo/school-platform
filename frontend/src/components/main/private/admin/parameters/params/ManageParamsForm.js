@@ -1,7 +1,7 @@
 /* eslint-disable arrow-body-style */
 import { useForm, Controller } from 'react-hook-form'
 import { DatePicker } from '@material-ui/pickers'
-import React, { useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Grid, List, ListItem, TextField, Button } from '@material-ui/core'
 import { styled, makeStyles } from '@material-ui/styles'

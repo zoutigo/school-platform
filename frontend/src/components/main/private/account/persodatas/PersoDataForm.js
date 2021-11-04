@@ -1,10 +1,19 @@
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
-import { Grid, useTheme } from '@material-ui/core'
+import {
+  Grid,
+  useTheme,
+  List,
+  ListItem,
+  TextField,
+  Select,
+  MenuItem,
+  styled,
+} from '@material-ui/core'
 import { StyledPersoDataContainer, StyledPersoDataForm } from './Style'
 import CustomButton from '../../../../elements/CustomButton'
 
@@ -31,6 +40,13 @@ import useMutate from '../../../../hooks/useMutate'
 import MutateCircularProgress from '../../../../elements/MutateCircularProgress'
 import getError from '../../../../../utils/getError'
 import getResponse from '../../../../../utils/getResponse'
+
+const StyledForm = styled('form')(({ theme }) => ({
+  width: '100%',
+  [theme.breakpoints.up('md')]: {
+    width: '100%',
+  },
+}))
 
 function PersoDataForm({ setForm, setToggle, form, data }) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -66,7 +82,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    formState: { isSubmitting, isValid, errors },
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(schema()),
@@ -158,41 +174,85 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
   return (
     <StyledPersoDataContainer container>
       {isMutating && <MutateCircularProgress />}
-      <StyledPersoDataForm onSubmit={handleSubmit(onSubmit)}>
+      <StyledForm onSubmit={handleSubmit(onSubmit)}>
         {credentialsform && (
-          <Grid container className="form-fields-container">
-            <InputSelectControl
-              control={control}
-              name="gender"
-              initialValue={initialGender}
-              label="Civilité"
-              options={genderOptions}
-            />
-            <InputTextControl
-              name="firstname"
-              control={control}
-              initialValue={data ? data.firstname : null}
-              helperText="au moins 2 caractères"
-              label="Votre Prénom"
-              width="100%"
-            />
-            <InputTextControl
-              name="lastname"
-              control={control}
-              initialValue={data ? data.lastname : null}
-              helperText="au moins 2 caractères"
-              label="Votre nom"
-              width="100%"
-            />
-            <InputTextControl
-              name="phone"
-              control={control}
-              initialValue={data ? data.phone : null}
-              helperText="ex: 0618657934 ou +33178569054"
-              label="Votre numéro de téléphone"
-              width="100%"
-            />
-          </Grid>
+          <List>
+            {/* <ListItem>
+              <Controller
+                control={control}
+                name="gender"
+                defaultValue={initialGender}
+                rules={{
+                  required: 'indiquez votre civilité',
+                }}
+                render={({ field }) => (
+                  <TextField
+                    id="gender"
+                    name="gender"
+                    label="Civilité"
+                    placeholder="homme ou femme ?"
+                    variant="outlined"
+                    fullWidth
+                    select
+                    SelectProps={{
+                      native: true,
+                    }}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    error={Boolean(errors.partner1Name)}
+                    helperText={
+                      errors.partner1Name ? errors.partner1Name.message : ''
+                    }
+                    {...field}
+                  >
+                    {genderOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </ListItem> */}
+            <ListItem>
+              <InputSelectControl
+                control={control}
+                name="gender"
+                initialValue={initialGender}
+                label="Civilité"
+                options={genderOptions}
+              />
+            </ListItem>
+            <ListItem>
+              <InputTextControl
+                name="firstname"
+                control={control}
+                initialValue={data ? data.firstname : null}
+                helperText="au moins 2 caractères"
+                label="Votre Prénom"
+                width="100%"
+              />
+            </ListItem>
+            <ListItem>
+              <InputTextControl
+                name="lastname"
+                control={control}
+                initialValue={data ? data.lastname : null}
+                helperText="au moins 2 caractères"
+                label="Votre nom"
+                width="100%"
+              />
+            </ListItem>
+            <ListItem>
+              <InputTextControl
+                name="phone"
+                control={control}
+                initialValue={data ? data.phone : null}
+                helperText="ex: 0618657934 ou +33178569054"
+                label="Votre numéro de téléphone"
+                width="100%"
+              />
+            </ListItem>
+          </List>
         )}
         {childrenform && (
           <Grid container className="form-fields-container">
@@ -247,7 +307,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
             disabled={!isValid || isSubmitting}
           />
         </Grid>
-      </StyledPersoDataForm>
+      </StyledForm>
     </StyledPersoDataContainer>
   )
 }
