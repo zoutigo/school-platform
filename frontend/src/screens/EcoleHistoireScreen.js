@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Page from '../components/page/Page'
 import { StyledPageGrid } from '../components/elements/styled'
 import useRigths from '../components/hooks/useRigths'
@@ -19,10 +19,11 @@ function EcoleHistoireScreen() {
     pageName,
     isAllowedToChange,
     type: 'page',
+    initialFormState: false,
   }
 
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="ecole-histoire-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

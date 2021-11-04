@@ -24,7 +24,7 @@ function EcoleProjetsEducatifScreen() {
   }
 
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="ecole-projets-educatifs-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

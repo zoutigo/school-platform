@@ -1,8 +1,7 @@
 /* eslint-disable import/named */
-import { Grid } from '@material-ui/core'
-import React, { useState } from 'react'
+
+import React from 'react'
 import Page from '../components/page/Page'
-import AlertCollapse from '../components/elements/AlertCollapse'
 import { StyledPageGrid } from '../components/elements/styled'
 import useRigths from '../components/hooks/useRigths'
 
@@ -12,11 +11,6 @@ function VieScolaireGarderiePresentationScreen() {
   const queryKey = [pageName, `page-${alias}`]
   const queryParams = `alias=${alias}`
 
-  const [topAlert, setTopAlert] = useState({
-    severity: '',
-    alertText: '',
-    openAlert: false,
-  })
   const { managerLevel, adminLevel } = useRigths()
   const isAllowedToChange = managerLevel || adminLevel
 
@@ -26,21 +20,15 @@ function VieScolaireGarderiePresentationScreen() {
     queryKey,
     queryParams,
     pageName,
-    setTopAlert,
+    type: 'page',
+    initialFormState: false,
   }
 
   return (
-    <StyledPageGrid container>
-      {topAlert.openAlert && (
-        <Grid item container>
-          <AlertCollapse
-            alertText={topAlert.alertText}
-            openAlert
-            severity={topAlert.severity}
-            callback={setTopAlert}
-          />
-        </Grid>
-      )}
+    <StyledPageGrid
+      container
+      data-testid="viescolaire-garderie-presentation-screen"
+    >
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

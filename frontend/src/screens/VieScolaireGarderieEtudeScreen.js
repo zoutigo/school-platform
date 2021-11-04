@@ -10,8 +10,8 @@ function VieScolaireGarderieEtudeScreen() {
   const queryKey = [pageName, `page-${alias}`]
   const queryParams = `alias=${alias}`
 
-  const { managerLevel, adminLevel } = useRigths()
-  const isAllowedToChange = managerLevel || adminLevel
+  const { moderatorLevel } = useRigths()
+  const isAllowedToChange = moderatorLevel
 
   const pageParams = {
     isAllowedToChange,
@@ -19,10 +19,12 @@ function VieScolaireGarderieEtudeScreen() {
     queryKey,
     queryParams,
     pageName,
+    type: 'page',
+    initialFormState: false,
   }
 
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="viescolaire-garderie-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

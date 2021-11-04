@@ -29,7 +29,7 @@ function ApelOgecApelScreen() {
   )
 
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="apelogec-apel-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

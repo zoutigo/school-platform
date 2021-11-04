@@ -5,24 +5,17 @@
 import { Grid } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
 
 import ClassroomSummary from '../components/main/classes/ClassroomSummary'
 import ClassroomForm from '../components/main/classes/ClassroomForm'
-import AlertCollapse from '../components/elements/AlertCollapse'
 import ToggleToolTip from '../components/elements/ToggleToolTip'
-import { setFetchAlert, setMutateAlert } from '../redux/alerts/AlertsActions'
-import { initialAlertCollapse } from '../constants/alerts'
 import useRigths from '../components/hooks/useRigths'
 import useRoles from '../components/hooks/useRoles'
 
 function ClassesPresentationScreen() {
-  const dispatch = useDispatch()
   const { pathname } = useLocation()
   const [currentClassroom, setCurrentClassroom] = useState(null)
   const [showClassroomForm, setShowClassroomForm] = useState(false)
-
-  const { mutate, fetch } = useSelector((state) => state.alerts)
 
   const defineAlias = useCallback((extract) => {
     switch (extract) {
@@ -79,13 +72,6 @@ function ClassesPresentationScreen() {
     }
   }, [])
 
-  const clearFetch = useCallback(() => {
-    dispatch(setFetchAlert(initialAlertCollapse))
-  }, [])
-  const clearMutate = useCallback(() => {
-    dispatch(setMutateAlert(initialAlertCollapse))
-  }, [])
-
   useEffect(() => {
     return () => {
       // clearMutate()
@@ -101,9 +87,6 @@ function ClassesPresentationScreen() {
 
   return (
     <Grid container>
-      <AlertCollapse {...fetch} callback={clearFetch} />
-      <AlertCollapse {...mutate} callback={clearMutate} />
-
       {showClassroomForm && isAllowedToChange && (
         <ClassroomForm
           setShowClassroomForm={setShowClassroomForm}

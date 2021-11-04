@@ -19,10 +19,12 @@ function PrivateAdminScreen() {
     queryParams,
     pageName,
     isAllowedToChange,
+    type: 'page',
+    initialFormState: false,
   }
 
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="administration-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

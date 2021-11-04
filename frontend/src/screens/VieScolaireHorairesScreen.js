@@ -22,7 +22,7 @@ function VieScolaireHorairesScreen() {
     initialFormState: false,
   }
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="viescolaire-horaires-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

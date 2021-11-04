@@ -5,12 +5,12 @@ import useRigths from '../components/hooks/useRigths'
 import Page from '../components/page/Page'
 
 function VieScolaireHorairesFeriesScreen() {
-  const pageName = 'La garderie'
+  const pageName = 'Les jours Feriés'
   const alias = `viescolaire-horaires-feries`
   const queryKey = [pageName, `page-${alias}`]
   const queryParams = `alias=${alias}`
-  const { managerLevel, adminLevel } = useRigths()
-  const isAllowedToChange = managerLevel || adminLevel
+  const { moderatorLevel } = useRigths()
+  const isAllowedToChange = moderatorLevel
 
   const pageParams = {
     alias,
@@ -18,9 +18,11 @@ function VieScolaireHorairesFeriesScreen() {
     queryParams,
     pageName,
     isAllowedToChange,
+    type: 'page',
+    initialFormState: false,
   }
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="viescolaire-horaires-feries-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

@@ -9,7 +9,6 @@ function VieScolairePastoraleScreen() {
   const alias = `pastorale`
   const queryKey = [pageName, `page-${alias}`]
   const queryParams = `alias=${alias}`
-
   const { moderatorLevel } = useRigths()
   const { catechiste } = useRoles()
   const isAllowedToChange = moderatorLevel || catechiste
@@ -25,7 +24,7 @@ function VieScolairePastoraleScreen() {
   }
 
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="viescolaire-pastorale-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

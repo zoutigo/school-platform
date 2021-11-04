@@ -22,7 +22,7 @@ function VieScolaireCantineScreen() {
   }
 
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="viescolaire-cantine-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

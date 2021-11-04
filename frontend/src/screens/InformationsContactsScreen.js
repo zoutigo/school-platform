@@ -21,7 +21,7 @@ function InformationsContactsScreen() {
     initialFormState: false,
   }
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="informations-contacts-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

@@ -22,7 +22,7 @@ function EcoleProjetsScreen() {
     initialFormState: false,
   }
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="ecole-projets-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )

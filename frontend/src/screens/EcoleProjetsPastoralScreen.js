@@ -23,7 +23,7 @@ function EcoleProjetsPastoralScreen() {
   }
 
   return (
-    <StyledPageGrid container>
+    <StyledPageGrid container data-testid="ecole-projets-pastoral-screen">
       <Page pageParams={pageParams} />
     </StyledPageGrid>
   )
