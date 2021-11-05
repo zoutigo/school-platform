@@ -51,7 +51,6 @@ function InputSelectControl({
   return (
     <Grid item container className="field">
       <Grid item container className="label">
-        {' '}
         {label}
       </Grid>
       <Grid item container>

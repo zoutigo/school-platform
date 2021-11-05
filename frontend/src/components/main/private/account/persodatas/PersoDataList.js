@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
-
 import CredentialDatas from './CredentialDatas'
 import ChildrenDatas from './ChildrenDatas'
 import RolesDatas from './RolesDatas'

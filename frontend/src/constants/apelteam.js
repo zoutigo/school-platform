@@ -1,27 +1,21 @@
 const APELTEAM = [
   {
-    role: 'president',
+    role: 'presidente',
+    gender: 'madame',
+    firstname: 'Chrystèle',
+    lastname: 'Poncet',
+  },
+  {
+    role: 'secrétaire',
     gender: 'monsieur',
-    firstname: 'Pascal',
-    lastname: 'Bardet',
+    firstname: 'Sebastien',
+    lastname: 'Gautron',
   },
   {
-    role: 'vice-president',
+    role: 'trésorière',
     gender: 'madame',
-    firstname: 'Annabelle',
-    lastname: 'Murat',
-  },
-  {
-    role: 'tresorier',
-    gender: 'madame',
-    firstname: 'Claire',
-    lastname: 'Bontemps',
-  },
-  {
-    role: 'secretaire',
-    gender: 'madame',
-    firstname: 'Camille',
-    lastname: 'Lagarde',
+    firstname: 'Nadège',
+    lastname: 'Carle',
   },
 ]
 

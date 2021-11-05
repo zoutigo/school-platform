@@ -1,32 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import PropTypes from 'prop-types'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSnackbar } from 'notistack'
 import {
   Grid,
-  useTheme,
   List,
   ListItem,
   TextField,
-  Select,
-  MenuItem,
+  InputAdornment,
+  IconButton,
+  Button,
   styled,
 } from '@material-ui/core'
-import { StyledPersoDataContainer, StyledPersoDataForm } from './Style'
-import CustomButton from '../../../../elements/CustomButton'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import Select from 'react-select'
+import { StyledPersoDataContainer } from './Style'
 
-import InputTextControl from '../../../../elements/InputTextControl'
 // eslint-disable-next-line import/named
 import { apiUpdateUser } from '../../../../../utils/api'
-import {
-  updateUserChildrenClassesSchema,
-  updateUserCredentialsSchema,
-  updateUserPasswordSchema,
-} from '../../../../../schemas/updateUserSchema'
-import InputSelectControl from '../../../../elements/InputSelectControl'
-import InputSelectMultiControl from '../../../../elements/InputSelectMultiControl'
+
 import {
   setUserInfos,
   setUserToken,
@@ -40,6 +34,7 @@ import useMutate from '../../../../hooks/useMutate'
 import MutateCircularProgress from '../../../../elements/MutateCircularProgress'
 import getError from '../../../../../utils/getError'
 import getResponse from '../../../../../utils/getResponse'
+import customStyles from '../../../../../constants/selectMultiCostumStyles'
 
 const StyledForm = styled('form')(({ theme }) => ({
   width: '100%',
@@ -50,8 +45,9 @@ const StyledForm = styled('form')(({ theme }) => ({
 
 function PersoDataForm({ setForm, setToggle, form, data }) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  const theme = useTheme()
+
   const dispatch = useDispatch()
+  const [showPassword, setShowPassword] = useState(false)
   const {
     User: { id },
     Token,
@@ -66,26 +62,14 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
 
   const [formtype] = type
 
-  const schema = () => {
-    switch (formtype) {
-      case 'credentialsform':
-        return updateUserCredentialsSchema
-      case 'childrenform':
-        return updateUserChildrenClassesSchema
-      case 'passwordform':
-        return updateUserPasswordSchema
-      default:
-        return updateUserCredentialsSchema
-    }
-  }
-
   const {
     control,
     handleSubmit,
     formState: { isSubmitting, isValid, errors },
+    getValues,
+    setValue,
   } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(schema()),
   })
 
   const onSubmit = async (datas) => {
@@ -123,6 +107,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
         'x-access-token': Token,
       },
     }
+
     closeSnackbar()
     try {
       await mutateAsync({
@@ -171,13 +156,15 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
     ? { label: data.gender, value: data.gender }
     : { label: 'madame', value: 'madame' }
 
+  const handleClickShowPassword = () => setShowPassword(!showPassword)
+
   return (
     <StyledPersoDataContainer container>
       {isMutating && <MutateCircularProgress />}
       <StyledForm onSubmit={handleSubmit(onSubmit)}>
         {credentialsform && (
           <List>
-            {/* <ListItem>
+            <ListItem>
               <Controller
                 control={control}
                 name="gender"
@@ -189,124 +176,333 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                   <TextField
                     id="gender"
                     name="gender"
-                    label="Civilité"
                     placeholder="homme ou femme ?"
                     variant="outlined"
-                    fullWidth
-                    select
-                    SelectProps={{
-                      native: true,
+                    InputLabelProps={{
+                      shrink: true,
                     }}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    error={Boolean(errors.partner1Name)}
-                    helperText={
-                      errors.partner1Name ? errors.partner1Name.message : ''
-                    }
-                    {...field}
-                  >
-                    {genderOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField>
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          Civilité:
+                        </InputAdornment>
+                      ),
+                      inputComponent: () => (
+                        <Select
+                          {...field}
+                          inputRef={field.ref}
+                          options={genderOptions}
+                          autoFocus
+                          styles={customStyles}
+                          defaultOptions
+                          maxMenuHeight={200}
+                        />
+                      ),
+                    }}
+                    onChange={(event) => field.onChange(event.target.value)}
+                    error={Boolean(errors.gender)}
+                    helperText={errors.gender ? errors.gender.message : ''}
+                    // {...field}
+                  />
                 )}
               />
-            </ListItem> */}
-            <ListItem>
-              <InputSelectControl
-                control={control}
-                name="gender"
-                initialValue={initialGender}
-                label="Civilité"
-                options={genderOptions}
-              />
             </ListItem>
             <ListItem>
-              <InputTextControl
-                name="firstname"
-                control={control}
-                initialValue={data ? data.firstname : null}
-                helperText="au moins 2 caractères"
-                label="Votre Prénom"
-                width="100%"
-              />
-            </ListItem>
-            <ListItem>
-              <InputTextControl
+              <Controller
                 name="lastname"
                 control={control}
-                initialValue={data ? data.lastname : null}
-                helperText="au moins 2 caractères"
-                label="Votre nom"
-                width="100%"
+                defaultValue={data ? data.lastname : ''}
+                rules={{
+                  required: 'le nom est obligatoire',
+                  minLength: {
+                    value: 2,
+                    message: 'Le nom ne peut pas avoir moins de deux lettres',
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: 'le nom ne peut avoir plus de 20 lettres',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="nom"
+                    label="Nom"
+                    placeholder="Votre nom"
+                    error={Boolean(errors.lastname)}
+                    helperText={errors.lastname ? errors.lastname.message : ''}
+                    {...field}
+                  />
+                )}
               />
             </ListItem>
             <ListItem>
-              <InputTextControl
-                name="phone"
+              <Controller
+                name="firstname"
                 control={control}
-                initialValue={data ? data.phone : null}
-                helperText="ex: 0618657934 ou +33178569054"
-                label="Votre numéro de téléphone"
-                width="100%"
+                defaultValue={data ? data.firstname : ''}
+                rules={{
+                  required: 'le prenom est obligatoire',
+                  minLength: {
+                    value: 2,
+                    message:
+                      'Le prénom ne peut pas avoir moins de deux lettres',
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: 'le prénom ne peut avoir plus de 20 lettres',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="prenom"
+                    label="Prénom"
+                    placeholder="Votre prénom"
+                    error={Boolean(errors.firstname)}
+                    helperText={
+                      errors.firstname ? errors.firstname.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+            <ListItem>
+              <Controller
+                control={control}
+                name="phone"
+                defaultValue={data ? data.phone : ''}
+                rules={{
+                  pattern: {
+                    value: /^[+](\d{3})\)?(\d{3})(\d{5,6})$|^(\d{10,10})$/,
+                    message: "le format de telephone saisi n'est pas valide.",
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="phone"
+                    label="Telephone"
+                    placeholder="Telephone"
+                    error={Boolean(errors.phone)}
+                    helperText={errors.phone ? errors.phone.message : ''}
+                    {...field}
+                  />
+                )}
               />
             </ListItem>
           </List>
         )}
         {childrenform && (
           <Grid container className="form-fields-container">
-            <InputSelectMultiControl
-              name="childrenClasses"
-              options={classroomsOptions}
-              control={control}
-              label="Choisir la classe :"
-              initialValue={initialClassrooms}
-            />
+            <List>
+              <ListItem>
+                <Controller
+                  control={control}
+                  name="childrenClasses"
+                  defaultValue={initialClassrooms}
+                  rules={{
+                    required: 'indiquez au moins une classe ',
+                  }}
+                  render={({ field }) => (
+                    <TextField
+                      id="gender"
+                      name="gender"
+                      placeholder="homme ou femme ?"
+                      variant="outlined"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            Choisir les classes
+                          </InputAdornment>
+                        ),
+                        inputComponent: () => (
+                          <Select
+                            {...field}
+                            inputRef={field.ref}
+                            options={classroomsOptions}
+                            isMulti
+                            autoFocus
+                            styles={customStyles}
+                            defaultValue={initialClassrooms}
+                            defaultOptions
+                            maxMenuHeight={200}
+                          />
+                        ),
+                      }}
+                      onChange={(event) => field.onChange(event.target.value)}
+                      error={Boolean(errors.gender)}
+                      helperText={errors.gender ? errors.gender.message : ''}
+                      // {...field}
+                    />
+                  )}
+                />
+              </ListItem>
+            </List>
           </Grid>
         )}
         {passwordform && (
-          <Grid container className="form-fields-container">
-            <InputTextControl
-              name="password"
-              type="password"
-              label="Ancien mot de pass"
-              placeholder="FureurVosgienne8854"
-              helperText="8 caractères minimum, dont au moins 1 majuscules, 1 majuscule 1 chiffre"
-              width="100%"
-              control={control}
-            />
-            <InputTextControl
-              name="newPassword"
-              type="password"
-              label="Nouveau mot de pass"
-              placeholder="FureurVosgienne8854"
-              helperText="8 caractères minimum, dont au moins 1 majuscules, 1 majuscule 1 chiffre"
-              width="100%"
-              control={control}
-            />
-            <InputTextControl
-              name="newPasswordConfirm"
-              type="password"
-              label="Confirmer le nouveau mot de pass"
-              placeholder="FureurVosgienne8854"
-              helperText="8 caractères minimum, dont au moins 1 majuscules, 1 majuscule 1 chiffre"
-              width="100%"
-              control={control}
-            />
-          </Grid>
-        )}
+          <List>
+            <ListItem>
+              <Controller
+                name="password"
+                defaultValue=""
+                control={control}
+                rules={{
+                  required: "veillez saisir l'ancien mot de pass",
+                  maxLength: {
+                    value: 64,
+                    message:
+                      'Le mot de pass ne peut avoir plus de 64 caractères',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="password"
+                    label="Ancien mot de pass"
+                    placeholder="exemple: FureurVosgienne8854"
+                    InputProps={{
+                      type: showPassword ? 'text' : 'password',
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    error={Boolean(errors.password)}
+                    helperText={errors.password ? errors.password.message : ''}
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
 
-        <Grid item container alignItems="center" justify="flex-end">
-          <CustomButton
-            text="je poste mes informations"
-            bgcolor={theme.palette.success.main}
-            action="post"
-            width="300px"
-            type="submit"
-            disabled={!isValid || isSubmitting}
-          />
-        </Grid>
+            <ListItem>
+              <Controller
+                name="newPassword"
+                defaultValue=""
+                control={control}
+                rules={{
+                  required: 'veillez saisir le nouveau mot de pass',
+                  maxLength: {
+                    value: 64,
+                    message:
+                      'Le mot de pass ne peut avoir plus de 64 caractères',
+                  },
+                  pattern: {
+                    value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$/,
+                    message:
+                      '8 caractères minimum, dont au moins 1 majuscules, 1 majuscule 1 chiffre',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="newPassword"
+                    label="Nouveau mot de pass"
+                    placeholder="exemple: FureurVosgienne8854"
+                    InputProps={{
+                      type: showPassword ? 'text' : 'password',
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    error={Boolean(errors.newPassword)}
+                    helperText={
+                      errors.newPassword ? errors.newPassword.message : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+            <ListItem>
+              <Controller
+                name="newPasswordConfirm"
+                defaultValue=""
+                control={control}
+                rules={{
+                  required: 'veillez confirmer le nouveau mot de pass',
+                  validate: {
+                    matches: (value) => {
+                      const { newPassword } = getValues()
+                      return (
+                        newPassword === value ||
+                        "la saisie n'est pas identique au nouveau mot de pass"
+                      )
+                    },
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="newPasswordConfirm"
+                    label="Confirmer le mot de pass"
+                    placeholder="Saisir le nouveau mot de pass"
+                    InputProps={{
+                      type: showPassword ? 'text' : 'password',
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    error={Boolean(errors.newPasswordConfirm)}
+                    helperText={
+                      errors.newPasswordConfirm
+                        ? errors.newPasswordConfirm.message
+                        : ''
+                    }
+                    {...field}
+                  />
+                )}
+              />
+            </ListItem>
+          </List>
+        )}
+        <List>
+          <ListItem>
+            <Button
+              role="button"
+              variant="contained"
+              fullWidth
+              type="submit"
+              color="secondary"
+              spacing={2}
+              disabled={!isValid || isSubmitting}
+            >
+              je poste mes informations
+            </Button>
+          </ListItem>
+        </List>
       </StyledForm>
     </StyledPersoDataContainer>
   )

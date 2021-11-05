@@ -88,6 +88,12 @@ const ogecs = [
     firstname: 'rachida',
     roles: ['agent polyvalent'],
   },
+  {
+    id: 7,
+    lastname: 'Jacob',
+    firstname: 'clara',
+    roles: ['volontaire service civique'],
+  },
 ]
 
 function EquipeScreen() {

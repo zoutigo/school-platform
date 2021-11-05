@@ -4,6 +4,7 @@ module.exports.userAttributes = [
   'lastname',
   'firstname',
   'gender',
+  'phone',
   'isAdmin',
   'isTeacher',
   'isManager',
