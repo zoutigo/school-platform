@@ -51,12 +51,6 @@ function PaperForm({
     }
   }, [formAction, currentDocument])
 
-  console.log(
-    'isPrivateDefaultValue',
-    isPrivateDefaultValue(),
-    currentDocument?.isPrivate
-  )
-
   const isPrivateOptions = useCallback(
     [
       { labelOption: 'Oui', optionvalue: 'oui' },

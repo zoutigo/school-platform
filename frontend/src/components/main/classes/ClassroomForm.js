@@ -9,7 +9,6 @@ import Title from '../../elements/Title'
 import CostumButton from '../../elements/CustomButton'
 import { apiPostEntity } from '../../../utils/api'
 import classroomSchema from '../../../schemas/classroomSchema'
-import InputReactPageControl from '../../elements/InputReactPageControl'
 import InputTextControl from '../../elements/InputTextControl'
 import InputRadio from '../../elements/InputRadio'
 import useRigths from '../../hooks/useRigths'
@@ -17,6 +16,7 @@ import useMutate from '../../hooks/useMutate'
 import MutateCircularProgress from '../../elements/MutateCircularProgress'
 import getError from '../../../utils/getError'
 import getResponse from '../../../utils/getResponse'
+import ReactPageInput from '../../elements/inputs/ReactPageInput'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
@@ -99,10 +99,10 @@ function ClassroomForm({
             initialValue={currentClassroom ? currentClassroom.email : null}
           />
         )}
-        <InputReactPageControl
+        <ReactPageInput
           control={control}
           name="content"
-          initialValue={currentClassroom ? currentClassroom.content : null}
+          defaultValue={currentClassroom ? currentClassroom.content : null}
           label="Description de la classe"
         />
         <StyledRadioDiv>

@@ -1,42 +1,25 @@
 /* eslint-disable import/named */
-import { Grid, styled, useTheme, TextField } from '@material-ui/core'
+import { Grid, List, ListItem, Button } from '@material-ui/core'
 import React, { useEffect } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { useSnackbar } from 'notistack'
 import { useSelector } from 'react-redux'
 import { apiPostAlbumImages } from '../../../utils/api'
 import Title from '../Title'
-import CostumButton from '../CustomButton'
 import useMutate from '../../hooks/useMutate'
 import MutateCircularProgress from '../MutateCircularProgress'
 import getError from '../../../utils/getError'
 import getResponse from '../../../utils/getResponse'
-
-const StyledPaperForm = styled('form')(() => ({
-  width: '100%',
-  margin: '1rem auto',
-  background: 'gray',
-  '& .form-fields-container': {
-    background: 'whitesmoke',
-    padding: '0.5rem 0.2rem',
-    '& .field': {
-      margin: '0.6rem 0px',
-    },
-  },
-}))
+import StyledHookForm from '../../styled-components/StyledHookForm'
+import FileInput from '../inputs/FileInput'
 
 function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
-  const theme = useTheme()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync, isMutating } = useMutate(queryKey, apiPostAlbumImages)
 
-  const {
-    control,
-    handleSubmit,
-    formState: { isSubmitting, isValid, errors },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     mode: 'onChange',
   })
 
@@ -82,62 +65,35 @@ function AlbumPageForm({ queryKey, currentAlbum, entityAlias, setShowPage }) {
 
   return (
     <Grid item container>
-      <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
+      <StyledHookForm onSubmit={handleSubmit(onSubmit)}>
         <Grid item container justifyContent="center">
           <Title title={formTitle} textcolor="whitesmoke" />
         </Grid>
         {isMutating && <MutateCircularProgress />}
-        <Grid container className="form-fields-container">
-          <Controller
-            name="files"
-            control={control}
-            defaultValue=""
-            rules={{
-              validate: {
-                minlenght: (value) =>
-                  value.length > 0 || '1 fichier au moins est requis',
-                maxlenght: (value) =>
-                  value.length < 16 ||
-                  'Vous ne pouvez telecharger que 15 fichiers maximum en meme temps',
-                filesize: (value) =>
-                  value[0].size <= 1024 * 1024 * 10 ||
-                  'Chacune des images doit faire moins de 10Mo',
-              },
-            }}
-            render={({ field }) => (
-              <TextField
-                variant="outlined"
-                fullWidth
-                type="file"
-                id="images"
-                label="Images"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  multiple: true,
-                  accept: 'image/jpg,image/jpeg,image/gif,image/png',
-                }}
-                onChange={(e) => {
-                  field.onChange(e.target.files)
-                }}
-                error={Boolean(errors.files)}
-                helperText={errors.files ? errors.files.message : ''}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item container alignItems="center" justifyContent="flex-end">
-          <CostumButton
-            text="J'envoie mes images"
-            bgcolor={theme.palette.success.main}
-            action="post"
-            width="300px"
-            type="submit"
-            disabled={!isValid || isSubmitting}
-          />
-        </Grid>
-      </StyledPaperForm>
+        <List className="form-fields-container">
+          <ListItem className="field">
+            <FileInput
+              control={control}
+              defaultValue=""
+              multiple
+              label="Ajouter des images"
+              example="Fichiers jpg,jpeg,gif,png, maximum 10Mo par image"
+              accept="image/jpg,image/jpeg,image/gif,image/png"
+            />
+          </ListItem>
+          <ListItem>
+            <Button
+              type="submit"
+              color="secondary"
+              variant="contained"
+              fullWidth
+              size="large"
+            >
+              Je publie mes images
+            </Button>
+          </ListItem>
+        </List>
+      </StyledHookForm>
     </Grid>
   )
 }

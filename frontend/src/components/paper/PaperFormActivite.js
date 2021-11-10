@@ -1,28 +1,23 @@
 /* eslint-disable import/named */
-import { styled, Grid, useTheme } from '@material-ui/core'
+import { styled, List, ListItem, Button } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import InputTextControl from '../elements/InputTextControl'
 import { apiPostPaper } from '../../utils/api'
-import paperActiviteSchema from '../../schemas/paperActiviteSchema'
-import TinyPageEditor from '../elements/TinyPageEditor'
-import CostumButton from '../elements/CustomButton'
-import InputEditorControl from '../elements/editor/InputEditorControl'
-import InputReactPageControl from '../elements/InputReactPageControl'
-import InputRadio from '../elements/InputRadio'
 import MutateCircularProgress from '../elements/MutateCircularProgress'
 import useMutate from '../hooks/useMutate'
 import getError from '../../utils/getError'
 import getResponse from '../../utils/getResponse'
+import TextInput from '../elements/inputs/TextInput'
+import RadioInput from '../elements/inputs/RadioInput'
+import ReactPageInput from '../elements/inputs/ReactPageInput'
 
 const StyledPaperForm = styled('form')(() => ({
   width: '100%',
   margin: '1rem auto',
-  background: 'gray',
+  background: 'whitesmoke',
   '& .form-fields-container': {
     background: 'whitesmoke',
     padding: '0.5rem 0.2rem',
@@ -39,7 +34,6 @@ function PaperFormActivite({
   handleBack,
   isPrivateDatas,
 }) {
-  const theme = useTheme()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
 
@@ -50,7 +44,6 @@ function PaperFormActivite({
     formState: { isSubmitting, isValid },
   } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(paperActiviteSchema),
   })
 
   const onSubmit = async (datas) => {
@@ -85,73 +78,66 @@ function PaperFormActivite({
   return (
     <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
       {isMutating && <MutateCircularProgress />}
-      <Grid container className="form-fields-container">
-        <InputTextControl
-          name="title"
-          control={control}
-          initialValue={formAction === 'update' ? currentDocument.title : ''}
-          helperText="au moins 10 caractères"
-          label="Titre"
-          width="100%"
-        />
-
-        <InputRadio
-          question="Activité privée ?"
-          options={isPrivateDatas?.isPrivateOptions}
-          name="isPrivate"
-          defaultValue={isPrivateDatas?.isPrivateDefaultValue}
-          control={control}
-          radioGroupProps={{ row: true }}
-          display="block"
-        />
-
-        {/* <Grid item container>
-          <Controller
-            name="text"
+      <List className="form-fields-container">
+        <ListItem>
+          <TextInput
+            name="title"
+            type="text"
+            variant="standard"
             control={control}
-            defaultValue={formAction === 'update' ? currentDocument.text : ''}
-            render={({ field: { onChange, value } }) => (
-              <TinyPageEditor onChange={onChange} value={value} />
-            )}
+            defaultValue={formAction === 'update' ? currentDocument.title : ''}
+            label="Titre"
+            example="le titre de votre activité"
+            width="100%"
+            rules={{
+              required: 'le titre est obligatoire',
+              minLength: {
+                value: 5,
+                message: 'Le titre ne peut pas avoir moins de cinq lettres',
+              },
+              maxLength: {
+                value: 50,
+                message: 'le titre ne peut avoir plus de 50 lettres',
+              },
+            }}
           />
-        </Grid> */}
-        {/* <InputEditorControl
-          name="text"
-          control={control}
-          initialValue={formAction === 'update' ? currentDocument.text : ''}
-          label="Texte:"
-          width="100%"
-          height={200}
-        /> */}
-        {/* <InputCKEditorControl
-          name="text"
-          control={control}
-          initialValue={formAction === 'update' ? currentDocument.text : ''}
-          label="Texte:"
-          width="100%"
-          height={200}
-        /> */}
-        <InputReactPageControl
-          name="content"
-          control={control}
-          initialValue={formAction === 'update' ? currentDocument.content : ''}
-          label="Texte:"
-        />
-      </Grid>
-      <Grid item container alignItems="center" justify="flex-end">
-        <CostumButton
-          text={
-            formAction === 'update'
+        </ListItem>
+        <ListItem>
+          <RadioInput
+            question="Activité privée ?"
+            options={isPrivateDatas?.isPrivateOptions}
+            name="isPrivate"
+            defaultValue={isPrivateDatas?.isPrivateDefaultValue}
+            control={control}
+            radioGroupProps={{ row: true }}
+            variant="standard"
+          />
+        </ListItem>
+        <ListItem>
+          <ReactPageInput
+            name="content"
+            control={control}
+            defaultValue={
+              formAction === 'update' ? currentDocument.content : ''
+            }
+            label="Saisir le contenu en cliquant sur le + pour créer un bloc:"
+          />
+        </ListItem>
+
+        <ListItem>
+          <Button
+            variant="contained"
+            type="submit"
+            color="secondary"
+            fullWidth
+            disabled={!isValid || isSubmitting}
+          >
+            {formAction === 'update'
               ? `Modifier ${paper.paperType}`
-              : `Poster ${paper.paperType}`
-          }
-          bgcolor={theme.palette.success.main}
-          action="post"
-          width="300px"
-          type="submit"
-          disabled={!isValid || isSubmitting}
-        />
-      </Grid>
+              : `Poster ${paper.paperType}`}
+          </Button>
+        </ListItem>
+      </List>
     </StyledPaperForm>
   )
 }

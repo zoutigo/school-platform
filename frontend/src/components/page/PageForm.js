@@ -1,38 +1,20 @@
 /* eslint-disable import/named */
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Button } from '@material-ui/core'
-import { styled } from '@material-ui/styles'
-import { Controller, useForm } from 'react-hook-form'
+import { Grid, Button, List, ListItem } from '@material-ui/core'
+import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
 import { useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import Editor, { getTextContents } from '@react-page/editor'
-import slate from '@react-page/plugins-slate'
-import { imagePlugin } from '@react-page/plugins-image'
-import divider from '@react-page/plugins-divider'
-import spacer from '@react-page/plugins-spacer'
 
-import cellSpacing from '../elements/reactpage/constants'
 import Title from '../elements/Title'
-import { apiPostEditorImage, apiPostEntity, apiPostPage } from '../../utils/api'
+import { apiPostEntity, apiPostPage } from '../../utils/api'
 import useMutate from '../hooks/useMutate'
 import MutateCircularProgress from '../elements/MutateCircularProgress'
 import getError from '../../utils/getError'
 import getResponse from '../../utils/getResponse'
-
-const StyledPaperForm = styled('form')(() => ({
-  width: '100%',
-  margin: '1rem auto',
-  background: 'gray',
-  '& .form-fields-container': {
-    background: 'whitesmoke',
-    padding: '0.5rem 0.2rem',
-    '& .field': {
-      margin: '0.6rem 0px',
-    },
-  },
-}))
+import ReactPageInput from '../elements/inputs/ReactPageInput'
+import StyledHookForm from '../styled-components/StyledHookForm'
 
 function PageForm({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
   const { pageName, queryKey, type } = pageParams
@@ -84,80 +66,37 @@ function PageForm({ page, pageParams, setShowPageForm, setShowEditToolTip }) {
     }
   }, [])
 
-  const uploadImage = useCallback(
-    () => async (file, reportProgress) => {
-      const data = await apiPostEditorImage({ file, Token })
-      return { url: data.url }
-    },
-    []
-  )
-
-  const cellPlugins = [
-    slate(),
-    imagePlugin({
-      imageUpload: uploadImage(),
-    }),
-    divider,
-    spacer,
-    // colorPlugin(),
-  ]
-
   // if (!isAllowedToChange) return <Redirect to="/private/identification/login" />
 
   return (
-    <StyledPaperForm onSubmit={handleSubmit(onSubmit)} data-testid="page-form">
+    <StyledHookForm onSubmit={handleSubmit(onSubmit)} data-testid="page-form">
+      {isMutating && <MutateCircularProgress />}
       <Grid item container justifyContent="center">
         <Title title={formTitle} textcolor="whitesmoke" role="presentation" />
       </Grid>
-      {isMutating && <MutateCircularProgress />}
-      <Grid container className="form-fields-container">
-        {/* <InputReactPageControl
-          control={control}
-          name="content"
-          initialValue={page ? page.content : null}
-          label="Contenu de la page"
-        /> */}
-        <Grid item container className="controller">
-          <Controller
+      <List className="form-fields-container">
+        <ListItem className="field">
+          <ReactPageInput
             name="content"
             control={control}
-            defaultValue={page ? JSON.parse(page.content) : null}
-            rules={{
-              required: 'il veillez ajouter un texte',
-              // validate: (value) => {
-              //   const datas = getTextContents(value, {
-              //     cellPlugins,
-              //     lang: 'fr',
-              //   })
-              //   console.log(value)
-              // },
-            }}
-            render={({ field }) => (
-              <Editor
-                data-testid="page-editor"
-                {...field}
-                cellPlugins={cellPlugins}
-                cellSpacing={cellSpacing}
-                lang="fr"
-                onChange={(newvalue) => field.onChange(newvalue)}
-              />
-            )}
+            defaultValue={page.content}
+            label="Saisir le texte en cliquant sur le +"
           />
-        </Grid>
-      </Grid>
-      <Grid item container alignItems="center" justifyContent="flex-end">
-        <Button
-          type="submit"
-          fullWidth
-          color="secondary"
-          disabled={!isValid || isSubmitting}
-          variant="contained"
-          size="large"
-        >
-          {buttonText}
-        </Button>
-      </Grid>
-    </StyledPaperForm>
+        </ListItem>
+        <ListItem>
+          <Button
+            type="submit"
+            fullWidth
+            color="secondary"
+            disabled={!isValid || isSubmitting}
+            variant="contained"
+            size="large"
+          >
+            {buttonText}
+          </Button>
+        </ListItem>
+      </List>
+    </StyledHookForm>
   )
 }
 

@@ -27,8 +27,8 @@ import {
 } from '../../../../../redux/user/UserActions'
 import tokenDatas from '../../../../../utils/tokenDatas'
 import {
-  classroomsOptions,
   genderOptions,
+  classroomsOptions,
 } from '../../../../../constants/options'
 import useMutate from '../../../../hooks/useMutate'
 import MutateCircularProgress from '../../../../elements/MutateCircularProgress'
@@ -174,6 +174,9 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                 }}
                 render={({ field }) => (
                   <TextField
+                    style={{
+                      overflow: 'hidden',
+                    }}
                     id="gender"
                     name="gender"
                     placeholder="homme ou femme ?"
@@ -192,17 +195,16 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                           {...field}
                           inputRef={field.ref}
                           options={genderOptions}
-                          autoFocus
                           styles={customStyles}
                           defaultOptions
                           maxMenuHeight={200}
+                          menuPortalTarget={document.body}
                         />
                       ),
                     }}
                     onChange={(event) => field.onChange(event.target.value)}
                     error={Boolean(errors.gender)}
                     helperText={errors.gender ? errors.gender.message : ''}
-                    // {...field}
                   />
                 )}
               />
@@ -298,55 +300,54 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
           </List>
         )}
         {childrenform && (
-          <Grid container className="form-fields-container">
-            <List>
-              <ListItem>
-                <Controller
-                  control={control}
-                  name="childrenClasses"
-                  defaultValue={initialClassrooms}
-                  rules={{
-                    required: 'indiquez au moins une classe ',
-                  }}
-                  render={({ field }) => (
-                    <TextField
-                      id="gender"
-                      name="gender"
-                      placeholder="homme ou femme ?"
-                      variant="outlined"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            Choisir les classes
-                          </InputAdornment>
-                        ),
-                        inputComponent: () => (
-                          <Select
-                            {...field}
-                            inputRef={field.ref}
-                            options={classroomsOptions}
-                            isMulti
-                            autoFocus
-                            styles={customStyles}
-                            defaultValue={initialClassrooms}
-                            defaultOptions
-                            maxMenuHeight={200}
-                          />
-                        ),
-                      }}
-                      onChange={(event) => field.onChange(event.target.value)}
-                      error={Boolean(errors.gender)}
-                      helperText={errors.gender ? errors.gender.message : ''}
-                      // {...field}
-                    />
-                  )}
-                />
-              </ListItem>
-            </List>
-          </Grid>
+          <List>
+            <ListItem>
+              <Controller
+                control={control}
+                name="childrenClasses"
+                defaultValue={initialClassrooms}
+                rules={{
+                  required: 'indiquez au moins une classe ',
+                }}
+                render={({ field }) => (
+                  <TextField
+                    id="gender"
+                    name="gender"
+                    placeholder="homme ou femme ?"
+                    variant="outlined"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          Choisir:
+                        </InputAdornment>
+                      ),
+                      inputComponent: () => (
+                        <Select
+                          {...field}
+                          inputRef={field.ref}
+                          options={classroomsOptions}
+                          isMulti
+                          autoFocus
+                          styles={customStyles}
+                          defaultValue={initialClassrooms}
+                          defaultOptions
+                          maxMenuHeight={200}
+                          menuPortalTarget={document.body}
+                        />
+                      ),
+                    }}
+                    onChange={(event) => field.onChange(event.target.value)}
+                    error={Boolean(errors.gender)}
+                    helperText={errors.gender ? errors.gender.message : ''}
+                    // {...field}
+                  />
+                )}
+              />
+            </ListItem>
+          </List>
         )}
         {passwordform && (
           <List>

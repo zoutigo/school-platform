@@ -1,34 +1,21 @@
 /* eslint-disable import/named */
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { styled, Grid, useTheme } from '@material-ui/core'
+import { styled, Grid, Button, List, ListItem } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
-import { yupResolver } from '@hookform/resolvers/yup'
+
 import { useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import Title from '../elements/Title'
-import pageSchema from '../../schemas/pageSchema'
-import CostumButton from '../elements/CustomButton'
+
 import { apiPostEntity } from '../../utils/api'
-import InputReactPageControl from '../elements/InputReactPageControl'
 import useMutate from '../hooks/useMutate'
 import MutateCircularProgress from '../elements/MutateCircularProgress'
 import getError from '../../utils/getError'
 import getResponse from '../../utils/getResponse'
-
-const StyledPaperForm = styled('form')(() => ({
-  width: '100%',
-  margin: '1rem auto',
-  background: 'gray',
-  '& .form-fields-container': {
-    background: 'whitesmoke',
-    padding: '0.5rem 0.2rem',
-    '& .field': {
-      margin: '0.6rem 0px',
-    },
-  },
-}))
+import ReactPageInput from '../elements/inputs/ReactPageInput'
+import StyledHookForm from '../styled-components/StyledHookForm'
 
 function PageFormEntity({
   entity,
@@ -37,7 +24,7 @@ function PageFormEntity({
   setShowEditToolTip,
 }) {
   const { pageName, queryKey, isAllowedToChange } = pageParams
-  const theme = useTheme()
+
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
   const formTitle = `Modification de la page ${pageName}`
@@ -49,7 +36,6 @@ function PageFormEntity({
     formState: { isSubmitting, isValid },
   } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(pageSchema),
   })
 
   const onSubmit = async (datas) => {
@@ -87,30 +73,32 @@ function PageFormEntity({
 
   if (!isAllowedToChange) return <Redirect to="/private/identification/login" />
   return (
-    <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
+    <StyledHookForm onSubmit={handleSubmit(onSubmit)}>
+      {isMutating && <MutateCircularProgress />}
       <Grid item container justify="center">
         <Title title={formTitle} textcolor="whitesmoke" />
       </Grid>
-      {isMutating && <MutateCircularProgress />}
-      <Grid container className="form-fields-container">
-        <InputReactPageControl
-          control={control}
-          name="content"
-          initialValue={entity ? entity.content : null}
-          label="Contenu de la page"
-        />
-      </Grid>
-      <Grid item container alignItems="center" justify="flex-end">
-        <CostumButton
-          text={`Je modifie la page ${pageName}`}
-          bgcolor={theme.palette.success.main}
-          action="post"
-          width="300px"
-          type="submit"
-          disabled={!isValid || isSubmitting}
-        />
-      </Grid>
-    </StyledPaperForm>
+      <List className="form-fields-container">
+        <ListItem className="field">
+          <ReactPageInput
+            control={control}
+            name="content"
+            defaultValue={entity ? entity.content : null}
+            label="Contenu de la page"
+          />
+        </ListItem>
+        <ListItem>
+          <Button
+            fullWidth
+            color="secondary"
+            type="submit"
+            disabled={!isValid || isSubmitting}
+            variant="contained"
+            size="large"
+          >{`Je modifie la page ${pageName}`}</Button>
+        </ListItem>
+      </List>
+    </StyledHookForm>
   )
 }
 

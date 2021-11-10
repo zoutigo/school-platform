@@ -1,34 +1,30 @@
 /* eslint-disable import/named */
 import { useSnackbar } from 'notistack'
-import { styled, Grid, useTheme } from '@material-ui/core'
+import {
+  styled,
+  Grid,
+  useTheme,
+  Button,
+  List,
+  ListItem,
+} from '@material-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import InputTextControl from '../elements/InputTextControl'
 import paperActiviteSchema from '../../schemas/paperActiviteSchema'
 import CostumButton from '../elements/CustomButton'
 import DatePickerControl from '../elements/DatePickerControl'
-import InputReactPageControl from '../elements/InputReactPageControl'
-import InputRadio from '../elements/InputRadio'
 import useMutate from '../hooks/useMutate'
 import MutateCircularProgress from '../elements/MutateCircularProgress'
 import getError from '../../utils/getError'
 import getResponse from '../../utils/getResponse'
-
-const StyledPaperForm = styled('form')(() => ({
-  width: '100%',
-  margin: '1rem auto',
-  background: 'gray',
-  '& .form-fields-container': {
-    background: 'whitesmoke',
-    padding: '0.5rem 0.2rem',
-    '& .field': {
-      margin: '0.6rem 0px',
-    },
-  },
-}))
+import RadioInput from '../elements/inputs/RadioInput'
+import ReactPageInput from '../elements/inputs/ReactPageInput'
+import TextInput from '../elements/inputs/TextInput'
+import DatePickerInput from '../elements/inputs/DatePickerInput'
+import StyledHookForm from '../styled-components/StyledHookForm'
 
 function PaperFormEvent({
   currentDocument,
@@ -47,10 +43,11 @@ function PaperFormEvent({
     formState: { isSubmitting, isValid },
   } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(paperActiviteSchema),
+    // resolver: yupResolver(paperActiviteSchema),
   })
 
   const onSubmit = async (datas) => {
+    console.log('datas', datas)
     const { title, content, date, place, isPrivate } = datas
     const finalDatas = {
       title,
@@ -83,78 +80,111 @@ function PaperFormEvent({
   if (!currentDocument && formAction === 'update') return null
 
   return (
-    <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
+    <StyledHookForm onSubmit={handleSubmit(onSubmit)}>
       {isMutating && <MutateCircularProgress />}
-      <Grid container className="form-fields-container">
-        <InputTextControl
-          name="title"
-          control={control}
-          initialValue={
-            currentDocument && formAction === 'update'
-              ? currentDocument.title
-              : 'Ecole Saint Augustin'
-          }
-          helperText="au moins 10 caractères"
-          label="Titre"
-          width="100%"
-        />
-
-        <InputTextControl
-          name="place"
-          control={control}
-          initialValue={
-            currentDocument && formAction === 'update'
-              ? currentDocument.place
-              : 'Ecole Saint Augustin'
-          }
-          helperText="au moins 10 caractères"
-          label="Lieu de l'évènement"
-          width="100%"
-        />
-
-        <DatePickerControl
-          control={control}
-          name="date"
-          label="Date de l'évènement"
-          format="dddd Do MMMM yyyy"
-          initialDate={
-            currentDocument && formAction === 'update'
-              ? new Date(Number(currentDocument.date))
-              : new Date()
-          }
-        />
-
-        <InputRadio
-          question="Evenement privé ?"
-          options={isPrivateDatas?.isPrivateOptions}
-          name="isPrivate"
-          defaultValue={isPrivateDatas?.isPrivateDefaultValue}
-          control={control}
-          radioGroupProps={{ row: true }}
-          display="block"
-        />
-        <InputReactPageControl
-          name="content"
-          control={control}
-          initialValue={formAction === 'update' ? currentDocument.content : ''}
-          label="Texte:"
-        />
-      </Grid>
-      <Grid item container alignItems="center" justify="flex-end">
-        <CostumButton
-          text={
-            formAction === 'update'
+      <List className="form-fields-container">
+        <ListItem className="field">
+          <TextInput
+            name="title"
+            control={control}
+            defaultValue={
+              currentDocument && formAction === 'update'
+                ? currentDocument.title
+                : ''
+            }
+            example="Plus de 5 caractères et moins de 50 caractères"
+            label="Titre"
+            width="100%"
+            variant="standard"
+            rules={{
+              minLength: {
+                value: 5,
+                message: 'le titre doit avoir au moins 5 caractères',
+              },
+              maxLength: {
+                value: 50,
+                message: 'le titre doit avoir au plus 50 caractères',
+              },
+            }}
+          />
+        </ListItem>
+        <ListItem className="field">
+          <TextInput
+            name="place"
+            control={control}
+            defaultValue={
+              currentDocument && formAction === 'update'
+                ? currentDocument.place
+                : ''
+            }
+            example="Plus de 5 caractères et moins de 50 caractères"
+            label="Lieu de l'évènement"
+            width="100%"
+            variant="standard"
+            rules={{
+              minLength: {
+                value: 5,
+                message: 'le lieu doit avoir au moins 5 caractères',
+              },
+              maxLength: {
+                value: 50,
+                message: 'le lieu doit avoir au plus 50 caractères',
+              },
+            }}
+          />
+        </ListItem>
+        <ListItem className="field">
+          <DatePickerInput
+            control={control}
+            name="date"
+            label="Date de l'évènement"
+            format="dddd Do MMMM yyyy"
+            defaultValue={
+              currentDocument && formAction === 'update'
+                ? new Date(Number(currentDocument.date))
+                : new Date()
+            }
+          />
+        </ListItem>
+        <ListItem className="field">
+          <RadioInput
+            question="Evenement privé ?"
+            options={isPrivateDatas?.isPrivateOptions}
+            name="isPrivate"
+            defaultValue={isPrivateDatas?.isPrivateDefaultValue}
+            control={control}
+            radioGroupProps={{ row: true }}
+            display="block"
+            variant="standard"
+          />
+        </ListItem>
+        <ListItem>
+          <ReactPageInput
+            name="content"
+            control={control}
+            defaultValue={
+              formAction === 'update' ? currentDocument.content : ''
+            }
+            label="Texte:"
+          />
+        </ListItem>
+        <ListItem>
+          <Button
+            type="submit"
+            disabled={!isValid || isSubmitting}
+            color="secondary"
+            fullWidth
+            variant="contained"
+          >
+            {formAction === 'update'
               ? `Modifier ${paper.paperType}`
-              : `Poster ${paper.paperType}`
-          }
-          bgcolor={theme.palette.success.main}
-          action="post"
-          width="300px"
-          type="submit"
-          disabled={!isValid || isSubmitting}
-        />
-      </Grid>
-    </StyledPaperForm>
+              : `Poster ${paper.paperType}`}
+          </Button>
+        </ListItem>
+      </List>
+      {/* <Grid container className="form-fields-container"></Grid>
+      <Grid item container alignItems="center" justify="flex-end"></Grid> */}
+    </StyledHookForm>
   )
 }
 

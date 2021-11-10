@@ -12,11 +12,12 @@ import '@react-page/plugins-slate/lib/index.css'
 import '@react-page/plugins-image/lib/index.css'
 import '@react-page/editor/lib/index.css'
 
-import { Grid, styled } from '@material-ui/core'
+import { Grid, styled, TextField } from '@material-ui/core'
 import AlertCollapse from './AlertCollapse'
 import TRANSLATIONS from './reactpage/constants'
 import cellSpacing from './reactpage/constants'
 import { apiPostEditorImage } from '../../utils/api'
+import AlertMessage from './AlertMessage'
 // import colorPlugin from './reactpage/colorPlugin'
 
 // const cellSpacing = {
@@ -45,6 +46,12 @@ const StyledLabel = styled(Grid)(({ theme }) => ({
   fontSize: '0.8rem',
   margin: '1rem 0px',
 }))
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  padding: '1rem 0.5rem',
+  '& >div': {
+    width: '100%',
+  },
+}))
 
 function InputReactPageControl({
   control,
@@ -52,13 +59,10 @@ function InputReactPageControl({
   height,
   initialValue,
   label: formlabel,
+
   ...rest
 }) {
   const { Token } = useSelector((state) => state.user)
-
-  const [editorValue, setEditorValue] = useState(
-    initialValue ? JSON.parse(initialValue) : null
-  )
 
   const uploadImage = useCallback(
     () => async (file, reportProgress) => {
@@ -80,43 +84,60 @@ function InputReactPageControl({
 
   const {
     field,
-    fieldState: { invalid, error: formerror },
+    fieldState: { invalid, error },
   } = useController({
     name,
     control,
-    defaultValue: initialValue,
+    defaultValue: initialValue ? JSON.parse(initialValue) : null,
     rules: { required: false },
   })
 
   const { ref, onChange, value, ...inputProps } = field
 
-  const handleChange = (data) => {
-    setEditorValue(data)
-    onChange(data)
-  }
   return (
     <StyledGrid container>
-      <Grid item container>
-        <AlertCollapse {...alert} />
-      </Grid>
-      <StyledLabel item> {formlabel}</StyledLabel>
       <Grid item container className="controller">
         <Controller
           {...rest}
           control={control}
-          defaultValue={initialValue}
+          // rules={{
+          //   required: "le nombre d'élèves est obligatoire",
+          //   maxLength: {
+          //     value: 5,
+          //     message: "le nombre d'élèves doit avoir au plus 5 caractères",
+          //   },
+          //   validate: {
+          //     number: (val) =>
+          //       Number.isInteger(val) ||
+          //       "le nombre d'élèves doit etre un nombre entier",
+          //   },
+          //   max: {
+          //     value: 20000,
+          //     message: "le nombre d'élèves doit etre inférieur à 20000",
+          //   },
+          // }}
+          // rules={{
+          //   validate: {
+          //     mandatory: (val) =>
+          //       (val && val.rows && val.rows.length > 0) ||
+          //       'Veillez ajouter un texte ou une image',
+          //   },
+          // }}
           render={() => (
             <Editor
+              {...field}
               cellPlugins={cellPlugins}
-              value={editorValue}
               cellSpacing={cellSpacing}
               lang="fr"
-              onChange={(newvalue) => handleChange(newvalue)}
-              // cellSpacing={cellSpacing}
+              onChange={(newvalue) => {
+                field.onChange(newvalue)
+              }}
+
               // uiTranslator={useUiTranslator()}
             />
           )}
         />
+        {error && <AlertMessage message={error.message} severity="error" />}
       </Grid>
     </StyledGrid>
   )

@@ -103,7 +103,6 @@ function InputSmallEditorControl({
                 force_br_newlines: true,
                 force_p_newlines: false,
                 image_caption: true,
-
                 font_formats: 'Comic Sans MS=comic sans ms,sans-serif',
                 // plugins:
                 //   'textcolor preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap  emoticons',

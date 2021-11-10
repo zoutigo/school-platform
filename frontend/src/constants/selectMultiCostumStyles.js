@@ -5,6 +5,7 @@ const customStyles = {
     color: state.isSelected ? 'red' : 'blue',
     padding: 20,
   }),
+  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
   control: (base, state) => ({
     ...base,
     // none of react-select's styles are passed to <Control />

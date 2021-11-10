@@ -120,6 +120,7 @@ export const StyledAlert = styled(Alert)(({ theme }) => ({
 
 export const StyledEditorGrid = styled(Grid)(() => ({
   background: 'whitesmoke',
+  width: '100%',
   '& .mce-fullscreen': {
     zIndex: '10',
     border: 'solid red 20px',

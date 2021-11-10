@@ -1,37 +1,22 @@
 /* eslint-disable import/named */
-import { Grid, styled, useTheme } from '@material-ui/core'
+import { Grid, useTheme, List, ListItem, Button } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 import React from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
 import { Link, useLocation } from 'react-router-dom'
 import Title from '../components/elements/Title'
-import TinyPageEditor from '../components/elements/TinyPageEditor'
-import InputTextControl from '../components/elements/InputTextControl'
-import suggestionSchema from '../schemas/suggestionSchema'
-import CustomButton from '../components/elements/CustomButton'
 import LazyMessage from '../components/elements/LazyMessage'
-import InputSelectControl from '../components/elements/InputSelectControl'
 import { apiPostSuggestion } from '../utils/api'
 import useRigths from '../components/hooks/useRigths'
 import useMutate from '../components/hooks/useMutate'
 import MutateCircularProgress from '../components/elements/MutateCircularProgress'
 import getError from '../utils/getError'
 import getResponse from '../utils/getResponse'
-
-const StyledPaperForm = styled('form')(() => ({
-  width: '100%',
-  margin: '1rem auto',
-  background: 'gray',
-  '& .form-fields-container': {
-    background: 'whitesmoke',
-    padding: '0.5rem 0.2rem',
-    '& .field': {
-      margin: '0.6rem 0px',
-    },
-  },
-}))
+import StyledHookForm from '../components/styled-components/StyledHookForm'
+import TextInput from '../components/elements/inputs/TextInput'
+import SelectSingleInput from '../components/elements/inputs/SelectSingleInput'
+import SmallEditorInput from '../components/elements/inputs/SmallEditorInput'
 
 function InformationContactsEcrireScreen() {
   const theme = useTheme()
@@ -40,13 +25,8 @@ function InformationContactsEcrireScreen() {
   const queryKey = ['suggestions']
   const { Token } = useSelector((state) => state.user)
   const { userLevel } = useRigths()
-  const {
-    control,
-    handleSubmit,
-    formState: { isSubmitting, isValid },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(suggestionSchema),
   })
 
   const { mutateAsync, isMutating, mutationIsSuccessfull } = useMutate(
@@ -133,7 +113,7 @@ function InformationContactsEcrireScreen() {
   const initial = initialTopic || otherTopic
 
   return (
-    <Grid container>
+    <Grid container data-testid="informations-contacts-ecrire-screen">
       {isMutating && <MutateCircularProgress />}
       {!userLevel && (
         <LazyMessage severity="error">
@@ -141,55 +121,83 @@ function InformationContactsEcrireScreen() {
         </LazyMessage>
       )}
       {userLevel && !mutationIsSuccessfull && (
-        <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
-          <Grid item container justify="center">
-            <Title
-              title={ecrireState.text || 'Ecrire'}
-              textcolor="whitesmoke"
-            />
-          </Grid>
-          <Grid container className="form-fields-container">
-            <InputSelectControl
-              name="topic"
-              control={control}
-              initialValue={initial}
-              options={suggestionOptions}
-              label="Sujet"
-            />
-            <InputTextControl
-              name="title"
-              control={control}
-              initialValue=""
-              helperText="au moins 10 caractères"
-              label="Titre"
-              width="100%"
-            />
-            <Grid item container>
-              <Controller
+        <StyledHookForm onSubmit={handleSubmit(onSubmit)} role="form">
+          <List className="form-fields-container">
+            <ListItem className="field">
+              <Title
+                title={ecrireState.text || 'Quelle est votre suggestion ?'}
+                textcolor={theme.palette.secondary.main}
+              />
+            </ListItem>
+            <ListItem>
+              <SelectSingleInput
+                name="topic"
+                control={control}
+                defaultValue={initial}
+                label="Sujet:"
+                rules={{
+                  required: 'Choisir le sujet',
+                }}
+                example="quelle option vous convient ?"
+                options={suggestionOptions}
+                variant="outlined"
+              />
+            </ListItem>
+
+            <ListItem className="field">
+              <TextInput
+                control={control}
+                defaultValue=""
+                name="title"
+                label="Titre"
+                variant="outlined"
+                example="soyez précis et constructifs"
+                rules={{
+                  required: 'le titre est obligatoire',
+                  minLength: {
+                    value: 5,
+                    message: 'Le titre ne peut pas avoir moins de cinq lettres',
+                  },
+                  maxLength: {
+                    value: 50,
+                    message: 'le titre ne peut avoir plus de 50 lettres',
+                  },
+                }}
+              />
+            </ListItem>
+
+            <ListItem className="field">
+              <SmallEditorInput
                 name="message"
                 control={control}
                 defaultValue=""
-                render={({ field: { onChange, value } }) => (
-                  <TinyPageEditor
-                    onChange={onChange}
-                    value={value}
-                    height={200}
-                  />
-                )}
+                label="Description"
+                rules={{
+                  minLength: {
+                    value: 20,
+                    message: 'La suggestion doit avoir au moins 20 caractères',
+                  },
+                  maxLength: {
+                    value: 1000,
+                    message: 'La suggestion doit avoir au plus 1000 caractères',
+                  },
+                }}
               />
-            </Grid>
-          </Grid>
-          <Grid item container alignItems="center" justify="flex-end">
-            <CustomButton
-              text="je poste ma suggestion"
-              bgcolor={theme.palette.success.main}
-              action="post"
-              width="300px"
-              type="submit"
-              disabled={!isValid || isSubmitting}
-            />
-          </Grid>
-        </StyledPaperForm>
+            </ListItem>
+
+            <ListItem>
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                fullWidth
+                size="large"
+              >
+                je poste ma suggestion
+              </Button>
+            </ListItem>
+          </List>
+        </StyledHookForm>
       )}
     </Grid>
   )

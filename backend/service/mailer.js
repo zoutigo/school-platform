@@ -35,15 +35,15 @@ module.exports.emailConfirmMail = (user) => {
     from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
     to: user.email,
     subject: "Confirmation de l'adresse mail",
-    text: `Bonjour.L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.
-    Afin de confirmer votre adresse mail et pour des raisons de sécurité , merci de bien vouloir coller ce lien sur votre navigateur
+    text: `Bonjour.L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs réguliers.
+    Afin de confirmer votre adresse mail et pour des raisons de sécurité , merci de bien vouloir coller le lien suivant sur votre navigateur.
     ${URL}/users/verification-email?token=${user.emailToken}
     `,
     html: `
     <h1>Bonjour</h1>
     <p>L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.</p>
-    <p>Afin de confirmer votre adresse mail et pour des raisons de sécurité , merci de bien vouloir coller ce lien sur votre navigateur </p>
-    <a href="${URL}/users/verification-email?token=${user.emailToken}">Verifiez dejà votre compte </a>
+    <p>Afin de confirmer votre adresse mail et pour des raisons de sécurité , merci de bien vouloir cliquer le lien suivant: </p>
+    <a href="${URL}/users/verification-email?token=${user.emailToken}">Verifiez votre compte maintenant </a>
     `,
   }
 
@@ -196,8 +196,19 @@ module.exports.userSuggestionEmail = (suggestion, user) => {
   )
 
   const template = handlebars.compile(emailUserSuggestionTemplateSource)
+  // const suggest = {
+  //   title: suggestion.title,
+  //   topic: suggestion.topic,
+  //   message: HTMLParser.parse(suggestion.message),
+  //   status: suggestion.status,
+  //   userId: suggestion.userId,
+  // }
 
-  const htmlToSend = template({ ...suggestion, logo: logopath })
+  console.log(suggestion.message)
+  const htmlToSend = template({
+    ...suggestion,
+    logo: logopath,
+  })
 
   const options = {
     from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,

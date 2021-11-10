@@ -1,39 +1,21 @@
 /* eslint-disable import/named */
-import { styled, Grid, useTheme, Collapse } from '@material-ui/core'
+import { List, ListItem, Button } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 import moment from 'moment'
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { apiPostPaper } from '../../utils/api'
-import CostumButton from '../elements/CustomButton'
-import DatePickerControl from '../elements/DatePickerControl'
-import InputFileControl from '../elements/InputFileControl'
-import newsletterSchema from '../../schemas/newsletterSchema'
-import menuSchema from '../../schemas/menuSchema'
-import breveSchema from '../../schemas/breveSchema'
-import fournitureSchema from '../../schemas/fournitureSchema'
-import InputSelectControl from '../elements/InputSelectControl'
-import InputRadio from '../elements/InputRadio'
 import useMutate from '../hooks/useMutate'
 import MutateCircularProgress from '../elements/MutateCircularProgress'
 import getError from '../../utils/getError'
 import getResponse from '../../utils/getResponse'
-
-const StyledPaperForm = styled('form')(() => ({
-  width: '100%',
-  margin: '1rem auto',
-  background: 'gray',
-  '& .form-fields-container': {
-    background: 'whitesmoke',
-    padding: '0.5rem 0.2rem',
-    '& .field': {
-      margin: '0.6rem 0px',
-    },
-  },
-}))
+import StyledHookForm from '../styled-components/StyledHookForm'
+import SelectSingleInput from '../elements/inputs/SelectSingleInput'
+import DatePickerInput from '../elements/inputs/DatePickerInput'
+import RadioInput from '../elements/inputs/RadioInput'
+import FileInput from '../elements/inputs/FileInput'
 
 function PaperFormPDF({
   currentDocument,
@@ -42,37 +24,25 @@ function PaperFormPDF({
   handleBack,
   isPrivateDatas,
 }) {
-  const theme = useTheme()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  const [addFile, setAddFile] = useState(formAction === 'create')
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync, isMutating } = useMutate(paper.queryKey, apiPostPaper)
 
-  const schema = (mypapertype) => {
-    switch (mypapertype) {
-      case 'newsletter':
-        return newsletterSchema
-
-      case 'menu':
-        return menuSchema
-
-      case 'breve':
-        return breveSchema
-
-      case 'fourniture':
-        return fournitureSchema
-
-      default:
-        return null
-    }
-  }
-  const { control, handleSubmit } = useForm({
+  const {
+    control,
+    handleSubmit,
+    watch,
+    getValues,
+    formState: { isSubmitting, isValid },
+  } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(schema(paper.paperType)),
   })
+
+  const changeFile = watch('changeFile')
 
   const onSubmit = async (datas) => {
     const { startdate, enddate, file, isPrivate, classeFourniture } = datas
+
     const finalDatas = async (type) => {
       switch (type) {
         case 'menu':
@@ -85,7 +55,6 @@ function PaperFormPDF({
             enddate: enddate.valueOf(),
             isPrivate: isPrivate === 'oui',
             type: paper.paperType,
-            // file: await convertBase64(file[0]),
             file: file ? file[0] : null,
             entityAlias: paper.entityAlias,
           }
@@ -177,105 +146,136 @@ function PaperFormPDF({
   ]
 
   return (
-    <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
+    <StyledHookForm onSubmit={handleSubmit(onSubmit)}>
       {isMutating && <MutateCircularProgress />}
-      <Grid container className="form-fields-container">
+      <List className="form-fields-container">
         {paper.paperType === 'fourniture' && (
-          <InputSelectControl
-            control={control}
-            options={selectOptions}
-            name="classeFourniture"
-            label="Choisir la classe"
-            helperText="Les fournitures sont pour quelle classe ?"
-            initialValue={
-              currentDocument
-                ? selectOptions.find(
-                    (option) =>
-                      option.value === currentDocument.classe_fourniture
-                  )
-                : null
-            }
-          />
+          <ListItem classname="field">
+            <SelectSingleInput
+              control={control}
+              name="classeFourniture"
+              label="Choisir la classe"
+              example="Les fournitures sont pour quelle classe ?"
+              variant="standard"
+              options={selectOptions}
+              defaultValue={
+                currentDocument
+                  ? selectOptions.find(
+                      (option) =>
+                        option.value === currentDocument.classe_fourniture
+                    )
+                  : null
+              }
+              rules={{
+                required: 'le choix de la classe est obligatoire',
+              }}
+            />
+          </ListItem>
         )}
-        <DatePickerControl
-          control={control}
-          name="startdate"
-          label="Date de début"
-          format="dddd Do MMMM yyyy"
-          helperText="Les dates passées ne sont pas autorisées"
-          initialDate={
-            formAction === 'update'
-              ? new Date(Number(currentDocument.startdate))
-              : new Date()
-          }
-        />
-        {paper.paperType !== 'newsletter' && (
-          <DatePickerControl
+        <ListItem className="field">
+          <DatePickerInput
             control={control}
-            name="enddate"
-            label="Date de fin"
+            name="startdate"
+            label="Date de début"
             format="dddd Do MMMM yyyy"
-            helperText="Supérieure à la date de début"
-            initialDate={
+            example="Attention, vous ne pourrez plus modifier cette date si elle est revolue."
+            defaultValue={
               formAction === 'update'
-                ? new Date(Number(currentDocument.enddate))
+                ? new Date(Number(currentDocument.startdate))
                 : new Date()
             }
+            rules={{
+              required: 'indiquez la date de début de validité',
+            }}
           />
+        </ListItem>
+        {paper.paperType !== 'newsletter' && (
+          <ListItem className="field">
+            <DatePickerInput
+              control={control}
+              name="enddate"
+              label="Date de fin"
+              format="dddd Do MMMM yyyy"
+              example="Quelle est la date de fin de validité"
+              defaultValue={
+                formAction === 'update'
+                  ? new Date(Number(currentDocument.enddate))
+                  : new Date()
+              }
+              rules={{
+                required: 'indiquez la date de fin de validité',
+                validate: {
+                  future: (value) => {
+                    const { startdate: startingdate } = getValues()
+                    return (
+                      moment(value).diff(moment(startingdate)) >= 0 ||
+                      'la date de fin doit etre supérieure à la date de début'
+                    )
+                  },
+                },
+              }}
+            />
+          </ListItem>
         )}
 
-        <InputRadio
-          question="Document privé ?"
-          options={isPrivateDatas?.isPrivateOptions}
-          name="isPrivate"
-          defaultValue={isPrivateDatas?.isPrivateDefaultValue}
-          control={control}
-          radioGroupProps={{ row: true }}
-          display="block"
-        />
-
-        <Collapse in={formAction === 'update'} style={{ width: '100%' }}>
-          <InputRadio
-            question="Modifier le fichier ?"
-            options={[
-              { labelOption: 'Oui', optionvalue: 'oui' },
-              { labelOption: 'Non', optionvalue: 'non' },
-            ]}
-            name="addFile"
-            defaultValue={formAction === 'update' ? 'non' : 'oui'}
-            callback={setAddFile}
+        <ListItem className="field">
+          <RadioInput
+            name="isPrivate"
             control={control}
+            question="Document privé ?"
+            options={isPrivateDatas?.isPrivateOptions}
+            defaultValue={isPrivateDatas?.isPrivateDefaultValue}
             radioGroupProps={{ row: true }}
+            variant="standard"
+            rules={{
+              required: 'veillez choisir une option',
+            }}
           />
-        </Collapse>
-
-        {(formAction === 'create' || formAction === 'update') && (
-          <InputFileControl
-            show={addFile}
-            control={control}
-            label="Pièce jointe"
-            name="file"
-            type="file"
-            accept="application/pdf"
-            helperText="Fichier PDF, maximum 5Mo"
-          />
+        </ListItem>
+        {formAction === 'update' && (
+          <ListItem className="field">
+            <RadioInput
+              name="changeFile"
+              control={control}
+              defaultValue={formAction === 'update' ? 'non' : 'oui'}
+              question="Modifier le fichier ?"
+              options={[
+                { labelOption: 'Oui', optionvalue: 'oui' },
+                { labelOption: 'Non', optionvalue: 'non' },
+              ]}
+              radioGroupProps={{ row: true }}
+              variant="standard"
+            />
+          </ListItem>
         )}
-      </Grid>
-      <Grid item container alignItems="center" justify="flex-end">
-        <CostumButton
-          text={
-            formAction === 'update'
+        {(formAction === 'create' ||
+          (formAction === 'update' && changeFile === 'oui')) && (
+          <ListItem className="field">
+            <FileInput
+              control={control}
+              multiple={false}
+              label="Ajouter un fichier"
+              example="Fichier PDF, maximum 10Mo"
+              defaultValue=""
+              accept="application/pdf"
+            />
+          </ListItem>
+        )}
+        <ListItem>
+          <Button
+            type="submit"
+            variant="contained"
+            color="secondary"
+            fullWidth
+            disabled={!isValid || isSubmitting}
+          >
+            {formAction === 'update'
               ? `Modifier ${paper.paperType}`
-              : `Poster ${paper.paperType}`
-          }
-          bgcolor={theme.palette.success.main}
-          action="post"
-          width="300px"
-          type="submit"
-          // disabled={formState.isDirty || formState.isSubmitting}
-        />
-      </Grid>
-    </StyledPaperForm>
+              : `Poster ${paper.paperType}`}
+          </Button>
+        </ListItem>
+      </List>
+    </StyledHookForm>
   )
 }
 PaperFormPDF.defaultProps = {
