@@ -196,15 +196,7 @@ module.exports.userSuggestionEmail = (suggestion, user) => {
   )
 
   const template = handlebars.compile(emailUserSuggestionTemplateSource)
-  // const suggest = {
-  //   title: suggestion.title,
-  //   topic: suggestion.topic,
-  //   message: HTMLParser.parse(suggestion.message),
-  //   status: suggestion.status,
-  //   userId: suggestion.userId,
-  // }
 
-  console.log(suggestion.message)
   const htmlToSend = template({
     ...suggestion,
     logo: logopath,
@@ -213,6 +205,29 @@ module.exports.userSuggestionEmail = (suggestion, user) => {
   const options = {
     from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
     to: user.email,
+    subject: `Suggestion reçue: ${suggestion.title}`,
+    html: htmlToSend,
+  }
+
+  return { transporter, options }
+}
+module.exports.adminSuggestionEmail = (suggestion, user) => {
+  const emailUserSuggestionTemplateSource = fs.readFileSync(
+    path.join('./backend', 'templates', 'adminSuggestionEmail.hbs'),
+    'utf8'
+  )
+
+  const template = handlebars.compile(emailUserSuggestionTemplateSource)
+
+  const htmlToSend = template({
+    ...suggestion,
+    logo: logopath,
+    ...user,
+  })
+
+  const options = {
+    from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
+    to: process.env.MAILER_USER,
     subject: `Suggestion reçue: ${suggestion.title}`,
     html: htmlToSend,
   }
