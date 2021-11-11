@@ -1,6 +1,5 @@
 import React from 'react'
 import { useController, Controller } from 'react-hook-form'
-import { TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import StyledTextField from '../../styled-components/StyledTextField'
 

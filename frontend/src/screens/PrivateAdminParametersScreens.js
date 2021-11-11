@@ -9,6 +9,7 @@ import { initialAlertCollapse } from '../constants/alerts'
 import AlertCollapse from '../components/elements/AlertCollapse'
 import ManageDialog from '../components/main/private/admin/parameters/dialog/ManageDialog'
 import ManageParams from '../components/main/private/admin/parameters/params/ManageParams'
+import ManageMail from '../components/main/private/admin/parameters/sendmail/ManageMail'
 
 const StyledGrid = styled(Grid)(() => ({
   margin: '1rem 0px',
@@ -19,6 +20,7 @@ function PrivateAdminParametersScreens() {
   const [showParams, setShowParams] = useState({
     dialog: true,
     parameters: true,
+    sendmail: true,
   })
   const { parametersMutate, parametersFetch } = useSelector(
     (state) => state.alerts
@@ -55,6 +57,7 @@ function PrivateAdminParametersScreens() {
         {showParams.parameters && (
           <ManageParams setShowparams={setShowParams} />
         )}
+        {showParams.parameters && <ManageMail setShowparams={setShowParams} />}
       </Grid>
     </StyledGrid>
   )

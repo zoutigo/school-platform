@@ -43,11 +43,9 @@ function PaperFormEvent({
     formState: { isSubmitting, isValid },
   } = useForm({
     mode: 'onChange',
-    // resolver: yupResolver(paperActiviteSchema),
   })
 
   const onSubmit = async (datas) => {
-    console.log('datas', datas)
     const { title, content, date, place, isPrivate } = datas
     const finalDatas = {
       title,
