@@ -28,9 +28,8 @@ const URL =
     ? SERVER_ONLINE_ADRESS
     : process.env.SERVER_ADRESS
 
-// const logopath = path.join(process.env.SERVER_ADRESS, 'images', 'logo.svg')
-const logopath = path.join(process.env.SERVER_ADRESS, 'public', 'logo.png')
-console.log('logopath:', logopath)
+// const logopath = '/logo1000.png'
+const logopath = 'http://localhost:3000/logo1000.png'
 
 module.exports.emailConfirmMail = (user) => {
   const options = {

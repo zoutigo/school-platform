@@ -10,6 +10,11 @@ header {
   justify-content: space-around;
   align-items: center;
 }
+
+footer {
+  background: yellowgreen;
+}
+
 .suggestion-user-email-message {
   background: coral;
 }

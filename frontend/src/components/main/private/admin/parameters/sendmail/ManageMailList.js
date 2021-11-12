@@ -48,6 +48,9 @@ const Mail = ({ createdAt, title, content, datetosend, isSent }) => (
       {' '}
       {content}
     </Grid>
+    <Grid item xs={12}>
+      <img src="/logo1000.png" alt="logo" />
+    </Grid>
   </Grid>
 )
 

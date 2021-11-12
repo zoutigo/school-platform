@@ -18,13 +18,8 @@ function ManageMailForm({ queryKey, setShowForm }) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync, isMutating } = useMutate(queryKey, apiPostMails)
-  const {
-    control,
-    handleSubmit,
-    formState: { isSubmitting, isValid },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     mode: 'onChange',
-    // resolver: yupResolver(paperActiviteSchema),
   })
 
   const onSubmit = async (datas) => {
