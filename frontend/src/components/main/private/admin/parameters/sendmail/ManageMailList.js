@@ -8,28 +8,39 @@ const mails = [
     title: 'un essai',
     createdAt: '15/02/2020',
     content: 'Je suis content de vous retouber',
+    datetosend: '18/03/2020',
+    isSent: true,
   },
   {
     id: 2,
     title: 'une modification',
     createdAt: '20/02/2021',
     content: 'Ne vous cachez pas trop',
+    datetosend: '17/02/2021',
+    isSent: true,
   },
   {
     id: 3,
     title: 'une amélioration',
-    createdAt: '18/02/2021',
+    createdAt: '10/06/2021',
     content: 'Une autre va arriver',
+    datetosend: '08/06/2021',
+    isSent: false,
   },
 ]
 
-const Mail = ({ createdAt, title, content }) => (
+const Mail = ({ createdAt, title, content, datetosend, isSent }) => (
   <Grid container>
-    <Grid item container xs={3}>
-      {' '}
+    <Grid item container xs={2}>
       {createdAt}
     </Grid>
-    <Grid item container xs={9}>
+    <Grid item container xs={2}>
+      {datetosend}
+    </Grid>
+    <Grid item container xs={2}>
+      {isSent ? 'envoyé' : 'non envoyé'}
+    </Grid>
+    <Grid item container xs={6}>
       {' '}
       {title}
     </Grid>
@@ -44,6 +55,8 @@ Mail.propTypes = {
   createdAt: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
+  datetosend: PropTypes.string.isRequired,
+  isSent: PropTypes.bool.isRequired,
 }
 
 function ManageMailList() {

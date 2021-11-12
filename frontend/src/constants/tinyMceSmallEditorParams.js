@@ -15,7 +15,7 @@ const tinyMceSmallEditorParams = {
   force_p_newlines: false,
 
   plugins:
-    'textcolor  importcss autolink directionality link  hr pagebreak nonbreaking anchor  advlist wordcount imagetools textpattern noneditable charmap  emoticons autoresize',
+    'lists textcolor  importcss autolink directionality link  hr pagebreak nonbreaking anchor  advlist wordcount imagetools textpattern noneditable charmap  emoticons autoresize',
   toolbar:
     'bold italic underline strikethrough | forecolor backcolor fontselect fontsizeselect formatselect  removeformat | alignleft aligncenter alignright alignjustify | outdent indent | pagebreak | emoticons | insertfile image  link ',
   toolbar_sticky: true,

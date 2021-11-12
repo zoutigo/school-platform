@@ -1,21 +1,10 @@
 /* eslint-disable import/named */
 import { useSnackbar } from 'notistack'
-import {
-  styled,
-  Grid,
-  useTheme,
-  Button,
-  List,
-  ListItem,
-} from '@material-ui/core'
+import { useTheme, Button, List, ListItem } from '@material-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import InputTextControl from '../elements/InputTextControl'
-import paperActiviteSchema from '../../schemas/paperActiviteSchema'
-import CostumButton from '../elements/CustomButton'
-import DatePickerControl from '../elements/DatePickerControl'
 import useMutate from '../hooks/useMutate'
 import MutateCircularProgress from '../elements/MutateCircularProgress'
 import getError from '../../utils/getError'
@@ -33,7 +22,6 @@ function PaperFormEvent({
   handleBack,
   isPrivateDatas,
 }) {
-  const theme = useTheme()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync, isMutating } = useMutate(paper.queryKey, paper.poster)

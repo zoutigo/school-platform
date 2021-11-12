@@ -60,7 +60,7 @@ module.exports.createImage = async (req, res, next) => {
   if (!path || !filename)
     return next(
       new BadRequest(
-        "une ereeur s'est produite à la creation multer de l'image"
+        "une erreur s'est produite à la creation multer de l'image"
       )
     )
 

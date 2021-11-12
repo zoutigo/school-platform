@@ -61,7 +61,6 @@ function ManageMail({ setShowParams }) {
               setShowForm={setShowForm}
               setShowParams={setShowParams}
               queryKey={queryKey}
-              queryParams={queryParams}
             />
           </Grid>
         )}

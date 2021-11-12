@@ -8,7 +8,7 @@ const { userInclude } = require('../constants/includes')
 module.exports.tokenVerify = async (req, res, next) => {
   const token = req.headers['x-access-token']
   if (!token) {
-    return next(new Unauthorized('Access denied'))
+    return next(new Unauthorized('veillez vous connecter au site'))
   }
   try {
     const verified = await jwt.verify(token, process.env.TOKEN_SECRET)

@@ -55,7 +55,10 @@ module.exports.postSuggestion = async (req, res, next) => {
           }
         })
 
-        return res.status(201).send({ message: 'Suggestion prise en compte' })
+        return res.status(201).send({
+          message:
+            'Votre suggestion a été prise en compte et adréssée à la bonne personne',
+        })
       }
     } catch (err) {
       return next(err)

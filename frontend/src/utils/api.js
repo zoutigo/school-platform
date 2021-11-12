@@ -416,3 +416,9 @@ export const apiFecthParametres = async (params) => {
 
   return data
 }
+
+export const apiPostMails = async ({ id, body, options, action }) => {
+  const URL = `${PREFIX}/mails?action=${action}&id=${id}`
+  const { data } = await axios.post(URL, body, options)
+  return data
+}

@@ -27,6 +27,7 @@ const updatesRouter = require('./routes/updates')
 const databaseRouter = require('./routes/databases')
 const initRouter = require('./routes/inits')
 const parametresRouter = require('./routes/parametres')
+const mailsRouter = require('./routes/mails')
 const db = require('./config/database')
 
 // const datasRouter = require("./routes/datas");
@@ -127,6 +128,7 @@ app.use('/updates', updatesRouter)
 app.use('/database', databaseRouter)
 app.use('/inits', initRouter)
 app.use('/parametres', parametresRouter)
+app.use('/mails', mailsRouter)
 // app.use('/files', filesRouter)
 
 app.use(handleErrors)

@@ -22,13 +22,15 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-const SERVER_ONLINE_ADRESS = 'http://www.ecole-st-augustin.fr'
+const SERVER_ONLINE_ADRESS = 'https://www.ecole-st-augustin.fr'
 const URL =
   process.env.NODE_ENV === 'production'
     ? SERVER_ONLINE_ADRESS
     : process.env.SERVER_ADRESS
 
-const logopath = path.join('./images', 'logo.svg')
+// const logopath = path.join(process.env.SERVER_ADRESS, 'images', 'logo.svg')
+const logopath = path.join(process.env.SERVER_ADRESS, 'public', 'logo.png')
+console.log('logopath:', logopath)
 
 module.exports.emailConfirmMail = (user) => {
   const options = {
@@ -218,7 +220,6 @@ module.exports.adminSuggestionEmail = (suggestion, user) => {
   )
 
   const template = handlebars.compile(emailUserSuggestionTemplateSource)
-
   const htmlToSend = template({
     ...suggestion,
     logo: logopath,
@@ -229,6 +230,32 @@ module.exports.adminSuggestionEmail = (suggestion, user) => {
     from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
     to: process.env.MAILER_USER,
     subject: `Suggestion reçue: ${suggestion.title}`,
+    html: htmlToSend,
+  }
+
+  return { transporter, options }
+}
+module.exports.toAllUsersEmail = (mail, user) => {
+  const emailToAllUsersTemplateSource = fs.readFileSync(
+    path.join('./backend', 'templates', 'emailToAllUsers.hbs'),
+    'utf8'
+  )
+
+  const template = handlebars.compile(emailToAllUsersTemplateSource)
+  const css = `${process.env.SERVER_ADRESS}/styles/emailstyles.css`
+
+  const htmlToSend = template({
+    css: css,
+    content: mail.content,
+    title: mail.title,
+    logo: logopath,
+    firstname: user.firstname,
+  })
+
+  const options = {
+    from: ` "Admin - Ecole Saint Augustin" <${process.env.MAILER_USER}>`,
+    to: user.email,
+    subject: `${mail.title}`,
     html: htmlToSend,
   }
 

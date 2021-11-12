@@ -37,6 +37,7 @@ const UserEntities = require('../models/UserEntities')
 const UserRoles = require('../models/UserRoles')
 const PreinscriptionFiles = require('../models/PreinscriptionFiles')
 const db = require('../config/database')
+const MailP = require('../models/MailP')
 
 require('dotenv').config()
 
@@ -558,6 +559,18 @@ module.exports.initRepair = async (req, res, next) => {
     }
 
     return res.status(200).send(fournitures)
+  } catch (err) {
+    return next(err)
+  }
+}
+
+module.exports.initMails = async (req, res, next) => {
+  // create Mails Table
+  try {
+    const createMail = await MailP.sync({ alter: true })
+    if (createMail)
+      return res.status(200).send('mail table successfull created')
+    return next('the was an error')
   } catch (err) {
     return next(err)
   }
