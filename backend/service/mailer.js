@@ -29,7 +29,8 @@ const URL =
     : process.env.SERVER_ADRESS
 
 // const logopath = '/logo1000.png'
-const logopath = 'http://localhost:3000/logo1000.png'
+const logopath = 'https://www.ecole-st-augustin.fr/images/logo.png'
+const rgpd = `Conformément à la réglementation relative à la protection des données personnelles, vous bénéficiez d'un droit d'accès, de rectification, d'effacement et de portabilité de vos informations personnelles. il suffit juste de les modifier dans votre espace personnel ou de contacter l'administrateur du site `
 
 module.exports.emailConfirmMail = (user) => {
   const options = {
@@ -241,10 +242,9 @@ module.exports.toAllUsersEmail = (mail, user) => {
   )
 
   const template = handlebars.compile(emailToAllUsersTemplateSource)
-  const css = `${process.env.SERVER_ADRESS}/styles/emailstyles.css`
 
   const htmlToSend = template({
-    css: css,
+    rgpd: rgpd,
     content: mail.content,
     title: mail.title,
     logo: logopath,
