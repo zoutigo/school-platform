@@ -1,29 +1,27 @@
 /* eslint-disable import/named */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { styled, useTheme } from '@material-ui/styles'
-import { Grid } from '@material-ui/core'
+import { styled } from '@material-ui/styles'
+import { Grid, List, ListItem, Button } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 import { apiPostLosspass } from '../../../../utils/api'
-import { lossPassPasswordSchema } from '../../../../schemas/losspassSchema'
-import CustomButton from '../../../elements/CustomButton'
-import { StyledStandardForm } from '../../../elements/styled'
 import Title from '../../../elements/Title'
-import InputTextControl from '../../../elements/InputTextControl'
 import useMutate from '../../../hooks/useMutate'
 import MutateCircularProgress from '../../../elements/MutateCircularProgress'
 import getError from '../../../../utils/getError'
 import getResponse from '../../../../utils/getResponse'
+import StyledHookForm from '../../../styled-components/StyledHookForm'
+import TextInput from '../../../elements/inputs/TextInput'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
 }))
 
-function LosspassPasswordForm({ setPasswordSent, token }) {
+function LosspassPasswordForm({ setPasswordSent, token, setEmailSent }) {
+  const history = useHistory()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  const theme = useTheme()
 
   const formTitle = `2/2: Re-Initialisation du mot de pass`
   const queryKey = ['losspass']
@@ -33,10 +31,10 @@ function LosspassPasswordForm({ setPasswordSent, token }) {
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    getValues,
+    formState: { isSubmitting },
   } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(lossPassPasswordSchema),
   })
 
   const onSubmit = async (datas) => {
@@ -54,73 +52,97 @@ function LosspassPasswordForm({ setPasswordSent, token }) {
       }).then((response) => {
         if (response.status === 200) {
           enqueueSnackbar(getResponse(response), { variant: 'success' })
-          enqueueSnackbar(response.data.message, { variant: 'success' })
           setPasswordSent(true)
         }
       })
     } catch (err) {
-      enqueueSnackbar(getError(err), { variant: 'error' })
+      if (err.response.status === 498) {
+        enqueueSnackbar(
+          'Le jeton de recuperation est arrivé à expiration. Recommencez la procédure de récupération',
+          { variant: 'error' }
+        )
+      } else {
+        enqueueSnackbar(getError(err), { variant: 'error' })
+      }
+      setEmailSent(false)
+      history.push('/private/identification/losspass/:token')
     }
   }
 
   return (
     <StyledGrid container>
       {isMutating && <MutateCircularProgress />}
-      <StyledStandardForm onSubmit={handleSubmit(onSubmit)}>
+      <StyledHookForm onSubmit={handleSubmit(onSubmit)}>
         <Grid item container justify="center" className="form-header">
           <Title title={formTitle} textcolor="whitesmoke" />
         </Grid>
-        <Grid container className="form-body">
-          <InputTextControl
-            name="password"
-            type="password"
-            label="Le nouveau Mot de Pass"
-            placeholder="FureurVosgienne8854"
-            helperText="8 caractères minimum, dont au moins 1 majuscules, 1 majuscule 1 chiffre"
-            width="100%"
-            control={control}
-          />
-          <InputTextControl
-            name="passwordConfirm"
-            type="password"
-            label="Confirmer ce nouveau Mot de pass"
-            placeholder="FureurVosgienne8854"
-            helperText="Identique au mot de pass du dessus"
-            width="100%"
-            control={control}
-          />
-        </Grid>
-        <Grid
-          item
-          container
-          alignItems="center"
-          justify="center"
-          className="form-footer"
-        >
-          <Grid
-            item
-            container
-            justify="center"
-            alignItems="center"
-            className="form-footer-button"
-          >
-            <CustomButton
-              text="Je m'inscris"
-              bgcolor={theme.palette.success.main}
-              action="post"
-              width="21rem"
-              type="submit"
-              disabled={!isValid || isSubmitting}
+
+        <List className="form-fields-container">
+          <ListItem className="field">
+            <TextInput
+              control={control}
+              name="password"
+              defaultValue=""
+              label="Le nouveau Mot de Pass"
+              example="FureurVosgienne8854"
+              variant="standard"
+              rules={{
+                required: 'veillez saisir le nouveau mot de pass',
+                maxLength: {
+                  value: 64,
+                  message: 'Le mot de pass ne peut avoir plus de 64 caractères',
+                },
+                pattern: {
+                  value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$/,
+                  message:
+                    '8 caractères minimum, dont au moins 1 majuscules, 1 majuscule 1 chiffre',
+                },
+              }}
             />
-          </Grid>
-        </Grid>
-      </StyledStandardForm>
+          </ListItem>
+          <ListItem className="field">
+            <TextInput
+              control={control}
+              name="passwordConfirm"
+              defaultValue=""
+              label="Confirmer ce nouveau Mot de pass"
+              example="Doit etre identique au précédent"
+              variant="standard"
+              rules={{
+                required: 'veillez confirmer le nouveau mot de pass',
+                validate: {
+                  matches: (value) => {
+                    const { password } = getValues()
+                    return (
+                      password === value ||
+                      "la saisie n'est pas identique au nouveau mot de pass"
+                    )
+                  },
+                },
+              }}
+            />
+          </ListItem>
+          <ListItem>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="secondary"
+              size="large"
+              disabled={isSubmitting}
+            >
+              Je modifie mon mot de pass
+            </Button>
+          </ListItem>
+        </List>
+      </StyledHookForm>
     </StyledGrid>
   )
 }
 
 LosspassPasswordForm.propTypes = {
   setPasswordSent: PropTypes.func.isRequired,
+  setEmailSent: PropTypes.func.isRequired,
   token: PropTypes.string.isRequired,
 }
 export default LosspassPasswordForm

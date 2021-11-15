@@ -1,35 +1,24 @@
 import { Grid } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Redirect, useHistory, useParams } from 'react-router-dom'
-import AlertCollapse from '../components/elements/AlertCollapse'
+import { useHistory, useParams } from 'react-router-dom'
 import LazyMessage from '../components/elements/LazyMessage'
 import LosspassEmailForm from '../components/main/private/losspass/LosspassEmailForm'
 import LosspassPasswordForm from '../components/main/private/losspass/LosspassPasswordForm'
-import { initialAlertCollapse } from '../constants/alerts'
-import { setMutateAlert } from '../redux/alerts/AlertsActions'
 
 function PrivateIdentificationLosspassScreen() {
-  const dispatch = useDispatch()
   const history = useHistory()
   const { token } = useParams()
-  const [externalToken, setExternalToken] = useState(token)
+
   const [emailSent, setEmailSent] = useState(false)
   const [passwordSent, setPasswordSent] = useState(false)
-  const { mutate } = useSelector((state) => state.alerts)
 
   const nullToken = useCallback(token === ':token', [token])
-
-  const callback = useCallback(() => {
-    dispatch(setMutateAlert(initialAlertCollapse))
-  }, [])
 
   useEffect(() => {
     if (passwordSent) {
       setTimeout(history.push('/private/identification/login'), 3000)
     }
     return () => {
-      callback()
       setEmailSent(false)
     }
   }, [passwordSent])
@@ -57,12 +46,15 @@ function PrivateIdentificationLosspassScreen() {
 
   return (
     <Grid container>
-      <AlertCollapse {...mutate} callback={callback} />
       {nullToken && !emailSent && (
         <LosspassEmailForm setEmailSent={setEmailSent} />
       )}
       {!nullToken && !passwordSent && !emailSent && (
-        <LosspassPasswordForm setPasswordSent={setPasswordSent} token={token} />
+        <LosspassPasswordForm
+          setPasswordSent={setPasswordSent}
+          token={token}
+          setEmailSent={setEmailSent}
+        />
       )}
       {emailSent && (
         <LazyMessage severity="info">

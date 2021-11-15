@@ -467,15 +467,15 @@ module.exports.userLosspass = async (req, res, next) => {
       where: { email },
       include: [RoleP, EntityP],
     })
+
     if (!user)
       return next(
         new BadRequest(" Cet email n'est pas connu dans notre base données")
       )
-
     const losspassToken = generateValidationToken(user)
     user.losspassToken = losspassToken
 
-    const { transporter, options } = emailLosspass(user)
+    const { transporter, options } = await emailLosspass(user)
 
     try {
       await user.save()
@@ -493,6 +493,18 @@ module.exports.userLosspass = async (req, res, next) => {
 
     if (error) return next(new TokenInvalid(error))
 
+    const user = await UserP.findOne({
+      where: { id: userId },
+      include: [RoleP, EntityP],
+    })
+
+    if (!user.losspassToken || user.losspassToken !== token)
+      return next(
+        new BadRequest(
+          'Vous devez amorcer la procédure de recuperation du mot de pass en allant sur MONCOMPTE/PASSPERDU'
+        )
+      )
+
     if (!password || !passwordConfirm)
       return next(new BadRequest('Veillez saisir les mots de pass demandés'))
 
@@ -508,7 +520,7 @@ module.exports.userLosspass = async (req, res, next) => {
       const hashedPassword = await bcrypt.hash(password, salt)
 
       const modifiedUser = await UserP.update(
-        { password: hashedPassword },
+        { password: hashedPassword, losspassToken: null },
         {
           where: { id: userId },
         }

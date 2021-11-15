@@ -1,8 +1,11 @@
 const nodemailer = require('nodemailer')
 const HTMLParser = require('node-html-parser')
 const handlebars = require('handlebars')
+const inlineCss = require('inline-css')
 const path = require('path')
 const fs = require('fs')
+const { logopath, rgpd } = require('../constants/texts')
+const { inlinerOptions } = require('../constants/inlinerOptions')
 
 require('dotenv').config()
 
@@ -28,10 +31,6 @@ const URL =
     ? SERVER_ONLINE_ADRESS
     : process.env.SERVER_ADRESS
 
-// const logopath = '/logo1000.png'
-const logopath = 'https://www.ecole-st-augustin.fr/images/logo.png'
-const rgpd = `Conformément à la réglementation relative à la protection des données personnelles, vous bénéficiez d'un droit d'accès, de rectification, d'effacement et de portabilité de vos informations personnelles. il suffit juste de les modifier dans votre espace personnel ou de contacter l'administrateur du site `
-
 module.exports.emailConfirmMail = (user) => {
   const options = {
     from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
@@ -51,24 +50,38 @@ module.exports.emailConfirmMail = (user) => {
 
   return { transporter, options }
 }
-module.exports.emailLosspass = (user) => {
-  const options = {
-    from: ` "Ecole Saint Augustin Cremieu" <${process.env.MAILER_USER}>`,
-    to: user.email,
-    subject: 'Reinitialisation du mot de pass',
-    text: `Bonjour.Nous avons bien pris en compte votre demande de reinitialisation du mot de pass.
-    Merci de bien vouloir coller ce lien sur votre navigateur afin de procéder au changement.
-    ${URL}/private/identification/losspass/${user.losspassToken}
-    `,
-    html: `
-    <h3>Bonjour</h3>
-    <p>Nous avons bien pris en compte votre demande de reinitialisation du mot de pass.</p>
-    <p>Afin de procéder au changement, merci de bien vouloir cliquer sur le lien ci dessous ou bien  coller ce lien sur votre navigateur.  </p>
-    <p><a href="${URL}/private/identification/losspass/${user.losspassToken}">Je modifie mon mot de pass</a></p>
-    `,
-  }
+module.exports.emailLosspass = async (user) => {
+  const emailLossPassTemplateSource = fs.readFileSync(
+    path.join('./backend', 'templates', 'emailLossPass.hbs'),
+    'utf8'
+  )
 
-  return { transporter, options }
+  try {
+    const inlinedEmailLossPassTemplate = await inlineCss(
+      emailLossPassTemplateSource,
+      inlinerOptions
+    )
+
+    const template = handlebars.compile(inlinedEmailLossPassTemplate)
+    const tokenlink = `${URL}/private/identification/losspass/${user.losspassToken}`
+    const htmlToSend = template({
+      tokenlink: tokenlink,
+      logo: logopath,
+      url: URL,
+      rgpd: rgpd,
+    })
+
+    const options = {
+      from: ` "Admin-Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
+      to: user.email,
+      subject: `Recupération du mot de pass`,
+      html: htmlToSend,
+    }
+
+    return { transporter, options }
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 module.exports.emailPreincriptionToUser = (datas) => {
@@ -193,15 +206,18 @@ module.exports.emailPreincriptionToManager = (datas) => {
 
 module.exports.userSuggestionEmail = (suggestion, user) => {
   const emailUserSuggestionTemplateSource = fs.readFileSync(
-    path.join('./backend', 'templates', 'email.hbs'),
+    path.join('./backend', 'templates', 'emailUserSuggestion.hbs'),
     'utf8'
   )
 
   const template = handlebars.compile(emailUserSuggestionTemplateSource)
 
   const htmlToSend = template({
-    ...suggestion,
+    title: suggestion.title,
+    topic: suggestion.topic,
+    message: suggestion.message,
     logo: logopath,
+    firstname: user.firstname,
   })
 
   const options = {
@@ -215,15 +231,17 @@ module.exports.userSuggestionEmail = (suggestion, user) => {
 }
 module.exports.adminSuggestionEmail = (suggestion, user) => {
   const emailUserSuggestionTemplateSource = fs.readFileSync(
-    path.join('./backend', 'templates', 'adminSuggestionEmail.hbs'),
+    path.join('./backend', 'templates', 'emailAdminSuggestion.hbs'),
     'utf8'
   )
 
   const template = handlebars.compile(emailUserSuggestionTemplateSource)
   const htmlToSend = template({
-    ...suggestion,
+    title: suggestion.title,
+    topic: suggestion.topic,
+    message: suggestion.message,
     logo: logopath,
-    ...user,
+    firstname: user.firstname,
   })
 
   const options = {

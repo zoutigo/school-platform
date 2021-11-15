@@ -1,0 +1,2 @@
+module.exports.rgpd = `Conformément à la réglementation relative à la protection des données personnelles, vous bénéficiez d'un droit d'accès, de rectification, d'effacement et de portabilité de vos informations personnelles. il suffit juste de les modifier dans votre espace personnel ou de contacter l'administrateur du site `
+module.exports.logopath = 'https://www.ecole-st-augustin.fr/images/logo.png'

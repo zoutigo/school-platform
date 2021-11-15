@@ -1,21 +1,18 @@
 /* eslint-disable import/named */
-import { yupResolver } from '@hookform/resolvers/yup'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { styled, useTheme } from '@material-ui/styles'
-import { Grid } from '@material-ui/core'
+import { styled } from '@material-ui/styles'
+import { List, ListItem, Button, Grid } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
 import { useSnackbar } from 'notistack'
 import { apiPostLosspass } from '../../../../utils/api'
-import { lossPassEmailSchema } from '../../../../schemas/losspassSchema'
-import { StyledStandardForm } from '../../../elements/styled'
 import Title from '../../../elements/Title'
-import InputTextControl from '../../../elements/InputTextControl'
-import CustomButton from '../../../elements/CustomButton'
 import useMutate from '../../../hooks/useMutate'
 import MutateCircularProgress from '../../../elements/MutateCircularProgress'
 import getError from '../../../../utils/getError'
 import getResponse from '../../../../utils/getResponse'
+import TextInput from '../../../elements/inputs/TextInput'
+import StyledHookForm from '../../../styled-components/StyledHookForm'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
@@ -23,19 +20,13 @@ const StyledGrid = styled(Grid)(() => ({
 
 function LosspassEmailForm({ setEmailSent }) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  const theme = useTheme()
 
   const formTitle = `Re-Initialisation du mot de pass`
   const queryKey = ['losspass']
 
   const { mutateAsync, isMutating } = useMutate(queryKey, apiPostLosspass)
-  const {
-    control,
-    handleSubmit,
-    formState: { isSubmitting, isValid },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(lossPassEmailSchema),
   })
 
   const onSubmit = async (datas) => {
@@ -51,7 +42,6 @@ function LosspassEmailForm({ setEmailSent }) {
       }).then((response) => {
         if (response.status === 200) {
           enqueueSnackbar(getResponse(response), { variant: 'success' })
-          enqueueSnackbar(response.data.message, { variant: 'success' })
           setEmailSent(true)
         }
       })
@@ -62,47 +52,46 @@ function LosspassEmailForm({ setEmailSent }) {
 
   return (
     <StyledGrid container>
-      <StyledStandardForm onSubmit={handleSubmit(onSubmit)}>
+      <StyledHookForm onSubmit={handleSubmit(onSubmit)}>
         <Grid item container justify="center" className="form-header">
           <Title title={formTitle} textcolor="whitesmoke" />
         </Grid>
         {isMutating && <MutateCircularProgress />}
-        <Grid container className="form-body">
-          <InputTextControl
-            name="email"
-            type="email"
-            label="Indiquez votre adresse mail"
-            // placeholder="geremy@gmail.com"
-            helperText="un email correct, au bon format"
-            width="100%"
-            control={control}
-          />
-        </Grid>
-        <Grid
-          item
-          container
-          alignItems="center"
-          justify="center"
-          className="form-footer"
-        >
-          <Grid
-            item
-            container
-            justify="center"
-            alignItems="center"
-            className="form-footer-button"
-          >
-            <CustomButton
-              text="Je m'inscris"
-              bgcolor={theme.palette.success.main}
-              action="post"
-              width="21rem"
-              type="submit"
-              disabled={!isValid || isSubmitting}
+        <List className="form-fields-container">
+          <ListItem classname="field">
+            <TextInput
+              control={control}
+              name="email"
+              defaultValue=""
+              label="Indiquez votre adresse mail"
+              example="un email correct, au bon format"
+              rules={{
+                required: 'Indiquez votre email',
+                maxLength: {
+                  value: 50,
+                  message: 'le mail doit avoir au plus 50 caractères',
+                },
+                pattern: {
+                  value: /^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/,
+                  message: 'le format mail est incorrect',
+                },
+              }}
+              variant="standard"
             />
-          </Grid>
-        </Grid>
-      </StyledStandardForm>
+          </ListItem>
+          <ListItem>
+            <Button
+              type="submit"
+              fullWidth
+              color="secondary"
+              size="large"
+              variant="contained"
+            >
+              Je recupère mon mot de pass
+            </Button>
+          </ListItem>
+        </List>
+      </StyledHookForm>
     </StyledGrid>
   )
 }
