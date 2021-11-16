@@ -78,9 +78,7 @@
 .align-center {
   text-align: center;
 }
-.logo-top {
-  width: 150px;
-}
+
 .logo-bottom {
   width: 150px;
 }
@@ -133,13 +131,7 @@
    
   </head>
   <body class="b-whitesmoke">
-    <header class=".container">
-      <img
-        src={{logo}}
-        alt="logo"
-        class='logo-top'
-      />
-    </header>
+  {{>header  }}
     <main class="my-4 mx-2">
       <section class="b-primary h-auto  mt-2 text-center py-2">
           <h1 class="fs-1 c-secondary">Ré initialisation du mot de pass</h1>
@@ -168,34 +160,7 @@
         <p>A tres bientot sur le site de école.</p>
       </section>
     </main>
-    <footer class="w-100">
-      <div class="w-100 b-secondary p-1 d-flex">
-        <div class="flex-4">
-          <h5 class="c-primary">Nous contacter ?</h5>
-          <div class="fs-08 c-white w-100">
-            Pendant les créneaux d &apos;ouverture </br> Lundi mardi et jeudi 
-            vendredi
-          </div>
-          <div class="fs-08 c-white w-100">Tel : 04 74 90 78 80</div>
-          <div class="fs-08 c-white w-100">Mail: ogec.cremieu@wanadoo.fr</div>
-        </div>
-        <div class="flex-1">
-          <h5 class="text-center c-primary">Lien du site</h5>
-          <div class='text-center'>
-            <a href={{url}}>
-              <img
-                src={{logo}}
-                alt="logo"
-                class='logo-bottom'
-              />
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="py-1 px-2 fs-06 fst-italic text-justify c-secondary">
-       {{rgpd}}
-      </div>
-    </footer>
+    {{>footer  }}
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

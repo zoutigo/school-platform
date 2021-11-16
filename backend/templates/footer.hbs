@@ -1,19 +1,9 @@
-
-<!DOCTYPE html>
-<html lang="fr">
+<html lang='fr'>
   <head>
-    <meta charset="UTF-8" />
+     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-      crossorigin="anonymous"
-    />
     <style>
-   a {
+      a {
   text-decoration: none;
   list-style: none;
 }
@@ -39,9 +29,6 @@
 }
 .c-white {
   color: white;
-}
-.fs-1 {
-  font-size: 1rem;
 }
 .fs-08 {
   font-size: 0.8rem;
@@ -81,7 +68,9 @@
 .align-center {
   text-align: center;
 }
-
+.logo-top {
+  width: 150px;
+}
 .logo-bottom {
   width: 150px;
 }
@@ -129,33 +118,39 @@
   width: 100%;
 }
 
-  
-
     </style>
 
   </head>
-  <body class="w-100 b-whitesmoke">
-    {{>header  }}
-    <main class="my-4 mx-2">
-      <section class="b-primary h-auto  mt-2 text-center py-2">
-          <h1 class="fs-1 c-secondary">{{title}}</h1>
-      </section>
-      <section class="my-4">
-        <h5>Bonjour {{firstname}}</h5>
-      </section>
-      <section>
-        {{{content}}}
-      </section>
-      <section class="my-4">
-        <p>A tres bientot sur le site de école.</p>
-      </section>
-    </main>
-     {{>footer  }}
+  <body>
+
+<footer  style="width:100%">
+<div style="width:100%;background: #294c60; padding:5px; display:flex">
+  <div  style="flex:4">
+    <h5 class="c-primary" style="color: #ffc49b;">Nous contacter ?</h5>
+    <div class="fs-08 c-white w-100">
+      Pendant les créneaux d &apos;ouverture </br> Lundi mardi et jeudi 
+      vendredi
+    </div>
+    <div class="fs-08 c-white w-100">Tel : 04 74 90 78 80</div>
+    <div class="fs-08 c-white w-100">Mail: ogec.cremieu@wanadoo.fr</div>
    
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-      crossorigin="anonymous"
-    ></script>
+  </div>
+  <div class="flex-1">
+    <h5 class="text-center c-primary">Lien du site</h5>
+    <div class='text-center'>
+      <a href='https://www.ecole-st-augustin.fr'>
+        <img
+          src='https://www.ecole-st-augustin.fr/images/logo.png'
+          alt="logo"
+          class='logo-bottom'
+        />
+      </a>
+    </div>
+  </div>
+</div>
+<div class="py-1 px-2 fs-06 fst-italic text-justify c-secondary">
+ Conformément à la réglementation relative à la protection des données personnelles, vous bénéficiez d'un droit d'accès, de rectification, d'effacement et de portabilité de vos informations personnelles. il suffit juste de les modifier dans votre espace personnel ou de contacter l'administrateur du site
+</div>
+</footer>
   </body>
 </html>

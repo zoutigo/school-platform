@@ -9,6 +9,17 @@ const { inlinerOptions } = require('../constants/inlinerOptions')
 
 require('dotenv').config()
 
+const footerSource = fs.readFileSync(
+  path.join('./backend', 'templates', 'footer.hbs'),
+  'utf8'
+)
+const headerSource = fs.readFileSync(
+  path.join('./backend', 'templates', 'header.hbs'),
+  'utf8'
+)
+handlebars.registerPartial('footer', footerSource)
+handlebars.registerPartial('header', headerSource)
+
 const transporter = nodemailer.createTransport({
   host: process.env.MAILER_HOST,
   port: process.env.MAILER_PORT,
@@ -31,24 +42,35 @@ const URL =
     ? SERVER_ONLINE_ADRESS
     : process.env.SERVER_ADRESS
 
-module.exports.emailConfirmMail = (user) => {
-  const options = {
-    from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
-    to: user.email,
-    subject: "Confirmation de l'adresse mail",
-    text: `Bonjour.L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs réguliers.
-    Afin de confirmer votre adresse mail et pour des raisons de sécurité , merci de bien vouloir coller le lien suivant sur votre navigateur.
-    ${URL}/users/verification-email?token=${user.emailToken}
-    `,
-    html: `
-    <h1>Bonjour</h1>
-    <p>L'école Saint Augustin est heureuse de vous acceuillir parmi ses visiteurs reguliers.</p>
-    <p>Afin de confirmer votre adresse mail et pour des raisons de sécurité , merci de bien vouloir cliquer le lien suivant: </p>
-    <a href="${URL}/users/verification-email?token=${user.emailToken}">Verifiez votre compte maintenant </a>
-    `,
-  }
+module.exports.emailConfirmMail = async (user) => {
+  const emailRegisterEmailConfirmTemplateSource = fs.readFileSync(
+    path.join('./backend', 'templates', 'emailRegisterEmailConfirm.hbs'),
+    'utf8'
+  )
 
-  return { transporter, options }
+  try {
+    const inlinedEmailRegisterEmailConfirmTemplateSource = await inlineCss(
+      emailRegisterEmailConfirmTemplateSource,
+      inlinerOptions
+    )
+    const template = handlebars.compile(
+      inlinedEmailRegisterEmailConfirmTemplateSource
+    )
+
+    const tokenLink = `${URL}/users/verification-email?token=${user.emailToken}`
+    const htmlToSend = template({
+      tokenLink: tokenLink,
+    })
+    const options = {
+      from: ` "Admin-Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
+      to: user.email,
+      subject: `Confirmation de l'adresse mail`,
+      html: htmlToSend,
+    }
+    return { transporter, options }
+  } catch (err) {
+    return { err }
+  }
 }
 module.exports.emailLosspass = async (user) => {
   const emailLossPassTemplateSource = fs.readFileSync(
@@ -80,7 +102,7 @@ module.exports.emailLosspass = async (user) => {
 
     return { transporter, options }
   } catch (err) {
-    console.log(err)
+    return { err }
   }
 }
 
@@ -216,14 +238,13 @@ module.exports.userSuggestionEmail = (suggestion, user) => {
     title: suggestion.title,
     topic: suggestion.topic,
     message: suggestion.message,
-    logo: logopath,
     firstname: user.firstname,
   })
 
   const options = {
     from: ` "Ecole Saint Augustin Crémieu" <${process.env.MAILER_USER}>`,
     to: user.email,
-    subject: `Suggestion reçue: ${suggestion.title}`,
+    subject: `Votre remarque intitulée ${suggestion.title}`,
     html: htmlToSend,
   }
 
@@ -240,8 +261,10 @@ module.exports.adminSuggestionEmail = (suggestion, user) => {
     title: suggestion.title,
     topic: suggestion.topic,
     message: suggestion.message,
-    logo: logopath,
     firstname: user.firstname,
+    lastname: user.lastname,
+    email: user.email,
+    gender: user.gender,
   })
 
   const options = {
