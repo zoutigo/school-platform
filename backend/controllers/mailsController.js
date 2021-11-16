@@ -22,20 +22,20 @@ module.exports.postMails = async (req, res, next) => {
     try {
       const savedMail = await MailP.create(mail)
       if (savedMail) {
-        const users = await UserP.findAll({
-          where: { isVerified: true },
-        })
+        // const users = await UserP.findAll({
+        //   where: { isVerified: true },
+        // })
 
-        await Promise.all(
-          users.map(async (user) => {
-            const { transporter, options } = toAllUsersEmail(savedMail, user)
-            await transporter.sendMail(options, (error, info) => {
-              if (error) {
-                return next(error)
-              }
-            })
-          })
-        )
+        // await Promise.all(
+        //   users.map(async (user) => {
+        //     const { transporter, options } = toAllUsersEmail(savedMail, user)
+        //     await transporter.sendMail(options, (error, info) => {
+        //       if (error) {
+        //         return next(error)
+        //       }
+        //     })
+        //   })
+        // )
 
         return res.status(201).send({
           message:
