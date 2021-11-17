@@ -44,7 +44,7 @@ function Aside({ datas, module }) {
   if (current.state.type === 'rubric') return null
 
   return (
-    <StyledAsideGrid item xs={false} md={title ? 3 : false} show={title}>
+    <StyledAsideGrid item xs={12} md={title ? 3 : false} show={title}>
       <AsideTitle title={title || ''} />
       <StyledAsideBodyGrid container>
         {itemsList ? (
