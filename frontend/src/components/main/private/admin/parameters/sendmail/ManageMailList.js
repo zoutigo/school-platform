@@ -1,54 +1,51 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import ReactHtmlParser from 'react-html-parser'
+import moment from 'moment'
+import { styled } from '@material-ui/styles'
 import { List, ListItem, Grid, ListSubheader } from '@material-ui/core'
+import { apiFetchMails } from '../../../../../../utils/api'
+import useFetch from '../../../../../hooks/useFetch'
+import AlertMessage from '../../../../../elements/AlertMessage'
+import FetchCircularProgress from '../../../../../elements/FetchCircularProgress'
 
-const mails = [
-  {
-    id: 1,
-    title: 'un essai',
-    createdAt: '15/02/2020',
-    content: 'Je suis content de vous retouber',
-    datetosend: '18/03/2020',
-    isSent: true,
+const StyledMailGrid = styled(Grid)(({ theme }) => ({
+  background: theme.palette.primary.light,
+  padding: '1rem 0.5rem',
+  '& .title': {
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    fontSize: '1.2rem',
+    padding: '0.5rem 0px',
   },
-  {
-    id: 2,
-    title: 'une modification',
-    createdAt: '20/02/2021',
-    content: 'Ne vous cachez pas trop',
-    datetosend: '17/02/2021',
-    isSent: true,
+  '& .content': {
+    fontSize: '1rem',
+    background: 'whitesmoke',
+    padding: '0.5rem 0px',
   },
-  {
-    id: 3,
-    title: 'une amélioration',
-    createdAt: '10/06/2021',
-    content: 'Une autre va arriver',
-    datetosend: '08/06/2021',
-    isSent: false,
+  '& .smalltext': {
+    fontSize: '0.9rem',
   },
-]
-
+}))
 const Mail = ({ createdAt, title, content, datetosend, isSent }) => (
-  <Grid container>
-    <Grid item container xs={2}>
-      {createdAt}
+  <StyledMailGrid container>
+    <Grid item container xs={5} className="smalltext">
+      créé le {moment(createdAt).format('DD MMMM YYYY')}
     </Grid>
-    <Grid item container xs={2}>
-      {datetosend}
+    <Grid item container xs={5} className="smalltext">
+      A envoyer le {moment(Number(datetosend)).format('DD MMMM YYYY')}
     </Grid>
-    <Grid item container xs={2}>
+    <Grid item container xs={2} className="smalltext">
       {isSent ? 'envoyé' : 'non envoyé'}
     </Grid>
-    <Grid item container xs={6}>
+    <Grid item container xs={12} className="title">
       {' '}
       {title}
     </Grid>
-    <Grid item container xs={12}>
-      {' '}
-      {content}
+    <Grid item container xs={12} className="content">
+      {ReactHtmlParser(content)}
     </Grid>
-  </Grid>
+  </StyledMailGrid>
 )
 
 Mail.propTypes = {
@@ -60,22 +57,37 @@ Mail.propTypes = {
 }
 
 function ManageMailList() {
+  const queryKey = ['mail-list']
+  const queryParams = ''
+  const {
+    isLoading,
+    isError,
+    data: mails,
+    errorMessage,
+  } = useFetch(queryKey, queryParams, apiFetchMails)
+
   return (
-    <List
-      component="div"
-      aria-labelledby="liste des messages envoyés"
-      subheader={
-        <ListSubheader component="div" id="titre liste des messages">
-          Liste des messages envoyés
-        </ListSubheader>
-      }
-    >
-      {mails.map((mail) => (
-        <ListItem key={mail.id}>
-          <Mail {...mail} />
-        </ListItem>
-      ))}
-    </List>
+    <Grid container>
+      {isError && <AlertMessage severity="error" message={errorMessage} />}
+      {isLoading && <FetchCircularProgress color="primary" />}
+      {mails && (
+        <List
+          component="div"
+          aria-labelledby="liste des messages envoyés"
+          subheader={
+            <ListSubheader component="div" id="titre liste des messages">
+              Liste des messages envoyés
+            </ListSubheader>
+          }
+        >
+          {mails.map((mail) => (
+            <ListItem key={mail.id}>
+              <Mail {...mail} />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </Grid>
   )
 }
 

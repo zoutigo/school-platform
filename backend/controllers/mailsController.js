@@ -3,6 +3,8 @@ const UserP = require('../models/UserP')
 const { toAllUsersEmail } = require('../service/mailer')
 const { BadRequest, NotFound, Unauthorized } = require('../utils/errors')
 
+require('dotenv').config()
+
 module.exports.postMails = async (req, res, next) => {
   const { isAdmin, isManager, isModerator, id: userId } = req.user
   const { id: mailId, action } = req.query
@@ -47,4 +49,16 @@ module.exports.postMails = async (req, res, next) => {
     }
   }
 }
-module.exports.getMails = async (req, res, next) => {}
+module.exports.getMails = async (req, res, next) => {
+  try {
+    const mails = await MailP.findAll({
+      where: { isSent: process.env.NODE_ENV !== 'production' },
+      order: [['createdAt', 'DESC']],
+      limit: 5,
+    })
+
+    if (mails) return res.status(200).send(mails)
+  } catch (err) {
+    return next(err)
+  }
+}

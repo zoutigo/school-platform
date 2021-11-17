@@ -10,7 +10,6 @@ const { eventValidator } = require('../validators/eventValidator')
 
 require('dotenv').config()
 
-const today = new Date().getTime()
 const yesterday = moment().add(-1, 'days')
 
 module.exports.postEvent = async (req, res, next) => {

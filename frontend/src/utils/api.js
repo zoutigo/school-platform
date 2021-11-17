@@ -422,3 +422,9 @@ export const apiPostMails = async ({ id, body, options, action }) => {
   const { data } = await axios.post(URL, body, options)
   return data
 }
+
+export const apiFetchMails = async () => {
+  const URL = `${PREFIX}/mails`
+  const { data } = await axios.get(URL)
+  return data
+}
