@@ -151,6 +151,7 @@ module.exports.getEvents = async (req, res, next) => {
           attributes: ['id', 'lastname'],
         },
       ],
+      order: [['date', 'ASC']],
     })
 
     const filteredEvents = events.filter(
