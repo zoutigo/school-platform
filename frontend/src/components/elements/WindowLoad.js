@@ -49,16 +49,6 @@ function WindowLoad() {
     }
   }, [chemins])
 
-  // useEffect(() => {
-  //   if (newRoutes.length) {
-  //     dispatch(setAllRoutes(newRoutes))
-  //   }
-  //   window.addEventListener('load', loadChemins)
-  //   return () => {
-  //     window.removeEventListener('load', loadChemins)
-  //   }
-  // }, [data, newRoutes])
-
   return null
 }
 

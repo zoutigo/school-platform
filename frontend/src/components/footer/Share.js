@@ -1,6 +1,5 @@
 import { Box, styled } from '@material-ui/core'
 import React from 'react'
-import { useQuery } from 'react-query'
 
 import {
   FacebookShareButton,
@@ -19,7 +18,7 @@ const StyledButtonGroup = styled(Box)(() => ({
 }))
 
 function Share() {
-  const url = 'http://www.ecole-st-augustin.fr'
+  const url = 'https://www.ecole-st-augustin.fr'
   const title = 'Partager'
   const shareTitle = 'Ecole Saint Augustin'
   const hashtag = '#ecolesaintaugustincremieu'
