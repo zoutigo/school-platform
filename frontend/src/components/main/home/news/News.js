@@ -1,4 +1,5 @@
 import { Grid, styled, Typography } from '@material-ui/core'
+import { useLocation } from 'react-router-dom'
 import React from 'react'
 import { StyledHomeGrid } from '../../../elements/styled'
 import NewsActivites from './NewsActivites'
@@ -37,7 +38,11 @@ const StyledCardContainer = styled(Grid)(() => ({
 }))
 
 function News() {
-  const message = "Restez connectés à l'actu de l'école."
+  const { pathname } = useLocation()
+  const message =
+    pathname === '/'
+      ? "Restez connectés à l'actu de l'école."
+      : 'Informations récentes'
   return (
     <StyledNewsContainer container>
       <StyledMessageContainer item container xs={12} xl={12} justify="center">

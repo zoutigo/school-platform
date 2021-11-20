@@ -75,7 +75,7 @@ function LoginScreen() {
           dispatch(setUserToken(newToken))
           const { isAdmin } = newDatas
           if (isAdmin) {
-            history.push('/informations')
+            history.push('/informations/actualites')
           } else {
             history.push('/')
           }

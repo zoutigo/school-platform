@@ -1,20 +1,22 @@
 import React from 'react'
 import MenuBookIcon from '@material-ui/icons/MenuBook'
-import { useQuery } from 'react-query'
 import moment from 'moment'
 import CardItem from './card/CardItem'
 import NewsCard from './card/NewsCard'
 import { apiFetchPaper } from '../../../../utils/api'
 import capitilize from '../../../../utils/capitilize'
+import useFetch from '../../../hooks/useFetch'
 
 function NewsActivites() {
-  const cardTitle = "Actualités de l'école"
+  const cardTitle = "Activités de l'école"
 
   const queryKey = ['activites']
   const queryParams = `type=activite`
 
-  const { isLoading, isError, data, error } = useQuery(queryKey, () =>
-    apiFetchPaper(queryParams)
+  const { isLoading, isError, data, error } = useFetch(
+    queryKey,
+    queryParams,
+    apiFetchPaper
   )
 
   if (isLoading) {
