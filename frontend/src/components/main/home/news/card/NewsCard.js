@@ -48,7 +48,7 @@ function NewsCard({ cardTitle, items }) {
   const theme = useTheme()
   const defineIcon = useCallback((cardtitle) => {
     switch (cardtitle) {
-      case "Actualités de l'école":
+      case "Activités de l'école":
         return <MenuBookIcon />
 
       case 'Agenda à venir':

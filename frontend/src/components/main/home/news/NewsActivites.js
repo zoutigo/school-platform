@@ -13,7 +13,7 @@ function NewsActivites() {
   const queryKey = ['activites']
   const queryParams = `type=activite`
 
-  const { isLoading, isError, data, error } = useFetch(
+  const { isLoading, isError, data, errorMessage } = useFetch(
     queryKey,
     queryParams,
     apiFetchPaper
@@ -27,7 +27,7 @@ function NewsActivites() {
     return (
       <span>
         Error:
-        {error.message}
+        {errorMessage}
       </span>
     )
   }

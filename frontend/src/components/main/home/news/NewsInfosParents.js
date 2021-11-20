@@ -1,21 +1,22 @@
 import React from 'react'
+import MenuBookIcon from '@material-ui/icons/MenuBook'
 import moment from 'moment'
-import DateRangeIcon from '@material-ui/icons/DateRange'
 import CardItem from './card/CardItem'
 import NewsCard from './card/NewsCard'
-import { apiFetchEvents } from '../../../../utils/api'
+import { apiFetchPaper } from '../../../../utils/api'
+import capitilize from '../../../../utils/capitilize'
 import useFetch from '../../../hooks/useFetch'
 
-function NewsAgenda() {
-  const cardTitle = 'Agenda à venir'
+function NewsInfosParents() {
+  const cardTitle = 'Infos Parents'
 
-  const queryKey = ['events']
-  const queryParams = ''
+  const queryKey = ['activites']
+  const queryParams = `type=parent-info`
 
   const { isLoading, isError, data, errorMessage } = useFetch(
     queryKey,
     queryParams,
-    apiFetchEvents
+    apiFetchPaper
   )
 
   if (isLoading) {
@@ -40,14 +41,13 @@ function NewsAgenda() {
   if (data && data.length > 0) {
     for (let i = 0; i < 3; i += 1) {
       if (data[i]) {
-        const { place, date, title, id } = data[i]
+        const { entity, date, title } = data[i]
         const dateString = moment(Number(date)).format('DD/MM/YYYY')
         items.push(
           <CardItem
             title={title}
-            detail={`${place} - ${dateString}`}
-            link="/informations/actualites/agenda"
-            id={id}
+            detail={`${capitilize(entity.name)} - ${dateString}`}
+            link="/informations/actualites/infosparents"
           />
         )
       }
@@ -58,9 +58,9 @@ function NewsAgenda() {
     <NewsCard
       cardTitle={cardTitle}
       items={items}
-      recipe={String(<DateRangeIcon />)}
+      recipe={String(<MenuBookIcon />)}
     />
   )
 }
 
-export default NewsAgenda
+export default NewsInfosParents

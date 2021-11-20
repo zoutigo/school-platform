@@ -5,6 +5,7 @@ import { StyledHomeGrid } from '../../../elements/styled'
 import NewsActivites from './NewsActivites'
 import NewsAgenda from './NewsAgenda'
 import NewsDocs from './NewsDocs'
+import NewsInfosParents from './NewsInfosParents'
 
 const StyledNewsContainer = styled(StyledHomeGrid)(({ theme }) => ({
   background: theme.palette.primary.main,
@@ -48,11 +49,17 @@ function News() {
       <StyledMessageContainer item container xs={12} xl={12} justify="center">
         <StyledMessage component="div">{message}</StyledMessage>
       </StyledMessageContainer>
-      <StyledCardContainer item md={12} lg={4} container justify="center">
-        <NewsDocs />
-      </StyledCardContainer>
+
+      {pathname !== '/' && (
+        <StyledCardContainer item md={12} lg={4} container justify="center">
+          <NewsInfosParents />
+        </StyledCardContainer>
+      )}
       <StyledCardContainer item md={12} lg={4} container justify="center">
         <NewsActivites />
+      </StyledCardContainer>
+      <StyledCardContainer item md={12} lg={4} container justify="center">
+        <NewsDocs />
       </StyledCardContainer>
       <StyledCardContainer item md={12} lg={4} container justify="center">
         <NewsAgenda />
