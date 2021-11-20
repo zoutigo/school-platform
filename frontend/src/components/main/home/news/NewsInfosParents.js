@@ -10,7 +10,7 @@ import useFetch from '../../../hooks/useFetch'
 function NewsInfosParents() {
   const cardTitle = 'Infos Parents'
 
-  const queryKey = ['activites']
+  const queryKey = ['infos-parents']
   const queryParams = `type=parent-info`
 
   const { isLoading, isError, data, errorMessage } = useFetch(
