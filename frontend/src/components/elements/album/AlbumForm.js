@@ -1,33 +1,19 @@
 /* eslint-disable import/named */
-import { yupResolver } from '@hookform/resolvers/yup'
-import {
-  Grid,
-  styled,
-  useTheme,
-  List,
-  ListItem,
-  Button,
-} from '@material-ui/core'
+import { Grid, List, ListItem, Button } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 import PropTypes from 'prop-types'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import albumSchema from '../../../schemas/albumSchema'
 import { apiPostAlbum } from '../../../utils/api'
 import getError from '../../../utils/getError'
 import getResponse from '../../../utils/getResponse'
 import useMutate from '../../hooks/useMutate'
 import StyledHookForm from '../../styled-components/StyledHookForm'
-import CostumButton from '../CustomButton'
-import InputFileControl from '../InputFileControl'
-import InputRadio from '../InputRadio'
 import FileInput from '../inputs/FileInput'
 import RadioInput from '../inputs/RadioInput'
 import SmallEditorInput from '../inputs/SmallEditorInput'
 import TextInput from '../inputs/TextInput'
-import InputSmallEditorControl from '../InputSmallEditorControl'
-import InputTextControl from '../InputTextControl'
 import MutateCircularProgress from '../MutateCircularProgress'
 import Title from '../Title'
 
@@ -40,22 +26,14 @@ function AlbumForm({
   currentAlbum,
   entityAlias,
 }) {
-  const theme = useTheme()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const dispatch = useDispatch()
   const { Token } = useSelector((state) => state.user)
 
   const { mutateAsync, isMutating } = useMutate(queryKey, apiPostAlbum)
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { isSubmitting, isValid },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     mode: 'onChange',
   })
-
-  const changeFile = watch('changeFile')
 
   const onSubmit = async (datas) => {
     const { description, file, name, isPrivate } = datas
@@ -181,27 +159,8 @@ function AlbumForm({
               }}
             />
           </ListItem>
-          {formAction === 'update' && (
-            <ListItem className="field">
-              <RadioInput
-                question="Modifier l'image de couverture ?"
-                options={[
-                  { labelOption: 'Oui', optionvalue: 'oui' },
-                  { labelOption: 'Non', optionvalue: 'non' },
-                ]}
-                name="changeFile"
-                defaultValue="non"
-                control={control}
-                radioGroupProps={{ row: true }}
-                variant="standard"
-                rules={{
-                  required: 'veillez choisir une option',
-                }}
-              />
-            </ListItem>
-          )}
-          {(formAction === 'create' ||
-            (formAction === 'update' && changeFile === 'oui')) && (
+
+          {formAction === 'create' && (
             <ListItem className="field">
               <FileInput
                 control={control}
@@ -225,71 +184,6 @@ function AlbumForm({
             </Button>
           </ListItem>
         </List>
-        <Grid container className="form-fields-container">
-          {/* <InputTextControl
-            control={control}
-            name="name"
-            label="Nom de l'album"
-            initialValue={currentAlbum ? currentAlbum.name : ''}
-          /> */}
-          {/* <InputSmallEditorControl
-            control={control}
-            name="description"
-            initialValue={currentAlbum ? currentAlbum.description : ''}
-            label="Description de l'album"
-            width="100%"
-            height={100}
-          /> */}
-          {/* <InputRadio
-            question="Modifier l'image de couverture ?"
-            options={[
-              { labelOption: 'Oui', optionvalue: 'oui' },
-              { labelOption: 'Non', optionvalue: 'non' },
-            ]}
-            name="addFile"
-            defaultValue="non"
-            callback={setAddFile}
-            control={control}
-            radioGroupProps={{ row: true }}
-            display={displayRadio}
-          /> */}
-          {/* <InputRadio
-            question="L'album reste privé ?"
-            options={[
-              { labelOption: 'Oui', optionvalue: 'oui' },
-              { labelOption: 'Non', optionvalue: 'non' },
-            ]}
-            name="isPrivate"
-            defaultValue={isPrivateDefaultValue}
-            control={control}
-            radioGroupProps={{ row: true }}
-            display="block"
-          /> */}
-
-          {/* {addFile && (
-            <InputFileControl
-              control={control}
-              label="Image de couverture"
-              name="file"
-              type="file"
-              accept="image/jpg,image/jpeg,image/gif,image/png"
-              helperText="maximum 10Mo"
-              show
-            />
-          )} */}
-        </Grid>
-        <Grid item container alignItems="center" justify="flex-end">
-          {/* <CostumButton
-            text={
-              formAction === 'update' ? `Modifier l'album` : `Créer un album`
-            }
-            bgcolor={theme.palette.success.main}
-            action="post"
-            width="300px"
-            type="submit"
-            disabled={!isValid || isSubmitting}
-          /> */}
-        </Grid>
       </StyledHookForm>
     </Grid>
   )

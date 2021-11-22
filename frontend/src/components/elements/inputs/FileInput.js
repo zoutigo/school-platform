@@ -1,7 +1,7 @@
 import React from 'react'
 import { useController, Controller } from 'react-hook-form'
 import PropTypes from 'prop-types'
-import { InputAdornment, TextField } from '@material-ui/core'
+import { TextField } from '@material-ui/core'
 
 function FileInput({
   control,

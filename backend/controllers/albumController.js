@@ -28,10 +28,7 @@ module.exports.postAlbum = async (req, res, next) => {
 
   if (action !== 'delete' && !entityAlias)
     return next(new BadRequest('entityAlias missing'))
-  const entity =
-    action !== 'delete'
-      ? await EntityP.findOne({ where: { alias: entityAlias } })
-      : null
+  const entity = await EntityP.findOne({ where: { alias: entityAlias } })
 
   if (action !== 'delete') {
     if (!entity)
@@ -126,7 +123,6 @@ module.exports.postAlbum = async (req, res, next) => {
     }
   } else if (action === 'update' && albumId) {
     // case update
-    console.log('albumiD:', albumId)
 
     const currentAlbum = await AlbumP.findOne({
       where: { id: albumId },
@@ -138,8 +134,6 @@ module.exports.postAlbum = async (req, res, next) => {
       name: req.body.name || currentAlbum.name,
       description: req.body.description || currentAlbum.description,
       isPrivate: req.body.isPrivate,
-      covername: req.file ? req.file.filename : currentAlbum.covername,
-      coverpath: req.file ? req.file.path : currentAlbum.coverpath,
     }
 
     try {
@@ -219,10 +213,12 @@ module.exports.getAlbums = async (req, res, next) => {
 
   try {
     const albums = await AlbumP.findAll({
+      subQuery: false,
       where: req.query,
       attributes: ['id', 'name', 'alias', 'description'],
-      limit: 10,
       include: albumIncludes,
+      order: [['createdAt', 'DESC']],
+      limit: 10,
     })
 
     if (albums.length < 1)
