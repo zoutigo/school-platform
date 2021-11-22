@@ -6,6 +6,8 @@ const path = require('path')
 const fs = require('fs')
 const { logopath, rgpd } = require('../constants/texts')
 const { inlinerOptions } = require('../constants/inlinerOptions')
+const paperintrotext = require('../constants/paperintrotext')
+const paperLink = require('../constants/paperLink')
 
 require('dotenv').config()
 
@@ -296,6 +298,30 @@ module.exports.toAllUsersEmail = (mail, user) => {
     from: ` "Admin - Ecole Saint Augustin" <${process.env.MAILER_USER}>`,
     to: user.email,
     subject: `${mail.title}`,
+    html: htmlToSend,
+  }
+
+  return { transporter, options }
+}
+module.exports.paperEmail = (paper, user) => {
+  const emailPaperTemplateSource = fs.readFileSync(
+    path.join('./backend', 'templates', 'emailPaper.hbs'),
+    'utf8'
+  )
+
+  const template = handlebars.compile(emailPaperTemplateSource)
+
+  const htmlToSend = template({
+    title: paper.title,
+    introtext: paperintrotext(paper),
+    link: `${URL}${paperLink(paper)}`,
+    firstname: user.firstname,
+  })
+
+  const options = {
+    from: ` "Site - Ecole Saint Augustin" <${process.env.MAILER_USER}>`,
+    to: user.email,
+    subject: `Nouveau : ${paper.type} de ${paper.entity.name}`,
     html: htmlToSend,
   }
 

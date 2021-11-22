@@ -29,7 +29,9 @@ const initRouter = require('./routes/inits')
 const parametresRouter = require('./routes/parametres')
 const mailsRouter = require('./routes/mails')
 const db = require('./config/database')
-const emailToAllUsersTask = require('./tasks/emailToAllUers')
+const emailToAllUsersTask = require('./tasks/emailToAllUsers')
+const emailFromEntityPost = require('./tasks/emailFromEntityPost')
+const emailFromClassroomPost = require('./tasks/emailFromClassroomPost')
 
 // const datasRouter = require("./routes/datas");
 // const filesRouter = require('./routes/files')
@@ -135,6 +137,8 @@ app.use('/mails', mailsRouter)
 app.use(handleErrors)
 
 emailToAllUsersTask.start()
+emailFromEntityPost.start()
+emailFromClassroomPost.start()
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))

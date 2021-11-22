@@ -4,7 +4,7 @@ const UserP = require('../models/UserP')
 const { toAllUsersEmail } = require('../service/mailer')
 
 const emailToAllUsersTask = cron.schedule(
-  '0 11 * * *',
+  '0 12 * * *',
   () => {
     const errors = []
     const sendMails = async () => {
