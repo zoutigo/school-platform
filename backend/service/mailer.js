@@ -8,6 +8,7 @@ const { logopath, rgpd } = require('../constants/texts')
 const { inlinerOptions } = require('../constants/inlinerOptions')
 const paperintrotext = require('../constants/paperintrotext')
 const paperLink = require('../constants/paperLink')
+const albumLink = require('../constants/albumLink')
 
 require('dotenv').config()
 
@@ -322,6 +323,31 @@ module.exports.paperEmail = (paper, user) => {
     from: ` "Site - Ecole Saint Augustin" <${process.env.MAILER_USER}>`,
     to: user.email,
     subject: `Nouveau : ${paper.type} de ${paper.entity.name}`,
+    html: htmlToSend,
+  }
+
+  return { transporter, options }
+}
+module.exports.albumEmail = (album, user) => {
+  const emailAlbumTemplateSource = fs.readFileSync(
+    path.join('./backend', 'templates', 'emailAlbum.hbs'),
+    'utf8'
+  )
+
+  const template = handlebars.compile(emailAlbumTemplateSource)
+
+  const htmlToSend = template({
+    title: album.name,
+    introtext: `un album a été posté par: ${album.entity.name}`,
+    description: album.description,
+    link: `${URL}${albumLink(album)}`,
+    firstname: user.firstname,
+  })
+
+  const options = {
+    from: ` "Site - Ecole Saint Augustin" <${process.env.MAILER_USER}>`,
+    to: user.email,
+    subject: `Nouvel album de ${album.entity.name}`,
     html: htmlToSend,
   }
 
