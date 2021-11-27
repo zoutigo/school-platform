@@ -339,7 +339,7 @@ module.exports.albumEmail = (album, user) => {
   const htmlToSend = template({
     title: album.name,
     introtext: `un album a été posté par: ${album.entity.name}`,
-    description: album.description,
+    description: HTMLParser.parse(album.description),
     link: `${URL}${albumLink(album)}`,
     firstname: user.firstname,
   })

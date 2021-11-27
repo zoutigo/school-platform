@@ -6,6 +6,7 @@ import NewsActivites from './NewsActivites'
 import NewsAgenda from './NewsAgenda'
 import NewsDocs from './NewsDocs'
 import NewsInfosParents from './NewsInfosParents'
+import NewsAlbums from './NewsAlbums'
 
 const StyledNewsContainer = styled(StyledHomeGrid)(({ theme }) => ({
   background: theme.palette.primary.main,
@@ -64,6 +65,11 @@ function News() {
       <StyledCardContainer item md={12} lg={4} container justify="center">
         <NewsAgenda />
       </StyledCardContainer>
+      {pathname !== '/' && (
+        <StyledCardContainer item md={12} lg={4} container justify="center">
+          <NewsAlbums />
+        </StyledCardContainer>
+      )}
     </StyledNewsContainer>
   )
 }

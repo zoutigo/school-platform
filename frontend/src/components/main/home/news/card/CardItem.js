@@ -2,6 +2,7 @@ import { Grid, styled, Typography } from '@material-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { StyledNavLink } from '../../../../elements/styled'
+import capitilize from '../../../../../utils/capitilize'
 
 const StyledCardItem = styled(Grid)(({ theme }) => ({
   padding: '0.5rem',
@@ -22,7 +23,7 @@ function CardItem({ title, detail, link }) {
       <StyledCardItem container>
         <Grid item xs={12}>
           <Typography variant="body1" component="div">
-            {title}
+            {capitilize(title).slice(0, 50)}
           </Typography>
         </Grid>
         <Grid item xs={12}>
