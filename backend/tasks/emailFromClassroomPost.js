@@ -4,8 +4,7 @@ const filterAlbumEmailClients = require('../utils/filterAlbumEmailClients')
 const filterPaperEmailClients = require('../utils/filterPaperEmailClients')
 
 const emailFromClassroomPost = cron.schedule(
-  // '30 11 * * *',
-  '23 12 * * *',
+  '30 11 * * *',
 
   () => {
     filterPaperEmailClients('classroom')
