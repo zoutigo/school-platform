@@ -28,7 +28,9 @@ function ManageMailForm({
     mode: 'onChange',
     defaultValues: {
       title: currentMail ? currentMail.title : '',
-      datetosend: currentMail ? new Date(currentMail.datetosend) : new Date(),
+      datetosend: currentMail
+        ? new Date(Number(currentMail.datetosend))
+        : new Date(),
       content: currentMail ? currentMail.content : '',
     },
   })

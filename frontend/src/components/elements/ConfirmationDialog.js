@@ -6,18 +6,43 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  DialogContentText,
 } from '@material-ui/core'
 
-function ConfirmationDialog({ open, title, content, callback, rollback }) {
+function ConfirmationDialog({
+  open,
+  title,
+  contentTitle,
+  contentQuestion,
+  content,
+  callback,
+  rollback,
+}) {
   return (
     <Dialog maxWidth="xs" open={open}>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent dividers>{content}</DialogContent>
-      <DialogActions>
-        <Button autoFocus onClick={() => rollback()} color="primary">
+      <DialogTitle style={{ textTransform: 'uppercase' }}>{title}</DialogTitle>
+      <DialogContent dividers>
+        <DialogContentText>{contentTitle}</DialogContentText>
+        <DialogContentText>{contentQuestion}</DialogContentText>
+
+        {content}
+      </DialogContent>
+      <DialogActions
+        style={{ display: 'flex', justifyContent: 'space-between' }}
+      >
+        <Button
+          autoFocus
+          onClick={() => rollback()}
+          color="primary"
+          variant="contained"
+        >
           Annuler
         </Button>
-        <Button onClick={() => callback()} color="secondary">
+        <Button
+          onClick={() => callback()}
+          color="secondary"
+          variant="contained"
+        >
           Confirmer
         </Button>
       </DialogActions>
@@ -28,6 +53,8 @@ function ConfirmationDialog({ open, title, content, callback, rollback }) {
 ConfirmationDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
+  contentTitle: PropTypes.string.isRequired,
+  contentQuestion: PropTypes.string.isRequired,
   callback: PropTypes.func.isRequired,
   rollback: PropTypes.func.isRequired,
   content: PropTypes.func.isRequired,

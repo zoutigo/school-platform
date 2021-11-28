@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { List, ListItem, Grid, ListSubheader } from '@material-ui/core'
 import { apiFetchMails } from '../../../../../../utils/api'
@@ -13,6 +13,7 @@ function ManageMailList({
   setFormAction,
   setShowForm,
   setCurrentMail,
+  showForm,
 }) {
   const {
     isLoading,
@@ -25,8 +26,9 @@ function ManageMailList({
     <Grid container>
       {isError && <AlertMessage severity="error" message={errorMessage} />}
       {isLoading && <FetchCircularProgress color="primary" />}
-      {mails && (
+      {mails && Array.isArray(mails) && (
         <List
+          style={{ width: '100%' }}
           component="div"
           aria-labelledby="liste des messages envoyés"
           subheader={
@@ -35,17 +37,20 @@ function ManageMailList({
             </ListSubheader>
           }
         >
-          {mails.map((mail) => (
-            <ListItem key={mail.id}>
-              <Mail
-                {...mail}
-                queryKey={queryKey}
-                setShowForm={setShowForm}
-                setFormAction={setFormAction}
-                setCurrentMail={setCurrentMail}
-              />
-            </ListItem>
-          ))}
+          {mails &&
+            Array.isArray(mails) &&
+            mails.map((mail) => (
+              <ListItem key={mail.id}>
+                <Mail
+                  queryKey={queryKey}
+                  setShowForm={setShowForm}
+                  setFormAction={setFormAction}
+                  setCurrentMail={setCurrentMail}
+                  mail={mail}
+                  showForm={showForm}
+                />
+              </ListItem>
+            ))}
         </List>
       )}
     </Grid>
@@ -57,6 +62,7 @@ ManageMailList.propTypes = {
   queryParams: PropTypes.string.isRequired,
   setFormAction: PropTypes.func.isRequired,
   setShowForm: PropTypes.func.isRequired,
+  showForm: PropTypes.bool.isRequired,
   setCurrentMail: PropTypes.func.isRequired,
 }
 

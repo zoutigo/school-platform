@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Grid, Collapse, Tooltip, Fab, styled } from '@material-ui/core'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import EditIcon from '@material-ui/icons/Edit'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 import StyledParametresGrid from '../../../../../styled-components/StyledPrametresGrid'
 import Title from '../../../../../elements/Title'
 import ManageMailList from './ManageMailList'
@@ -22,6 +23,12 @@ function ManageMail({ setShowParams }) {
   const queryKey = ['sent-email-list']
   const queryParams = ``
 
+  const handleClick = () => {
+    setCurrentMail(null)
+    setFormAction('create')
+    setShowForm(!showForm)
+  }
+
   return (
     <StyledParametresGrid item container>
       <Grid item container justifyContent="space-between">
@@ -40,10 +47,10 @@ function ManageMail({ setShowParams }) {
             <Tooltip
               title="Envoyer un mail"
               aria-label="Envoyer un mail"
-              onClick={() => setShowForm(!showForm)}
+              onClick={handleClick}
             >
               <StyledDeleteFab size="small">
-                {showForm ? <ReceiptIcon /> : <EditIcon />}
+                {showForm ? <ReceiptIcon /> : <AddCircleIcon />}
               </StyledDeleteFab>
             </Tooltip>
           </Grid>

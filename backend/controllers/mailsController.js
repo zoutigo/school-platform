@@ -48,12 +48,37 @@ module.exports.postMails = async (req, res, next) => {
       return next(err)
     }
   }
+  if (action === 'update') {
+    if (!mailId) return next(new BadRequest('Merci de definir mail à modifier'))
+    try {
+      const updatedMail = await MailP.update(req.body, {
+        where: { id: mailId },
+      })
+      if (updatedMail) {
+        return res.status(200).send({ message: 'mail correctement modifié' })
+      }
+    } catch (err) {
+      return next(err)
+    }
+  }
+  if (action === 'delete') {
+    if (!mailId) return next(new BadRequest('Merci de definir mail à modifier'))
+
+    try {
+      const deletedMail = await MailP.destroy({ where: { id: mailId } })
+      if (deletedMail) {
+        return res.status(200).send({ message: 'Mail correctement supprimé' })
+      }
+    } catch (err) {
+      return next(err)
+    }
+  }
 }
 module.exports.getMails = async (req, res, next) => {
   try {
     const mails = await MailP.findAll({
-      where: { isSent: process.env.NODE_ENV !== 'production' },
-      order: [['createdAt', 'DESC']],
+      where: { isSent: false },
+      order: [['createdAt', 'ASC']],
       limit: 5,
     })
 

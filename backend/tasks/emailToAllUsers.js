@@ -17,17 +17,31 @@ const emailToAllUsersTask = cron.schedule(
 
       try {
         users.forEach(async (user) => {
-          mails.forEach(async (mail) => {
-            const { transporter, options } = toAllUsersEmail(mail, user)
-            await transporter.sendMail(options, async (error, info) => {
-              if (error) {
-                errors.push(error)
-              }
+          // mails.forEach(async (mail) => {
+          //   const { transporter, options } = toAllUsersEmail(mail, user)
+          //   await transporter.sendMail(options, async (error, info) => {
+          //     if (error) {
+          //       errors.push(error)
+          //     }
+          //   })
+          //   // eslint-disable-next-line no-param-reassign
+          //   mail.isSent = true
+          //   await mail.save()
+          // })
+
+          await Promise.all(
+            mails.map(async (mail) => {
+              const { transporter, options } = toAllUsersEmail(mail, user)
+              await transporter.sendMail(options, async (error, info) => {
+                if (error) {
+                  errors.push(error)
+                }
+              })
+              // eslint-disable-next-line no-param-reassign
+              mail.isSent = true
+              await mail.save()
             })
-            // eslint-disable-next-line no-param-reassign
-            mail.isSent = true
-            await mail.save()
-          })
+          )
         })
       } catch (err) {
         console.log(err)
