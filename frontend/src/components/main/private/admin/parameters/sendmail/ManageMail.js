@@ -14,10 +14,10 @@ const StyledDeleteFab = styled(Fab)(({ theme }) => ({
   background: 'white',
 }))
 
-const rgpd = `Conformément à la réglementation relative à la protection des données personnelles, vous bénéficiez d'un droit d'accès, de rectification, d'effacement et de portabilité de vos informations personnelles. il suffit juste de les modifier dans votre espace personnel ou de contacter l'administrateur du site `
-
 function ManageMail({ setShowParams }) {
   const [showForm, setShowForm] = useState(false)
+  const [formAction, setFormAction] = useState('create')
+  const [currentMail, setCurrentMail] = useState(null)
   const [showParametresDetails, setShowParametresDetails] = useState(false)
   const queryKey = ['sent-email-list']
   const queryParams = ``
@@ -56,6 +56,8 @@ function ManageMail({ setShowParams }) {
               setShowForm={setShowForm}
               queryKey={queryKey}
               queryParams={queryParams}
+              setFormAction={setFormAction}
+              setCurrentMail={setCurrentMail}
             />
           </Grid>
         ) : (
@@ -64,6 +66,9 @@ function ManageMail({ setShowParams }) {
               setShowForm={setShowForm}
               setShowParams={setShowParams}
               queryKey={queryKey}
+              formAction={formAction}
+              currentMail={currentMail}
+              setCurrentMail={setCurrentMail}
             />
           </Grid>
         )}

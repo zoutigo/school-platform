@@ -14,12 +14,23 @@ import { apiPostMails } from '../../../../../../utils/api'
 import getResponse from '../../../../../../utils/getResponse'
 import getError from '../../../../../../utils/getError'
 
-function ManageMailForm({ queryKey, setShowForm }) {
+function ManageMailForm({
+  queryKey,
+  setShowForm,
+  formAction,
+  setCurrentMail,
+  currentMail,
+}) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { Token } = useSelector((state) => state.user)
   const { mutateAsync, isMutating } = useMutate(queryKey, apiPostMails)
   const { control, handleSubmit } = useForm({
     mode: 'onChange',
+    defaultValues: {
+      title: currentMail ? currentMail.title : '',
+      datetosend: currentMail ? new Date(currentMail.datetosend) : new Date(),
+      content: currentMail ? currentMail.content : '',
+    },
   })
 
   const onSubmit = async (datas) => {
@@ -38,13 +49,14 @@ function ManageMailForm({ queryKey, setShowForm }) {
 
     try {
       await mutateAsync({
-        id: null,
-        action: 'create',
+        id: currentMail ? currentMail.id : null,
+        action: formAction,
         options: options,
         body: finalDatas,
       }).then((response) => {
         enqueueSnackbar(getResponse(response), { variant: 'success' })
         setShowForm(false)
+        setCurrentMail(null)
         window.scrollTo(0, 0)
       })
     } catch (err) {
@@ -70,7 +82,6 @@ function ManageMailForm({ queryKey, setShowForm }) {
           <TextInput
             control={control}
             name="title"
-            defaultValue=""
             label="Sujet "
             example="plus de 5 caractètes , moins de 50"
             variant="standard"
@@ -101,7 +112,6 @@ function ManageMailForm({ queryKey, setShowForm }) {
           <SmallEditorInput
             name="content"
             control={control}
-            defaultValue=""
             label="Message"
             rules={{
               required: 'le contenu est obligatoire',
@@ -124,7 +134,9 @@ function ManageMailForm({ queryKey, setShowForm }) {
             fullWidth
             size="large"
           >
-            je poste ma suggestion
+            {formAction === 'create'
+              ? `Je poste mon mail`
+              : `Je corrige mon mail`}
           </Button>
         </ListItem>
       </List>
@@ -132,9 +144,21 @@ function ManageMailForm({ queryKey, setShowForm }) {
   )
 }
 
+ManageMailForm.defaultProps = {
+  currentMail: null,
+}
+
 ManageMailForm.propTypes = {
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
   setShowForm: PropTypes.func.isRequired,
+  formAction: PropTypes.string.isRequired,
+  setCurrentMail: PropTypes.func.isRequired,
+  currentMail: PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    datetosend: PropTypes.string,
+    content: PropTypes.string,
+  }),
 }
 
 export default ManageMailForm
