@@ -78,6 +78,7 @@ function Header() {
           </StyledIconBox>
         </div>
       )}
+
       <MainDialog />
     </StyledHeader>
   )
