@@ -30,7 +30,7 @@ function MainDialog() {
 
   return (
     <Dialog
-      open={MainDialogCount === 0}
+      open={MainDialogCount === 0 && MainDialogDatas}
       //   TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}

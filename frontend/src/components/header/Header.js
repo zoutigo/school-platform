@@ -75,7 +75,6 @@ function Header() {
             }}
           >
             {!SmallScreenNavIsOpened && <MenuIcon />}
-            {/* {SmallScreenNavIsOpened && <CancelIcon />} */}
           </StyledIconBox>
         </div>
       )}
