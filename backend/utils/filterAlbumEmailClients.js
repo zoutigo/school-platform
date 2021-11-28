@@ -31,10 +31,6 @@ const filterAlbumEmailClients = async (variant) => {
       ],
     })
 
-    // const classroomAlbums = albums.filter((album) =>
-    //   classroomsAliasses.includes(album.entity.alias)
-    // )
-
     const filteredAlbums = albums.filter(
       (album) =>
         (variant === 'classroom' &&
@@ -58,14 +54,16 @@ const filterAlbumEmailClients = async (variant) => {
               )
             })
 
-      parents.forEach(async (parent) => {
-        const { transporter, options } = albumEmail(dailyAlbum, parent)
-        await transporter.sendMail(options, async (error, info) => {
-          if (error) {
-            console.log('mail-error:', error)
-          }
+      await Promise.all(
+        parents.map(async (parent) => {
+          const { transporter, options } = albumEmail(dailyAlbum, parent)
+          await transporter.sendMail(options, async (error, info) => {
+            if (error) {
+              console.log('mail-error:', error)
+            }
+          })
         })
-      })
+      )
     }
   } catch (err) {
     console.log(err)

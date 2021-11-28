@@ -39,7 +39,7 @@ const filterPaperEmailClients = async (variant) => {
     )
 
     if (filteredPapers.length > 0) {
-      filteredPapers.forEach((paper) => {
+      filteredPapers.forEach(async (paper) => {
         const parents =
           variant !== 'classroom'
             ? users
@@ -53,14 +53,16 @@ const filterPaperEmailClients = async (variant) => {
                 )
               })
 
-        parents.forEach(async (parent) => {
-          const { transporter, options } = paperEmail(paper, parent)
-          await transporter.sendMail(options, async (error, info) => {
-            if (error) {
-              console.log('mail-error:', error)
-            }
+        await Promise.all(
+          parents.map(async (parent) => {
+            const { transporter, options } = paperEmail(paper, parent)
+            await transporter.sendMail(options, async (error, info) => {
+              if (error) {
+                console.log('mail-error:', error)
+              }
+            })
           })
-        })
+        )
       })
     }
   } catch (err) {
