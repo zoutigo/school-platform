@@ -1,5 +1,5 @@
 /* eslint-disable import/named */
-import { Grid, List, ListItem, Button } from '@material-ui/core'
+import { Grid, List, ListItem, Button, Typography } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 import PropTypes from 'prop-types'
 import React, { useCallback, useEffect } from 'react'
@@ -165,13 +165,22 @@ function AlbumForm({
               <FileInput
                 control={control}
                 multiple={false}
-                label="Ajouter un fichier"
+                label="Ajouter une image de couverture"
                 example="Fichiers jpg,jpeg,gif,png, maximum 10Mo"
                 defaultValue=""
                 accept="image/jpg,image/jpeg,image/gif,image/png"
               />
             </ListItem>
           )}
+          <ListItem>
+            <Typography
+              variant="body1"
+              style={{ letterSpacing: '1px', fontWeight: 'bold' }}
+            >
+              Vous pourrez y insérer des photos supplémentaires une fois que
+              votre album sera crée.
+            </Typography>
+          </ListItem>
           <ListItem>
             <Button
               type="submit"

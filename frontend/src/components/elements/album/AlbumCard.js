@@ -172,9 +172,16 @@ function AlbumCard({
             </StyledCollapse>
             <StyledCollapse in={showUpdateConfirm}>
               <CustomButton
-                text="Je modifie"
-                bgcolor={theme.palette.warning.main}
+                text="J'insère des photos"
+                bgcolor={theme.palette.primary.main}
                 action="confirm"
+                width="100%"
+                onClick={handleClick}
+              />
+              <CustomButton
+                text="Je modifie l'album"
+                bgcolor={theme.palette.warning.main}
+                action="update"
                 width="100%"
                 onClick={handleUpdate}
               />
@@ -182,7 +189,7 @@ function AlbumCard({
           </Grid>
         ) : (
           <Button size="small" color="primary">
-            {'EN SAVOIR PLUS >>>'}
+            {'REGARDER LES PHOTOS >>>'}
           </Button>
         )}
       </StyledCardActions>
