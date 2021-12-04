@@ -31,13 +31,14 @@ const filterPaperEmailClients = async (variant) => {
       ],
     })
 
-    // papers only for classrooms
-    const filteredPapers = papers.filter(
-      (paper) =>
-        (!classroomsAliasses.includes(paper.entity.alias) &&
-          variant !== 'classroom') ||
-        classroomsAliasses.includes(paper.entity.alias)
-    )
+    const filteredPapers =
+      variant === 'classroom'
+        ? papers.filter((paper) =>
+            classroomsAliasses.includes(paper.entity.alias)
+          )
+        : papers.filter(
+            (paper) => !classroomsAliasses.includes(paper.entity.alias)
+          )
 
     if (filteredPapers.length > 0) {
       filteredPapers.forEach(async (paper) => {

@@ -31,12 +31,21 @@ const filterAlbumEmailClients = async (variant) => {
       ],
     })
 
-    const filteredAlbums = albums.filter(
-      (album) =>
-        (variant === 'classroom' &&
-          classroomsAliasses.includes(album.entity.alias)) ||
-        !classroomsAliasses.includes(album.entity.alias)
-    )
+    // const filteredAlbums = albums.filter(
+    //   (album) =>
+    //     (variant === 'classroom' &&
+    //       classroomsAliasses.includes(album.entity.alias)) ||
+    //     !classroomsAliasses.includes(album.entity.alias)
+    // )
+
+    const filteredAlbums =
+      variant === 'classroom'
+        ? albums.filter((album) =>
+            classroomsAliasses.includes(album.entity.alias)
+          )
+        : albums.filter(
+            (album) => !classroomsAliasses.includes(album.entity.alias)
+          )
 
     if (filteredAlbums.length > 0) {
       const [dailyAlbum, ...rest] = filteredAlbums
