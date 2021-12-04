@@ -54,6 +54,13 @@ const filterAlbumEmailClients = async (variant) => {
               )
             })
 
+      // console.log(
+      //   variant,
+      //   dailyAlbum.entity.alias,
+      //   dailyAlbum.name,
+      //   parents.map((parent) => parent.email)
+      // )
+
       await Promise.all(
         parents.map(async (parent) => {
           const { transporter, options } = albumEmail(dailyAlbum, parent)

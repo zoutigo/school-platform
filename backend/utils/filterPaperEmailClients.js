@@ -31,6 +31,7 @@ const filterPaperEmailClients = async (variant) => {
       ],
     })
 
+    // papers only for classrooms
     const filteredPapers = papers.filter(
       (paper) =>
         (!classroomsAliasses.includes(paper.entity.alias) &&
@@ -52,6 +53,13 @@ const filterPaperEmailClients = async (variant) => {
                   userEntities.includes(paper.entity.alias)
                 )
               })
+
+        // console.log(
+        //   variant,
+        //   paper.entity.alias,
+        //   paper.title,
+        //   parents.map((parent) => parent.email)
+        // )
 
         await Promise.all(
           parents.map(async (parent) => {
