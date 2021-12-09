@@ -61,7 +61,7 @@ function NewsDocs() {
             )} au ${moment(Number(currentMenu.enddate)).format('Do MMM YYYY')}`
           : 'Pas de menu disponible'
       }
-      link="viescolaire/cantine/menus"
+      link="/viescolaire/cantine/menus"
     />,
     <CardItem
       title="Newsletter mensuelle"
