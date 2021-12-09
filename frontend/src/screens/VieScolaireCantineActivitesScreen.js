@@ -1,14 +1,12 @@
 import React from 'react'
 import useRigths from '../components/hooks/useRigths'
-import useRoles from '../components/hooks/useRoles'
 import Paper from '../components/paper/Paper'
 import { apiFetchPaper, apiPostPaper } from '../utils/api'
 
 function VieScolaireCantineActivitesScreen() {
   const { moderatorLevel } = useRigths()
-  const { apelMembre } = useRoles()
 
-  const isAllowedToChange = moderatorLevel || apelMembre
+  const isAllowedToChange = moderatorLevel
   const paperType = 'activite'
   const paperFormat = 'html'
   const paperName = 'activite-cantine'
