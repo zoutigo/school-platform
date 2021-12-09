@@ -13,6 +13,7 @@ const today = moment().toDate()
 const filterAlbumEmailClients = async (variant) => {
   try {
     const users = await UserP.findAll({
+      where: { isVerified: true },
       include: userInclude,
     })
 
