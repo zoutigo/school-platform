@@ -215,7 +215,7 @@ module.exports.getAlbums = async (req, res, next) => {
     const albums = await AlbumP.findAll({
       subQuery: false,
       where: req.query,
-      attributes: ['id', 'name', 'alias', 'description'],
+      attributes: ['id', 'name', 'alias', 'description', 'createdAt'],
       include: albumIncludes,
       order: [['createdAt', 'DESC']],
       limit: 10,
