@@ -93,6 +93,7 @@ function ClassesPresentationScreen() {
           setCurrentClassroom={setCurrentClassroom}
           currentClassroom={currentClassroom}
           queryKey={queryKey}
+          isAllowedToChange={isAllowedToChange}
         />
       )}
 

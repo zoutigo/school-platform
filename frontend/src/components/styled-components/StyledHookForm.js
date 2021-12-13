@@ -10,6 +10,9 @@ const StyledHookForm = styled('form')(() => ({
     '& .field': {
       margin: '0.6rem 0px',
     },
+    '& .title': {
+      background: 'gray',
+    },
   },
 }))
 

@@ -168,8 +168,6 @@ function PaperFormEvent({
           </Button>
         </ListItem>
       </List>
-      {/* <Grid container className="form-fields-container"></Grid>
-      <Grid item container alignItems="center" justify="flex-end"></Grid> */}
     </StyledHookForm>
   )
 }

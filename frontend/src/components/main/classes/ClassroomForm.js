@@ -1,62 +1,37 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSnackbar } from 'notistack'
-import { styled, Grid, useTheme } from '@material-ui/core'
+import { useTheme, List, ListItem, Button } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { useSelector } from 'react-redux'
 import Title from '../../elements/Title'
-import CostumButton from '../../elements/CustomButton'
 import { apiPostEntity } from '../../../utils/api'
-import classroomSchema from '../../../schemas/classroomSchema'
-import InputTextControl from '../../elements/InputTextControl'
-import InputRadio from '../../elements/InputRadio'
-import useRigths from '../../hooks/useRigths'
 import useMutate from '../../hooks/useMutate'
 import MutateCircularProgress from '../../elements/MutateCircularProgress'
 import getError from '../../../utils/getError'
 import getResponse from '../../../utils/getResponse'
 import ReactPageInput from '../../elements/inputs/ReactPageInput'
-
-const StyledPaperForm = styled('form')(() => ({
-  width: '100%',
-  margin: '1rem auto',
-  background: 'gray',
-
-  '& .form-fields-container': {
-    background: 'whitesmoke',
-    padding: '0.5rem 0.2rem',
-    '& .field': {
-      margin: '0.6rem 0px',
-    },
-  },
-}))
-
-const StyledRadioDiv = styled('div')(() => ({
-  display: 'none',
-}))
+import TextInput from '../../elements/inputs/TextInput'
+import StyledHookForm from '../../styled-components/StyledHookForm'
 
 function ClassroomForm({
   queryKey,
   setShowClassroomForm,
   setCurrentClassroom,
   currentClassroom,
+  isAllowedToChange,
 }) {
-  const theme = useTheme()
-
-  const { moderatorLevel } = useRigths()
   const { Token } = useSelector((state) => state.user)
   const formTitle = `Modification de classe ${currentClassroom?.name}`
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { mutateAsync, isMutating } = useMutate(queryKey, apiPostEntity)
-
+  const buttonText = `Je modifie la page ${currentClassroom?.name}`
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting, isValid },
+    formState: { isSubmitting },
   } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(classroomSchema),
   })
 
   const onSubmit = async (datas) => {
@@ -85,52 +60,56 @@ function ClassroomForm({
   }
 
   return (
-    <StyledPaperForm onSubmit={handleSubmit(onSubmit)}>
-      <Grid item container justifyContent="center">
-        <Title title={formTitle} textcolor="whitesmoke" />
-      </Grid>
-      {isMutating && <MutateCircularProgress />}
-      <Grid container className="form-fields-container">
-        {moderatorLevel && (
-          <InputTextControl
-            name="email"
-            label="email de la classe"
-            control={control}
-            initialValue={currentClassroom ? currentClassroom.email : null}
-          />
-        )}
-        <ReactPageInput
-          control={control}
-          name="content"
-          defaultValue={currentClassroom ? currentClassroom.content : null}
-          label="Description de la classe"
-        />
-        <StyledRadioDiv>
-          <InputRadio
-            question="tu as le droit ?"
-            options={[
-              { labelOption: 'Oui', optionvalue: 'oui' },
-              { labelOption: 'Non', optionvalue: 'non' },
-            ]}
-            name="isAllowed"
-            defaultValue={moderatorLevel ? 'oui' : 'non'}
-            control={control}
-            radioGroupProps={{ row: true }}
-            display="block"
-          />
-        </StyledRadioDiv>
-      </Grid>
-      <Grid item container alignItems="center" justify="flex-end">
-        <CostumButton
-          text={`Je modifie la page ${currentClassroom?.name}`}
-          bgcolor={theme.palette.success.main}
-          action="post"
-          width="500px"
-          type="submit"
-          disabled={isSubmitting || !isValid}
-        />
-      </Grid>
-    </StyledPaperForm>
+    <StyledHookForm onSubmit={handleSubmit(onSubmit)}>
+      {(isMutating || isSubmitting) && <MutateCircularProgress />}
+      {isAllowedToChange && (
+        <List className="form-fields-container">
+          <ListItem className="title">
+            <Title title={formTitle} textcolor="whitesmoke" />
+          </ListItem>
+          <ListItem clasname="field">
+            <TextInput
+              name="email"
+              label="email de la classe"
+              control={control}
+              defaultValue={currentClassroom ? currentClassroom.email : null}
+              rules={{
+                required: 'le mail est obligatoire',
+                pattern: {
+                  value: /^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/,
+                  message: 'Veillez saisir un mail au format correct',
+                },
+                maxLength: {
+                  value: 50,
+                  message: 'le mail ne peut avoir plus de 50 caractères',
+                },
+              }}
+              example="Une adresse correcte"
+              variant="standard"
+              width="100%"
+            />
+          </ListItem>
+          <ListItem classname="field">
+            <ReactPageInput
+              control={control}
+              name="content"
+              defaultValue={currentClassroom ? currentClassroom.content : null}
+              label="Description de la classe"
+            />
+          </ListItem>
+          <ListItem>
+            <Button
+              type="submit"
+              color="secondary"
+              fullWidth
+              variant="contained"
+            >
+              {buttonText}
+            </Button>
+          </ListItem>
+        </List>
+      )}
+    </StyledHookForm>
   )
 }
 
@@ -141,6 +120,7 @@ ClassroomForm.defaultProps = {
 ClassroomForm.propTypes = {
   setShowClassroomForm: PropTypes.func.isRequired,
   setCurrentClassroom: PropTypes.func.isRequired,
+  isAllowedToChange: PropTypes.bool.isRequired,
   currentClassroom: PropTypes.shape({
     id: PropTypes.number,
     content: PropTypes.string,
