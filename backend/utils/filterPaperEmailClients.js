@@ -10,6 +10,8 @@ const { paperEmail } = require('../service/mailer')
 const yesterday = moment().add(-1, 'days').toDate()
 const today = moment().toDate()
 
+const excludedPaperTypes = ['menu']
+
 const filterPaperEmailClients = async (variant) => {
   try {
     const users = await UserP.findAll({
@@ -38,7 +40,9 @@ const filterPaperEmailClients = async (variant) => {
             classroomsAliasses.includes(paper.entity.alias)
           )
         : papers.filter(
-            (paper) => !classroomsAliasses.includes(paper.entity.alias)
+            (paper) =>
+              !classroomsAliasses.includes(paper.entity.alias) &&
+              !excludedPaperTypes.includes(paper.type)
           )
 
     if (filteredPapers.length > 0) {
