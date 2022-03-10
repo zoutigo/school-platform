@@ -2,7 +2,7 @@ const cron = require('node-cron')
 const backup = require('../service/backup')
 
 const backupPgDb = cron.schedule(
-  '45 12 * * *',
+  '30 23 * * *',
 
   () => {
     console.log('hello')
