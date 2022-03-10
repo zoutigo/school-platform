@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/zoutigo/platform#readme",
   "dependencies": {
+    "@getvim/execute": "^1.0.0",
     "aws-sdk": "^2.931.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.4",
@@ -34,6 +35,7 @@
     "dotenv": "^10.0.0",
     "express": "~4.16.1",
     "express-fileupload": "^1.2.1",
+    "gzipme": "^1.0.0",
     "handlebars": "^4.7.7",
     "http-errors": "~1.6.3",
     "i": "^0.3.6",

@@ -32,6 +32,7 @@ const db = require('./config/database')
 const emailToAllUsersTask = require('./tasks/emailToAllUsers')
 const emailFromEntityPost = require('./tasks/emailFromEntityPost')
 const emailFromClassroomPost = require('./tasks/emailFromClassroomPost')
+const makePgDbBackup = require('./tasks/makePgDbBackup')
 
 // const datasRouter = require("./routes/datas");
 // const filesRouter = require('./routes/files')
@@ -139,6 +140,7 @@ app.use(handleErrors)
 emailToAllUsersTask.start()
 emailFromEntityPost.start()
 emailFromClassroomPost.start()
+makePgDbBackup.start()
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
