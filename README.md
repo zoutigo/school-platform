@@ -17,3 +17,9 @@
   `npm run backdev`
 - lancer le frontend
   `cd frontend && npm run dev`
+
+### effectuer des test
+
+```bash
+npm run test
+```

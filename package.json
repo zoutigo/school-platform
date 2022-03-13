@@ -7,7 +7,8 @@
     "start": "node ./backend/bin/www",
     "backdev": "cross-env NODE_ENV=development  DEBUG=express nodemon ./backend/bin/www",
     "frontdev": "cd ./frontend NODE_ENV=development npm start ",
-    "test": "npm run mocha",
+    "testing": "npm run mocha",
+    "test": "jest",
     "mocha": "cross-env NODE_ENV=test mocha --require babel-register ./backend/test/*.js --exit",
     "build": "rm -rf ./public/* && cd ./frontend && npm run build",
     "postbuild": "cp -r ./frontend/build/* ./public && rm -rf ./frontend/build",
@@ -78,9 +79,11 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "faker": "^5.5.3",
+    "jest": "^27.5.1",
     "mocha": "^9.0.2",
     "nodemon": "^2.0.7",
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.0",
+    "supertest": "^6.2.2"
   },
   "eslintConfig": {
     "extends": ".eslintrc"
