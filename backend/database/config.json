@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "valery54",
+    "database": "augustin-dev-db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test":  {
+    "username": "postgres",
+    "password": "valery54",
+    "database": "augustin-dev-db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production":  {
+    "username": "postgres",
+    "password": "valery54",
+    "database": "augustin-dev-db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
