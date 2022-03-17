@@ -1,7 +1,6 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize')
+const { pageRawContent } = require('../../constants/pageRawContent')
+
 module.exports = (sequelize, DataTypes) => {
   class Page extends Model {
     /**
@@ -13,12 +12,26 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Page.init({
-    mission: DataTypes.STRING,
-    name: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Page',
-  });
-  return Page;
-};
+  Page.init(
+    {
+      title: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+      alias: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        unique: true,
+      },
+      content: {
+        type: DataTypes.STRING(10000),
+        defaultValue: JSON.stringify(pageRawContent),
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Page',
+    }
+  )
+  return Page
+}

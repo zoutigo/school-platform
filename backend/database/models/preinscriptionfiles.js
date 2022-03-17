@@ -1,9 +1,9 @@
 const { Model } = require('sequelize')
+const Preinscription = require('./preinscription')
 const File = require('./file')
-const Paper = require('./paper')
 
 module.exports = (sequelize, DataTypes) => {
-  class PaperFiles extends Model {
+  class PresinscriptionFiles extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,15 +13,17 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  PaperFiles.init(
+  PresinscriptionFiles.init(
     {},
     {
       sequelize,
-      modelName: 'PaperFiles',
-      tableName: 'paper_file',
+      modelName: 'PresinscriptionFile',
+      tableName: 'preinscription_file',
     }
   )
-  Paper.belongsToMany(File, { through: PaperFiles })
-  File.belongsToMany(Paper, { through: PaperFiles })
-  return PaperFiles
+
+  Preinscription.belongsToMany(File, { through: PresinscriptionFiles })
+  File.belongsToMany(Preinscription, { through: PresinscriptionFiles })
+
+  return PresinscriptionFiles
 }

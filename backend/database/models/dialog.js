@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class Dialog extends Model {
     /**
@@ -13,12 +11,29 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Dialog.init({
-    title: DataTypes.STRING,
-    text: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Dialog',
-  });
-  return Dialog;
-};
+  Dialog.init(
+    {
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      text: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      startdate: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      enddate: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Dialog',
+    }
+  )
+  return Dialog
+}

@@ -1,7 +1,6 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize')
+const File = require('./file')
+
 module.exports = (sequelize, DataTypes) => {
   class Album extends Model {
     /**
@@ -13,12 +12,37 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Album.init({
-    mission: DataTypes.STRING,
-    name: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Album',
-  });
-  return Album;
-};
+  Album.init(
+    {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      alias: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      description: {
+        type: DataTypes.STRING,
+        defaulValue: 'Il faut une description',
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaulValue: true,
+      },
+      isPrivate: {
+        type: DataTypes.BOOLEAN,
+        defaulValue: true,
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Album',
+    }
+  )
+  Album.hasMany(File, { foreignKey: 'albumId' })
+  File.belongsTo(Album)
+
+  return Album
+}

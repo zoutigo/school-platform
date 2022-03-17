@@ -1,7 +1,7 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize')
+const Entity = require('./entity')
+const User = require('./user')
+
 module.exports = (sequelize, DataTypes) => {
   class UserEntities extends Model {
     /**
@@ -13,12 +13,20 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  UserEntities.init({
-    mission: DataTypes.STRING,
-    name: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'UserEntities',
-  });
-  return UserEntities;
-};
+  UserEntities.init(
+    {
+      mission: DataTypes.STRING,
+      name: DataTypes.STRING,
+    },
+    {
+      sequelize,
+      modelName: 'UserEntities',
+      tableName: 'user_entities',
+    }
+  )
+
+  User.belongsToMany(Entity, { through: UserEntities })
+  Entity.belongsToMany(User, { through: UserEntities })
+
+  return UserEntities
+}

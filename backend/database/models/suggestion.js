@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class Suggestion extends Model {
     /**
@@ -13,12 +11,29 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Suggestion.init({
-    title: DataTypes.STRING,
-    topic: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Suggestion',
-  });
-  return Suggestion;
-};
+  Suggestion.init(
+    {
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      topic: {
+        type: DataTypes.ENUM('bug', 'idea', 'improvment', 'other'),
+        allowNull: false,
+      },
+      message: {
+        type: DataTypes.STRING(1000),
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.ENUM('open', 'read', 'answered'),
+        defaultValue: 'open',
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Suggestion',
+    }
+  )
+  return Suggestion
+}

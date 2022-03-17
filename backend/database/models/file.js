@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class File extends Model {
     /**
@@ -13,12 +11,25 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  File.init({
-    mission: DataTypes.STRING,
-    name: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'File',
-  });
-  return File;
-};
+  File.init(
+    {
+      filename: {
+        type: DataTypes.STRING(300),
+        allowNull: false,
+      },
+      filepath: {
+        type: DataTypes.STRING(300),
+        allowNull: false,
+      },
+      filetype: {
+        type: DataTypes.ENUM('image', 'file'),
+        defaultValue: 'image',
+      },
+    },
+    {
+      sequelize,
+      modelName: 'File',
+    }
+  )
+  return File
+}
