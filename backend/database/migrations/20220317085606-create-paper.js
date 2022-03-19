@@ -5,10 +5,14 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.DataTypes.INTEGER,
+      },
+      uuid: {
+        type: Sequelize.DataTypes.UUID,
+        defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
       type: {
-        type: Sequelize.ENUM(
+        type: Sequelize.DataTypes.ENUM(
           'article',
           'activite',
           'parent-info',
@@ -21,36 +25,46 @@ module.exports = {
         allowNull: false,
       },
       title: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.DataTypes.STRING(100),
         allowNull: false,
       },
       content: {
-        type: Sequelize.STRING(10000),
+        type: Sequelize.DataTypes.STRING(10000),
       },
       classe_fourniture: {
-        type: Sequelize.STRING(30),
+        type: Sequelize.DataTypes.STRING(30),
       },
       isPrivate: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.DataTypes.BOOLEAN,
         defaultValue: true,
       },
       date: {
-        type: Sequelize.STRING(14),
+        type: Sequelize.DataTypes.STRING(14),
         defaultValue: new Date().getTime(),
       },
       startdate: {
-        type: Sequelize.STRING(14),
+        type: Sequelize.DataTypes.STRING(14),
       },
       enddate: {
-        type: Sequelize.STRING(14),
+        type: Sequelize.DataTypes.STRING(14),
+      },
+      entityId: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'entities',
+          key: 'id',
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+        },
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
     })
   },

@@ -1,6 +1,4 @@
 const { Model } = require('sequelize')
-const User = require('./user')
-const Role = require('./role')
 
 module.exports = (sequelize, DataTypes) => {
   class UserRoles extends Model {
@@ -9,14 +7,22 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ User, Role }) {
       // define association here
+      User.belongsToMany(Role, { through: this })
+      Role.belongsToMany(User, { through: this })
+    }
+
+    toJSON() {
+      return { ...this.get(), id: undefined }
     }
   }
   UserRoles.init(
     {
-      mission: DataTypes.STRING,
-      name: DataTypes.STRING,
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
     },
     {
       sequelize,
@@ -24,9 +30,6 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'user_roles',
     }
   )
-
-  User.belongsToMany(Role, { through: UserRoles })
-  Role.belongsToMany(User, { through: UserRoles })
 
   return UserRoles
 }

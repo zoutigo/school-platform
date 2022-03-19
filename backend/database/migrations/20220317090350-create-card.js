@@ -5,27 +5,31 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.DataTypes.INTEGER,
+      },
+      uuid: {
+        type: Sequelize.DataTypes.UUID,
+        defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
       path: {
-        type: Sequelize.STRING(64),
+        type: Sequelize.DataTypes.STRING(64),
         allowNull: false,
       },
       description: {
-        type: Sequelize.STRING(1000),
+        type: Sequelize.DataTypes.STRING(1000),
         allowNull: false,
       },
       alias: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.DataTypes.STRING(100),
         allowNull: false,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
     })
   },

@@ -5,32 +5,46 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.DataTypes.INTEGER,
+      },
+      uuid: {
+        type: Sequelize.DataTypes.UUID,
+        defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
       title: {
-        type: Sequelize.STRING,
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
       topic: {
-        type: Sequelize.ENUM('bug', 'idea', 'improvment', 'other'),
+        type: Sequelize.DataTypes.ENUM('bug', 'idea', 'improvment', 'other'),
         allowNull: false,
       },
       message: {
-        type: Sequelize.STRING(1000),
+        type: Sequelize.DataTypes.STRING(1000),
         allowNull: false,
       },
       status: {
-        type: Sequelize.ENUM('open', 'read', 'answered'),
+        type: Sequelize.DataTypes.ENUM('open', 'read', 'answered'),
         defaultValue: 'open',
+      },
+      userId: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+        },
       },
 
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
     })
   },

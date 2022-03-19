@@ -1,11 +1,4 @@
-const { Model } = require('sequelize')
-const Entity = require('./entity')
-const Role = require('./role')
-const Event = require('./event')
-const Suggestion = require('./suggestion')
-const Paper = require('./paper')
-const Dialog = require('./dialog')
-const Preinscription = require('./preinscription')
+const { Model, Sequelize } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -14,13 +7,49 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of DataTypes lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({
+      Role,
+      Entity,
+      Suggestion,
+      Paper,
+      Dialog,
+      Event,
+      Preinscription,
+    }) {
       // define association here
+      this.belongsToMany(Role, { through: 'user_roles' })
+      Role.belongsToMany(this, { through: 'user_roles' })
+
+      this.belongsToMany(Entity, { through: 'user_entities' })
+      Entity.belongsToMany(this, { through: 'user_entities' })
+
+      this.hasMany(Suggestion, { foreignKey: 'userId' })
+      Suggestion.belongsTo(this)
+
+      this.hasMany(Paper, { foreignKey: 'userId' })
+      Paper.belongsTo(this)
+
+      this.hasMany(Dialog, { foreignKey: 'userId' })
+      Dialog.belongsTo(this)
+
+      this.hasMany(Event, { foreignKey: 'userId' })
+      Event.belongsTo(this)
+
+      this.hasMany(Preinscription, { foreignKey: 'userId' })
+      Preinscription.belongsTo(this)
+    }
+
+    toJSON() {
+      return { ...this.get(), id: undefined }
     }
   }
 
   User.init(
     {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: Sequelize.UUIDV4,
+      },
       lastname: {
         type: DataTypes.STRING(30),
       },
@@ -75,27 +104,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'User',
     }
   )
-
-  User.belongsToMany(Role, { through: 'user_roles' })
-  Role.belongsToMany(User, { through: 'user_roles' })
-
-  User.belongsToMany(Entity, { through: 'user_entities' })
-  Entity.belongsToMany(User, { through: 'user_entities' })
-
-  User.hasMany(Suggestion, { foreignKey: 'userId' })
-  Suggestion.belongsTo(User)
-
-  User.hasMany(Paper, { foreignKey: 'userId' })
-  Paper.belongsTo(User)
-
-  User.hasMany(Dialog, { foreignKey: 'userId' })
-  Dialog.belongsTo(User)
-
-  User.hasMany(Event, { foreignKey: 'userId' })
-  Event.belongsTo(User)
-
-  User.hasMany(Preinscription, { foreignKey: 'userId' })
-  Preinscription.belongsTo(User)
 
   return User
 }

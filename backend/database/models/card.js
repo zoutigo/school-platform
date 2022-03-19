@@ -10,9 +10,17 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    toJSON() {
+      return { ...this.get(), id: undefined }
+    }
   }
   Card.init(
     {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       path: {
         type: DataTypes.STRING(64),
         allowNull: false,

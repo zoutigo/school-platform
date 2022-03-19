@@ -1,5 +1,4 @@
 const { Model } = require('sequelize')
-const File = require('./file')
 
 module.exports = (sequelize, DataTypes) => {
   class Album extends Model {
@@ -8,12 +7,22 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ File }) {
       // define association here
+      this.hasMany(File, { foreignKey: 'albumId' })
+      File.belongsTo(this)
+    }
+
+    toJSON() {
+      return { ...this.get(), id: undefined }
     }
   }
   Album.init(
     {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -39,10 +48,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'Album',
+      tableName: 'albums',
     }
   )
-  Album.hasMany(File, { foreignKey: 'albumId' })
-  File.belongsTo(Album)
 
   return Album
 }

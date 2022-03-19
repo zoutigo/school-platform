@@ -5,34 +5,58 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.DataTypes.INTEGER,
+      },
+      uuid: {
+        type: Sequelize.DataTypes.UUID,
+        defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
       childFirstname: {
-        type: Sequelize.STRING(30),
+        type: Sequelize.DataTypes.STRING(30),
         allowNull: false,
       },
       childLastname: {
-        type: Sequelize.STRING(30),
+        type: Sequelize.DataTypes.STRING(30),
         allowNull: false,
       },
       message: {
-        type: Sequelize.STRING(1500),
+        type: Sequelize.DataTypes.STRING(1500),
       },
       status: {
-        type: Sequelize.ENUM('etude', 'encours', 'cloturé'),
+        type: Sequelize.DataTypes.ENUM('etude', 'encours', 'cloturé'),
         defaultValue: 'etude',
       },
       verdict: {
-        type: Sequelize.ENUM('ok', 'nok', 'encours'),
+        type: Sequelize.DataTypes.ENUM('ok', 'nok', 'encours'),
         defaultValue: 'encours',
+      },
+      userId: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+        },
+        entityId: {
+          type: Sequelize.DataTypes.INTEGER,
+          allowNull: false,
+          references: {
+            model: 'entities',
+            key: 'id',
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
+          },
+        },
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
     })
   },

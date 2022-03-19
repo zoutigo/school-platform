@@ -9,11 +9,15 @@ module.exports = {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
-            type: Sequelize.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
+          },
+          uuid: {
+            type: Sequelize.DataTypes.UUID,
+            defaultValue: Sequelize.literal('uuid_generate_v4()'),
           },
           preinscriptionId: {
             primaryKey: true,
-            type: Sequelize.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
             references: {
               model: 'preinscriptions',
@@ -24,7 +28,7 @@ module.exports = {
           },
           fileId: {
             primaryKey: true,
-            type: Sequelize.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
             references: {
               model: 'files',
@@ -36,11 +40,11 @@ module.exports = {
 
           createdAt: {
             allowNull: false,
-            type: Sequelize.DATE,
+            type: Sequelize.DataTypes.DATE,
           },
           updatedAt: {
             allowNull: false,
-            type: Sequelize.DATE,
+            type: Sequelize.DataTypes.DATE,
           },
         },
         { transaction }

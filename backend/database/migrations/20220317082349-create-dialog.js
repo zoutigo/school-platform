@@ -10,31 +10,45 @@ module.exports = {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
-            type: Sequelize.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
+          },
+          uuid: {
+            type: Sequelize.DataTypes.UUID,
+            defaultValue: Sequelize.literal('uuid_generate_v4()'),
           },
           title: {
-            type: Sequelize.STRING,
+            type: Sequelize.DataTypes.STRING,
             allowNull: false,
           },
           text: {
-            type: Sequelize.STRING,
+            type: Sequelize.DataTypes.STRING,
             allowNull: false,
           },
           startdate: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
           },
           enddate: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
+          },
+          userId: {
+            type: Sequelize.DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+              model: 'users',
+              key: 'id',
+              onUpdate: 'CASCADE',
+              onDelete: 'SET NULL',
+            },
           },
           createdAt: {
             allowNull: false,
-            type: Sequelize.DATE,
+            type: Sequelize.DataTypes.DATE,
           },
           updatedAt: {
             allowNull: false,
-            type: Sequelize.DATE,
+            type: Sequelize.DataTypes.DATE,
           },
         },
         { transaction }

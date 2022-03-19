@@ -5,10 +5,14 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.DataTypes.INTEGER,
+      },
+      uuid: {
+        type: Sequelize.DataTypes.UUID,
+        defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
       title: {
-        type: Sequelize.STRING(50),
+        type: Sequelize.DataTypes.STRING(50),
         allowNull: false,
         validate: {
           notNull: {
@@ -21,7 +25,7 @@ module.exports = {
         },
       },
       content: {
-        type: Sequelize.STRING(5000),
+        type: Sequelize.DataTypes.STRING(5000),
         allowNull: false,
         validate: {
           notNull: {
@@ -34,7 +38,7 @@ module.exports = {
         },
       },
       datetosend: {
-        type: Sequelize.STRING,
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: {
@@ -47,16 +51,26 @@ module.exports = {
         },
       },
       isSent: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.DataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      userId: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+          onUpdate: 'CASCADE',
+          onDelete: 'SET NULL',
+        },
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
     })
   },

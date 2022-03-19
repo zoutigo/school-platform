@@ -1,10 +1,5 @@
 const { Model } = require('sequelize')
 const { pageRawContent } = require('../../constants/pageRawContent')
-const Role = require('./role')
-const Paper = require('./paper')
-const Event = require('./event')
-const Album = require('./album')
-const Preinscription = require('./preinscription')
 
 module.exports = (sequelize, DataTypes) => {
   class Entity extends Model {
@@ -13,12 +8,35 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ Role, Paper, Event, Album, Preinscription }) {
       // define association here
+
+      this.hasMany(Role, { foreignKey: 'entityId' })
+      Role.belongsTo(this)
+
+      this.hasMany(Paper, { foreignKey: 'entityId' })
+      Paper.belongsTo(this)
+
+      this.hasMany(Event, { foreignKey: 'entityId' })
+      Event.belongsTo(this)
+
+      this.hasMany(Album, { foreignKey: 'entityId' })
+      Album.belongsTo(this)
+
+      this.hasMany(Preinscription, { foreignKey: 'entityId' })
+      Preinscription.belongsTo(this)
+    }
+
+    toJSON() {
+      return { ...this.get(), id: undefined }
     }
   }
   Entity.init(
     {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -43,19 +61,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
 
-  Entity.hasMany(Role, { foreignKey: 'entityId' })
-  Role.belongsTo(Entity)
-
-  Entity.hasMany(Paper, { foreignKey: 'entityId' })
-  Paper.belongsTo(Entity)
-
-  Entity.hasMany(Event, { foreignKey: 'entityId' })
-  Event.belongsTo(Entity)
-
-  Entity.hasMany(Album, { foreignKey: 'entityId' })
-  Album.belongsTo(Entity)
-
-  Entity.hasMany(Preinscription, { foreignKey: 'entityId' })
-  Preinscription.belongsTo(Entity)
   return Entity
 }

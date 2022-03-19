@@ -1,19 +1,32 @@
 const { Model } = require('sequelize')
-const File = require('./file')
 
 module.exports = (sequelize, DataTypes) => {
   class Preinscription extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
+     * The `index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ File }) {
       // define association here
+      this.belongsToMany(File, {
+        through: 'preinscription_files',
+      })
+      File.belongsToMany(this, {
+        through: 'preinscription_files',
+      })
+    }
+
+    toJSON() {
+      return { ...this.get(), id: undefined }
     }
   }
   Preinscription.init(
     {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       childFirstname: {
         type: DataTypes.STRING(30),
         allowNull: false,
@@ -39,9 +52,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Presincription',
     }
   )
-
-  Preinscription.belongsToMany(File, { through: 'preinscription_files' })
-  File.belongsToMany(Preinscription, { through: 'preinscription_files' })
 
   return Preinscription
 }

@@ -7,28 +7,42 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.DataTypes.INTEGER,
+      },
+      uuid: {
+        type: Sequelize.DataTypes.UUID,
+        defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
       title: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.DataTypes.STRING(100),
         allowNull: false,
       },
       alias: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.DataTypes.STRING(100),
         allowNull: false,
         unique: true,
       },
       content: {
-        type: Sequelize.STRING(10000),
+        type: Sequelize.DataTypes.STRING(10000),
         defaultValue: JSON.stringify(pageRawContent),
+      },
+      entityId: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'entities',
+          key: 'id',
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+        },
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DataTypes.DATE,
       },
     })
   },
