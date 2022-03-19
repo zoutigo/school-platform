@@ -1,4 +1,4 @@
-const { Model } = require('sequelize')
+const { Model, Sequelize } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   class Paper extends Model {
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       uuid: {
         type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        defaultValue: Sequelize.UUIDV4,
       },
       type: {
         type: DataTypes.ENUM(

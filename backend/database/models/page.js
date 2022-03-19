@@ -1,4 +1,4 @@
-const { Model } = require('sequelize')
+const { Model, Sequelize } = require('sequelize')
 const { pageRawContent } = require('../../constants/pageRawContent')
 
 module.exports = (sequelize, DataTypes) => {
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       uuid: {
         type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        defaultValue: Sequelize.UUIDV4,
       },
       title: {
         type: DataTypes.STRING(100),
