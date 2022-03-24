@@ -1,9 +1,10 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     const transaction = await queryInterface.sequelize.transaction()
+
     try {
       await queryInterface.createTable(
-        'preinscription_files',
+        'suggestions',
         {
           id: {
             allowNull: false,
@@ -15,27 +16,36 @@ module.exports = {
             type: Sequelize.DataTypes.UUID,
             defaultValue: Sequelize.literal('uuid_generate_v4()'),
           },
-          preinscriptionId: {
-            primaryKey: true,
-            type: Sequelize.DataTypes.INTEGER,
+          title: {
+            type: Sequelize.DataTypes.STRING,
             allowNull: false,
-            references: {
-              model: 'preinscriptions',
-              key: 'id',
-            },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE',
           },
-          fileId: {
-            primaryKey: true,
+          topic: {
+            type: Sequelize.DataTypes.ENUM(
+              'bug',
+              'idea',
+              'improvment',
+              'other'
+            ),
+            allowNull: false,
+          },
+          message: {
+            type: Sequelize.DataTypes.STRING(1000),
+            allowNull: false,
+          },
+          status: {
+            type: Sequelize.DataTypes.ENUM('open', 'read', 'answered'),
+            defaultValue: 'open',
+          },
+          userId: {
             type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
             references: {
-              model: 'files',
+              model: 'users',
               key: 'id',
+              onUpdate: 'CASCADE',
+              onDelete: 'SET NULL',
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE',
           },
 
           createdAt: {
@@ -49,7 +59,6 @@ module.exports = {
         },
         { transaction }
       )
-
       await transaction.commit()
     } catch (err) {
       await transaction.rollback()
@@ -57,12 +66,6 @@ module.exports = {
     }
   },
   async down(queryInterface, Sequelize) {
-    const transaction = await queryInterface.sequelize.transaction()
-    try {
-      await queryInterface.dropTable('preinscription_files')
-    } catch (err) {
-      await transaction.rollback()
-      throw err
-    }
+    await queryInterface.dropTable('suggestions')
   },
 }

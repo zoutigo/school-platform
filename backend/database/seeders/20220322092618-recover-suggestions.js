@@ -1,18 +1,11 @@
 const SuggestionP = require('../../models/SuggestionP')
+const { User } = require('../models')
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-     */
-
     const oldSuggestions = await SuggestionP.findAll()
+    const newUsers = await User.findAll()
+
     const suggestions = oldSuggestions.map((sugg) => ({
       title: sugg.title,
       topic: sugg.topic,
@@ -20,20 +13,13 @@ module.exports = {
       status: sugg.status,
       createdAt: sugg.createdAt,
       updatedAt: sugg.updatedAt,
-      userId: 6,
+      userId: newUsers[0].id,
     }))
-    console.log('suggestions', suggestions)
 
     await queryInterface.bulkInsert('suggestions', suggestions, {})
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    await queryInterface.bulkInsert('suggestions', null, {})
+    await queryInterface.bulkDelete('suggestions', null, {})
   },
 }

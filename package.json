@@ -13,7 +13,13 @@
     "build": "rm -rf ./public/* && cd ./frontend && npm run build",
     "postbuild": "cp -r ./frontend/build/* ./public && rm -rf ./frontend/build",
     "dev": "concurrently \"npm run backdev\" \"npm run frontdev\"",
-    "update": "node ./backend/controllers/databaseController"
+    "update": "node ./backend/controllers/databaseController",
+    "migrate": "npx sequelize-cli db:migrate --debug",
+    "migrateundo": "npx sequelize-cli db:migrate:undo:all --debug",
+    "seedall": "npx sequelize-cli db:seed:all --debug",
+    "seedundoall": "npx sequelize-cli db:seed:undo:all",
+    "modelgenerate": "npx sequelize-cli model:generate --name Example --attributes firstName:string,lastName:string,email:string",
+    "seedgenerate": "npx sequelize-cli seed:generate --name demo-example"
   },
   "repository": {
     "type": "git",
@@ -27,6 +33,7 @@
   "homepage": "https://github.com/zoutigo/platform#readme",
   "dependencies": {
     "@getvim/execute": "^1.0.0",
+    "@sequelize/core": "^7.0.0-alpha.10",
     "aws-sdk": "^2.931.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.4",

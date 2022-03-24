@@ -68,6 +68,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'Mail',
+      tableName: 'mails',
     }
   )
   return Mail

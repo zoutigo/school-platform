@@ -1,3 +1,5 @@
+const { pageRawContent } = require('../../constants/pageRawContent')
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('entities', {
@@ -8,7 +10,7 @@ module.exports = {
         type: Sequelize.DataTypes.INTEGER,
       },
       uuid: {
-        type: Sequelize.DataTypes.DataTypes.UUID,
+        type: Sequelize.DataTypes.UUID,
         defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
       name: {
@@ -21,8 +23,8 @@ module.exports = {
         unique: true,
       },
       content: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
+        type: Sequelize.DataTypes.STRING(10000),
+        defaultValue: JSON.stringify(pageRawContent),
       },
       email: {
         type: Sequelize.DataTypes.STRING,

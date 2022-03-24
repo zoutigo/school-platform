@@ -8,11 +8,23 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Role, Paper, Event, Album, Preinscription }) {
+    static associate({
+      Role,
+      User,
+      UserEntity,
+      Page,
+      Paper,
+      Event,
+      Album,
+      Preinscription,
+    }) {
       // define association here
 
       this.hasMany(Role, { foreignKey: 'entityId' })
       Role.belongsTo(this)
+
+      this.belongsToMany(User, { through: 'user_entities' })
+      User.belongsToMany(this, { through: 'user_entities' })
 
       this.hasMany(Paper, { foreignKey: 'entityId' })
       Paper.belongsTo(this)
@@ -20,11 +32,13 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(Event, { foreignKey: 'entityId' })
       Event.belongsTo(this)
 
-      this.hasMany(Album, { foreignKey: 'entityId' })
-      Album.belongsTo(this)
+      // this.hasMany(Album, { foreignKey: 'entityId' })
+      // Album.belongsTo(this)
 
-      this.hasMany(Preinscription, { foreignKey: 'entityId' })
-      Preinscription.belongsTo(this)
+      // this.hasMany(Preinscription, { foreignKey: 'entityId' })
+      // Preinscription.belongsTo(this)
+
+      //   Entity.belongsToMany(models.Album, { through: models.AlbumEntity })
     }
 
     toJSON() {
@@ -35,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       uuid: {
         type: DataTypes.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
       name: {
         type: DataTypes.STRING,
@@ -58,6 +72,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'Entity',
+      tableName: 'entities',
     }
   )
 

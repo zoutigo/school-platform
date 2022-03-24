@@ -26,16 +26,6 @@ module.exports = {
         type: Sequelize.DataTypes.STRING(10000),
         defaultValue: JSON.stringify(pageRawContent),
       },
-      entityId: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'entities',
-          key: 'id',
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE',
-        },
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,

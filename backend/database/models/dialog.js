@@ -30,17 +30,18 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       startdate: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(13),
         allowNull: false,
       },
       enddate: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(13),
         allowNull: false,
       },
     },
     {
       sequelize,
       modelName: 'Dialog',
+      tableName: 'dialogs',
     }
   )
   return Dialog

@@ -18,33 +18,34 @@ module.exports = (sequelize, DataTypes) => {
   Event.init(
     {
       uuid: {
-        type: DataTypes.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.DataTypes.UUID,
+        defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
       title: {
-        type: DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING(100),
         allowNull: false,
       },
       content: {
-        type: DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING(15000),
         allowNull: false,
       },
       place: {
-        type: DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING(100),
         allowNull: false,
       },
       date: {
-        type: DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING(13),
         allowNull: false,
       },
       isPrivate: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.Sequelize.DataTypes.BOOLEAN,
         defaultValue: true,
       },
     },
     {
       sequelize,
       modelName: 'Event',
+      tableName: 'events',
     }
   )
   return Event

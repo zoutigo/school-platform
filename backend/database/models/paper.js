@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: Sequelize.UUIDV4,
       },
       type: {
-        type: DataTypes.ENUM(
+        type: DataTypes.ENUM,
+        values: [
           'article',
           'activite',
           'parent-info',
@@ -30,8 +31,8 @@ module.exports = (sequelize, DataTypes) => {
           'menu',
           'breve',
           'info',
-          'fourniture'
-        ),
+          'fourniture',
+        ],
         allowNull: false,
       },
       title: {
@@ -58,11 +59,16 @@ module.exports = (sequelize, DataTypes) => {
       enddate: {
         type: DataTypes.STRING(14),
       },
+      files: {
+        type: Sequelize.ARRAY(Sequelize.JSONB),
+        allowNull: true,
+      },
     },
     {
       sequelize,
       modelName: 'Paper',
     }
   )
+
   return Paper
 }

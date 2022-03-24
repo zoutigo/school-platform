@@ -1,6 +1,6 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('cards', {
+    await queryInterface.createTable('events', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,17 +11,35 @@ module.exports = {
         type: Sequelize.DataTypes.UUID,
         defaultValue: Sequelize.literal('uuid_generate_v4()'),
       },
-      path: {
-        type: Sequelize.DataTypes.STRING(64),
-        allowNull: false,
-      },
-      description: {
-        type: Sequelize.DataTypes.STRING(1000),
-        allowNull: false,
-      },
-      alias: {
+      title: {
         type: Sequelize.DataTypes.STRING(100),
         allowNull: false,
+      },
+      content: {
+        type: Sequelize.DataTypes.STRING(15000),
+        allowNull: false,
+      },
+      place: {
+        type: Sequelize.DataTypes.STRING(100),
+        allowNull: false,
+      },
+      date: {
+        type: Sequelize.DataTypes.STRING(13),
+        allowNull: false,
+      },
+      isPrivate: {
+        type: Sequelize.DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
+      entityId: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'entities',
+          key: 'id',
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+        },
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +52,6 @@ module.exports = {
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('cards')
+    await queryInterface.dropTable('events')
   },
 }

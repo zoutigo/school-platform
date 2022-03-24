@@ -41,5 +41,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Page',
     }
   )
+
   return Page
 }

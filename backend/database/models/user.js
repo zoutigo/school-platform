@@ -9,34 +9,35 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({
       Role,
-      Entity,
+      UserRole,
       Suggestion,
       Paper,
       Dialog,
       Event,
       Preinscription,
+      Mail,
     }) {
       // define association here
-      this.belongsToMany(Role, { through: 'user_roles' })
-      Role.belongsToMany(this, { through: 'user_roles' })
-
-      this.belongsToMany(Entity, { through: 'user_entities' })
-      Entity.belongsToMany(this, { through: 'user_entities' })
 
       this.hasMany(Suggestion, { foreignKey: 'userId' })
       Suggestion.belongsTo(this)
 
-      this.hasMany(Paper, { foreignKey: 'userId' })
-      Paper.belongsTo(this)
+      this.hasMany(Mail, { foreignKey: 'userId' })
+      Mail.belongsTo(this)
+
+      this.belongsToMany(Role, { through: 'user_roles' })
+      Role.belongsToMany(this, { through: 'user_roles' })
+
+      // this.hasMany(Paper, { foreignKey: 'userId' })
+      // Paper.belongsTo(this)
 
       this.hasMany(Dialog, { foreignKey: 'userId' })
       Dialog.belongsTo(this)
 
-      this.hasMany(Event, { foreignKey: 'userId' })
-      Event.belongsTo(this)
-
-      this.hasMany(Preinscription, { foreignKey: 'userId' })
-      Preinscription.belongsTo(this)
+      // this.hasMany(Event, { foreignKey: 'userId' })
+      // Event.belongsTo(this)
+      // this.hasMany(Preinscription, { foreignKey: 'userId' })
+      // Preinscription.belongsTo(this)
     }
 
     toJSON() {
@@ -102,8 +103,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'User',
+      tableName: 'users',
     }
   )
-
   return User
 }
