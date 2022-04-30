@@ -1,15 +1,22 @@
 require('dotenv').config()
 
 module.exports = {
+  // development: {
+  //   username: process.env.DEV_DB_USERNAME,
+  //   password: process.env.DEV_DB_PASSWORD,
+  //   database: process.env.DEV_DB_NAME,
+  //   host: '127.0.0.1',
+  //   dialect: 'postgres',
+  //   dialectOptions: {
+  //     bigNumberStrings: true,
+  //   },
+  // },
   development: {
-    username: process.env.DEV_DB_USERNAME,
-    password: process.env.DEV_DB_PASSWORD,
-    database: process.env.DEV_DB_NAME,
+    username: 'zoutigo',
+    password: 'valery54',
+    database: 'augustin_new',
     host: '127.0.0.1',
-    dialect: 'postgres',
-    dialectOptions: {
-      bigNumberStrings: true,
-    },
+    dialect: 'mysql',
   },
   test: {
     username: process.env.CI_DB_USERNAME,
