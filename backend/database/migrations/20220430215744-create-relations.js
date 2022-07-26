@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require('uuid')
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     const t = await queryInterface.sequelize.transaction()
@@ -6,7 +8,7 @@ module.exports = {
         'papers',
         'entityId',
         {
-          type: Sequelize.UUID,
+          type: Sequelize.DataTypes.INTEGER,
           allowNull: false,
           references: {
             model: 'entities',
@@ -21,7 +23,7 @@ module.exports = {
         'albums',
         'entityId',
         {
-          type: Sequelize.UUID,
+          type: Sequelize.DataTypes.INTEGER,
           allowNull: false,
           references: {
             model: 'entities',
@@ -36,7 +38,7 @@ module.exports = {
         'events',
         'entityId',
         {
-          type: Sequelize.UUID,
+          type: Sequelize.DataTypes.INTEGER,
           allowNull: false,
           references: {
             model: 'entities',
@@ -51,7 +53,7 @@ module.exports = {
         'suggestions',
         'userId',
         {
-          type: Sequelize.UUID,
+          type: Sequelize.DataTypes.INTEGER,
           allowNull: false,
           references: {
             model: 'users',
@@ -66,7 +68,7 @@ module.exports = {
         'mails',
         'userId',
         {
-          type: Sequelize.UUID,
+          type: Sequelize.DataTypes.INTEGER,
           allowNull: false,
           references: {
             model: 'users',
@@ -81,7 +83,7 @@ module.exports = {
         'preinscriptions',
         'userId',
         {
-          type: Sequelize.UUID,
+          type: Sequelize.DataTypes.INTEGER,
           allowNull: false,
           references: {
             model: 'users',

@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require('uuid')
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     const t = await queryInterface.sequelize.transaction()
@@ -8,13 +10,13 @@ module.exports = {
         {
           id: {
             allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
-            type: Sequelize.UUID,
-            defaultValue: Sequelize.UUIDV4,
+            type: Sequelize.INTEGER,
           },
-          name: {
-            type: Sequelize.DataTypes.STRING(50),
-            allowNull: false,
+          uuid: {
+            type: Sequelize.UUID,
+            defaultValue: uuidv4(),
           },
           alias: {
             type: Sequelize.DataTypes.STRING(100),
