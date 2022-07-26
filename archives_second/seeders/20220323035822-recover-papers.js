@@ -1,7 +1,7 @@
-const EntityP = require('../../models/EntityP')
-const FileP = require('../../models/FileP')
-const PaperP = require('../../models/PaperP')
-const { Entity } = require('../models')
+const EntityP = require('../../backend/models/EntityP')
+const FileP = require('../../backend/models/FileP')
+const PaperP = require('../../backend/models/PaperP')
+const { Entity } = require('../../backend/database/models')
 
 module.exports = {
   async up(queryInterface, Sequelize) {

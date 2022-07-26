@@ -1,4 +1,4 @@
-const { pageRawContent } = require('../../constants/pageRawContent')
+const { pageRawContent } = require('../../backend/constants/pageRawContent')
 
 module.exports = {
   async up(queryInterface, Sequelize) {
