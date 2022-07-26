@@ -13,6 +13,9 @@
   `sudo systemctl start postgresql`
   `sudo systemctl start apache2`
 
+- activer le uuid sur postgres
+  `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`
+
 - lancer le backend
   `npm run backdev`
 - lancer le frontend

@@ -142,7 +142,16 @@ emailFromEntityPost.start()
 emailFromClassroomPost.start()
 makePgDbBackup.start()
 
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
+// })
+
+// render react index html
+
+const root = path.join(__dirname, '..', 'frontend', 'build')
+
+app.use(express.static(root))
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
+  res.sendFile('index.html', { root })
 })
 module.exports = app

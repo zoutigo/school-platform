@@ -5,15 +5,21 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./backend/bin/www",
+    "dev": "concurrently \"npm run backdev\" \"npm run frontdev\"",
     "backdev": "cross-env NODE_ENV=development  DEBUG=express nodemon ./backend/bin/www",
-    "frontdev": "cd ./frontend NODE_ENV=development npm start ",
+    "frontdev": "cd ./frontend && NODE_ENV=development npm start ",
     "testing": "npm run mocha",
     "test": "jest",
     "mocha": "cross-env NODE_ENV=test mocha --require babel-register ./backend/test/*.js --exit",
-    "build": "rm -rf ./public/* && cd ./frontend && npm run build",
+    "build": "cd ./frontend && npm run build",
     "postbuild": "cp -r ./frontend/build/* ./public && rm -rf ./frontend/build",
-    "dev": "concurrently \"npm run backdev\" \"npm run frontdev\"",
-    "update": "node ./backend/controllers/databaseController"
+    "update": "node ./backend/controllers/databaseController",
+    "migrate": "npx sequelize-cli db:migrate --debug",
+    "migrateundo": "npx sequelize-cli db:migrate:undo:all --debug",
+    "seedall": "npx sequelize-cli db:seed:all --debug",
+    "seedundoall": "npx sequelize-cli db:seed:undo:all",
+    "modelgenerate": "npx sequelize-cli model:generate --name Example --attributes firstName:string,lastName:string,email:string",
+    "seedgenerate": "npx sequelize-cli seed:generate --name demo-example"
   },
   "repository": {
     "type": "git",
@@ -27,6 +33,7 @@
   "homepage": "https://github.com/zoutigo/platform#readme",
   "dependencies": {
     "@getvim/execute": "^1.0.0",
+    "@sequelize/core": "^7.0.0-alpha.10",
     "aws-sdk": "^2.931.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.4",
@@ -50,6 +57,7 @@
     "mongoose": "^5.12.13",
     "morgan": "~1.9.1",
     "multer": "^1.4.2",
+    "mysql2": "^2.3.3",
     "node-cron": "^3.0.0",
     "node-html-parser": "^4.0.0",
     "nodemailer": "^6.6.2",
@@ -83,6 +91,7 @@
     "mocha": "^9.0.2",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.0",
+    "sequelize-cli": "^6.4.1",
     "supertest": "^6.2.2"
   },
   "eslintConfig": {

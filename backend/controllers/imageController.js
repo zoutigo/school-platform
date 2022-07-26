@@ -97,9 +97,7 @@ module.exports.createEditorImage = async (req, res, next) => {
   const ref = `${timestamp}-${originalname}.webp`
 
   try {
-    await sharp(buffer)
-      .webp({ quality: 20 })
-      .toFile('./images/editor/' + ref)
+    await sharp(buffer).webp({ quality: 20 }).toFile(`./images/editor/${ref}`)
 
     const location =
       process.env.NODE_ENV === 'production'
