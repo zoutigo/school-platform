@@ -19,16 +19,12 @@ module.exports = {
             defaultValue: uuidv4(),
           },
 
-          path: {
-            type: Sequelize.DataTypes.STRING(200),
-            allowNull: false,
-          },
           alias: {
             type: Sequelize.DataTypes.STRING(100),
             allowNull: false,
             unique: true,
           },
-          description: {
+          desc: {
             type: Sequelize.DataTypes.TEXT,
             allowNull: false,
           },

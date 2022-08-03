@@ -23,7 +23,7 @@ module.exports = {
             type: Sequelize.DataTypes.STRING(100),
             allowNull: false,
           },
-          mission: {
+          desc: {
             type: Sequelize.DataTypes.STRING(200),
             allowNull: false,
           },

@@ -62,11 +62,11 @@ module.exports = {
     }
   },
   async down(queryInterface, Sequelize) {
-    const transaction = await queryInterface.sequelize.transaction()
+    const t = await queryInterface.sequelize.transaction()
     try {
       await queryInterface.dropTable('user_roles')
     } catch (err) {
-      await transaction.rollback()
+      await t.rollback()
       throw err
     }
   },

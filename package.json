@@ -16,10 +16,10 @@
     "update": "node ./backend/controllers/databaseController",
     "migrate": "npx sequelize-cli db:migrate --debug",
     "migrate:undo": "npx sequelize-cli db:migrate:undo:all --debug",
-    "seedall": "npx sequelize-cli db:seed:all --debug",
-    "seedundoall": "npx sequelize-cli db:seed:undo:all",
-    "modelgenerate": "npx sequelize-cli model:generate --name Example --attributes firstName:string,lastName:string,email:string",
-    "seedgenerate": "npx sequelize-cli seed:generate --name demo-example"
+    "seed:all": "npx sequelize-cli db:seed:all --debug",
+    "seed:undo:all": "npx sequelize-cli db:seed:undo:all",
+    "model:generate": "npx sequelize-cli model:generate --name Example --attributes firstName:string,lastName:string,email:string",
+    "seed:generate": "npx sequelize-cli seed:generate --name demo-example"
   },
   "repository": {
     "type": "git",

@@ -18,36 +18,6 @@ module.exports = {
             type: Sequelize.UUID,
             defaultValue: uuidv4(),
           },
-          albumId: {
-            type: Sequelize.UUID,
-            allowNull: false,
-            references: {
-              model: 'albums',
-              key: 'id',
-              onUpdate: 'CASCADE',
-              onDelete: 'SET NULL',
-            },
-          },
-          paperId: {
-            type: Sequelize.UUID,
-            allowNull: false,
-            references: {
-              model: 'papers',
-              key: 'id',
-              onUpdate: 'CASCADE',
-              onDelete: 'SET NULL',
-            },
-          },
-          cardId: {
-            type: Sequelize.UUID,
-            allowNull: false,
-            references: {
-              model: 'cards',
-              key: 'id',
-              onUpdate: 'CASCADE',
-              onDelete: 'SET NULL',
-            },
-          },
 
           filename: {
             type: Sequelize.DataTypes.STRING(200),

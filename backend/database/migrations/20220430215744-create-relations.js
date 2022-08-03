@@ -1,30 +1,13 @@
-const { v4: uuidv4 } = require('uuid')
-
 module.exports = {
   async up(queryInterface, Sequelize) {
     const t = await queryInterface.sequelize.transaction()
     try {
       await queryInterface.addColumn(
-        'papers',
-        'entityId',
-        {
-          type: Sequelize.DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'entities',
-            key: 'id',
-            onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
-          },
-        },
-        { t }
-      )
-      await queryInterface.addColumn(
         'albums',
         'entityId',
         {
           type: Sequelize.DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
           references: {
             model: 'entities',
             key: 'id',
@@ -34,27 +17,13 @@ module.exports = {
         },
         { t }
       )
-      await queryInterface.addColumn(
-        'events',
-        'entityId',
-        {
-          type: Sequelize.DataTypes.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'entities',
-            key: 'id',
-            onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
-          },
-        },
-        { t }
-      )
+
       await queryInterface.addColumn(
         'suggestions',
         'userId',
         {
           type: Sequelize.DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
           references: {
             model: 'users',
             key: 'id',
@@ -69,7 +38,7 @@ module.exports = {
         'userId',
         {
           type: Sequelize.DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
           references: {
             model: 'users',
             key: 'id',
@@ -84,7 +53,7 @@ module.exports = {
         'userId',
         {
           type: Sequelize.DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
           references: {
             model: 'users',
             key: 'id',
@@ -104,16 +73,25 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     const t = await queryInterface.sequelize.transaction()
     try {
-      await queryInterface.removeColumn('papers', 'entityId', { t })
-      await queryInterface.removeColumn('albums', 'entityId', { t })
-      await queryInterface.removeColumn('events', 'entityId', { t })
+      console.log('----------start reverting')
+
       await queryInterface.removeColumn('suggestions', 'userId', { t })
+
+      console.log('----------suggestion ok')
+
+      await queryInterface.removeColumn('albums', 'entityId', { t })
+      console.log('----------album ok')
+
       await queryInterface.removeColumn('mails', 'userId', { t })
+      console.log('----------mail ok')
+
       await queryInterface.removeColumn('preinscriptions', 'userId', { t })
+      console.log('----------preinscription ok')
+
       await t.commit()
     } catch (error) {
       await t.rollback()
-      throw error
+      console.log('error', error)
     }
   },
 }

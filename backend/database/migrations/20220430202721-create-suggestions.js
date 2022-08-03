@@ -20,8 +20,8 @@ module.exports = {
           },
           topic: {
             type: Sequelize.DataTypes.ENUM,
-            values: ['bug', 'idea', 'improve'],
-            defaultValue: 'idea',
+            values: ['bug', 'idea', 'improvment', 'other'],
+            defaultValue: 'other',
             allowNull: false,
           },
           status: {

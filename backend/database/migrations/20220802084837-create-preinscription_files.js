@@ -6,7 +6,7 @@ module.exports = {
 
     try {
       await queryInterface.createTable(
-        'events',
+        'preinscription_files',
         {
           id: {
             allowNull: false,
@@ -18,45 +18,55 @@ module.exports = {
             type: Sequelize.UUID,
             defaultValue: uuidv4(),
           },
-
-          title: {
-            type: Sequelize.DataTypes.STRING(100),
+          preinscriptionId: {
+            primaryKey: true,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
+            references: {
+              model: 'preinscriptions',
+              key: 'id',
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
           },
-
-          content: {
-            type: Sequelize.DataTypes.TEXT,
+          fileId: {
+            primaryKey: true,
+            type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
-          },
-          place: {
-            type: Sequelize.DataTypes.STRING(100),
-            allowNull: false,
-          },
-
-          date: {
-            allowNull: false,
-            type: Sequelize.DATE,
-            defaultValue: new Date(),
+            references: {
+              model: {
+                tableName: 'files',
+              },
+              key: 'id',
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
           },
           createdAt: {
             allowNull: false,
             type: Sequelize.DATE,
-            defaultValue: new Date(),
           },
           updatedAt: {
             allowNull: false,
             type: Sequelize.DATE,
-            defaultValue: new Date(),
           },
         },
         { t }
       )
       await t.commit()
     } catch (error) {
+      console.log('error', error)
       await t.rollback()
     }
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('events')
+    const t = await queryInterface.sequelize.transaction()
+
+    try {
+      await queryInterface.dropTable('preinscription_files')
+    } catch (error) {
+      await t.rollback()
+      console.log('error', error)
+    }
   },
 }

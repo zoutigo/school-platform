@@ -21,8 +21,13 @@ module.exports = {
           alias: {
             type: Sequelize.DataTypes.STRING(100),
             allowNull: false,
+            unique: true,
           },
-          description: {
+          name: {
+            type: Sequelize.DataTypes.STRING(100),
+            allowNull: false,
+          },
+          descr: {
             type: Sequelize.DataTypes.TEXT,
             allowNull: false,
           },

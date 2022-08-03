@@ -29,6 +29,7 @@ module.exports = {
               'breve',
               'info',
               'fourniture',
+              'event',
             ],
             allowNull: false,
           },
@@ -38,7 +39,6 @@ module.exports = {
           },
           content: {
             type: Sequelize.DataTypes.TEXT,
-            allowNull: false,
           },
           classroom: {
             type: Sequelize.DataTypes.STRING(30),
@@ -48,15 +48,21 @@ module.exports = {
             defaultValue: true,
             allowNull: false,
           },
+          place: {
+            type: Sequelize.DataTypes.STRING(100),
+          },
           date: {
             type: Sequelize.DataTypes.DATE,
+            allowNull: false,
             defaultValue: new Date(),
           },
           startdate: {
             type: Sequelize.DataTypes.DATE,
+            defaultValue: null,
           },
           enddate: {
             type: Sequelize.DataTypes.DATE,
+            defaultValue: null,
           },
 
           createdAt: {

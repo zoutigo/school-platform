@@ -2,72 +2,69 @@ const { v4: uuidv4 } = require('uuid')
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const transaction = await queryInterface.sequelize.transaction()
+    const t = await queryInterface.sequelize.transaction()
+
     try {
       await queryInterface.createTable(
-        'user_entities',
+        'card_files',
         {
           id: {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
-            type: Sequelize.DataTypes.INTEGER,
+            type: Sequelize.INTEGER,
           },
           uuid: {
             type: Sequelize.UUID,
             defaultValue: uuidv4(),
           },
-
-          userId: {
+          cardId: {
             primaryKey: true,
             type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
             references: {
-              model: 'users',
+              model: 'cards',
               key: 'id',
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
           },
-          entityId: {
+          fileId: {
             primaryKey: true,
             type: Sequelize.DataTypes.INTEGER,
             allowNull: false,
             references: {
-              model: 'entities',
+              model: 'files',
               key: 'id',
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
           },
-
           createdAt: {
             allowNull: false,
             type: Sequelize.DATE,
-            defaultValue: new Date(),
           },
           updatedAt: {
             allowNull: false,
             type: Sequelize.DATE,
-            defaultValue: new Date(),
           },
         },
-        { transaction }
+        { t }
       )
-
-      await transaction.commit()
-    } catch (err) {
-      await transaction.rollback()
-      throw err
+      await t.commit()
+    } catch (error) {
+      console.log('error', error)
+      await t.rollback()
     }
   },
   async down(queryInterface, Sequelize) {
     const t = await queryInterface.sequelize.transaction()
+
     try {
-      await queryInterface.dropTable('user_entities', null, { t })
-    } catch (err) {
-      console.log('error', err)
+      await queryInterface.dropTable('card_files')
+    } catch (error) {
       await t.rollback()
+      console.log('error', error)
     }
   },
 }

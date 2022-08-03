@@ -36,6 +36,9 @@ module.exports = {
             unique: true,
             allowNull: false,
           },
+          phone: {
+            type: Sequelize.DataTypes.INTEGER,
+          },
           isVerified: {
             type: Sequelize.DataTypes.BOOLEAN,
             defaultValue: false,
