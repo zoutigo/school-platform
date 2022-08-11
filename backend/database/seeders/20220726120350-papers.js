@@ -100,9 +100,8 @@ module.exports = {
 
       await transaction.commit()
     } catch (error) {
-      console.log('err', error)
-
       await transaction.rollback()
+      throw error
     }
   },
 
@@ -113,6 +112,7 @@ module.exports = {
       await transaction.commit()
     } catch (error) {
       await transaction.rollback()
+      throw error
     }
   },
 }

@@ -6,7 +6,13 @@ const config = {
     '<rootDir>/backend/**/*.{spec,test}.{js,jsx,ts,tsx}',
   ],
   moduleFileExtensions: ['js', 'jsx', 'json', 'node'],
-  testPathIgnorePatterns: ['/public/', '/files/', '/images/', '/frontend/'],
+  testPathIgnorePatterns: [
+    '/public/',
+    '/files/',
+    '/images/',
+    '/frontend/',
+    '/archives',
+  ],
   moduleDirectories: ['node_modules', 'backend', __dirname],
   transform: {
     '\\.(js|jsx)?$': 'babel-jest',

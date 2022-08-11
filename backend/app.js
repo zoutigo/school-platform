@@ -3,18 +3,21 @@ const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
-const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const cors = require('cors')
 
 const handleErrors = require('./middlewares/handleErrors')
 
 const indexRouter = require('./routes/index')
-const usersRouter = require('./routes/users')
+
+// const usersRouter = require('./routes/users')
+const usersRouter = require('./modules/userModule/userRouter')
+const authRouter = require('./modules/authModule/authRouter')
+const rolesRouter = require('./modules/roleModule/roleRouter')
 const papersRouter = require('./routes/papers')
 const eventsRouter = require('./routes/events')
 const entitiesRouter = require('./routes/entities')
-const rolesRouter = require('./routes/roles')
+// const rolesRouter = require('./routes/roles')
 const imagesRouter = require('./routes/images')
 const pagesRouter = require('./routes/pages')
 const variablesRouter = require('./routes/variables')
@@ -50,25 +53,6 @@ db.authenticate()
   .catch((err) =>
     console.log(`connexion to postgres failed with error: ${err}`)
   )
-
-// Mongodb Database connexion
-
-// const DB_URL =
-//   process.env.NODE_ENV === 'development'
-//     ? process.env.NODE_ENV === 'test'
-//       ? process.env.DB_TEST
-//       : process.env.DB_DEV
-//     : process.env.DB_PROD
-
-// mongoose
-//   .connect(process.env.MONGO_URI || DB_URL, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     useFindAndModify: false,
-//     useCreateIndex: true,
-//   })
-//   .then(() => console.log('Connexion établie à la base de donnée'))
-//   .catch((err) => console.log('mongo connexion error', err))
 
 const allowedOrigins = ['http://localhost:3000', process.env.SERVER_ADRESS]
 
@@ -115,6 +99,9 @@ app.use(cookieParser())
 // app.use(express.static(process.env.PWD + "/public"));
 
 app.use('/', indexRouter)
+app.use('/api/auth', authRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/roles', rolesRouter)
 app.use('/users', usersRouter)
 app.use('/events', eventsRouter)
 app.use('/papers', papersRouter)

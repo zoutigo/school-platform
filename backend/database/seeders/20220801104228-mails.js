@@ -47,8 +47,8 @@ module.exports = {
       await queryInterface.bulkInsert('mails', newMails, { t })
       await t.commit()
     } catch (error) {
-      console.log('error', error)
       await t.rollback()
+      throw error
     }
   },
 
@@ -58,8 +58,8 @@ module.exports = {
       await queryInterface.bulkDelete('mails', null, { t })
       await t.commit()
     } catch (error) {
-      console.log('error')
       await t.rollback()
+      throw error
     }
   },
 }

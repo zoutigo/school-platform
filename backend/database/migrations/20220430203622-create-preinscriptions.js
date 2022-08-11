@@ -48,6 +48,10 @@ module.exports = {
             type: Sequelize.DATE,
             defaultValue: new Date(),
           },
+          deletedAt: {
+            type: Sequelize.DATE,
+            defaultValue: null,
+          },
         },
         { t }
       )

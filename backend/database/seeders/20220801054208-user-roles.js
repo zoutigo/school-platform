@@ -87,9 +87,8 @@ module.exports = {
 
       await t.commit()
     } catch (error) {
-      console.log('err', error)
-
       await t.rollback()
+      throw error
     }
   },
 
@@ -100,6 +99,7 @@ module.exports = {
       await t.commit()
     } catch (error) {
       await t.rollback()
+      throw error
     }
   },
 }

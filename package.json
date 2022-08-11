@@ -8,18 +8,17 @@
     "dev": "concurrently \"npm run backdev\" \"npm run frontdev\"",
     "backdev": "cross-env NODE_ENV=development  DEBUG=express nodemon ./backend/bin/www",
     "frontdev": "cd ./frontend && NODE_ENV=development npm start ",
-    "testing": "npm run mocha",
-    "test": "jest",
-    "mocha": "cross-env NODE_ENV=test mocha --require babel-register ./backend/test/*.js --exit",
     "build": "cd ./frontend && npm run build",
-    "postbuild": "cp -r ./frontend/build/* ./public && rm -rf ./frontend/build",
     "update": "node ./backend/controllers/databaseController",
     "migrate": "npx sequelize-cli db:migrate --debug",
     "migrate:undo": "npx sequelize-cli db:migrate:undo:all --debug",
     "seed:all": "npx sequelize-cli db:seed:all --debug",
     "seed:undo:all": "npx sequelize-cli db:seed:undo:all",
     "model:generate": "npx sequelize-cli model:generate --name Example --attributes firstName:string,lastName:string,email:string",
-    "seed:generate": "npx sequelize-cli seed:generate --name demo-example"
+    "seed:generate": "npx sequelize-cli seed:generate --name demo-example",
+    "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=40000 --coverage --verbose --runInBand --detectOpenHandles",
+    "pretest": "cross-env NODE_ENV=test npm run migrate:reset"
   },
   "repository": {
     "type": "git",
@@ -43,6 +42,7 @@
     "dotenv": "^10.0.0",
     "express": "~4.16.1",
     "express-fileupload": "^1.2.1",
+    "express-validator": "^6.14.2",
     "gzipme": "^1.0.0",
     "handlebars": "^4.7.7",
     "http-errors": "~1.6.3",
@@ -53,6 +53,7 @@
     "joi": "^17.4.0",
     "joi-objectid": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^5.12.13",
     "morgan": "~1.9.1",
@@ -72,6 +73,7 @@
   "devDependencies": {
     "@babel/core": "^7.14.6",
     "@babel/node": "^7.14.7",
+    "@faker-js/faker": "^7.3.0",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.3.4",
@@ -93,7 +95,7 @@
     "nodemon": "^2.0.7",
     "prettier": "^2.3.0",
     "sequelize-cli": "^6.4.1",
-    "supertest": "^6.2.2"
+    "supertest": "^6.2.4"
   },
   "eslintConfig": {
     "extends": ".eslintrc"
@@ -107,5 +109,17 @@
     "events": {
       "crash": "sh -c 'lsof -i :${PORT:-3500} -t | xargs kill'"
     }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "testPathIgnorePatterns": [
+      "frontend",
+      "archive_second",
+      "files",
+      "/archives"
+    ]
   }
 }

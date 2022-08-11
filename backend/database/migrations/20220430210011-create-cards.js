@@ -24,7 +24,7 @@ module.exports = {
             allowNull: false,
             unique: true,
           },
-          desc: {
+          descr: {
             type: Sequelize.DataTypes.TEXT,
             allowNull: false,
           },
@@ -38,6 +38,10 @@ module.exports = {
             allowNull: false,
             type: Sequelize.DATE,
             defaultValue: new Date(),
+          },
+          deletedAt: {
+            type: Sequelize.DATE,
+            defaultValue: null,
           },
         },
         { t }

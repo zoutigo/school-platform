@@ -48,8 +48,8 @@ module.exports = {
       await queryInterface.bulkInsert('preinscriptions', newPreIncs, { t })
       await t.commit()
     } catch (error) {
-      console.log('error', error)
       await t.rollback()
+      throw error
     }
   },
 
@@ -59,8 +59,8 @@ module.exports = {
       await queryInterface.bulkDelete('preinscriptions', null, { t })
       await t.commit()
     } catch (error) {
-      console.log('error')
       await t.rollback()
+      throw error
     }
   },
 }

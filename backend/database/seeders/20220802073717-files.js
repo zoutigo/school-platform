@@ -18,11 +18,6 @@ module.exports = {
         nest: true,
         raw: true,
       })
-      const oldPapers = await AlbumP.findAll({
-        include: [FileP],
-        nest: true,
-        raw: true,
-      })
 
       const newAlbums = await queryInterface.sequelize.query(
         ` SELECT * FROM albums`,

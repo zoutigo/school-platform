@@ -14,7 +14,7 @@ module.exports = {
       const newPages = oldPages.map(({ title, alias, content }) => ({
         uuid: uuidv4(),
         title,
-        alias,
+        slug: alias,
         content,
         createdAt: new Date(),
         updatedAt: new Date(),

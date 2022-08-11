@@ -73,25 +73,17 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     const t = await queryInterface.sequelize.transaction()
     try {
-      console.log('----------start reverting')
-
       await queryInterface.removeColumn('suggestions', 'userId', { t })
 
-      console.log('----------suggestion ok')
-
       await queryInterface.removeColumn('albums', 'entityId', { t })
-      console.log('----------album ok')
 
       await queryInterface.removeColumn('mails', 'userId', { t })
-      console.log('----------mail ok')
 
       await queryInterface.removeColumn('preinscriptions', 'userId', { t })
-      console.log('----------preinscription ok')
 
       await t.commit()
     } catch (error) {
       await t.rollback()
-      console.log('error', error)
     }
   },
 }

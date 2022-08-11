@@ -1,23 +1,14 @@
 require('dotenv').config()
 
 module.exports = {
-  // development: {
-  //   username: process.env.DEV_DB_USERNAME,
-  //   password: process.env.DEV_DB_PASSWORD,
-  //   database: process.env.DEV_DB_NAME,
-  //   host: '127.0.0.1',
-  //   dialect: 'postgres',
-  //   dialectOptions: {
-  //     bigNumberStrings: true,
-  //   },
-  // },
   development: {
-    username: 'zoutigo',
-    password: 'valery54',
-    database: 'augustin_lift',
-    host: '127.0.0.1',
+    username: process.env.MYSQL_DEV_USER,
+    password: process.env.MYSQL_DEV_PASSWORD,
+    database: process.env.MYSQL_DEV_DATABASE,
+    host: process.env.MYSQL_DEV_HOST,
     dialect: 'mysql',
     debug: true,
+    logging: true,
     seederStorage: 'sequelize',
     seederStorageTableName: 'sequelizeData',
     pool: {
@@ -27,17 +18,24 @@ module.exports = {
       acquire: 100 * 1000,
     },
   },
-  // test: {
-  //   username: process.env.CI_DB_USERNAME,
-  //   password: process.env.CI_DB_PASSWORD,
-  //   database: process.env.CI_DB_NAME,
-  //   host: '127.0.0.1',
-  //   port: 3306,
-  //   dialect: 'postgres',
-  //   dialectOptions: {
-  //     bigNumberStrings: true,
-  //   },
-  // },
+  test: {
+    username: process.env.MYSQL_TEST_USER,
+    password: process.env.MYSQL_TEST_PASSWORD,
+    database: process.env.MYSQL_TEST_DATABASE,
+    host: process.env.MYSQL_TEST_HOST,
+    dialect: 'mysql',
+    debug: true,
+    logging: false,
+    seederStorage: 'sequelize',
+    seederStorageTableName: 'sequelizeData',
+    pool: {
+      max: 100,
+      min: 0,
+      // @note https://github.com/sequelize/sequelize/issues/8133#issuecomment-359993057
+      acquire: 100 * 1000,
+    },
+  },
+
   // production: {
   //   username: process.env.PROD_DB_USERNAME,
   //   password: process.env.PROD_DB_PASSWORD,

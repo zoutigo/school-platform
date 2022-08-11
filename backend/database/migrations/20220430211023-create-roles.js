@@ -23,7 +23,11 @@ module.exports = {
             type: Sequelize.DataTypes.STRING(100),
             allowNull: false,
           },
-          desc: {
+          slug: {
+            type: Sequelize.DataTypes.STRING(150),
+            allowNull: false,
+          },
+          descr: {
             type: Sequelize.DataTypes.STRING(200),
             allowNull: false,
           },
@@ -37,6 +41,10 @@ module.exports = {
             allowNull: false,
             type: Sequelize.DATE,
             defaultValue: new Date(),
+          },
+          deletedAt: {
+            type: Sequelize.DATE,
+            defaultValue: null,
           },
         },
         { t }

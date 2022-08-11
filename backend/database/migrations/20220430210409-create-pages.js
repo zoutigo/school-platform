@@ -23,7 +23,7 @@ module.exports = {
             type: Sequelize.DataTypes.STRING(100),
             allowNull: false,
           },
-          alias: {
+          slug: {
             type: Sequelize.DataTypes.STRING(100),
             allowNull: false,
             unique: true,
@@ -42,6 +42,10 @@ module.exports = {
             allowNull: false,
             type: Sequelize.DATE,
             defaultValue: new Date(),
+          },
+          deletedAt: {
+            type: Sequelize.DATE,
+            defaultValue: null,
           },
         },
         { t }

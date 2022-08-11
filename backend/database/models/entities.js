@@ -1,26 +1,74 @@
-const { Model } = require('sequelize')
+const { Model, Sequelize } = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-  class Example extends Model {
+  class Entity extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
+    static associate({ role }) {
+      this.hasMany(role, {
+        foreignKey: 'roleId',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      })
     }
   }
-  Example.init(
+  Entity.init(
     {
-      firstName: DataTypes.STRING,
-      lastName: DataTypes.STRING,
-      email: DataTypes.STRING,
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: Sequelize.UUIDV4,
+      },
+      name: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "le nom de l'entité est obligatoire",
+          },
+          len: {
+            args: [2, 100],
+            msg: 'le nom doit avoir entre 2 et 100 caractères',
+          },
+        },
+      },
+      alias: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        unique: true,
+        validate: {
+          notNull: {
+            msg: "l'alias de l'entité est obligatoire",
+          },
+          len: {
+            args: [2, 100],
+            msg: 'le nom doit avoir entre 2 et 100 caractères',
+          },
+        },
+      },
+      email: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "l'alias de l'entité est obligatoire",
+          },
+          len: {
+            args: [2, 100],
+            msg: 'le nom doit avoir entre 2 et 100 caractères',
+          },
+        },
+      },
+      content: DataTypes.TEXT,
     },
     {
       sequelize,
-      modelName: 'Example',
+      modelName: 'entity',
+      tableName: 'entities',
+      paranoid: true,
     }
   )
-  return Example
+  return Entity
 }

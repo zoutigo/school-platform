@@ -1,16 +1,10 @@
 const { v4: uuidv4 } = require('uuid')
 const { QueryTypes } = require('@sequelize/core')
-const CardP = require('../../models/CardP')
 
 module.exports = {
   async up(queryInterface, Sequelize) {
     const t = await queryInterface.sequelize.transaction()
     try {
-      const oldCards = await CardP.findAll({
-        nest: true,
-        raw: true,
-      })
-
       const newCards = await queryInterface.sequelize.query(
         ` SELECT * FROM cards`,
         {

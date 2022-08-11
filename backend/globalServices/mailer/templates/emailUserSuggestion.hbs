@@ -1,0 +1,161 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <title>Suggestion - {{topic}}</title>
+    <meta
+      name='viewport'
+      content='width=device-width, initial-scale=1.0, viewport-fit=cover'
+    />
+     <style>
+ a {
+  text-decoration: none;
+  list-style: none;
+}
+
+.d-flex {
+  display: flex;
+  flex-direction:row;
+  justify-content:space-between;
+  align-items:center
+}
+
+.flex-4 {
+  flex: 4;
+}
+.flex-1 {
+  flex: 1;
+}
+.text-center {
+  text-align: center;
+}
+.text-justify {
+  text-align: center;
+}
+.c-white {
+  color: white;
+}
+.fs-08 {
+  font-size: 0.8rem;
+}
+.fs-06 {
+  font-size: 0.6rem;
+}
+.fst-italic {
+  font-style: italic;
+}
+.c-primary {
+  color: #ffc49b;
+}
+.c-secondary {
+  color: #294c60;
+}
+.b-primary {
+  background: #ffc49b;
+}
+.b-secondary {
+  background: #294c60;
+}
+.b-white {
+  background: white;
+}
+.b-whitesmoke {
+  background: whitesmoke;
+}
+.c-whitesmoke {
+  color: whitesmoke;
+}
+
+.text-center {
+  text-align: center;
+}
+.text-justify {
+  text-align: justify;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.logo-bottom {
+  width: 150px;
+}
+.my-4 {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+.mx-2 {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+.mt-2 {
+  margin-top: 2px;
+}
+.p-1 {
+  padding: 1px;
+}
+.p-5 {
+  padding: 5px;
+}
+.px-2 {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.py-1 {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+.py-2 {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.h-auto {
+  height: auto;
+}
+.btn {
+  border-radius: 5px;
+  border: 'none';
+}
+.btn-lg {
+  min-height: 3rem;
+  font-size: 1.5rem;
+}
+.w-100 {
+  width: 100%;
+}
+
+    </style>
+   
+  </head>
+
+  <body >
+     {{>header  }}
+    <main class="my-4 mx-2">
+        <section class="b-primary h-auto  mt-2 text-center py-2">
+          <h1 class="fs-1 c-secondary">Merci pour cette remarque.</h1>
+      </section>
+       <section class="my-4">
+        <h5>Bonjour {{firstname}}</h5>
+      </section>
+       <section class="my-4">
+        <p>
+          Nous allons votre remarque dans les plus bref délais et pour apporter une
+          réponse pertinente.</br>
+          En attendant , vous pouvez continuer à explorer les autres rubriques du site.
+        </p>
+      </section>
+      <section class="my-4 b-white">
+        <h2>RECAPITULATIF DE LA REMARQUE:</h2>
+        <div class='w-100'>
+          <h2>{{title}}</h2>
+        <p>{{{message}}} </p>
+        </div>
+        
+      </section>
+      <section class="my-4">
+        <p>A tres bientot sur le site de école.</p>
+      </section>
+    </main>
+    {{>footer  }}
+  </body>
+</html>

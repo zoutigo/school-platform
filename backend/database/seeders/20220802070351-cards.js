@@ -9,7 +9,7 @@ module.exports = {
       const newCards = olCards.map(
         ({ description, alias, createdAt, updatedAt }) => ({
           uuid: uuidv4(),
-          desc: description,
+          descr: description,
           alias,
           createdAt,
           updatedAt,
@@ -20,8 +20,8 @@ module.exports = {
 
       await t.commit()
     } catch (error) {
-      console.log('error', error)
       await t.rollback()
+      throw error
     }
   },
 
@@ -31,8 +31,8 @@ module.exports = {
       await queryInterface.bulkDelete('cards', null, { t })
       await t.commit()
     } catch (error) {
-      console.log('error')
       await t.rollback()
+      throw error
     }
   },
 }
