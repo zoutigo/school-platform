@@ -2,10 +2,10 @@ const { faker } = require('@faker-js/faker')
 const truncate = require('../../utils/truncate')
 const { entity } = require('../models')
 
-const testAlias = 'ps'
+const entityName = 'la vie est belle'
 const fakeEntity = {
-  name: faker.name.firstName(),
-  alias: testAlias,
+  name: entityName,
+  // alias: testAlias,
   email: faker.internet.email(),
   content: faker.lorem.paragraphs(2, '<br/>\n'),
 }
@@ -23,7 +23,7 @@ describe('MODEL: entity', () => {
     expect(newEntity).toHaveProperty('email')
     expect(newEntity).toHaveProperty('createdAt')
     expect(newEntity).toHaveProperty('updatedAt')
-    expect(newEntity.getDataValue('alias')).toEqual(testAlias)
+    expect(newEntity.getDataValue('alias')).toEqual('la-vie-est-belle')
   })
   it('should find entity', async () => {
     const newEntity = await entity.create(fakeEntity)
@@ -31,13 +31,12 @@ describe('MODEL: entity', () => {
     const foundEntity = await entity.findOne({ where: { uuid: newEntityUuid } })
 
     expect(foundEntity).toHaveProperty('uuid')
-    expect(foundEntity.getDataValue('alias')).toEqual(testAlias)
   })
   it('update entity', async () => {
     const newEntity = await entity.create(fakeEntity)
-    const updatedEntity = await newEntity.update({ alias: 'remi' })
+    const updatedEntity = await newEntity.update({ name: 'le bon port' })
 
-    expect(updatedEntity.getDataValue('alias')).toEqual('remi')
+    expect(updatedEntity.getDataValue('alias')).toEqual('le-bon-port')
     expect(updatedEntity.getDataValue('createdAt')).not.toEqual('updatedAt')
   })
   it('delete entity', async () => {

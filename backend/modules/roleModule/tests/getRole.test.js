@@ -4,7 +4,6 @@ const app = require('../../../app')
 const truncate = require('../../../utils/truncate')
 const { user, role } = require('../../../database/models')
 
-const fakeRoleName = `la belle famille`
 const fakeEmail = 'user@test.com'
 
 const adminRoledatas = {

@@ -28,6 +28,9 @@ module.exports.listUsers = async (req, res, next) => {
 module.exports.putUser = async (req, res, next) => {
   const requester = req.user
   const { uuid } = req.params
+
+  if (!req.body)
+    return next(new BadRequest('veiller modidier un champ au moins'))
   const { roles, classrooms, ...rest } = req.body
 
   try {

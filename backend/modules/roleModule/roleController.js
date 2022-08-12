@@ -42,7 +42,8 @@ module.exports.listRoles = async (req, res, next) => {
 module.exports.putRole = async (req, res, next) => {
   const { uuid } = req.params
 
-  console.log('body', req.body)
+  if (!req.body)
+    return next(new BadRequest('veiller modidier un champ au moins'))
 
   try {
     const { updatedRole, updateRoleError } = await putRoleService(

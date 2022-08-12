@@ -1,4 +1,5 @@
 const { Model, Sequelize } = require('sequelize')
+const slugify = require('../../utils/slugify')
 
 module.exports = (sequelize, DataTypes) => {
   class Entity extends Model {
@@ -36,24 +37,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       alias: {
         type: DataTypes.STRING(100),
-        allowNull: false,
+        allowNull: true,
         unique: true,
-        validate: {
-          notNull: {
-            msg: "l'alias de l'entité est obligatoire",
-          },
-          len: {
-            args: [2, 100],
-            msg: 'le nom doit avoir entre 2 et 100 caractères',
-          },
-        },
       },
       email: {
         type: DataTypes.STRING(100),
         allowNull: false,
         validate: {
           notNull: {
-            msg: "l'alias de l'entité est obligatoire",
+            msg: "le mail de l'entité est obligatoire",
           },
           len: {
             args: [2, 100],
@@ -64,6 +56,23 @@ module.exports = (sequelize, DataTypes) => {
       content: DataTypes.TEXT,
     },
     {
+      hooks: {
+        beforeCreate: async (entity, options) => {
+          const nameValue = entity.getDataValue('name')
+
+          if (nameValue) {
+            // eslint-disable-next-line no-param-reassign
+            entity.alias = slugify(nameValue)
+          }
+        },
+        beforeUpdate: async (entity, options) => {
+          const nameValue = entity.getDataValue('name')
+          if (nameValue) {
+            // eslint-disable-next-line no-param-reassign
+            entity.alias = slugify(nameValue)
+          }
+        },
+      },
       sequelize,
       modelName: 'entity',
       tableName: 'entities',

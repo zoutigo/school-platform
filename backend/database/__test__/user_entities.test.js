@@ -3,14 +3,12 @@ const truncate = require('../../utils/truncate')
 const { entity, user } = require('../models')
 
 const fakeEntity0 = {
-  name: faker.name.firstName(),
-  alias: 'ps',
+  name: 'petite section',
   email: faker.internet.email(),
   content: faker.lorem.paragraphs(2, '<br/>\n'),
 }
 const fakeEntity1 = {
-  name: faker.name.firstName(),
-  alias: 'ms',
+  name: 'moyenne section',
   email: faker.internet.email(),
   content: faker.lorem.paragraphs(2, '<br/>\n'),
 }
@@ -48,7 +46,7 @@ describe('MODEL: user_entities', () => {
     await newUser.addEntity(newentity1)
 
     const toberemovedRole = await entity.findOne({
-      where: { alias: 'ms' },
+      where: { alias: 'petite-section' },
     })
     await newUser.removeEntity(toberemovedRole)
 

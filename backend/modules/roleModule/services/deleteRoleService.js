@@ -1,8 +1,8 @@
-const { user } = require('../../../database/models')
+const { role } = require('../../../database/models')
 
 const deleteRoleService = async (uuid) => {
   try {
-    const deletedRole = await user.destroy({
+    const deletedRole = await role.destroy({
       where: { uuid },
     })
 
