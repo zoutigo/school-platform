@@ -8,10 +8,29 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ role }) {
+    static associate({ role, album }) {
       this.hasMany(role, {
         foreignKey: 'roleId',
         onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      })
+      role.belongsTo(this)
+
+      this.hasMany(album, {
+        foreignKey: 'albumId',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      })
+      album.belongsTo(this)
+
+      this.belongsToMany(role, {
+        through: 'user_roles',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      })
+      role.belongsToMany(this, {
+        through: 'user_roles',
+        onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       })
     }

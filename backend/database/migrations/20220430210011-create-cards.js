@@ -19,10 +19,14 @@ module.exports = {
             defaultValue: uuidv4(),
           },
 
-          alias: {
+          slug: {
             type: Sequelize.DataTypes.STRING(100),
             allowNull: false,
             unique: true,
+          },
+          path: {
+            type: Sequelize.DataTypes.STRING(100),
+            allowNull: false,
           },
           descr: {
             type: Sequelize.DataTypes.TEXT,

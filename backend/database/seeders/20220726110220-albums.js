@@ -2,6 +2,7 @@ const { QueryTypes } = require('@sequelize/core')
 const { v4: uuidv4 } = require('uuid')
 const AlbumP = require('../../models/AlbumP')
 const EntityP = require('../../models/EntityP')
+const slugify = require('../../utils/slugify')
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -35,7 +36,7 @@ module.exports = {
 
           return {
             uuid: uuidv4(),
-            alias,
+            slug: slugify(alias),
             name,
             descr: description,
             isActive,

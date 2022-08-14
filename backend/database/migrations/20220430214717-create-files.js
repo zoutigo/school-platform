@@ -27,6 +27,10 @@ module.exports = {
             type: Sequelize.DataTypes.STRING(200),
             allowNull: false,
           },
+          filetype: {
+            type: Sequelize.DataTypes.ENUM('image', 'file'),
+            allowNull: false,
+          },
 
           createdAt: {
             allowNull: false,

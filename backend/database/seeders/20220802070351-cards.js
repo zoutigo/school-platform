@@ -7,10 +7,11 @@ module.exports = {
     try {
       const olCards = await CardP.findAll({ nest: false, raw: true })
       const newCards = olCards.map(
-        ({ description, alias, createdAt, updatedAt }) => ({
+        ({ description, alias, path, createdAt, updatedAt }) => ({
           uuid: uuidv4(),
           descr: description,
-          alias,
+          slug: alias,
+          path,
           createdAt,
           updatedAt,
         })

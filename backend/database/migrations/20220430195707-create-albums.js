@@ -18,7 +18,7 @@ module.exports = {
             type: Sequelize.UUID,
             defaultValue: uuidv4(),
           },
-          alias: {
+          slug: {
             type: Sequelize.DataTypes.STRING(100),
             allowNull: false,
             unique: true,
@@ -28,7 +28,7 @@ module.exports = {
             allowNull: false,
           },
           descr: {
-            type: Sequelize.DataTypes.TEXT,
+            type: Sequelize.DataTypes.STRING(300),
             allowNull: false,
           },
           isActive: {
