@@ -64,19 +64,19 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       hooks: {
-        beforeCreate: async (entity, options) => {
-          const nameValue = entity.getDataValue('name')
+        beforeCreate: async (album, options) => {
+          const nameValue = album.getDataValue('name')
 
           if (nameValue) {
             // eslint-disable-next-line no-param-reassign
-            entity.slug = slugify(nameValue)
+            album.slug = slugify(nameValue)
           }
         },
-        beforeUpdate: async (entity, options) => {
-          const nameValue = entity.getDataValue('name')
+        beforeUpdate: async (album, options) => {
+          const nameValue = album.getDataValue('name')
           if (nameValue) {
             // eslint-disable-next-line no-param-reassign
-            entity.slug = slugify(nameValue)
+            album.slug = slugify(nameValue)
           }
         },
       },

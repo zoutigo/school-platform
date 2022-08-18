@@ -5,9 +5,9 @@ const getAlbumValidator = validate([
   param('uuid')
     .not()
     .isEmpty()
-    .withMessage(`veillez indiquer l'entité recherché`)
+    .withMessage(`veillez indiquer l'album recherché`)
     .isUUID()
-    .withMessage(`le format de l'entité n'est pas bon`),
+    .withMessage(`le format de l'album n'est pas bon`),
 ])
 
 module.exports = getAlbumValidator

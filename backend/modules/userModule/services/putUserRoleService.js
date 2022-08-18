@@ -5,49 +5,54 @@ const putUserRoleService = async (roles, uuid, requester) => {
     const toUpdateUser = await user.findOne({
       where: { uuid },
       include: [role, entity],
-      nest: true,
-      raw: true,
     })
 
     const superRoles = ['admin', 'manager', 'moderateur']
-    const requesterRoles = await requester.getRoles()
-    const requestedAllowedRole = superRoles.find((rol) =>
-      requesterRoles.includes(rol.slug)
+    const requesterRoles = requester.roles.map(
+      ({ dataValues: { slug } }) => slug
     )
-    if (!requestedAllowedRole)
+
+    const requestedAllowedRoles = requesterRoles.map((rol) =>
+      superRoles.includes(rol)
+    )
+
+    if (requestedAllowedRoles < 0)
       return {
         putUserRoleErrorAuth: "vous n'etes pas autorisé à modifier ce role",
         putRoleUser: false,
         putUserRoleError: false,
       }
 
-    const previousRoles = toUpdateUser.roles
+    // const previousRoles = toUpdateUser.roles
 
     // destroy previous associations
-    if (previousRoles && previousRoles.length > 0) {
-      previousRoles.forEach(async (prevRole) => {
-        const oldRole = await role.findOne({
-          where: { uuid: prevRole.uuid },
-        })
-        await toUpdateUser.removeRole(oldRole)
-      })
-    }
 
-    // create new associations
-    roles.forEach(async (newRoleUuid) => {
-      const newRole = await role.findOne({
-        where: { uuid: newRoleUuid },
+    await toUpdateUser.setRoles([])
+
+    const newRoles = await Promise.all(
+      roles.map(async (roleUuid) => {
+        const newRole = await role.findOne({ where: { uuid: roleUuid } })
+        return newRole
       })
-      await toUpdateUser.addRole(newRole)
+    )
+    await toUpdateUser.setRoles(newRoles)
+
+    const putRoleUser = await user.findOne({
+      where: { uuid },
+      attributes: { exclude: ['id', 'password'] },
+      include: [role, entity],
+      nest: true,
+      raw: true,
     })
 
-    const putRoleUser = await toUpdateUser.save()
+    // console.log('updateduser:', putRoleUser)
 
     return { putRoleUser, putUserRoleError: false, putUserRoleErrorAuth: false }
   } catch (error) {
+    console.log('error', error)
     return {
       putRoleUser: null,
-      putUserRoleError: error,
+      putUserRoleError: error.message,
       putUserRoleErrorAuth: false,
     }
   }

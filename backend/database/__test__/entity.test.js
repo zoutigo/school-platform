@@ -1,6 +1,12 @@
 const { faker } = require('@faker-js/faker')
 const truncate = require('../../utils/truncate')
-const { entity } = require('../models')
+const { entity, role } = require('../models')
+
+const roleName = 'enseignant ps'
+const fakeRole = {
+  name: roleName,
+  descr: faker.lorem.sentence(),
+}
 
 const entityName = 'la vie est belle'
 const fakeEntity = {
@@ -28,7 +34,10 @@ describe('MODEL: entity', () => {
   it('should find entity', async () => {
     const newEntity = await entity.create(fakeEntity)
     const newEntityUuid = newEntity.getDataValue('uuid')
-    const foundEntity = await entity.findOne({ where: { uuid: newEntityUuid } })
+    const foundEntity = await entity.findOne({
+      where: { uuid: newEntityUuid },
+      include: [{ model: role }],
+    })
 
     expect(foundEntity).toHaveProperty('uuid')
   })
@@ -44,5 +53,14 @@ describe('MODEL: entity', () => {
     const destroyedEntity = await newEntity.destroy()
 
     expect(destroyedEntity.getDataValue('deletedAt')).not.toBeNull()
+  })
+  it('get entity role', async () => {
+    const newEntity = await entity.create(fakeEntity)
+    const newRole = await role.create(fakeRole)
+    await newEntity.addRole(newRole)
+
+    const roles = await newEntity.getRoles()
+
+    expect(roles.length).toEqual(1)
   })
 })

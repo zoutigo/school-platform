@@ -1,5 +1,6 @@
 const router = require('express').Router()
-const isAdminMiddleware = require('../authModule/middlewares/authorizations/isAdminMiddleWare')
+const multer = require('multer')
+
 const verifyTokenMiddleware = require('../authModule/middlewares/verifyTokenMiiddleware')
 const {
   createAlbum,
@@ -12,37 +13,50 @@ const getAlbumValidator = require('./middlewares/validators/getAlbumValidator')
 const putAlbumValidator = require('./middlewares/validators/putAlbumValidator')
 const deleteAlbumValidator = require('./middlewares/validators/deleteAlbumValidator')
 const postAlbumValidator = require('./middlewares/validators/postAlbumValidator')
+const { imageMaxSize } = require('../../constants/maxsize')
+const albumAuthorization = require('./middlewares/albumAuthorization')
+
+const storage = multer.memoryStorage()
+
+const uploadImages = multer({
+  storage: storage,
+  limits: {
+    fileSize: imageMaxSize,
+  },
+})
 
 //  create album
-router.post('/', postAlbumValidator, createAlbum)
-
-// get album
-router.get(
-  '/:uuid',
+router.post(
+  '/',
   verifyTokenMiddleware,
-  isAdminMiddleware,
-  getAlbumValidator,
-  getAlbum
+  uploadImages.array('files', 20),
+  postAlbumValidator,
+  albumAuthorization,
+  createAlbum
 )
 
+// get album
+router.get('/:uuid', getAlbumValidator, getAlbum)
+
 // list albums
-router.get('/', verifyTokenMiddleware, listAlbums)
+router.get('/', listAlbums)
 
 // put album
 router.put(
   '/:uuid',
   verifyTokenMiddleware,
-  isAdminMiddleware,
+  uploadImages.array('files', 20),
+  albumAuthorization,
   putAlbumValidator,
   putAlbum
 )
 
-// delete user
+// delete delete
 router.delete(
   '/:uuid',
   verifyTokenMiddleware,
-  isAdminMiddleware,
   deleteAlbumValidator,
+  albumAuthorization,
   deleteAlbum
 )
 

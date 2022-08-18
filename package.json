@@ -11,7 +11,7 @@
     "build": "cd ./frontend && npm run build",
     "update": "node ./backend/controllers/databaseController",
     "migrate": "npx sequelize-cli db:migrate --debug",
-    "migrate:undo": "npx sequelize-cli db:migrate:undo:all --debug",
+    "migrate:undo:all": "npx sequelize-cli db:migrate:undo:all --debug",
     "seed:all": "npx sequelize-cli db:seed:all --debug",
     "seed:undo:all": "npx sequelize-cli db:seed:undo:all",
     "model:generate": "npx sequelize-cli model:generate --name Example --attributes firstName:string,lastName:string,email:string",

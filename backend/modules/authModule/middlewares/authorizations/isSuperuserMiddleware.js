@@ -17,7 +17,7 @@ const isSuperuserMiddleware = async (req, rest, next) => {
 
   if (!isAllowed)
     return next(
-      new Unauthorized("vous n'etes pas authorisés à modifier cette ressouce")
+      new Unauthorized("vous n'etes pas authorisés à modifier cette ressource")
     )
 
   return next()

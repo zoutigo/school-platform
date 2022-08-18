@@ -33,6 +33,13 @@ const putEntityValidator = validate([
     .withMessage(`format de descrption de entité incorrect`)
     .isLength({ min: 2, max: 200000 })
     .withMessage(`la description doit avoir entre 2 et 20000 caractères`),
+  body('roleUuid')
+    .optional()
+    .not()
+    .isEmpty()
+    .withMessage(`veillez indiquer le role à ajouter`)
+    .isUUID()
+    .withMessage(`le format du role n'est pas bon`),
 ])
 
 module.exports = putEntityValidator

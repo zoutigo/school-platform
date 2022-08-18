@@ -7,6 +7,7 @@ const {
   TokenInvalid,
 } = require('../../../utils/errors')
 const { user, role, entity } = require('../../../database/models')
+const errorLogger = require('../../../utils/errorLogger')
 
 const verifyTokenMiddleware = async (req, res, next) => {
   const bearerHeader = req.headers['authorization']
@@ -45,6 +46,7 @@ const verifyTokenMiddleware = async (req, res, next) => {
     req.user = verifiedUser
     next()
   } catch (err) {
+    errorLogger('verify token middleware', err)
     return next(
       new TokenInvalid(
         'Veillez vous connecter ou vous incrire pour obtenir cette ressource'

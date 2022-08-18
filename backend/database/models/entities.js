@@ -10,29 +10,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ role, album }) {
       this.hasMany(role, {
-        foreignKey: 'roleId',
+        foreignKey: 'entityId',
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
+        allowNull: true,
       })
       role.belongsTo(this)
 
       this.hasMany(album, {
-        foreignKey: 'albumId',
+        foreignKey: 'entityId',
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
       })
       album.belongsTo(this)
-
-      this.belongsToMany(role, {
-        through: 'user_roles',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      })
-      role.belongsToMany(this, {
-        through: 'user_roles',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      })
     }
   }
   Entity.init(

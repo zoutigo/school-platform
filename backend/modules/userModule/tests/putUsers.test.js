@@ -2,6 +2,8 @@ const request = require('supertest')
 const { faker } = require('@faker-js/faker')
 const app = require('../../../app')
 const truncate = require('../../../utils/truncate')
+const { user, role } = require('../../../database/models')
+const slugify = require('../../../utils/slugify')
 
 const userDatas = {
   lastname: faker.name.lastName(),
@@ -26,7 +28,6 @@ const adminRoleDatas = {
 const psRoleDatas = {
   name: 'enseignant ps',
   descr: 'enseigner en classe de petite section',
-  slug: 'enseignant-ps',
 }
 
 const gsRoleDatas = {
@@ -62,5 +63,49 @@ describe('USER PUT', () => {
     expect(updateUser.body.datas.lastname).toEqual('valeria')
     expect(updateUser.body.datas.firstname).toEqual('robert')
     expect(updateUser.body.datas.gender).toEqual('madame')
+  })
+  it('should add user role', async () => {
+    await request(app).post('/api/roles').send(adminRoleDatas)
+    await request(app).post('/api/auth/register').send(adminDatas)
+
+    // set admin role
+    const adminUser = await user.findOne({
+      where: { email: adminDatas.email },
+    })
+    const adminRole = await role.findOne({
+      where: { slug: 'admin' },
+    })
+
+    await adminUser.addRole(adminRole)
+
+    // Login admin
+    const adminLogin = await request(app)
+      .post(`/api/auth/login`)
+      .send({ username: adminDatas.email, password: adminDatas.password })
+
+    const adminTokenHeader = {
+      Authorization: `Bearer ${adminLogin.body.token}`,
+    }
+
+    // create new role
+
+    const psRole = await request(app).post('/api/roles').send(psRoleDatas)
+
+    // register new user
+
+    const userRegister = await request(app)
+      .post('/api/auth/register')
+      .send(userDatas)
+
+    const updateUser = await request(app)
+      .put(`/api/users/${userRegister.body.datas.uuid}`)
+      .send({ roles: [psRole.body.datas.uuid] })
+      .set(adminTokenHeader)
+
+    expect(updateUser.statusCode).toEqual(200)
+    expect(updateUser.body.datas.roles.length).toEqual(1)
+    expect(updateUser.body.datas.roles[0].slug).toEqual(
+      slugify(psRoleDatas.name)
+    )
   })
 })
