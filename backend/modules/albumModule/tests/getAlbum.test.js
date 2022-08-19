@@ -4,16 +4,13 @@ const { faker } = require('@faker-js/faker')
 const app = require('../../../app')
 const truncate = require('../../../utils/truncate')
 const { user, role } = require('../../../database/models')
+const { testImagesFolder } = require('../../../constants/testFolders')
+const cleanDirectory = require('../../../utils/cleanDirectory')
 
 const fakeAlbum1 = {
   name: faker.company.catchPhrase(),
   descr: faker.lorem.sentence(2),
   isPrivate: true,
-}
-const fakeAlbum2 = {
-  name: faker.company.catchPhrase(),
-  descr: faker.lorem.sentence(2),
-  isPrivate: false,
 }
 
 const adminDatas = {
@@ -46,18 +43,14 @@ const imagepath1 = path.resolve(
   __dirname,
   `../../../tests/test_images/test_img1.jpg`
 )
-const imagepath2 = path.resolve(
-  __dirname,
-  `../../../tests/test_images/test_img1.jpg`
-)
-const imagepath3 = path.resolve(
-  __dirname,
-  `../../../tests/test_images/test_img1.jpg`
-)
 
 describe('ALBUM - GET', () => {
   beforeEach(async () => {
     await truncate()
+  })
+
+  afterEach(async () => {
+    await cleanDirectory(testImagesFolder)
   })
 
   it('should return one album', async () => {

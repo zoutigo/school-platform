@@ -4,6 +4,8 @@ const { faker } = require('@faker-js/faker')
 const app = require('../../../app')
 const truncate = require('../../../utils/truncate')
 const { user, role } = require('../../../database/models')
+const { testImagesFolder } = require('../../../constants/testFolders')
+const cleanDirectory = require('../../../utils/cleanDirectory')
 
 const fakeAlbum = {
   name: 'un nouvel album',
@@ -41,13 +43,13 @@ const imagepath = path.resolve(
   __dirname,
   `../../../tests/test_images/test_img1.jpg`
 )
-// const imagepath1 = path.resolve(__dirname, `../test_images/test_img1.jpg`)
-// const imagepath2 = path.resolve(__dirname, `../test_images/test_img2.jpg`)
-// const imagepath3 = path.resolve(__dirname, `../test_images/test_img3.jpg`)
 
 describe('ALBUM - POST', () => {
   beforeEach(async () => {
     await truncate()
+  })
+  afterEach(async () => {
+    await cleanDirectory(testImagesFolder)
   })
 
   it('should return statuscode 401 if no logged', async () => {

@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
+const paperVariantList = require('../../constants/paperVariantList')
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -20,17 +21,7 @@ module.exports = {
           },
           type: {
             type: Sequelize.DataTypes.ENUM,
-            values: [
-              'article',
-              'activite',
-              'parent-info',
-              'newsletter',
-              'menu',
-              'breve',
-              'info',
-              'fourniture',
-              'event',
-            ],
+            values: paperVariantList,
             allowNull: false,
           },
           title: {

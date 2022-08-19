@@ -4,4 +4,7 @@ node_modules
 /images
 /files
 /archives
-/public/images/tests
+/public/images/test
+/public/images/development
+/public/files/tests
+/public/files/development

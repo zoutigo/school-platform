@@ -9,10 +9,15 @@ dotenv.config()
 
 const storeImageService = async (file) => {
   try {
-    const directory =
-      process.env.NODE_ENV === 'test'
-        ? path.join('.', 'public/images/tests', '/')
-        : path.join('.', 'public/images', '/')
+    const directory = path.join(
+      '.',
+      `public/images/${process.env.NODE_ENV}`,
+      '/'
+    )
+    // const directory =
+    //   process.env.NODE_ENV === 'test'
+    //     ? path.join('.', 'public/images/tests', '/')
+    //     : path.join('.', 'public/images', '/')
     const timestamp = new Date().toISOString()
 
     fs.access(directory, (error) => {
@@ -27,7 +32,7 @@ const storeImageService = async (file) => {
 
     await sharp(buffer).webp({ quality: 20 }).toFile(destination)
 
-    return { filename: ref, filepath: ref }
+    return { filename: ref, filepath: destination }
   } catch (error) {
     deleteFileStorageService(file.path)
 

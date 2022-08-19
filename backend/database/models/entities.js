@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ role, album }) {
+    static associate({ role, album, paper }) {
       this.hasMany(role, {
         foreignKey: 'entityId',
         onDelete: 'SET NULL',
@@ -23,6 +23,13 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
       })
       album.belongsTo(this)
+
+      this.hasMany(paper, {
+        foreignKey: 'entityId',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      })
+      paper.belongsTo(this)
     }
   }
   Entity.init(
