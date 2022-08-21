@@ -84,8 +84,6 @@ describe('CARD - POST', () => {
       .attach('files', imagepath)
 
     expect(newCard.statusCode).toEqual(201)
-
-    expect(newCard.statusCode).toEqual(201)
     expect(newCard.body.datas).toHaveProperty('uuid')
     expect(newCard.body.datas).toHaveProperty('name')
     expect(newCard.body.datas).toHaveProperty('slug')
