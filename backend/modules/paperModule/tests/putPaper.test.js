@@ -303,8 +303,6 @@ describe('PAPER - PUT', () => {
       .field('todeletefilesUuids', newPaper.body.datas.files[1].uuid)
       .attach('files', docpath1)
 
-    console.log('putPaper', putPaper.body)
-
     expect(putPaper.statusCode).toEqual(200)
     expect(putPaper.body.datas).toHaveProperty('uuid')
     expect(putPaper.body.datas).toHaveProperty('title')

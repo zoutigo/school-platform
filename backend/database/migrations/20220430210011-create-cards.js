@@ -19,6 +19,10 @@ module.exports = {
             defaultValue: uuidv4(),
           },
 
+          name: {
+            type: Sequelize.DataTypes.STRING(100),
+            allowNull: false,
+          },
           slug: {
             type: Sequelize.DataTypes.STRING(100),
             allowNull: false,

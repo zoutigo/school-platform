@@ -11,6 +11,7 @@ module.exports = {
           uuid: uuidv4(),
           descr: description,
           slug: alias,
+          name: alias,
           path,
           createdAt,
           updatedAt,
