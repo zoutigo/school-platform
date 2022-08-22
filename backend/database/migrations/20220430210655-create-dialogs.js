@@ -23,7 +23,7 @@ module.exports = {
             type: Sequelize.DataTypes.STRING(100),
             allowNull: false,
           },
-          text: {
+          content: {
             type: Sequelize.DataTypes.TEXT,
             allowNull: false,
           },

@@ -5,7 +5,6 @@ const { faker } = require('@faker-js/faker')
 const app = require('../../../app')
 const truncate = require('../../../utils/truncate')
 const { user, role } = require('../../../database/models')
-const slugify = require('../../../utils/slugify')
 const cleanDirectory = require('../../../utils/cleanDirectory')
 const { testFilesFolder } = require('../../../constants/testFolders')
 

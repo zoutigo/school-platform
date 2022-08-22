@@ -14,7 +14,7 @@ module.exports = {
         ({ title, text, startdate, enddate }) => ({
           uuid: uuidv4(),
           title,
-          text,
+          content: text,
           startdate: new Date(Number(startdate)),
           enddate: new Date(Number(enddate)),
           createdAt: new Date(),
