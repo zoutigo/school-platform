@@ -1,4 +1,5 @@
 const { user, entity, role } = require('../../../database/models')
+const errorLogger = require('../../../utils/errorLogger')
 
 const findUserService = async (uuid) => {
   try {
@@ -17,7 +18,8 @@ const findUserService = async (uuid) => {
 
     return { requestedUser, findUserError: false }
   } catch (error) {
-    return { requestedUser: null, findUserError: error }
+    errorLogger('findUserService', error.message)
+    return { requestedUser: null, findUserError: error.message }
   }
 }
 

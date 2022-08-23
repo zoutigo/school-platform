@@ -20,10 +20,8 @@ function RolesDatas({ roles }) {
         <Grid item sm={6}>
           {roles && roles.length > 0 ? (
             roles.map((role) => (
-              <div key={role.id}>
-                <StyledPersoDataValueTypo>
-                  {role.name} - {role.entity.alias}
-                </StyledPersoDataValueTypo>
+              <div key={role.uuid}>
+                <StyledPersoDataValueTypo>{role.name}</StyledPersoDataValueTypo>
               </div>
             ))
           ) : (
@@ -40,9 +38,7 @@ RolesDatas.propTypes = {
   roles: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
-      entity: PropTypes.shape({
-        alias: PropTypes.string,
-      }),
+      uuid: PropTypes.string,
     })
   ),
 }

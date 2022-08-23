@@ -15,10 +15,10 @@ import AlertMessage from '../../../../elements/AlertMessage'
 
 function PersoDataList({ setForm, form, toggle, setToggle, setData }) {
   const {
-    User: { id },
+    User: { uuid },
   } = useSelector((state) => state.user)
-  const queryKey = [`data-${id}`]
-  const queryParams = id
+  const queryKey = [`data-${uuid}`]
+  const queryParams = uuid
 
   const { credentialsform, rolesform, passwordform, childrenform, gradeform } =
     form

@@ -18,43 +18,74 @@ module.exports = {
         }
       )
 
-      const entitiesRoles = entities
-        .map((entity) => {
-          const entityRole = rawRoles.find(
-            ({ slug }) => slug.indexOf(entity.alias) > 0
-          )
+      // const entitiesRoles = entities
+      //   .map((entity) => {
+      //     const entityRole = rawRoles.find(
+      //       ({ slug }) => slug.indexOf(entity.alias) > 0
+      //     )
 
+      //     return {
+      //       entityUuid: entity.uuid,
+      //       roleSlug: entityRole ? entityRole.slug : null,
+      //     }
+      //   })
+      //   .filter(({ roleSlug }) => roleSlug !== null)
+      //   .map(({ entityUuid, roleSlug }) => {
+      //     const frole = roles.find((role) => role.slug === roleSlug)
+      //     return {
+      //       entityUuid,
+      //       roleId: frole.id,
+      //     }
+      //   })
+
+      // await Promise.all(
+      //   entitiesRoles.map(async ({ entityUuid, roleId }) => {
+      //     await queryInterface.sequelize.query(` SELECT * FROM entities`, {
+      //       type: QueryTypes.SELECT,
+      //     })
+      //     await queryInterface.bulkUpdate(
+      //       'entities',
+      //       {
+      //         roleId,
+      //       },
+      //       {
+      //         uuid: entityUuid,
+      //       },
+      //       { t }
+      //     )
+      //   })
+      // )
+
+      const roleEntities = roles
+        .map((rol) => {
+          const roleEntity = entities.find(
+            (ent) => rol.slug.indexOf(ent.alias) > 0
+          )
           return {
-            entityUuid: entity.uuid,
-            roleSlug: entityRole ? entityRole.slug : null,
+            roleUuid: rol.uuid,
+            entityId: roleEntity ? roleEntity.id : null,
           }
         })
-        .filter(({ roleSlug }) => roleSlug !== null)
-        .map(({ entityUuid, roleSlug }) => {
-          const frole = roles.find((role) => role.slug === roleSlug)
-          return {
-            entityUuid,
-            roleId: frole.id,
-          }
-        })
+        .filter(({ entityId }) => entityId !== null)
 
       await Promise.all(
-        entitiesRoles.map(async ({ entityUuid, roleId }) => {
-          await queryInterface.sequelize.query(` SELECT * FROM entities`, {
+        roleEntities.map(async ({ roleUuid, entityId }) => {
+          await queryInterface.sequelize.query(` SELECT * FROM roles`, {
             type: QueryTypes.SELECT,
           })
           await queryInterface.bulkUpdate(
-            'entities',
+            'roles',
             {
-              roleId,
+              entityId,
             },
             {
-              uuid: entityUuid,
+              uuid: roleUuid,
             },
             { t }
           )
         })
       )
+
       await t.commit()
     } catch (error) {
       await t.rollback()
@@ -66,10 +97,18 @@ module.exports = {
     const t = await queryInterface.sequelize.transaction()
 
     try {
+      // await queryInterface.bulkUpdate(
+      //   'entities',
+      //   {
+      //     roleId: null,
+      //   },
+      //   {},
+      //   { t }
+      // )
       await queryInterface.bulkUpdate(
-        'entities',
+        'roles',
         {
-          roleId: null,
+          entityId: null,
         },
         {},
         { t }

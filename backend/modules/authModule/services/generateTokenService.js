@@ -9,6 +9,7 @@ const generateTokenService = (user) =>
       firstname: user.firstname,
       lastname: user.lastname,
       gender: user.gender,
+      email: user.email,
       roles: user.roles,
       isVerified: user.isVerified,
       classrooms: user.entities,

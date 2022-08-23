@@ -19,6 +19,8 @@ import useRouteParams from '../components/hooks/useRouteParams'
 import useMutate from '../components/hooks/useMutate'
 import MutateCircularProgress from '../components/elements/MutateCircularProgress'
 import { apiRegister } from '../utils/api'
+import InputTextControlNew from '../components/elements/InputTextControlNew'
+import { emailPattern, passwordPattern } from '../constants/regex'
 
 const StyledGrid = styled(Grid)(() => ({
   marginTop: '4rem',
@@ -92,13 +94,17 @@ function RegisterScreen() {
   const { mutateAsync, isMutating } = useMutate(queryKey, apiRegister)
 
   const onSubmit = async (datas) => {
+    const { email, password, passwordConfirm, lastname, firstname } = datas
+    const finalDatas = { email, password, passwordConfirm, lastname, firstname }
     closeSnackbar()
     try {
-      await mutateAsync(datas).then((response) => {
+      await mutateAsync(finalDatas).then((response) => {
         if (response.status === 201) {
           setValue('email', '')
           setValue('password', '')
           setValue('passwordConfirm', '')
+          setValue('lastname', '')
+          setValue('firstname', '')
           setshowForm(false)
         }
       })
@@ -125,92 +131,112 @@ function RegisterScreen() {
           {isMutating && <MutateCircularProgress />}
           <List>
             <ListItem>
-              <Controller
+              <InputTextControlNew
+                control={control}
+                name="firstname"
+                label="Prénom "
+                defaultValue=""
+                variant="outlined"
+                example=""
+                rules={{
+                  required: 'le prénom est obligatoire',
+                  minLength: {
+                    value: 2,
+                    message: 'le prénom doit avoir 2 caractères au moins',
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: 'le prénom doit avoir 30 caractères au plus',
+                  },
+                }}
+              />
+            </ListItem>
+            <ListItem>
+              <InputTextControlNew
+                control={control}
+                name="lastname"
+                label="Nom "
+                defaultValue=""
+                variant="outlined"
+                example=""
+                rules={{
+                  required: 'le nom est obligatoire',
+                  minLength: {
+                    value: 2,
+                    message: 'le nom doit avoir 2 caractères au moins',
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: 'le nom doit avoir 30 caractères au plus',
+                  },
+                }}
+              />
+            </ListItem>
+            <ListItem>
+              <InputTextControlNew
+                control={control}
                 name="email"
+                label="Email "
                 defaultValue=""
-                control={control}
+                variant="outlined"
+                example="bienvenu@example.com"
                 rules={{
-                  required: true,
-                  pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/,
+                  required: 'le mail est obligatoire',
+                  pattern: {
+                    value: emailPattern,
+                    message: `Ceci n'est pas une adresse mail correcte`,
+                  },
+                  maxLength: {
+                    value: 100,
+                    message: 'le mail doit avoir 30 caractères au plus',
+                  },
                 }}
-                render={({ field }) => (
-                  <TextField
-                    variant="outlined"
-                    fullWidth
-                    id="email"
-                    label="Email"
-                    placeholder="Entrez votre email"
-                    inputProps={{ type: 'email' }}
-                    FormHelperTextProps={{
-                      'data-testid': 'password-error',
-                    }}
-                    error={Boolean(errors.email)}
-                    helperText={errors.email ? getEmailError(errors.email) : ''}
-                    {...field}
-                  />
-                )}
               />
             </ListItem>
             <ListItem>
-              <Controller
+              <InputTextControlNew
+                control={control}
                 name="password"
+                label="Mot de pass "
                 defaultValue=""
-                control={control}
+                variant="outlined"
+                example="Karamba1728"
                 rules={{
-                  required: true,
-                  minLength: 8,
-                  pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$/,
+                  required: 'le mot de pass est obligatoire',
+                  pattern: {
+                    value: passwordPattern,
+                    message: `mot de pass invalide: 8 caractères au minimum dont 1 majuscule, 1 minuscule , 1 chiffre`,
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: 'le mot de pass doit avoir 30 caractères au plus',
+                  },
                 }}
-                render={({ field }) => (
-                  <TextField
-                    variant="outlined"
-                    fullWidth
-                    id="password"
-                    placeholder="Entrez votre mot de pass"
-                    label="Mot de Pass"
-                    inputProps={{ type: 'password' }}
-                    error={Boolean(errors.password)}
-                    helperText={
-                      errors.password ? getPasswordError(errors.password) : ''
-                    }
-                    {...field}
-                  />
-                )}
               />
             </ListItem>
             <ListItem>
-              <Controller
-                name="passwordConfirm"
+              <InputTextControlNew
                 control={control}
+                name="passwordConfirm"
+                label="Confirmation mot de pass"
                 defaultValue=""
+                variant="outlined"
+                example=""
                 rules={{
-                  required: true,
+                  required: 'la confirmation est obligatoire',
                   validate: {
                     matches: (value) => {
                       const { password } = getValues()
-                      return password === value
+                      return (
+                        password === value ||
+                        'les mots de pass ne sont pas identiques'
+                      )
                     },
                   },
                 }}
-                render={({ field }) => (
-                  <TextField
-                    variant="outlined"
-                    fullWidth
-                    id="passwordConfirm"
-                    placeholder="Confirmez le mot de pass"
-                    label="Confirmation mot de pass"
-                    inputProps={{ type: 'password' }}
-                    error={Boolean(errors.passwordConfirm)}
-                    helperText={
-                      errors.passwordConfirm
-                        ? getPasswordConfirmError(errors.passwordConfirm)
-                        : ''
-                    }
-                    {...field}
-                  />
-                )}
               />
             </ListItem>
+
             <ListItem>
               <Button
                 role="button"

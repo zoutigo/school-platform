@@ -1,29 +1,12 @@
 const { user, entity, role } = require('../../../database/models')
+const errorLogger = require('../../../utils/errorLogger')
 
-const putUserRoleService = async (roles, uuid, requester) => {
+const putUserRoleService = async (roles, uuid) => {
   try {
     const toUpdateUser = await user.findOne({
       where: { uuid },
       include: [role, entity],
     })
-
-    const superRoles = ['admin', 'manager', 'moderateur']
-    const requesterRoles = requester.roles.map(
-      ({ dataValues: { slug } }) => slug
-    )
-
-    const requestedAllowedRoles = requesterRoles.map((rol) =>
-      superRoles.includes(rol)
-    )
-
-    if (requestedAllowedRoles < 0)
-      return {
-        putUserRoleErrorAuth: "vous n'etes pas autorisé à modifier ce role",
-        putRoleUser: false,
-        putUserRoleError: false,
-      }
-
-    // const previousRoles = toUpdateUser.roles
 
     // destroy previous associations
 
@@ -47,13 +30,12 @@ const putUserRoleService = async (roles, uuid, requester) => {
 
     // console.log('updateduser:', putRoleUser)
 
-    return { putRoleUser, putUserRoleError: false, putUserRoleErrorAuth: false }
+    return { putRoleUser, putUserRoleError: false }
   } catch (error) {
-    console.log('error', error)
+    errorLogger('putUserRoleService', error)
     return {
       putRoleUser: null,
       putUserRoleError: error.message,
-      putUserRoleErrorAuth: false,
     }
   }
 }

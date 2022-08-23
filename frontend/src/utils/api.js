@@ -1,8 +1,18 @@
 import axios from 'axios'
 
+import Cookies from 'js-cookie'
+
 const LOCALHOST = 'http://localhost:3500'
 
 const PREFIX = process.env.NODE_ENV === 'production' ? '' : LOCALHOST
+
+axios.defaults.headers.post['X-CSRF-Token'] = Cookies.get('_csrf')
+axios.defaults.headers.put['X-CSRF-Token'] = Cookies.get('_csrf')
+axios.defaults.headers.delete['X-CSRF-Token'] = Cookies.get('_csrf')
+const commonHeaders = {
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
+}
 
 export const apiInitialize = async ({ type }) => {
   const URL = `${PREFIX}/inits/${type}`
@@ -25,26 +35,65 @@ export const apiCheckEmail = async (value) => {
   }
 }
 
+// export const apiRegister = async (datas) => {
+//   const URL = `${PREFIX}/users/register`
+
+//   const response = await axios.post(URL, datas)
+//   return response
+// }
+
 export const apiRegister = async (datas) => {
-  const URL = `${PREFIX}/users/register`
-
-  const response = await axios.post(URL, datas)
+  const registerURL = `${PREFIX}/api/auth/register`
+  const response = await axios({
+    method: 'post',
+    url: registerURL,
+    data: datas,
+    headers: { ...commonHeaders },
+  })
   return response
 }
-export const apiUpdateUser = async ({ id, action, body, options }) => {
-  const URL = `${PREFIX}/users?action=${action}&id=${id}`
-  const response = await axios.post(URL, body, options)
+
+// export const apiUpdateUser = async ({ id, action, body, options }) => {
+//   const URL = `${PREFIX}/users?action=${action}&id=${id}`
+//   const response = await axios.post(URL, body, options)
+//   return response
+// }
+export const apiUpdateUser = async ({ uuid, body, token }) => {
+  const URL = `${PREFIX}/api/users/${uuid}`
+  const tokenHeader = { Authorization: `Bearer ${token}` }
+  const response = await axios({
+    method: 'put',
+    url: URL,
+    data: body,
+    headers: { ...commonHeaders, ...tokenHeader },
+  })
   return response
 }
 
+// export const apiLogin = async (datas) => {
+//   const URL = `${PREFIX}/users/login`
+//   const response = await axios.post(URL, datas)
+//   return response
+// }
 export const apiLogin = async (datas) => {
-  const URL = `${PREFIX}/users/login`
-  const response = await axios.post(URL, datas)
+  const URL = `${PREFIX}/api/auth/login`
+  const response = await axios({
+    method: 'post',
+    url: URL,
+    data: datas,
+    headers: { ...commonHeaders },
+  })
   return response
 }
 
-export const apiFecthUserDatas = async (id) => {
-  const url = `${PREFIX}/users/${id}`
+// export const apiFecthUserDatas = async (id) => {
+//   const url = `${PREFIX}/users/${id}`
+//   const { data } = await axios.get(url)
+
+//   return data
+// }
+export const apiFecthUserDatas = async (uuid) => {
+  const url = `${PREFIX}/api/users/${uuid}`
   const { data } = await axios.get(url)
 
   return data
@@ -52,6 +101,12 @@ export const apiFecthUserDatas = async (id) => {
 
 export const apiFecthEntity = async (param) => {
   const URL = param ? `${PREFIX}/entities?${param}` : `${PREFIX}/entities`
+  const { data } = await axios.get(URL)
+
+  return data
+}
+export const apiFecthEntities = async (param) => {
+  const URL = `${PREFIX}/api/entities`
   const { data } = await axios.get(URL)
 
   return data

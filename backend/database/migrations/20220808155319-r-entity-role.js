@@ -3,16 +3,34 @@ module.exports = {
     const t = await queryInterface.sequelize.transaction()
 
     try {
+      // await queryInterface.addColumn(
+      //   'entities',
+      //   'roleId',
+      //   {
+      //     primaryKey: false,
+      //     type: Sequelize.INTEGER,
+      //     allowNull: true,
+      //     references: {
+      //       model: {
+      //         tableName: 'roles',
+      //         key: 'id',
+      //       },
+      //       onUpdate: 'CASCADE',
+      //       onDelete: 'SET NULL',
+      //     },
+      //   },
+      //   { t }
+      // )
       await queryInterface.addColumn(
-        'entities',
-        'roleId',
+        'roles',
+        'entityId',
         {
           primaryKey: false,
           type: Sequelize.INTEGER,
           allowNull: true,
           references: {
             model: {
-              tableName: 'roles',
+              tableName: 'entities',
               key: 'id',
             },
             onUpdate: 'CASCADE',
@@ -33,7 +51,8 @@ module.exports = {
     const t = await queryInterface.sequelize.transaction()
 
     try {
-      await queryInterface.removeColumn('entities', 'roleId', { t })
+      // await queryInterface.removeColumn('entities', 'roleId', { t })
+      await queryInterface.removeColumn('roles', 'entityId', { t })
 
       await t.commit()
     } catch (error) {

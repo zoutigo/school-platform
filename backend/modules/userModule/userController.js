@@ -1,5 +1,7 @@
 const dotenv = require('dotenv')
 const { BadRequest, NotFound, Unauthorized } = require('../../utils/errors')
+const generateTokenService = require('../authModule/services/generateTokenService')
+const checkRoleService = require('./services/checkRoleService')
 const deleteUserService = require('./services/deleteUserService')
 const findUserService = require('./services/findUserService')
 const listUsersService = require('./services/listUsersService')
@@ -34,38 +36,57 @@ module.exports.putUser = async (req, res, next) => {
   const { roles, classrooms, ...rest } = req.body
 
   try {
-    if (roles) {
-      const { putUserRoleErrorAuth, putUserRoleError, putRoleUser } =
-        await putUserRoleService(roles, uuid, requester)
+    const { isAdmin, isManager, isModerator, isOwner } = checkRoleService(
+      requester,
+      uuid
+    )
 
-      if (putUserRoleErrorAuth)
-        return next(new Unauthorized(putUserRoleErrorAuth))
+    const update = {}
+
+    if (roles) {
+      const isSuperUser = isManager || isModerator || isAdmin
+      if (!isSuperUser)
+        return next(
+          new Unauthorized(`Vous n'avez pas les droits pour modifier le role`)
+        )
+      const { putUserRoleError, putRoleUser } = await putUserRoleService(
+        roles,
+        uuid
+      )
+
       if (putUserRoleError) return next(putUserRoleError)
+
+      update.user = putRoleUser
     }
     if (classrooms) {
       const { putClassroomError, putClassroomsUser } =
         await putUserClassroomService(classrooms, uuid)
 
       if (putClassroomError) return next(putClassroomError)
+      update.user = putClassroomsUser
     }
 
-    const { updatedUser, updatedUserError } = await putUserService(
-      rest,
-      uuid,
-      requester
-    )
-
-    if (updatedUserError) return next(updatedUserError)
+    if (rest) {
+      const { updatedUser, updatedUserError } = await putUserService(
+        rest,
+        uuid,
+        requester
+      )
+      if (updatedUserError) return next(updatedUserError)
+      update.user = updatedUser
+    }
 
     if (process.env.NODE_ENV !== 'production')
       return res.status(200).send({
         message: 'la modification a bien été effectuée',
-        datas: updatedUser,
+        datas: update.user,
+        token: generateTokenService(isOwner ? update.user : requester),
       })
 
-    return res
-      .status(200)
-      .send({ message: 'la modification a bien été effectuée' })
+    return res.status(200).send({
+      message: 'la modification a bien été effectuée',
+      token: generateTokenService(isOwner ? update.user : requester),
+    })
   } catch (error) {
     return next(error)
   }
@@ -77,5 +98,8 @@ module.exports.deleteUser = async (req, res, next) => {
 
   if (deleteUserError) return next(deleteUserError)
   if (!deletedUser) return next(new NotFound("Cet utilisateur n'existe pas"))
-  return res.status(200).send(deletedUser)
+  return res.status(200).send({
+    message: 'Utilisateur supprimé',
+    datas: deletedUser,
+  })
 }

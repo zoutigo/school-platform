@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1661146378707" clover="3.2.0">
-  <project timestamp="1661146378707" name="All files">
-    <metrics statements="2330" coveredstatements="1786" conditionals="552" coveredconditionals="250" methods="285" coveredmethods="201" elements="3167" coveredelements="2237" complexity="0" loc="2330" ncloc="2330" packages="44" files="175" classes="175"/>
+<coverage generated="1661236856187" clover="3.2.0">
+  <project timestamp="1661236856188" name="All files">
+    <metrics statements="2352" coveredstatements="1805" conditionals="559" coveredconditionals="254" methods="288" coveredmethods="206" elements="3199" coveredelements="2265" complexity="0" loc="2352" ncloc="2352" packages="44" files="175" classes="175"/>
     <package name="backend">
       <metrics statements="69" coveredstatements="54" conditionals="8" coveredconditionals="3" methods="5" coveredmethods="2"/>
       <file name="app.js" path="/home/zoutigo/projets/school-platform/backend/app.js">
@@ -329,7 +329,7 @@
         <line num="1" count="48" type="stmt"/>
         <line num="2" count="48" type="stmt"/>
         <line num="4" count="48" type="stmt"/>
-        <line num="9" count="129" type="stmt"/>
+        <line num="9" count="140" type="stmt"/>
         <line num="12" count="48" type="stmt"/>
         <line num="53" count="84" type="stmt"/>
         <line num="54" count="84" type="cond" truecount="2" falsecount="0"/>
@@ -1075,28 +1075,28 @@
         <line num="9" count="39" type="stmt"/>
         <line num="10" count="39" type="stmt"/>
         <line num="12" count="39" type="stmt"/>
-        <line num="13" count="89" type="stmt"/>
-        <line num="14" count="89" type="cond" truecount="2" falsecount="0"/>
+        <line num="13" count="88" type="stmt"/>
+        <line num="14" count="88" type="cond" truecount="2" falsecount="0"/>
         <line num="15" count="12" type="stmt"/>
-        <line num="22" count="77" type="stmt"/>
-        <line num="23" count="77" type="stmt"/>
-        <line num="24" count="77" type="stmt"/>
-        <line num="25" count="77" type="stmt"/>
-        <line num="26" count="77" type="cond" truecount="1" falsecount="1"/>
-        <line num="27" count="77" type="stmt"/>
-        <line num="29" count="77" type="stmt"/>
-        <line num="43" count="77" type="cond" truecount="1" falsecount="1"/>
+        <line num="22" count="76" type="stmt"/>
+        <line num="23" count="76" type="stmt"/>
+        <line num="24" count="76" type="stmt"/>
+        <line num="25" count="76" type="stmt"/>
+        <line num="26" count="76" type="cond" truecount="1" falsecount="1"/>
+        <line num="27" count="76" type="stmt"/>
+        <line num="29" count="76" type="stmt"/>
+        <line num="43" count="76" type="cond" truecount="1" falsecount="1"/>
         <line num="44" count="0" type="stmt"/>
-        <line num="46" count="77" type="stmt"/>
-        <line num="47" count="77" type="stmt"/>
+        <line num="46" count="76" type="stmt"/>
+        <line num="47" count="76" type="stmt"/>
         <line num="49" count="0" type="stmt"/>
         <line num="50" count="0" type="stmt"/>
-        <line num="56" count="77" type="stmt"/>
+        <line num="56" count="76" type="stmt"/>
         <line num="59" count="39" type="stmt"/>
       </file>
     </package>
     <package name="backend.modules.authModule.middlewares.authorizations">
-      <metrics statements="23" coveredstatements="21" conditionals="9" coveredconditionals="7" methods="4" coveredmethods="4"/>
+      <metrics statements="23" coveredstatements="21" conditionals="9" coveredconditionals="6" methods="4" coveredmethods="4"/>
       <file name="isAdminMiddleWare.js" path="/home/zoutigo/projets/school-platform/backend/modules/authModule/middlewares/authorizations/isAdminMiddleWare.js">
         <metrics statements="11" coveredstatements="10" conditionals="2" coveredconditionals="1" methods="2" coveredmethods="2"/>
         <line num="1" count="39" type="stmt"/>
@@ -1112,18 +1112,18 @@
         <line num="22" count="39" type="stmt"/>
       </file>
       <file name="isSuperuserMiddleware.js" path="/home/zoutigo/projets/school-platform/backend/modules/authModule/middlewares/authorizations/isSuperuserMiddleware.js">
-        <metrics statements="12" coveredstatements="11" conditionals="7" coveredconditionals="6" methods="2" coveredmethods="2"/>
+        <metrics statements="12" coveredstatements="11" conditionals="7" coveredconditionals="5" methods="2" coveredmethods="2"/>
         <line num="1" count="39" type="stmt"/>
         <line num="3" count="39" type="stmt"/>
-        <line num="4" count="20" type="stmt"/>
-        <line num="6" count="20" type="stmt"/>
-        <line num="8" count="20" type="stmt"/>
-        <line num="10" count="20" type="stmt"/>
-        <line num="12" count="20" type="cond" truecount="3" falsecount="0"/>
-        <line num="16" count="20" type="cond" truecount="2" falsecount="0"/>
-        <line num="18" count="20" type="cond" truecount="1" falsecount="1"/>
+        <line num="4" count="8" type="stmt"/>
+        <line num="6" count="8" type="stmt"/>
+        <line num="8" count="8" type="stmt"/>
+        <line num="10" count="8" type="stmt"/>
+        <line num="12" count="8" type="cond" truecount="2" falsecount="1"/>
+        <line num="16" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="18" count="8" type="cond" truecount="1" falsecount="1"/>
         <line num="19" count="0" type="stmt"/>
-        <line num="23" count="20" type="stmt"/>
+        <line num="23" count="8" type="stmt"/>
         <line num="26" count="39" type="stmt"/>
       </file>
     </package>
@@ -1171,8 +1171,8 @@
         <line num="1" count="39" type="stmt"/>
         <line num="2" count="39" type="stmt"/>
         <line num="5" count="39" type="stmt"/>
-        <line num="6" count="57" type="stmt"/>
-        <line num="20" count="39" type="stmt"/>
+        <line num="6" count="69" type="stmt"/>
+        <line num="21" count="39" type="stmt"/>
       </file>
       <file name="verifyPasswordService.js" path="/home/zoutigo/projets/school-platform/backend/modules/authModule/services/verifyPasswordService.js">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
@@ -1732,9 +1732,9 @@
         <line num="17" count="39" type="stmt"/>
         <line num="20" count="39" type="stmt"/>
         <line num="29" count="39" type="stmt"/>
-        <line num="32" count="39" type="stmt"/>
-        <line num="41" count="39" type="stmt"/>
-        <line num="49" count="39" type="stmt"/>
+        <line num="36" count="39" type="stmt"/>
+        <line num="45" count="39" type="stmt"/>
+        <line num="53" count="39" type="stmt"/>
       </file>
     </package>
     <package name="backend.modules.entityModule.middlewares.validators">
@@ -2499,9 +2499,9 @@
       </file>
     </package>
     <package name="backend.modules.userModule">
-      <metrics statements="60" coveredstatements="49" conditionals="28" coveredconditionals="12" methods="4" coveredmethods="3"/>
+      <metrics statements="68" coveredstatements="56" conditionals="37" coveredconditionals="18" methods="4" coveredmethods="3"/>
       <file name="userController.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/userController.js">
-        <metrics statements="47" coveredstatements="36" conditionals="28" coveredconditionals="12" methods="4" coveredmethods="3"/>
+        <metrics statements="56" coveredstatements="44" conditionals="37" coveredconditionals="18" methods="4" coveredmethods="3"/>
         <line num="1" count="39" type="stmt"/>
         <line num="2" count="39" type="stmt"/>
         <line num="3" count="39" type="stmt"/>
@@ -2510,48 +2510,57 @@
         <line num="6" count="39" type="stmt"/>
         <line num="7" count="39" type="stmt"/>
         <line num="8" count="39" type="stmt"/>
+        <line num="9" count="39" type="stmt"/>
         <line num="10" count="39" type="stmt"/>
         <line num="12" count="39" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="39" type="stmt"/>
         <line num="15" count="1" type="stmt"/>
-        <line num="17" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="18" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="19" count="1" type="stmt"/>
-        <line num="21" count="39" type="stmt"/>
-        <line num="22" count="1" type="stmt"/>
-        <line num="24" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="25" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="26" count="1" type="stmt"/>
-        <line num="28" count="39" type="stmt"/>
-        <line num="29" count="12" type="stmt"/>
-        <line num="30" count="12" type="stmt"/>
-        <line num="32" count="12" type="cond" truecount="1" falsecount="1"/>
-        <line num="33" count="0" type="stmt"/>
-        <line num="34" count="12" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="19" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="20" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="23" count="39" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="26" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="27" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="30" count="39" type="stmt"/>
+        <line num="31" count="12" type="stmt"/>
+        <line num="32" count="12" type="stmt"/>
+        <line num="34" count="12" type="cond" truecount="1" falsecount="1"/>
+        <line num="35" count="0" type="stmt"/>
         <line num="36" count="12" type="stmt"/>
-        <line num="37" count="12" type="cond" truecount="2" falsecount="0"/>
-        <line num="39" count="11" type="stmt"/>
-        <line num="41" count="11" type="cond" truecount="1" falsecount="1"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="43" count="11" type="cond" truecount="1" falsecount="1"/>
-        <line num="45" count="12" type="cond" truecount="1" falsecount="1"/>
-        <line num="47" count="0" type="stmt"/>
-        <line num="49" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="52" count="12" type="stmt"/>
-        <line num="58" count="12" type="cond" truecount="1" falsecount="1"/>
-        <line num="60" count="12" type="cond" truecount="1" falsecount="1"/>
-        <line num="61" count="12" type="stmt"/>
+        <line num="38" count="12" type="stmt"/>
+        <line num="39" count="12" type="stmt"/>
+        <line num="44" count="12" type="stmt"/>
+        <line num="46" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="47" count="11" type="cond" truecount="3" falsecount="0"/>
+        <line num="48" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="52" count="11" type="stmt"/>
+        <line num="57" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="59" count="11" type="stmt"/>
+        <line num="61" count="12" type="cond" truecount="1" falsecount="1"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="65" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="66" count="0" type="stmt"/>
-        <line num="70" count="0" type="stmt"/>
-        <line num="73" count="39" type="stmt"/>
-        <line num="74" count="0" type="stmt"/>
-        <line num="76" count="0" type="stmt"/>
-        <line num="78" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="79" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="80" count="0" type="stmt"/>
+        <line num="69" count="12" type="cond" truecount="1" falsecount="1"/>
+        <line num="70" count="12" type="stmt"/>
+        <line num="75" count="12" type="cond" truecount="1" falsecount="1"/>
+        <line num="76" count="12" type="stmt"/>
+        <line num="79" count="12" type="cond" truecount="1" falsecount="1"/>
+        <line num="80" count="12" type="stmt"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="91" count="0" type="stmt"/>
+        <line num="94" count="39" type="stmt"/>
+        <line num="95" count="0" type="stmt"/>
+        <line num="97" count="0" type="stmt"/>
+        <line num="99" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="100" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="101" count="0" type="stmt"/>
       </file>
       <file name="userRouter.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/userRouter.js">
-        <metrics statements="13" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="39" type="stmt"/>
         <line num="2" count="39" type="stmt"/>
         <line num="3" count="39" type="stmt"/>
@@ -2559,16 +2568,15 @@
         <line num="5" count="39" type="stmt"/>
         <line num="6" count="39" type="stmt"/>
         <line num="7" count="39" type="stmt"/>
-        <line num="8" count="39" type="stmt"/>
-        <line num="10" count="39" type="stmt"/>
-        <line num="13" count="39" type="stmt"/>
-        <line num="16" count="39" type="stmt"/>
-        <line num="25" count="39" type="stmt"/>
-        <line num="33" count="39" type="stmt"/>
+        <line num="9" count="39" type="stmt"/>
+        <line num="12" count="39" type="stmt"/>
+        <line num="15" count="39" type="stmt"/>
+        <line num="24" count="39" type="stmt"/>
+        <line num="32" count="39" type="stmt"/>
       </file>
     </package>
     <package name="backend.modules.userModule.middlewares.validators">
-      <metrics statements="18" coveredstatements="15" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="0"/>
+      <metrics statements="16" coveredstatements="13" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
       <file name="deleteUserValidator.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/middlewares/validators/deleteUserValidator.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="39" type="stmt"/>
@@ -2583,11 +2591,6 @@
         <line num="5" count="39" type="stmt"/>
         <line num="14" count="39" type="stmt"/>
       </file>
-      <file name="listUsersValidator.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/middlewares/validators/listUsersValidator.js">
-        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="1" count="39" type="stmt"/>
-        <line num="3" count="39" type="stmt"/>
-      </file>
       <file name="putUserValidator.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/middlewares/validators/putUserValidator.js">
         <metrics statements="8" coveredstatements="5" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="39" type="stmt"/>
@@ -2601,7 +2604,27 @@
       </file>
     </package>
     <package name="backend.modules.userModule.services">
-      <metrics statements="67" coveredstatements="43" conditionals="6" coveredconditionals="1" methods="11" coveredmethods="7"/>
+      <metrics statements="83" coveredstatements="57" conditionals="4" coveredconditionals="0" methods="15" coveredmethods="12"/>
+      <file name="checkRoleService.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/services/checkRoleService.js">
+        <metrics statements="17" coveredstatements="17" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="7"/>
+        <line num="1" count="39" type="stmt"/>
+        <line num="2" count="12" type="stmt"/>
+        <line num="4" count="12" type="stmt"/>
+        <line num="6" count="12" type="stmt"/>
+        <line num="10" count="11" type="stmt"/>
+        <line num="11" count="11" type="stmt"/>
+        <line num="13" count="11" type="stmt"/>
+        <line num="15" count="12" type="stmt"/>
+        <line num="19" count="11" type="stmt"/>
+        <line num="20" count="11" type="stmt"/>
+        <line num="22" count="11" type="stmt"/>
+        <line num="24" count="12" type="stmt"/>
+        <line num="28" count="11" type="stmt"/>
+        <line num="29" count="11" type="stmt"/>
+        <line num="31" count="11" type="stmt"/>
+        <line num="33" count="12" type="stmt"/>
+        <line num="41" count="39" type="stmt"/>
+      </file>
       <file name="deleteUserService.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/services/deleteUserService.js">
         <metrics statements="7" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="39" type="stmt"/>
@@ -2613,14 +2636,16 @@
         <line num="15" count="39" type="stmt"/>
       </file>
       <file name="findUserService.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/services/findUserService.js">
-        <metrics statements="7" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <metrics statements="9" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="1" count="39" type="stmt"/>
-        <line num="3" count="39" type="stmt"/>
-        <line num="4" count="1" type="stmt"/>
+        <line num="2" count="39" type="stmt"/>
+        <line num="4" count="39" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
-        <line num="18" count="1" type="stmt"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="24" count="39" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="26" count="39" type="stmt"/>
       </file>
       <file name="listUsersService.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/services/listUsersService.js">
         <metrics statements="7" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
@@ -2633,47 +2658,44 @@
         <line num="23" count="39" type="stmt"/>
       </file>
       <file name="putUserClassroomService.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/services/putUserClassroomService.js">
-        <metrics statements="16" coveredstatements="3" conditionals="4" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <metrics statements="19" coveredstatements="4" conditionals="4" coveredconditionals="0" methods="2" coveredmethods="0"/>
         <line num="1" count="39" type="stmt"/>
-        <line num="3" count="39" type="stmt"/>
-        <line num="4" count="0" type="stmt"/>
+        <line num="2" count="39" type="stmt"/>
+        <line num="4" count="39" type="stmt"/>
         <line num="5" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="15" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="14" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="15" count="0" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="25" count="0" type="stmt"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="29" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="39" count="0" type="stmt"/>
-        <line num="46" count="39" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="43" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="62" count="0" type="stmt"/>
+        <line num="67" count="0" type="stmt"/>
+        <line num="74" count="39" type="stmt"/>
       </file>
       <file name="putUserRoleService.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/services/putUserRoleService.js">
-        <metrics statements="21" coveredstatements="18" conditionals="2" coveredconditionals="1" methods="4" coveredmethods="4"/>
+        <metrics statements="15" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="39" type="stmt"/>
-        <line num="3" count="39" type="stmt"/>
-        <line num="4" count="11" type="stmt"/>
+        <line num="2" count="39" type="stmt"/>
+        <line num="4" count="39" type="stmt"/>
         <line num="5" count="11" type="stmt"/>
-        <line num="10" count="11" type="stmt"/>
-        <line num="11" count="11" type="stmt"/>
-        <line num="12" count="11" type="stmt"/>
+        <line num="6" count="11" type="stmt"/>
+        <line num="13" count="11" type="stmt"/>
         <line num="15" count="11" type="stmt"/>
-        <line num="16" count="11" type="stmt"/>
-        <line num="19" count="11" type="cond" truecount="1" falsecount="1"/>
-        <line num="20" count="0" type="stmt"/>
-        <line num="30" count="11" type="stmt"/>
-        <line num="32" count="11" type="stmt"/>
-        <line num="34" count="11" type="stmt"/>
-        <line num="35" count="11" type="stmt"/>
-        <line num="38" count="11" type="stmt"/>
-        <line num="40" count="11" type="stmt"/>
-        <line num="50" count="11" type="stmt"/>
-        <line num="52" count="0" type="stmt"/>
-        <line num="53" count="0" type="stmt"/>
-        <line num="61" count="39" type="stmt"/>
+        <line num="17" count="11" type="stmt"/>
+        <line num="18" count="11" type="stmt"/>
+        <line num="21" count="11" type="stmt"/>
+        <line num="23" count="11" type="stmt"/>
+        <line num="33" count="11" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="43" count="39" type="stmt"/>
       </file>
       <file name="putUserService.js" path="/home/zoutigo/projets/school-platform/backend/modules/userModule/services/putUserService.js">
         <metrics statements="9" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>

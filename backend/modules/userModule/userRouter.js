@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const { getUser, listUsers, putUser, deleteUser } = require('./userController')
 const getUserValidator = require('./middlewares/validators/getUserValidator')
-const listUsersValidator = require('./middlewares/validators/listUsersValidator')
 const putUserValidator = require('./middlewares/validators/putUserValidator')
 const deleteUserValidator = require('./middlewares/validators/deleteUserValidator')
 const isSuperuserMiddleware = require('../authModule/middlewares/authorizations/isSuperuserMiddleware')
@@ -16,7 +15,7 @@ router.get('/', listUsers)
 router.put(
   '/:uuid',
   verifyTokenMiddleware,
-  isSuperuserMiddleware,
+  // isSuperuserMiddleware,
   putUserValidator,
   putUser
 )

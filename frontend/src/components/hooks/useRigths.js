@@ -7,7 +7,7 @@ const useRigths = () => {
   const setRigths = useCallback(() => {
     // const { isAdmin, isModerator, isManager, isTeacher, exp, id } = User
     const TokenIsValid =
-      User?.exp && User?.id ? new Date().getTime() / 1000 < User?.exp : false
+      User?.exp && User?.uuid ? new Date().getTime() / 1000 < User?.exp : false
 
     const userLevel = TokenIsValid
     const teacherLevel =
@@ -17,6 +17,7 @@ const useRigths = () => {
     const adminLevel = TokenIsValid && User?.isAdmin
     const moderatorLevel =
       TokenIsValid && (User?.isAdmin || User?.isManager || User?.isModerator)
+
     return { userLevel, teacherLevel, managerLevel, adminLevel, moderatorLevel }
   }, [User])
 

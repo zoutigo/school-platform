@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
@@ -19,7 +19,11 @@ import Select from 'react-select'
 import { StyledPersoDataContainer } from './Style'
 
 // eslint-disable-next-line import/named
-import { apiUpdateUser } from '../../../../../utils/api'
+import {
+  apiFecthEntities,
+  apiFecthEntity,
+  apiUpdateUser,
+} from '../../../../../utils/api'
 
 import {
   setUserInfos,
@@ -35,6 +39,7 @@ import MutateCircularProgress from '../../../../elements/MutateCircularProgress'
 import getError from '../../../../../utils/getError'
 import getResponse from '../../../../../utils/getResponse'
 import customStyles from '../../../../../constants/selectMultiCostumStyles'
+import useFetch from '../../../../hooks/useFetch'
 
 const StyledForm = styled('form')(({ theme }) => ({
   width: '100%',
@@ -49,10 +54,10 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
   const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false)
   const {
-    User: { id },
+    User: { uuid },
     Token,
   } = useSelector((state) => state.user)
-  const queryKey = [`datas-${id}`]
+  const queryKey = [`datas-${uuid}`]
 
   const { mutateAsync, isMutating } = useMutate(queryKey, apiUpdateUser)
 
@@ -92,9 +97,10 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
           return { password, newPassword, newPasswordConfirm }
         case 'childrenform':
           return {
-            childrenClasses: childrenClasses.map(
-              (classroom) => classroom.value
-            ),
+            // childrenClasses: childrenClasses.map(
+            //   (classroom) => classroom.value
+            // ),
+            classrooms: childrenClasses.map((classroom) => classroom.value),
           }
 
         default:
@@ -102,18 +108,12 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
       }
     }
 
-    const options = {
-      headers: {
-        'x-access-token': Token,
-      },
-    }
-
     closeSnackbar()
     try {
       await mutateAsync({
-        id: id,
-        action: 'update',
-        options: options,
+        uuid,
+        // action: 'update',
+        // options: options,
         body: finalDatas(),
         token: Token,
       }).then((response) => {
@@ -144,10 +144,10 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
 
   const initialClassrooms = data.entities
     ? data.entities.map((classroom) => {
-        const { name: entityname, alias: entityalias } = classroom
+        const { uuid: entityUuid, alias: entityAlias } = classroom
         return {
-          label: entityname,
-          value: entityalias,
+          label: entityAlias,
+          value: entityUuid,
         }
       })
     : null
@@ -157,6 +157,54 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
     : { label: 'madame', value: 'madame' }
 
   const handleClickShowPassword = () => setShowPassword(!showPassword)
+
+  const queryKeyClassrooms = ['classrooms']
+  const queryParamsClassrooms = ''
+  const {
+    isLoading,
+    isError,
+    data: entities,
+    errorMessage,
+  } = useFetch(queryKeyClassrooms, queryParamsClassrooms, apiFecthEntities)
+
+  const classroomList = useCallback(() => {
+    if (entities && Array.isArray(entities.datas)) {
+      const classroomsDefinition = [
+        'cm2',
+        'cm1',
+        'ce2',
+        'ce1',
+        'cp',
+        'gs',
+        'ms',
+        'ps',
+        'adaptation',
+      ]
+      return entities.datas
+        .map(
+          ({
+            uuid: classroomUuid,
+            name: classroomName,
+            alias: classroomAlias,
+          }) => ({
+            uuid: classroomUuid,
+            name: classroomName,
+            alias: classroomAlias,
+          })
+        )
+        .filter((classroom) => classroomsDefinition.includes(classroom.alias))
+        .map((classroom) => ({
+          label: classroom.alias,
+          value: classroom.uuid,
+        }))
+        .sort(
+          (a, b) =>
+            classroomsDefinition.indexOf(a.label) -
+            classroomsDefinition.indexOf(b.label)
+        )
+    }
+    return null
+  }, [entities])
 
   return (
     <StyledPersoDataContainer container>
@@ -177,7 +225,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                     style={{
                       overflow: 'hidden',
                     }}
-                    id="gender"
+                    uuid="gender"
                     name="gender"
                     placeholder="homme ou femme ?"
                     variant="outlined"
@@ -229,7 +277,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                   <TextField
                     variant="outlined"
                     fullWidth
-                    id="nom"
+                    uuid="nom"
                     label="Nom"
                     placeholder="Votre nom"
                     error={Boolean(errors.lastname)}
@@ -260,7 +308,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                   <TextField
                     variant="outlined"
                     fullWidth
-                    id="prenom"
+                    uuid="prenom"
                     label="Prénom"
                     placeholder="Votre prénom"
                     error={Boolean(errors.firstname)}
@@ -287,7 +335,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                   <TextField
                     variant="outlined"
                     fullWidth
-                    id="phone"
+                    uuid="phone"
                     label="Telephone"
                     placeholder="Telephone"
                     error={Boolean(errors.phone)}
@@ -311,7 +359,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                 }}
                 render={({ field }) => (
                   <TextField
-                    id="gender"
+                    uuid="gender"
                     name="gender"
                     placeholder="homme ou femme ?"
                     variant="outlined"
@@ -328,7 +376,8 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                         <Select
                           {...field}
                           inputRef={field.ref}
-                          options={classroomsOptions}
+                          // options={classroomsOptions}
+                          options={classroomList()}
                           isMulti
                           autoFocus
                           styles={customStyles}
@@ -368,7 +417,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                   <TextField
                     variant="outlined"
                     fullWidth
-                    id="password"
+                    uuid="password"
                     label="Ancien mot de pass"
                     placeholder="exemple: FureurVosgienne8854"
                     InputProps={{
@@ -414,7 +463,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                   <TextField
                     variant="outlined"
                     fullWidth
-                    id="newPassword"
+                    uuid="newPassword"
                     label="Nouveau mot de pass"
                     placeholder="exemple: FureurVosgienne8854"
                     InputProps={{
@@ -460,7 +509,7 @@ function PersoDataForm({ setForm, setToggle, form, data }) {
                   <TextField
                     variant="outlined"
                     fullWidth
-                    id="newPasswordConfirm"
+                    uuid="newPasswordConfirm"
                     label="Confirmer le mot de pass"
                     placeholder="Saisir le nouveau mot de pass"
                     InputProps={{
@@ -532,7 +581,7 @@ PersoDataForm.propTypes = {
     gender: PropTypes.string,
     entities: PropTypes.arrayOf(
       PropTypes.shape({
-        name: PropTypes.string,
+        uuid: PropTypes.string,
         alias: PropTypes.string,
       })
     ),

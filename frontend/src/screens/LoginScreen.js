@@ -21,15 +21,20 @@ import StyledForm from '../components/styled-components/StyledForm'
 // import AlertCollapse from '../components/elements/AlertCollapse'
 
 import { setUserInfos, setUserToken } from '../redux/user/UserActions'
-
+import getResponse from '../utils/getResponse'
 import tokenDatas from '../utils/tokenDatas'
 import getError from '../utils/getError'
-import { passwordRegex } from '../constants/regex'
+import {
+  emailPattern,
+  passwordPattern,
+  passwordRegex,
+} from '../constants/regex'
 import StyledNavLink from '../components/styled-components/StyledNavLink'
 import useRouteParams from '../components/hooks/useRouteParams'
 import useMutate from '../components/hooks/useMutate'
 import MutateCircularProgress from '../components/elements/MutateCircularProgress'
 import { apiLogin } from '../utils/api'
+import InputTextControlNew from '../components/elements/InputTextControlNew'
 
 const loginSchema = yup.object().shape({
   email: yup
@@ -62,23 +67,29 @@ function LoginScreen() {
     formState: { isSubmitting, isValid, errors },
   } = useForm({
     mode: 'onChange',
-    resolver: yupResolver(loginSchema),
+    // resolver: yupResolver(loginSchema),
   })
 
   const onSubmit = async (datas) => {
+    const finalDatas = {
+      username: datas.email,
+      password: datas.password,
+    }
     closeSnackbar()
     try {
-      await mutateAsync(datas).then((response) => {
+      await mutateAsync(finalDatas).then((response) => {
         if (response && response.status === 200) {
           const { newToken, newDatas } = tokenDatas(response)
           dispatch(setUserInfos(newDatas))
           dispatch(setUserToken(newToken))
+
+          enqueueSnackbar(getResponse(response), { variant: 'success' })
+
           const { isAdmin } = newDatas
-          if (isAdmin) {
-            history.push('/informations/actualites')
-          } else {
-            history.push('/')
-          }
+          setTimeout(
+            () => history.push(isAdmin ? '/informations/actualites' : '/'),
+            2000
+          )
         }
       })
     } catch (err) {
@@ -98,6 +109,48 @@ function LoginScreen() {
         {isMutating && <MutateCircularProgress />}
         <List>
           <ListItem>
+            <InputTextControlNew
+              control={control}
+              name="email"
+              label="Email "
+              defaultValue=""
+              variant="outlined"
+              example="bienvenu@example.com"
+              rules={{
+                required: 'le mail est obligatoire',
+                pattern: {
+                  value: emailPattern,
+                  message: `Ceci n'est pas une adresse mail correcte`,
+                },
+                maxLength: {
+                  value: 100,
+                  message: 'le mail doit avoir 30 caractères au plus',
+                },
+              }}
+            />
+          </ListItem>
+          <ListItem>
+            <InputTextControlNew
+              control={control}
+              name="password"
+              label="Mot de pass "
+              defaultValue=""
+              variant="outlined"
+              example="Karamba1728"
+              rules={{
+                required: 'le mot de pass est obligatoire',
+                pattern: {
+                  value: passwordPattern,
+                  message: `mot de pass invalide: 8 caractères au minimum dont 1 majuscule, 1 minuscule , 1 chiffre`,
+                },
+                maxLength: {
+                  value: 30,
+                  message: 'le mot de pass doit avoir 30 caractères au plus',
+                },
+              }}
+            />
+          </ListItem>
+          {/* <ListItem>
             <Controller
               name="email"
               control={control}
@@ -120,8 +173,8 @@ function LoginScreen() {
                 />
               )}
             />
-          </ListItem>
-          <ListItem>
+          </ListItem> */}
+          {/* <ListItem>
             <Controller
               name="password"
               control={control}
@@ -144,7 +197,7 @@ function LoginScreen() {
                 />
               )}
             />
-          </ListItem>
+          </ListItem> */}
           <ListItem>
             <Button
               role="button"

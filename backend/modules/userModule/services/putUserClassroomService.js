@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const { user, entity, role } = require('../../../database/models')
 
 const putUserClassroomService = async (classrooms, uuid) => {
@@ -5,31 +6,36 @@ const putUserClassroomService = async (classrooms, uuid) => {
     const toUpdateUser = await user.findOne({
       where: { uuid },
       include: [role, entity],
-      nest: true,
-      raw: true,
     })
 
-    const previousClasrooms = toUpdateUser.entities
+    await toUpdateUser.setEntities([])
 
-    // destroy previous associations
-    if (previousClasrooms && previousClasrooms.length > 0) {
-      previousClasrooms.forEach(async (prevClassroom) => {
-        const oldClassroom = await entity.findOne({
-          where: { uuid: prevClassroom.uuid },
-        })
-        await toUpdateUser.removeEntity(oldClassroom)
-      })
-    }
-
-    // create new associations
-    classrooms.forEach(async (newRoleUuid) => {
-      const newRole = await role.findOne({
-        where: { uuid: newRoleUuid },
-      })
-      await toUpdateUser.addEntity(newRole)
+    const toAddClassrooms = await entity.findAll({
+      where: {
+        uuid: {
+          [Op.or]: classrooms,
+        },
+      },
     })
 
-    const putClassroomsUser = await toUpdateUser.save()
+    await toUpdateUser.setEntities(toAddClassrooms)
+
+    const putClassroomsUser = await user.findOne({
+      where: { uuid },
+      attributes: { exclude: ['id', 'password'] },
+      include: [
+        {
+          model: entity,
+          attributes: { exclude: ['id'] },
+        },
+        {
+          model: role,
+          attributes: { exclude: ['id'] },
+        },
+      ],
+    })
+
+    console.log('classrooms', putClassroomsUser.entities.length)
 
     return {
       putClassroomsUser,

@@ -69,7 +69,7 @@ const putUserValidator = validate([
     .trim()
     .escape(),
   check('roles.*').isUUID(),
-  check('classrooms.*').isUUID(),
+  check('classrooms.*').isUUID().withMessage('format de la classe invalide'),
 ])
 
 module.exports = putUserValidator

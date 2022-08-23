@@ -26,7 +26,11 @@ router.get(
 )
 
 // list entities
-router.get('/', verifyTokenMiddleware, listEntities)
+router.get(
+  '/',
+  // verifyTokenMiddleware,
+  listEntities
+)
 
 // put entity
 router.put(
