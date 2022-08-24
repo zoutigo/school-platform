@@ -1,15 +1,13 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 /* eslint-disable no-nested-ternary */
 import React, { useCallback, useState } from 'react'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import ImportExportRoundedIcon from '@material-ui/icons/ImportExportRounded'
 import PropTypes from 'prop-types'
 import { Collapse, Grid, styled, Typography } from '@material-ui/core'
 import MembreForm from './MembreForm'
-import { apiFecthUserDatas } from '../../../../../utils/api'
-import useFetch from '../../../../hooks/useFetch'
 import AlertMessage from '../../../../elements/AlertMessage'
 import StyledBasicButton from '../../../../styled-components/StyledBasicButton'
+import userPropTypes from '../../../../../constants/proytypes/userProptypes'
 
 const StyledValueTypo = styled(Typography)(() => ({
   fontWeight: 'bold',
@@ -26,8 +24,8 @@ const StyledButton = styled(StyledBasicButton)(() => ({
   },
 }))
 
-function Membre({ membre }) {
-  if (!membre)
+function Membre({ membre: user, queryKey }) {
+  if (!user)
     return (
       <Grid container>
         <AlertMessage
@@ -38,29 +36,6 @@ function Membre({ membre }) {
     )
 
   const [showMembreForm, setShowMembreForm] = useState(false)
-  const gradetext = `utilisateur`
-  const queryKey = [`user-${membre.id}`]
-  const {
-    isLoading,
-    isError,
-    errorMessage,
-    data: user,
-  } = useFetch(queryKey, membre.id, apiFecthUserDatas)
-
-  const grades = useCallback(
-    {
-      moderateur: user ? user.isModerator : null,
-      manager: user ? user.isManager : null,
-      admin: user ? user.isAdmin : null,
-      teacher: user ? user.isTeacher : null,
-    },
-    [user]
-  )
-
-  const grade = useCallback(
-    Object.entries(grades).find(([entry, value]) => value),
-    [grades]
-  )
 
   const handleClick = useCallback(() => {
     setShowMembreForm(!showMembreForm)
@@ -68,16 +43,6 @@ function Membre({ membre }) {
 
   return (
     <Grid item container>
-      {isError && (
-        <Grid container>
-          <AlertMessage severity="error" message={errorMessage} />
-        </Grid>
-      )}
-      {isLoading && (
-        <Grid container>
-          <CircularProgress color="secondary" />
-        </Grid>
-      )}
       {user && (
         <Grid container spacing={1} style={{ padding: '1.3rem' }}>
           <Grid item md={6} xs={12}>
@@ -142,7 +107,7 @@ function Membre({ membre }) {
                 <StyledValueTypo variant="body1">
                   {user && user.entities && user.entities.length > 0
                     ? user.entities.map((entity) => (
-                        <span key={entity.id}>{entity.name}</span>
+                        <span key={entity.uuid}>{entity.name}</span>
                       ))
                     : 'Non indiqué'}
                 </StyledValueTypo>
@@ -151,11 +116,6 @@ function Membre({ membre }) {
             <Grid item container alignItems="center" spacing={2}>
               <Grid item xs={5} className="label">
                 <Typography variant="h6"> Grades</Typography>
-              </Grid>
-              <Grid item xs={7} className="value">
-                <StyledValueTypo variant="body1">
-                  {grade ? grade[0] : gradetext}
-                </StyledValueTypo>
               </Grid>
             </Grid>
             <Grid item container alignItems="center" spacing={2}>
@@ -166,9 +126,7 @@ function Membre({ membre }) {
                 <StyledValueTypo variant="body1">
                   {user && user.roles && user.roles.length > 0
                     ? user.roles.map((role) => (
-                        <span key={role.id}>
-                          {role.name} -- {role.entity.alias}
-                        </span>
+                        <span key={role.uuid}>{role.name}</span>
                       ))
                     : 'Aucun role'}
                 </StyledValueTypo>
@@ -186,9 +144,7 @@ function Membre({ membre }) {
               onClick={handleClick}
             >
               <span>
-                {showMembreForm
-                  ? 'Refermer le panneau'
-                  : 'Modifier le role ou le grade'}
+                {showMembreForm ? 'Refermer le panneau' : 'Modifier les roles'}
               </span>
             </StyledButton>
           </Grid>
@@ -207,12 +163,12 @@ function Membre({ membre }) {
 
 Membre.defaultProps = {
   membre: null,
+  queryKey: [],
 }
 
 Membre.propTypes = {
-  membre: PropTypes.shape({
-    id: PropTypes.number,
-  }),
+  membre: userPropTypes,
+  queryKey: PropTypes.arrayOf(PropTypes.string),
 }
 
 export default React.memo(Membre)

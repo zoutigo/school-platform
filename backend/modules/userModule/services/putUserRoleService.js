@@ -1,3 +1,5 @@
+const { Op } = require('sequelize')
+
 const { user, entity, role } = require('../../../database/models')
 const errorLogger = require('../../../utils/errorLogger')
 
@@ -12,13 +14,21 @@ const putUserRoleService = async (roles, uuid) => {
 
     await toUpdateUser.setRoles([])
 
-    const newRoles = await Promise.all(
-      roles.map(async (roleUuid) => {
-        const newRole = await role.findOne({ where: { uuid: roleUuid } })
-        return newRole
-      })
-    )
-    await toUpdateUser.setRoles(newRoles)
+    // const newRoles = await Promise.all(
+    //   roles.map(async (roleUuid) => {
+    //     const newRole = await role.findOne({ where: { uuid: roleUuid } })
+    //     return newRole
+    //   })
+    // )
+
+    const toAddRoles = await role.findAll({
+      where: {
+        uuid: {
+          [Op.or]: roles,
+        },
+      },
+    })
+    await toUpdateUser.setRoles(toAddRoles)
 
     const putRoleUser = await user.findOne({
       where: { uuid },

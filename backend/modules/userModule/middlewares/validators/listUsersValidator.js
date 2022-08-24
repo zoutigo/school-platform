@@ -1,3 +1,46 @@
-const lisUsersValidator = () => {}
+const { param, body, check, query } = require('express-validator')
+const { QueryTypes } = require('sequelize')
+const { passwordPattern } = require('../../../../constants/regex')
+const validate = require('../../../../middlewares/validate')
+const { user, sequelize } = require('../../../../database/models')
+const verifyPasswordService = require('../../../authModule/services/verifyPasswordService')
 
-module.exports = lisUsersValidator
+const listUsersValidator = validate([
+  query('uuid')
+    .optional()
+    .not()
+    .isEmpty()
+    .withMessage(`veillez indiquer l'utilisateur recherché`)
+    .isUUID()
+    .withMessage(`le format utilisateur n'est pas bon`),
+  query('lastname')
+    .optional()
+    .not()
+    .isEmpty()
+    .withMessage(`veillez indiquer le nom`)
+    .isString()
+    .withMessage(`format nom incorrect`)
+    .isLength({ min: 2, max: 30 })
+    .withMessage(`le nom doit avoir entre 2 et 30 caractères`)
+    .trim()
+    .escape(),
+  query('firstname')
+    .optional()
+    .not()
+    .isEmpty()
+    .withMessage(`veillez indiquer le nom`)
+    .isString()
+    .withMessage(`format nom incorrect`)
+    .isLength({ min: 2, max: 30 })
+    .withMessage(`le nom doit avoir entre 2 et 30 caractères`)
+    .trim()
+    .escape(),
+  query('email')
+    .not()
+    .isEmpty()
+    .withMessage('indiquez le mail utilisateur')
+    .isEmail()
+    .withMessage('format email non valide'),
+])
+
+module.exports = listUsersValidator

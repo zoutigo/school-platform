@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.69% </span>
+                <span class="strong">67.16% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>44/65</span>
+                <span class='fraction'>45/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">48.64% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/37</span>
+                <span class='fraction'>21/42</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.57% </span>
+                <span class="strong">77.58% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>44/56</span>
+                <span class='fraction'>45/58</span>
             </div>
         
             
@@ -168,7 +168,15 @@
 <a name='L103'></a><a href='#L103'>103</a>
 <a name='L104'></a><a href='#L104'>104</a>
 <a name='L105'></a><a href='#L105'>105</a>
-<a name='L106'></a><a href='#L106'>106</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">39x</span>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-yes">39x</span>
@@ -191,11 +199,11 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">39x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-yes">12x</span>
@@ -203,15 +211,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">11x</span>
@@ -296,7 +312,7 @@ module.exports.getUser = async (req, res, next) =&gt; {
   return res.status(200).send(requestedUser)
 }
 module.exports.listUsers = async (req, res, next) =&gt; {
-  const { listUsers, listUsersError } = await listUsersService()
+  const { listUsers, listUsersError } = await listUsersService(req.query)
 &nbsp;
   <span class="missing-if-branch" title="if path not taken" >I</span>if (listUsersError) <span class="cstat-no" title="statement not covered" >return next(new BadRequest(listUsersError))</span>
   <span class="missing-if-branch" title="if path not taken" >I</span>if (!listUsers) <span class="cstat-no" title="statement not covered" >return next(new NotFound('aucun utilisateur trouvé'))</span>
@@ -308,7 +324,8 @@ module.exports.putUser = async (req, res, next) =&gt; {
 &nbsp;
   <span class="missing-if-branch" title="if path not taken" >I</span>if (!req.body)
 <span class="cstat-no" title="statement not covered" >    return next(new BadRequest('veiller modidier un champ au moins'))</span>
-  const { roles, classrooms, ...rest } = req.body
+  const { roles, classrooms, newPassword, newPasswordConfirm, ...rest } =
+    req.body
 &nbsp;
   try {
     const { isAdmin, isManager, isModerator, isOwner } = checkRoleService(
@@ -317,6 +334,13 @@ module.exports.putUser = async (req, res, next) =&gt; {
     )
 &nbsp;
     const update = {}
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if ((newPassword || newPasswordConfirm) &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >!isOwner)</span>
+<span class="cstat-no" title="statement not covered" >      return next(</span>
+        new BadRequest(
+          'Seul le detenteur du compte peut modifier son mot de pass'
+        )
+      )
 &nbsp;
     if (roles) {
       const isSuperUser = isManager || isModerator || isAdmin
@@ -385,7 +409,7 @@ module.exports.deleteUser = <span class="fstat-no" title="function not covered" 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Aug 23 2022 08:40:56 GMT+0200 (heure d’été d’Europe centrale)
+                at Wed Aug 24 2022 15:51:05 GMT+0200 (heure d’été d’Europe centrale)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

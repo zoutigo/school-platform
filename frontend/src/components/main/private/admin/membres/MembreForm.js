@@ -22,6 +22,7 @@ import AlertMessage from '../../../../elements/AlertMessage'
 import getError from '../../../../../utils/getError'
 import customStyles from '../../../../../constants/selectMultiCostumStyles'
 import getResponse from '../../../../../utils/getResponse'
+import userPropTypes from '../../../../../constants/proytypes/userProptypes'
 
 const StyledForm = styled('form')(() => ({
   width: '100%',
@@ -36,7 +37,7 @@ const StyledSelectGrid = styled(Grid)(({ theme }) => ({
 
 function MembreForm({ setShowMembreForm, user, queryKey }) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  const rolesQueryKey = ['listes-roles']
+  const rolesQueryKey = ['listes-roles', `user-${user.uuid}`]
   const { Token } = useSelector((state) => state.user)
   const {
     control,
@@ -52,14 +53,18 @@ function MembreForm({ setShowMembreForm, user, queryKey }) {
     null,
     apiFetchRoles
   )
-
   const { mutateAsync } = useMutate(queryKey, apiUpdateUser)
 
   const rolesOptions = useCallback(() => {
-    if (data && Array.isArray(data) && data.length > 0)
-      return data.map(({ name, id, entity }) => ({
-        value: id,
-        label: `${name}-${entity.name}`,
+    if (
+      data &&
+      data.datas &&
+      Array.isArray(data.datas) &&
+      data.datas.length > 0
+    )
+      return data.datas.map(({ name, uuid }) => ({
+        value: uuid,
+        label: `${name}`,
       }))
     return null
   }, [data])
@@ -67,8 +72,8 @@ function MembreForm({ setShowMembreForm, user, queryKey }) {
   const initialRoles = useCallback(
     user && user.roles && Array.isArray(user.roles) && user.roles.length > 0
       ? user.roles.map((role) => ({
-          value: role.id,
-          label: `${role.name}-${role.entity.name}`,
+          value: role.uuid,
+          label: `${role.name}`,
         }))
       : [],
     [user]
@@ -81,24 +86,17 @@ function MembreForm({ setShowMembreForm, user, queryKey }) {
       roles: roles.map((role) => role.value),
     }
 
-    const options = {
-      headers: {
-        'x-access-token': Token,
-      },
-    }
     closeSnackbar()
 
     try {
       await mutateAsync({
-        id: user ? user.id : null,
+        uuid: user ? user.uuid : null,
         action: 'update',
-        options: options,
         body: finalDatas,
         token: Token,
       }).then((response) => {
         if (response.status === 200) {
           enqueueSnackbar(getResponse(response), { variant: 'success' })
-          enqueueSnackbar(response.data.message, { variant: 'success' })
           setValue('roles', [])
           setShowMembreForm(false)
           window.scrollTo(0, 0)
@@ -120,6 +118,7 @@ function MembreForm({ setShowMembreForm, user, queryKey }) {
           <AlertMessage
             severity="error"
             message={errorMessage || 'aucun utilisateur à definir'}
+            fullWidth
           />
         </Grid>
       )}
@@ -207,15 +206,7 @@ MembreForm.defaultProps = {
 MembreForm.propTypes = {
   setShowMembreForm: PropTypes.func.isRequired,
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
-  user: PropTypes.shape({
-    id: PropTypes.number,
-    roles: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number,
-        name: PropTypes.string,
-      })
-    ),
-  }),
+  user: userPropTypes,
 }
 
 export default React.memo(MembreForm)

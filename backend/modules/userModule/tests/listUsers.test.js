@@ -45,4 +45,29 @@ describe('USER GET', () => {
     expect(getUsers.body.datas[0]).toHaveProperty('createdAt')
     expect(getUsers.body.datas[0]).toHaveProperty('updatedAt')
   })
+
+  it('should return requested users by query', async () => {
+    await request(app).post('/api/auth/register').send(userDatas1)
+    await request(app).post('/api/auth/register').send(userDatas2)
+
+    const getUsers = await request(app).get(
+      `/api/users/?email=${userDatas1.email}`
+    )
+
+    expect(getUsers.statusCode).toEqual(200)
+    expect(getUsers.body.datas.length).toEqual(1)
+    expect(getUsers.body.datas[0]).not.toHaveProperty('password')
+    expect(getUsers.body.datas[0]).not.toHaveProperty('id')
+    expect(getUsers.body.datas[0]).toHaveProperty('uuid')
+    expect(getUsers.body.datas[0]).toHaveProperty('email')
+    expect(getUsers.body.datas[0]).toHaveProperty('lastname')
+    expect(getUsers.body.datas[0]).toHaveProperty('firstname')
+    expect(getUsers.body.datas[0]).toHaveProperty('gender')
+    expect(getUsers.body.datas[0]).toHaveProperty('emailToken')
+    expect(getUsers.body.datas[0]).toHaveProperty('losspassToken')
+    expect(getUsers.body.datas[0]).toHaveProperty('roles')
+    expect(getUsers.body.datas[0]).toHaveProperty('entities')
+    expect(getUsers.body.datas[0]).toHaveProperty('createdAt')
+    expect(getUsers.body.datas[0]).toHaveProperty('updatedAt')
+  })
 })

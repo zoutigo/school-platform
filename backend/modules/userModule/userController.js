@@ -21,7 +21,7 @@ module.exports.getUser = async (req, res, next) => {
   return res.status(200).send(requestedUser)
 }
 module.exports.listUsers = async (req, res, next) => {
-  const { listUsers, listUsersError } = await listUsersService()
+  const { listUsers, listUsersError } = await listUsersService(req.query)
 
   if (listUsersError) return next(new BadRequest(listUsersError))
   if (!listUsers) return next(new NotFound('aucun utilisateur trouvé'))
@@ -33,7 +33,8 @@ module.exports.putUser = async (req, res, next) => {
 
   if (!req.body)
     return next(new BadRequest('veiller modidier un champ au moins'))
-  const { roles, classrooms, ...rest } = req.body
+  const { roles, classrooms, newPassword, newPasswordConfirm, ...rest } =
+    req.body
 
   try {
     const { isAdmin, isManager, isModerator, isOwner } = checkRoleService(
@@ -42,6 +43,13 @@ module.exports.putUser = async (req, res, next) => {
     )
 
     const update = {}
+
+    if ((newPassword || newPasswordConfirm) && !isOwner)
+      return next(
+        new BadRequest(
+          'Seul le detenteur du compte peut modifier son mot de pass'
+        )
+      )
 
     if (roles) {
       const isSuperUser = isManager || isModerator || isAdmin

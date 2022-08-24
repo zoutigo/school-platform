@@ -26,7 +26,7 @@ router.get(
 )
 
 // list roles
-router.get('/', verifyTokenMiddleware, listRoles)
+router.get('/', listRoles)
 
 // put role
 router.put(

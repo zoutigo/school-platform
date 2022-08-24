@@ -1,4 +1,4 @@
-const { param, body, check } = require('express-validator')
+const { param } = require('express-validator')
 const validate = require('../../../../middlewares/validate')
 
 const deleteUserValidator = validate([

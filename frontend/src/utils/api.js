@@ -92,11 +92,37 @@ export const apiLogin = async (datas) => {
 
 //   return data
 // }
-export const apiFecthUserDatas = async (uuid) => {
-  const url = `${PREFIX}/api/users/${uuid}`
-  const { data } = await axios.get(url)
+// export const apiFecthUserDatas = async (uuid) => {
+//   const url = `${PREFIX}/api/users/${uuid}`
+//   const { data } = await axios.get(url)
 
+//   return data
+// }
+export const apiFecthUserDatas = async (uuid) => {
+  const URL = `${PREFIX}/api/users/${uuid}`
+  const { data } = await axios({
+    method: 'get',
+    url: URL,
+    headers: { ...commonHeaders },
+  })
   return data
+}
+
+// export const apiFetchMembres = async (params) => {
+//   const URL = `${PREFIX}/users?${params}`
+
+//   const { data } = await axios.get(URL)
+//   return data
+// }
+
+export const apiFetchMembres = async (params) => {
+  const URL = `${PREFIX}/api/users?${params}`
+  const response = await axios({
+    method: 'get',
+    url: URL,
+    headers: { ...commonHeaders },
+  })
+  return response
 }
 
 export const apiFecthEntity = async (param) => {
@@ -105,10 +131,21 @@ export const apiFecthEntity = async (param) => {
 
   return data
 }
-export const apiFecthEntities = async (param) => {
-  const URL = `${PREFIX}/api/entities`
-  const { data } = await axios.get(URL)
 
+// export const apiFecthEntities = async (param) => {
+//   const URL = `${PREFIX}/api/entities`
+//   const { data } = await axios.get(URL)
+
+//   return data
+// }
+
+export const apiFecthEntities = async () => {
+  const URL = `${PREFIX}/api/entities`
+  const { data } = await axios({
+    method: 'get',
+    url: URL,
+    headers: { ...commonHeaders },
+  })
   return data
 }
 export const apiPostEntity = async ({ id, action, body, options }) => {
@@ -453,15 +490,19 @@ export const apiPostEditorImage = async ({ file, Token }) => {
   return data
 }
 
-export const apiFetchMembres = async (params) => {
-  const URL = `${PREFIX}/users?${params}`
+// export const apiFetchRoles = async () => {
+//   const URL = `${PREFIX}/roles`
+//   const { data } = await axios.get(URL)
+//   return data
+// }
 
-  const { data } = await axios.get(URL)
-  return data
-}
-export const apiFetchRoles = async () => {
-  const URL = `${PREFIX}/roles`
-  const { data } = await axios.get(URL)
+export const apiFetchRoles = async (uuid) => {
+  const URL = `${PREFIX}/api/roles`
+  const { data } = await axios({
+    method: 'get',
+    url: URL,
+    headers: { ...commonHeaders },
+  })
   return data
 }
 

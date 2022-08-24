@@ -6,7 +6,6 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import CredentialDatas from './CredentialDatas'
 import ChildrenDatas from './ChildrenDatas'
 import RolesDatas from './RolesDatas'
-import GradeDatas from './GradeDatas'
 import PasswordDatas from './PasswordDatas'
 import { StyledPersoDataCollapse } from './Style'
 import { apiFecthUserDatas } from '../../../../../utils/api'
@@ -20,8 +19,7 @@ function PersoDataList({ setForm, form, toggle, setToggle, setData }) {
   const queryKey = [`data-${uuid}`]
   const queryParams = uuid
 
-  const { credentialsform, rolesform, passwordform, childrenform, gradeform } =
-    form
+  const { credentialsform, rolesform, passwordform, childrenform } = form
 
   const { isLoading, isError, data, errorMessage } = useFetch(
     queryKey,
@@ -41,11 +39,6 @@ function PersoDataList({ setForm, form, toggle, setToggle, setData }) {
     nom: data ? data.lastname : null,
     Téléphone: data ? data.phone : null,
     email: data ? data.email : null,
-  }
-  const grades = {
-    moderateur: data ? data.isModerator : null,
-    manager: data ? data.isManager : null,
-    admin: data ? data.isAdmin : null,
   }
 
   return (
@@ -78,14 +71,7 @@ function PersoDataList({ setForm, form, toggle, setToggle, setData }) {
               setToggle={setToggle}
             />
           </StyledPersoDataCollapse>
-          <StyledPersoDataCollapse in={toggle === 'list' || gradeform}>
-            <GradeDatas
-              grades={grades}
-              toggle={toggle}
-              setForm={setForm}
-              setToggle={setToggle}
-            />
-          </StyledPersoDataCollapse>
+
           <StyledPersoDataCollapse in={toggle === 'list' || passwordform}>
             <PasswordDatas
               toggle={toggle}
@@ -108,7 +94,6 @@ PersoDataList.propTypes = {
     childrenform: PropTypes.bool,
     rolesform: PropTypes.bool,
     passwordform: PropTypes.bool,
-    gradeform: PropTypes.bool,
   }).isRequired,
   toggle: PropTypes.string.isRequired,
 }

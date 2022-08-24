@@ -18,9 +18,14 @@ function MembresList({ queryKey, queryParams }) {
     <Grid item container>
       {isError && <AlertMessage severity="error" message={errorMessage} />}
       {isLoading && <CircularProgress color="secondary" />}
-      {Array.isArray(data) &&
-        data.length > 0 &&
-        data.map((membre) => <Membre key={membre.id} membre={membre} />)}
+      {data &&
+        data.data &&
+        data.data.datas &&
+        Array.isArray(data.data.datas) &&
+        data.data.datas.length > 0 &&
+        data.data.datas.map((membre) => (
+          <Membre key={membre.uuid} membre={membre} queryKey={queryKey} />
+        ))}
     </Grid>
   )
 }
