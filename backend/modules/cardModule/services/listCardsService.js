@@ -9,7 +9,7 @@ const listCardsService = async () => {
       include: [
         {
           model: file,
-          attributes: { exclude: ['id'] },
+          exclude: ['id', 'albumId', 'paperId', 'cardId', 'preinscriptionId'],
           paranoid: true,
         },
       ],

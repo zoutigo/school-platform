@@ -56,7 +56,7 @@ module.exports.getPaper = async (req, res, next) => {
 }
 module.exports.listPapers = async (req, res, next) => {
   try {
-    const { paperList, paperListError } = await listPapersService()
+    const { paperList, paperListError } = await listPapersService(req.query)
 
     if (paperListError) return next(paperListError)
     if (!paperList || paperList.length < 1)

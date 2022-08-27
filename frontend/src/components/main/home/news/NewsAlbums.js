@@ -66,23 +66,25 @@ function NewsAlbums() {
     )
   }
 
-  if (!Array.isArray(data)) {
+  if (!data || !data.datas || !Array.isArray(data.datas)) {
     return null
   }
 
+  const albums = data.datas
+
   const items = []
 
-  if (data && data.length > 0) {
+  if (albums && albums.length > 0) {
     for (let i = 0; i < 3; i += 1) {
-      if (data[i]) {
-        const { entity, name, id, createdAt } = data[i]
+      if (albums[i]) {
+        const { entity, name, id, createdAt } = albums[i]
         const dateString = moment(createdAt).format('DD/MM/YYYY')
 
         items.push(
           <CardItem
             title={name}
             detail={`${capitilize(entity.name)} - ${dateString}`}
-            link={albumLink(data[i])}
+            link={albumLink(albums[i])}
             id={id}
           />
         )

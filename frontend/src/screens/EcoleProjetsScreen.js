@@ -5,15 +5,15 @@ import useRigths from '../components/hooks/useRigths'
 
 function EcoleProjetsScreen() {
   const pageName = 'projets'
-  const alias = `ecole-projets`
-  const queryKey = [pageName, `page-${alias}`]
-  const queryParams = `alias=${alias}`
+  const slug = `ecole-projets`
+  const queryKey = [pageName, `page-${slug}`]
+  const queryParams = `slug=${slug}`
 
   const { moderatorLevel } = useRigths()
   const isAllowedToChange = moderatorLevel
 
   const pageParams = {
-    alias,
+    slug,
     queryKey,
     queryParams,
     pageName,

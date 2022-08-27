@@ -139,6 +139,7 @@ function Album() {
           setShow={setShow}
           entityAlias={categoryAlias}
           isAllowed={isAllowed}
+          queryKey={queryKey}
         />
       )}
       {show.list && isAllowed && (

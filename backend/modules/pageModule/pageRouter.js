@@ -13,6 +13,7 @@ const putPageValidator = require('./middlewares/validators/putPageValidator')
 const deletePagevalidator = require('./middlewares/validators/deletePageValidator')
 const isSuperuserMiddleware = require('../authModule/middlewares/authorizations/isSuperuserMiddleware')
 const getPageValidator = require('./middlewares/validators/getPageValidator')
+const listPageValidator = require('./middlewares/validators/listPageValidator')
 
 //  create page
 router.post(
@@ -27,7 +28,7 @@ router.post(
 router.get('/:uuid', getPageValidator, getPage)
 
 // list roles
-router.get('/', listPages)
+router.get('/', listPageValidator, listPages)
 
 // put page
 router.put(

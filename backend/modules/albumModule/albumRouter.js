@@ -15,6 +15,7 @@ const deleteAlbumValidator = require('./middlewares/validators/deleteAlbumValida
 const postAlbumValidator = require('./middlewares/validators/postAlbumValidator')
 const { imageMaxSize } = require('../../constants/maxsize')
 const albumAuthorization = require('./middlewares/albumAuthorization')
+const listAlbumValidator = require('./middlewares/validators/listAlbumValidator')
 
 const storage = multer.memoryStorage()
 
@@ -39,7 +40,7 @@ router.post(
 router.get('/:uuid', getAlbumValidator, getAlbum)
 
 // list albums
-router.get('/', listAlbums)
+router.get('/', listAlbumValidator, listAlbums)
 
 // put album
 router.put(

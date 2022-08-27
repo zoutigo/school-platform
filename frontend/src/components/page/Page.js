@@ -60,7 +60,7 @@ function Page({ pageParams }) {
 
 Page.defaultProps = {
   pageParams: {
-    alias: 'fake',
+    slug: 'fake',
     pageName: 'fake',
     queryKey: ['fake'],
     queryParams: 'fake',
@@ -72,7 +72,7 @@ Page.defaultProps = {
 
 Page.propTypes = {
   pageParams: PropTypes.shape({
-    alias: PropTypes.string.isRequired,
+    slug: PropTypes.string,
     pageName: PropTypes.string.isRequired,
     queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
     queryParams: PropTypes.string.isRequired,

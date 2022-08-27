@@ -1,12 +1,19 @@
 const { page } = require('../../../database/models')
 const errorLogger = require('../../../utils/errorLogger')
 
-const listPagesService = async () => {
+const listPagesService = async (params) => {
+  const options = {
+    attributes: { exclude: ['id'] },
+    panaroid: true,
+  }
   try {
-    const pageList = await page.findAll({
-      attributes: { exclude: ['id'] },
-      panaroid: true,
-    })
+    const pageList =
+      Object.entries(params).length > 0
+        ? await page.findAll({
+            where: params,
+            ...options,
+          })
+        : await page.findAll(options)
 
     return { pageList, pageListError: false }
   } catch (error) {

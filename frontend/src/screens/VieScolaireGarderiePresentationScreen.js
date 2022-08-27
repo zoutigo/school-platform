@@ -7,16 +7,16 @@ import useRigths from '../components/hooks/useRigths'
 
 function VieScolaireGarderiePresentationScreen() {
   const pageName = 'presentation garderie'
-  const alias = `viescolaire-garderie-presentation`
-  const queryKey = [pageName, `page-${alias}`]
-  const queryParams = `alias=${alias}`
+  const slug = `viescolaire-garderie-presentation`
+  const queryKey = [pageName, `page-${slug}`]
+  const queryParams = `slug=${slug}`
 
   const { managerLevel, adminLevel } = useRigths()
   const isAllowedToChange = managerLevel || adminLevel
 
   const pageParams = {
     isAllowedToChange,
-    alias,
+    slug,
     queryKey,
     queryParams,
     pageName,

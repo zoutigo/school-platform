@@ -22,7 +22,7 @@ function SelectSingleInput({
   } = useController({
     name,
     control,
-    defaultValue: defaultValue,
+    defaultValue,
     rules: { ...rules },
   })
 
@@ -84,17 +84,15 @@ SelectSingleInput.propTypes = {
       value: PropTypes.string,
     })
   ).isRequired,
-  defaultValue: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string,
-      value: PropTypes.string,
-    })
-  ),
+  defaultValue: PropTypes.shape({
+    label: PropTypes.string,
+    value: PropTypes.string,
+  }),
   label: PropTypes.string.isRequired,
   example: PropTypes.string.isRequired,
   variant: PropTypes.string,
   rules: PropTypes.shape({
-    required: PropTypes.bool,
+    fake: PropTypes.bool,
   }),
 }
 

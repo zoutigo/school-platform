@@ -56,7 +56,7 @@ module.exports.getAlbum = async (req, res, next) => {
 }
 module.exports.listAlbums = async (req, res, next) => {
   try {
-    const { albumList, albumListError } = await listAlbumsService()
+    const { albumList, albumListError } = await listAlbumsService(req.query)
 
     if (albumListError) return next(albumListError)
     if (!albumList || albumList.length < 1)

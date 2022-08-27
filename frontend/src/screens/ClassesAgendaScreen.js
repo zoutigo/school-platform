@@ -3,7 +3,7 @@ import useRigths from '../components/hooks/useRigths'
 import useRoles from '../components/hooks/useRoles'
 import useRoutesInfos from '../components/hooks/useRoutesInfos'
 import Paper from '../components/paper/Paper'
-import { apiFetchEvents, apiPostEvents } from '../utils/api'
+import { apiFetchPaper, apiPostPaper } from '../utils/api'
 import redefineAlias from '../utils/redefineAlias'
 
 function ClassesAgendaScreen() {
@@ -54,9 +54,9 @@ function ClassesAgendaScreen() {
   const entityAlias = alias
   const paperName = `Agenda - ${alias}`
   const queryKey = [paperName]
-  const queryParams = `entityAlias=${entityAlias}`
-  const fetcher = apiFetchEvents
-  const poster = apiPostEvents
+  const queryParams = `entityAlias=${entityAlias}&type=event`
+  const fetcher = apiFetchPaper
+  const poster = apiPostPaper
 
   const paper = {
     queryKey,

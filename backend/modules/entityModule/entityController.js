@@ -43,7 +43,7 @@ module.exports.getEntity = async (req, res, next) => {
 }
 module.exports.listEntities = async (req, res, next) => {
   try {
-    const { entityList, entityListError } = await listEntitiesService()
+    const { entityList, entityListError } = await listEntitiesService(req.query)
 
     if (entityListError) return next(entityListError)
     if (!entityList || entityList.length < 1)

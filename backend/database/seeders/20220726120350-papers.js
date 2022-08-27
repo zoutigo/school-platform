@@ -26,7 +26,7 @@ module.exports = {
             type,
             title,
             content,
-            classroom,
+            classe_fourniture: classroom,
             isPrivate,
             date,
             startdate,

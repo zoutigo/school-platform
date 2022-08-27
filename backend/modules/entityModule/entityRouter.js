@@ -12,10 +12,18 @@ const getEntityValidator = require('./middlewares/validators/getEntityValidator'
 const putEntityValidator = require('./middlewares/validators/putEntityValidator')
 const deleteEntityValidator = require('./middlewares/validators/deleteEntityValidator')
 const postEntityValidator = require('./middlewares/validators/postEntityValidators')
+const listEntityValidator = require('./middlewares/validators/listEntityValidator')
 
 //  create entity
 router.post('/', postEntityValidator, createEntity)
 
+// list entities
+router.get(
+  '/',
+  // verifyTokenMiddleware,
+  listEntityValidator,
+  listEntities
+)
 // get entity
 router.get(
   '/:uuid',
@@ -23,13 +31,6 @@ router.get(
   isAdminMiddleware,
   getEntityValidator,
   getEntity
-)
-
-// list entities
-router.get(
-  '/',
-  // verifyTokenMiddleware,
-  listEntities
 )
 
 // put entity

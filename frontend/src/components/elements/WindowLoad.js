@@ -24,6 +24,7 @@ function WindowLoad() {
     apiFetchVariables()
   )
   const { data: chemins } = useQuery(['liste-chemins'], () => apiFetchChemin())
+  // const { data: chemins } = useQuery(['liste-cartes'], () => apiFetchCards())
 
   useEffect(() => {
     if (variablesData) {

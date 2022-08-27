@@ -32,17 +32,19 @@ function NewsInfosParents() {
     )
   }
 
-  if (!Array.isArray(data)) {
+  if (!data || !data.data || !Array.isArray(data.data.datas)) {
     return null
   }
 
+  const papers = data.data.datas
+
   const items = []
 
-  if (data && data.length > 0) {
+  if (papers && papers.length > 0) {
     for (let i = 0; i < 3; i += 1) {
-      if (data[i]) {
-        const { entity, date, title } = data[i]
-        const dateString = moment(Number(date)).format('DD/MM/YYYY')
+      if (papers[i]) {
+        const { entity, date, title } = papers[i]
+        const dateString = moment(date).format('DD/MM/YYYY')
         items.push(
           <CardItem
             title={title}

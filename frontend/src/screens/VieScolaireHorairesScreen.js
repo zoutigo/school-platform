@@ -6,14 +6,14 @@ import Page from '../components/page/Page'
 
 function VieScolaireHorairesScreen() {
   const pageName = 'La garderie'
-  const alias = `viescolaire-horaires`
-  const queryKey = [pageName, `page-${alias}`]
-  const queryParams = `alias=${alias}`
+  const slug = `viescolaire-horaires`
+  const queryKey = [pageName, `page-${slug}`]
+  const queryParams = `slug=${slug}`
   const { managerLevel, adminLevel } = useRigths()
   const isAllowedToChange = managerLevel || adminLevel
 
   const pageParams = {
-    alias,
+    slug,
     queryKey,
     queryParams,
     pageName,

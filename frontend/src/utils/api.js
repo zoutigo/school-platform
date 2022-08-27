@@ -125,10 +125,20 @@ export const apiFetchMembres = async (params) => {
   return response
 }
 
-export const apiFecthEntity = async (param) => {
-  const URL = param ? `${PREFIX}/entities?${param}` : `${PREFIX}/entities`
-  const { data } = await axios.get(URL)
+// export const apiFecthEntity = async (param) => {
+//   const URL = param ? `${PREFIX}/entities?${param}` : `${PREFIX}/entities`
+//   const { data } = await axios.get(URL)
 
+//   return data
+// }
+
+export const apiFecthEntity = async (param) => {
+  const URL = `${PREFIX}/api/entities/${param}`
+  const { data } = await axios({
+    method: 'get',
+    url: URL,
+    headers: { ...commonHeaders },
+  })
   return data
 }
 
@@ -139,8 +149,8 @@ export const apiFecthEntity = async (param) => {
 //   return data
 // }
 
-export const apiFecthEntities = async () => {
-  const URL = `${PREFIX}/api/entities`
+export const apiFecthEntities = async (params) => {
+  const URL = `${PREFIX}/api/entities?${params}`
   const { data } = await axios({
     method: 'get',
     url: URL,
@@ -196,10 +206,20 @@ export const apiPostEvents = async ({ id, body, action, Token }) => {
   return data
 }
 
-export const apiFecthPage = async (params) => {
-  const URL = `${PREFIX}/pages?${params}`
-  const { data } = await axios.get(URL)
+// export const apiFecthPage = async (params) => {
+//   const URL = `${PREFIX}/pages?${params}`
+//   const { data } = await axios.get(URL)
 
+//   return data
+// }
+
+export const apiFecthPage = async (params) => {
+  const URL = `${PREFIX}/api/pages?${params}`
+  const { data } = await axios({
+    method: 'get',
+    url: URL,
+    headers: { ...commonHeaders },
+  })
   return data
 }
 
@@ -209,15 +229,25 @@ export const apiPostPage = async ({ id, body, options, action }) => {
   return data
 }
 
-export const apiFetchPaper = async (params) => {
-  const URL = `${PREFIX}/papers/?${params}`
-  const { data } = await axios.get(URL)
+// export const apiFetchPaper = async (params) => {
+//   const URL = `${PREFIX}/papers/?${params}`
+//   const { data } = await axios.get(URL)
 
-  return data
+//   return data
+// }
+
+export const apiFetchPaper = async (params) => {
+  const URL = `${PREFIX}/api/papers?${params}`
+  const response = await axios({
+    method: 'get',
+    url: URL,
+    headers: { ...commonHeaders },
+  })
+  return response
 }
 
 export const apiFetchVariables = async () => {
-  const URL = `${PREFIX}/variables`
+  const URL = `${PREFIX}/api/utils/variables`
   const { data } = await axios.get(URL)
 
   return data
@@ -288,9 +318,19 @@ export const apiPostChemin = async ({ id, body, options, action, token }) => {
   return result
 }
 
+// export const apiFetchChemin = async () => {
+//   const URL = `${PREFIX}/chemins`
+//   const { data } = await axios.get(URL)
+//   return data
+// }
+
 export const apiFetchChemin = async () => {
-  const URL = `${PREFIX}/chemins`
-  const { data } = await axios.get(URL)
+  const URL = `${PREFIX}/api/cards`
+  const { data } = await axios({
+    method: 'get',
+    url: URL,
+    headers: { ...commonHeaders },
+  })
   return data
 }
 
@@ -386,10 +426,20 @@ export const apiPostAlbum = async ({
   return data
 }
 
-export const apiFetchAlbum = async (params) => {
-  const URL = `${PREFIX}/albums/?${params}`
-  const { data } = await axios.get(URL)
+// export const apiFetchAlbum = async (params) => {
+//   const URL = `${PREFIX}/albums/?${params}`
+//   const { data } = await axios.get(URL)
 
+//   return data
+// }
+
+export const apiFetchAlbum = async (params) => {
+  const URL = `${PREFIX}/api/albums?${params}`
+  const { data } = await axios({
+    method: 'get',
+    url: URL,
+    headers: { ...commonHeaders },
+  })
   return data
 }
 
@@ -436,10 +486,20 @@ export const apiPostDialog = async ({ id, action, body, options }) => {
   return data
 }
 
-export const apiFetchDialogs = async () => {
-  const URL = `${PREFIX}/dialogs`
-  const { data } = await axios.get(URL)
+// export const apiFetchDialogs = async () => {
+//   const URL = `${PREFIX}/dialogs`
+//   const { data } = await axios.get(URL)
 
+//   return data
+// }
+
+export const apiFetchDialogs = async () => {
+  const URL = `${PREFIX}/api/dialogs`
+  const { data } = await axios({
+    method: 'get',
+    url: URL,
+    headers: { ...commonHeaders },
+  })
   return data
 }
 

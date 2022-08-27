@@ -36,17 +36,20 @@ function PaperNativeList({
     fetcher
   )
 
+  const papers = data ? data.data.datas : null
+
   // filter private datas
   const filteredPapers = useCallback(() => {
-    if (!data || !Array.isArray(data)) return []
+    if (!papers || !Array.isArray(papers)) return []
     if (userLevel) {
-      return data
+      return papers
     }
-    const result = data.filter((pack) => pack.isPrivate !== true)
-    return result
-  }, [data, userLevel])
 
-  const Screen = () =>
+    const result = papers.filter((pack) => pack.isPrivate !== true)
+    return result
+  }, [papers, userLevel])
+
+  const Screen = React.memo(() =>
     filteredPapers().length > 0 ? (
       filteredPapers().map((paperItem, index) => {
         if (
@@ -58,7 +61,7 @@ function PaperNativeList({
         }
         return (
           <PaperItem
-            key={paperItem.id}
+            key={paperItem.uuid}
             paper={paper}
             setShowPaperForm={setShowPaperForm}
             setShowPaperList={setShowPaperList}
@@ -84,6 +87,7 @@ function PaperNativeList({
         </Typography>
       </Grid>
     )
+  )
 
   return (
     <StyledGrid item container>
@@ -100,8 +104,8 @@ PaperNativeList.defaultProps = {
 
 PaperNativeList.propTypes = {
   paper: PropTypes.shape({
-    queryKey: PropTypes.string.isRequired,
-    queryParams: PropTypes.arrayOf(PropTypes.string),
+    queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
+    queryParams: PropTypes.string,
     paperName: PropTypes.string.isRequired,
     paperFormat: PropTypes.string.isRequired,
     paperType: PropTypes.string.isRequired,
@@ -113,7 +117,7 @@ PaperNativeList.propTypes = {
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
   currentDocument: PropTypes.shape({
-    id: PropTypes.number,
+    uuid: PropTypes.string,
   }),
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.func.isRequired,

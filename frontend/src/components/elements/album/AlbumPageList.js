@@ -6,6 +6,7 @@ import AlbumPageItem from './AlbumPageItem'
 import useFetch from '../../hooks/useFetch'
 import { apiFetchAlbum } from '../../../utils/api'
 import AlertMessage from '../AlertMessage'
+import albumProptypes from '../../../constants/proytypes/albumProptypes'
 
 const StyledDiv = styled('div')(({ theme }) => ({
   WebkitColumnCount: 3,
@@ -55,29 +56,24 @@ function AlbumPageList({
     apiFetchAlbum
   )
 
-  useEffect(() => {
-    if (data && data[0] && data[0].files && Array.isArray(data[0].files)) {
-      console.log(data)
-      console.log(data[0].files.length)
-    }
-  }, [data])
+  if (!data || !data.datas || !Array.isArray(data.datas)) return null
 
   return (
     <StyledDiv container>
       {isError && <AlertMessage severity="error" message={errorMessage} />}
       {isLoading && <CircularProgress color="secondary" />}
       {data &&
-        data[0] &&
-        data[0].files &&
-        Array.isArray(data[0].files) &&
-        data[0].files.map((image) => (
+        Array.isArray(data.datas) &&
+        data.datas[0] &&
+        Array.isArray(data.datas[0].files) &&
+        data.datas[0].files.map((image) => (
           <AlbumPageItem
-            key={image.filepath}
+            key={image.uuid}
             isAllowed={isAllowed}
             image={image}
             queryKey={queryKey}
             entityAlias={entityAlias}
-            albumId={currentAlbum ? currentAlbum.id : null}
+            albumUuid={currentAlbum ? currentAlbum.uuid : null}
           />
         ))}
     </StyledDiv>
@@ -93,14 +89,6 @@ AlbumPageList.propTypes = {
   entityAlias: PropTypes.string.isRequired,
   queryParams: PropTypes.string.isRequired,
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
-  currentAlbum: PropTypes.shape({
-    id: PropTypes.string,
-    files: PropTypes.arrayOf(
-      PropTypes.shape({
-        filename: PropTypes.string,
-        filepath: PropTypes.string,
-      })
-    ),
-  }),
+  currentAlbum: albumProptypes,
 }
 export default React.memo(AlbumPageList)

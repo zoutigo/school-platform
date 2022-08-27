@@ -104,7 +104,7 @@ function InformationContactsEcrireScreen() {
     },
   ]
   const initialTopic = suggestionOptions.find(
-    (suggestion) => suggestion.value === ecrireState.topic
+    (suggestion) => suggestion.value === ecrireState?.topic
   )
   const otherTopic = suggestionOptions.find(
     (suggestion) => suggestion.value === 'other'
@@ -125,7 +125,7 @@ function InformationContactsEcrireScreen() {
           <List className="form-fields-container">
             <ListItem className="field">
               <Title
-                title={ecrireState.text || 'Quelle est votre suggestion ?'}
+                title={ecrireState?.text || 'Quelle est votre suggestion ?'}
                 textcolor={theme.palette.secondary.main}
               />
             </ListItem>

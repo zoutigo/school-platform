@@ -5,19 +5,20 @@ import Page from '../components/page/Page'
 
 function PrivateAccountScreen() {
   const pageName = 'Mon Compte'
-  const alias = `account`
-  const queryKey = [pageName, `page-${alias}`]
-  const queryParams = `alias=${alias}`
+  const slug = `account`
+  const queryKey = [pageName, `page-${slug}`]
+  const queryParams = `slug=${slug}`
 
   const { moderatorLevel } = useRigths()
   const isAllowedToChange = moderatorLevel
 
   const pageParams = {
-    alias,
+    slug,
     queryKey,
     queryParams,
     pageName,
     isAllowedToChange,
+    type: 'page',
   }
   return (
     <StyledPageGrid container>

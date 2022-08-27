@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux'
 import ReactHtmlParser from 'react-html-parser'
 import { Collapse, Grid } from '@material-ui/core'
 import { apiPostAlbum } from '../../../utils/api'
-
+import albumProptypes from '../../../constants/proytypes/albumProptypes'
 import CustomButton from '../CustomButton'
 import useMutate from '../../hooks/useMutate'
 import MutateCircularProgress from '../MutateCircularProgress'
@@ -61,9 +61,14 @@ function AlbumCard({
   const [showUpdateConfirm, setShowUpdateConfirm] = useState(false)
   const { URL_PREFIX } = useSelector((state) => state.settings)
   const { Token } = useSelector((state) => state.user)
-  const { description, files, name } = album
+  const { descr, files, name } = album
+
+  const backupImage =
+    'http://localhost:3500/images/albums/1630392789.199/2021-08-31T070734.744Z-pexels-olia-danilevich-5088021.jpg.webp'
   const image =
-    files && files.length > 0 ? `${URL_PREFIX}/${files[0].filepath}` : null
+    files && files.length > 0 && files[0].filepath
+      ? `${URL_PREFIX}/${files[0].filepath.replace(/:/gi, '')}`
+      : null
 
   const { mutateAsync, isMutating } = useMutate(queryKey, apiPostAlbum)
 
@@ -91,7 +96,7 @@ function AlbumCard({
   const handleDelete = async () => {
     try {
       await mutateAsync({
-        id: album.id,
+        uuid: album.uuid,
         action: 'delete',
         Token,
         entityAlias,
@@ -119,13 +124,17 @@ function AlbumCard({
   return (
     <StyledCard>
       <CardActionArea className="area" onClick={handleClick}>
-        <CardMedia className="media" image={image} title={name} />
+        <CardMedia
+          className="media"
+          image={image !== null ? image : backupImage}
+          title={name}
+        />
         <CardContent className="title">
           <Typography gutterBottom variant="h5" component="h2">
             {name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {ReactHtmlParser(description)}
+            {ReactHtmlParser(descr)}
           </Typography>
           {isAllowed && (
             <div>
@@ -198,19 +207,7 @@ function AlbumCard({
 }
 
 AlbumCard.propTypes = {
-  album: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    isPrivate: PropTypes.bool.isRequired,
-    alias: PropTypes.string.isRequired,
-    files: PropTypes.arrayOf(
-      PropTypes.shape({
-        filepath: PropTypes.string,
-        filename: PropTypes.string,
-      })
-    ),
-    description: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-  }).isRequired,
+  album: albumProptypes.isRequired,
   setCurrentAlbum: PropTypes.func.isRequired,
   setFormAction: PropTypes.func.isRequired,
   setShow: PropTypes.func.isRequired,

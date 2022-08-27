@@ -95,11 +95,21 @@ export const StyledBaseButton = styled(Button)(() => ({
   margin: '0.3rem',
 }))
 
-export const StyledIconButton = styled(IconButton)(({ bgcolor }) => ({
-  color: bgcolor,
-  fontSize: '3rem',
-  marginLeft: '2rem !important',
-}))
+// export const StyledIconButton = styled(IconButton)(({ bgcolor }) => ({
+//   color: bgcolor,
+//   fontSize: '3rem',
+//   marginLeft: '2rem !important',
+// }))
+
+export const  StyledIconButton = 
+
+  withTheme(
+    styled(({ bgcolor,children, ...rest }) => <IconButton {...rest} >{children}</IconButton>)({
+      fontSize: '3rem',
+      marginLeft: '2rem !important',
+      color: ({ bgcolor }) => bgcolor,
+    })
+  )
 
 export const StyledTitle = withTheme(
   styled(({ bgcolor, ...rest }) => <div {...rest} />)({

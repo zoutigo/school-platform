@@ -47,26 +47,62 @@ function News() {
       : 'Informations récentes'
   return (
     <StyledNewsContainer container>
-      <StyledMessageContainer item container xs={12} xl={12} justify="center">
+      <StyledMessageContainer
+        item
+        container
+        xs={12}
+        xl={12}
+        justifyContent="center"
+      >
         <StyledMessage component="div">{message}</StyledMessage>
       </StyledMessageContainer>
 
       {pathname !== '/' && (
-        <StyledCardContainer item md={12} lg={4} container justify="center">
+        <StyledCardContainer
+          item
+          md={12}
+          lg={4}
+          container
+          justifyContent="center"
+        >
           <NewsInfosParents />
         </StyledCardContainer>
       )}
-      <StyledCardContainer item md={12} lg={4} container justify="center">
+      <StyledCardContainer
+        item
+        md={12}
+        lg={4}
+        container
+        justifyContent="center"
+      >
         <NewsActivites />
       </StyledCardContainer>
-      <StyledCardContainer item md={12} lg={4} container justify="center">
+      <StyledCardContainer
+        item
+        md={12}
+        lg={4}
+        container
+        justifyContent="center"
+      >
         <NewsDocs />
       </StyledCardContainer>
-      <StyledCardContainer item md={12} lg={4} container justify="center">
+      <StyledCardContainer
+        item
+        md={12}
+        lg={4}
+        container
+        justifyContent="center"
+      >
         <NewsAgenda />
       </StyledCardContainer>
       {pathname !== '/' && (
-        <StyledCardContainer item md={12} lg={4} container justify="center">
+        <StyledCardContainer
+          item
+          md={12}
+          lg={4}
+          container
+          justifyContent="center"
+        >
           <NewsAlbums />
         </StyledCardContainer>
       )}

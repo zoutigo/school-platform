@@ -26,11 +26,11 @@ function AlbumList({
   )
 
   const filteredAlbums = useCallback(() => {
-    if (!data || !Array.isArray(data)) return null
+    if (!data || !Array.isArray(data.datas)) return null
     if (userLevel) {
-      return data
+      return data.datas
     }
-    const result = data.filter((pack) => pack.isPrivate !== true)
+    const result = data.datas.filter((pack) => pack.isPrivate !== true)
     return result
   }, [data, userLevel])
 
@@ -41,7 +41,7 @@ function AlbumList({
       {filteredAlbums() &&
         filteredAlbums().map((album) => (
           <AlbumCard
-            key={album.id}
+            key={album.uuid}
             album={album}
             setCurrentAlbum={setCurrentAlbum}
             setFormAction={setFormAction}

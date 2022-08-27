@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import PaperItemHeader from './PaperItemHeader'
 import PaperItemFooter from './PaperItemFooter'
 import PaperItemBody from './PaperItemBody'
+import paperProptypes from '../../constants/proytypes/paperProptypes'
 
 const StyledPaperItemGrid = styled(Grid)(() => ({
   boxShadow: `rgba(0, 0, 0, 0.35) 0px 5px 15px`,
@@ -23,7 +24,7 @@ function PaperItem({
   setFormAction,
   setShowSearch,
 }) {
-  const { id, content, files } = paperItem
+  const { uuid, content, files } = paperItem
   const { URL_PREFIX } = useSelector((state) => state.settings)
 
   const transformedFiles = useCallback(
@@ -32,7 +33,7 @@ function PaperItem({
           filepath: `${URL_PREFIX}/${file.filepath}`,
           filename: file.filename,
           filetype: file.filetype,
-          albumId: file.albumId,
+          uuid: file.uuid,
         }))
       : [],
     [files, URL_PREFIX]
@@ -42,7 +43,7 @@ function PaperItem({
       <Grid item container>
         <PaperItemHeader
           setCurrentDocument={setCurrentDocument}
-          currentDocumentId={currentDocument ? currentDocument.id : null}
+          currentDocumentUuid={currentDocument ? currentDocument.uuid : null}
           paperItem={paperItem}
           paper={paper}
         />
@@ -53,12 +54,12 @@ function PaperItem({
     <StyledPaperItemGrid item container>
       <PaperItemHeader
         setCurrentDocument={setCurrentDocument}
-        currentDocumentId={currentDocument?.id}
+        currentDocumentUuid={currentDocument?.uuid}
         paperItem={paperItem}
         paper={paper}
       />
       <Grid item container>
-        <Collapse in={currentDocument ? currentDocument.id === id : false}>
+        <Collapse in={currentDocument ? currentDocument.uuid === uuid : false}>
           <PaperItemBody
             content={content}
             files={transformedFiles}
@@ -84,12 +85,6 @@ function PaperItem({
 PaperItem.defaultProps = {
   currentDocument: null,
   paperItem: null,
-  // paperItem: {
-  //   files: [],
-  //   id: null,
-  //   content: null,
-  //   title: null,
-  // },
 }
 
 PaperItem.propTypes = {
@@ -105,26 +100,10 @@ PaperItem.propTypes = {
   setShowPaperForm: PropTypes.func.isRequired,
   setShowPaperList: PropTypes.func.isRequired,
   setCurrentDocument: PropTypes.func.isRequired,
-  currentDocument: PropTypes.shape({
-    id: PropTypes.number,
-  }),
+  currentDocument: paperProptypes,
   setFormAction: PropTypes.func.isRequired,
   setShowSearch: PropTypes.func.isRequired,
-  paperItem: PropTypes.shape({
-    id: PropTypes.number,
-    content: PropTypes.string,
-    title: PropTypes.string,
-    entity: PropTypes.shape({
-      name: PropTypes.string,
-    }),
-    files: PropTypes.arrayOf(
-      PropTypes.shape({
-        filename: PropTypes.string,
-        filepath: PropTypes.string,
-      })
-    ),
-    createdat: PropTypes.number,
-  }),
+  paperItem: paperProptypes,
 }
 
 export default React.memo(PaperItem)

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { StyledPaperBody } from '../elements/styled'
 import PaperPdfHandler from './PaperPdfHandler'
 import PageScreen from '../elements/reactpage/PageScreen'
+import fileProptypes from '../../constants/proytypes/fileProptypes'
 
 function PaperItemBody({ content, files, paper: { paperFormat } }) {
   return (
@@ -20,12 +21,7 @@ PaperItemBody.defaultProps = {
 }
 
 PaperItemBody.propTypes = {
-  files: PropTypes.arrayOf(
-    PropTypes.shape({
-      filename: PropTypes.string,
-      filepath: PropTypes.string,
-    })
-  ),
+  files: PropTypes.arrayOf(fileProptypes),
   content: PropTypes.string,
   paper: PropTypes.shape({
     paperFormat: PropTypes.string,

@@ -5,6 +5,7 @@ import moment from 'moment'
 import { Grid, Box, Typography, styled } from '@material-ui/core'
 
 import { StyledPaperHeader } from '../elements/styled'
+import paperProptypes from '../../constants/proytypes/paperProptypes'
 
 const StyledTypo = styled(Typography)(() => ({
   marginRight: '1rem',
@@ -15,7 +16,7 @@ function PaperItemHeader({
   setCurrentDocument,
   paperItem,
   paper,
-  currentDocumentId,
+  currentDocumentUuid,
 }) {
   const { palette } = useTheme()
   const PaperItemHeaderTitle = ({ criteria }) => {
@@ -24,12 +25,12 @@ function PaperItemHeader({
         return (
           <>
             <StyledTypo variant="body1">
-              {`${paperItem.classe_fourniture}  `}
+              {`${paperItem.classroom}  `}
             </StyledTypo>
             <Typography variant="caption">
-              {`Année Scolaire ${moment(Number(paperItem.startdate)).format(
+              {`Année Scolaire ${moment(paperItem.startdate).format(
                 'YYYY'
-              )}-${moment(Number(paperItem.enddate)).format('YYYY')}`}
+              )}-${moment(paperItem.enddate).format('YYYY')}`}
             </Typography>
           </>
         )
@@ -72,7 +73,7 @@ function PaperItemHeader({
   }, [])
 
   const handleClick = () => {
-    if (currentDocumentId && currentDocumentId === paperItem.id) {
+    if (currentDocumentUuid && currentDocumentUuid === paperItem.uuid) {
       setCurrentDocument(null)
     } else {
       setCurrentDocument(paperItem)
@@ -93,15 +94,13 @@ function PaperItemHeader({
       <Grid item container>
         <PaperItemHeaderTitle criteria={paper.paperType} />
       </Grid>
-      <Grid item container justify="space-between">
+      <Grid item container justifyContent="space-between">
         <Box>
           {paper.paperType === 'event' && (
             <>
               <Typography variant="caption">
                 Date: &nbsp;&nbsp;
-                {moment(Number(paperItem ? paperItem.date : null)).format(
-                  'DD/MM/YYYY'
-                )}
+                {moment(paperItem ? paperItem.date : null).format('DD/MM/YYYY')}
               </Typography>
               &nbsp;&nbsp;&nbsp;&nbsp;
               <Typography variant="caption">
@@ -111,9 +110,7 @@ function PaperItemHeader({
           )}
           {paper.paperType === 'activite' && (
             <Typography variant="caption">
-              {moment(Number(paperItem ? paperItem.date : null)).format(
-                'DD/MM/YYYY'
-              )}
+              {moment(paperItem ? paperItem.date : null).format('DD/MM/YYYY')}
             </Typography>
           )}
         </Box>
@@ -127,33 +124,15 @@ function PaperItemHeader({
   )
 }
 PaperItemHeader.defaultProps = {
-  currentDocumentId: null,
+  currentDocumentUuid: null,
 }
 PaperItemHeader.propTypes = {
   setCurrentDocument: PropTypes.func.isRequired,
   paper: PropTypes.shape({
     paperType: PropTypes.string,
   }).isRequired,
-  currentDocumentId: PropTypes.number,
-  paperItem: PropTypes.shape({
-    id: PropTypes.number,
-    place: PropTypes.string,
-    text: PropTypes.string,
-    name: PropTypes.string,
-    classe_fourniture: PropTypes.string,
-    title: PropTypes.string,
-    date: PropTypes.number,
-    startdate: PropTypes.string,
-    enddate: PropTypes.string,
-    entity: PropTypes.shape({
-      name: PropTypes.string,
-      alias: PropTypes.string,
-    }),
-    clientEntity: PropTypes.shape({
-      name: PropTypes.string,
-    }),
-    createdat: PropTypes.number,
-  }).isRequired,
+  currentDocumentUuid: PropTypes.string,
+  paperItem: paperProptypes.isRequired,
 }
 
 export default React.memo(PaperItemHeader)

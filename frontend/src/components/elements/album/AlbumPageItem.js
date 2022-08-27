@@ -9,6 +9,7 @@ import useMutate from '../../hooks/useMutate'
 import MutateCircularProgress from '../MutateCircularProgress'
 import getError from '../../../utils/getError'
 import getResponse from '../../../utils/getResponse'
+import fileProptypes from '../../../constants/proytypes/fileProptypes'
 
 const StyledDeleteButton = styled(Button)(({ theme }) => ({
   background: theme.palette.warning.main,
@@ -19,7 +20,7 @@ const StyledConfirmDeleteButton = styled(Button)(({ theme }) => ({
   width: '100%',
 }))
 
-function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
+function AlbumPageItem({ image, queryKey, entityAlias, albumUuid, isAllowed }) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [showButton, setShowButton] = useState(false)
   const [showImage, setShowImage] = useState(true)
@@ -42,7 +43,7 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
     closeSnackbar()
     try {
       await mutateAsync({
-        id: albumId,
+        uuid: albumUuid,
         entityAlias: entityAlias,
         action: 'delete',
         Token: Token,
@@ -66,7 +67,7 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
       {showImage && (
         <div className="pic">
           <img
-            src={`${URL_PREFIX}/${image.filepath}`}
+            src={`${URL_PREFIX}/${image.filepath.replace(/:/gi, '')}`}
             alt={image.filename}
             key={image.filename}
             style={{ width: '100%' }}
@@ -93,18 +94,15 @@ function AlbumPageItem({ image, queryKey, entityAlias, albumId, isAllowed }) {
   )
 }
 AlbumPageItem.defaultProps = {
-  albumId: null,
+  albumUuid: null,
 }
 
 AlbumPageItem.propTypes = {
   isAllowed: PropTypes.bool.isRequired,
-  albumId: PropTypes.string,
+  albumUuid: PropTypes.string,
   entityAlias: PropTypes.string.isRequired,
   queryKey: PropTypes.arrayOf(PropTypes.string).isRequired,
-  image: PropTypes.shape({
-    filename: PropTypes.string.isRequired,
-    filepath: PropTypes.string.isRequired,
-  }).isRequired,
+  image: fileProptypes.isRequired,
 }
 
 export default AlbumPageItem

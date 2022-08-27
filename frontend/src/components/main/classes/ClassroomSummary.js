@@ -4,7 +4,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 import PropTypes from 'prop-types'
 import PageScreen from '../../elements/reactpage/PageScreen'
-import { apiFecthEntity } from '../../../utils/api'
+import { apiFecthEntities } from '../../../utils/api'
 import useFetch from '../../hooks/useFetch'
 import AlertMessage from '../../elements/AlertMessage'
 
@@ -16,21 +16,24 @@ function ClassroomSummary({ queryParams, queryKey, setCurrentClassroom }) {
   const { isLoading, isError, data, errorMessage } = useFetch(
     queryKey,
     queryParams,
-    apiFecthEntity
+    apiFecthEntities
   )
 
   useEffect(() => {
-    if (data && Array.isArray(data)) {
-      const [result] = data
+    if (data && data.datas && Array.isArray(data.datas)) {
+      const [result] = data.datas
       setCurrentClassroom(result)
     }
   }, [data])
 
+  const entities = data && Array.isArray(data.datas) ? data.datas : []
+  if (!entities.length > 0) return null
+  const [entity] = entities
   return (
     <StyledClassroomContainer item container className="react-editor-read">
       {isError && <AlertMessage severity="error" message={errorMessage} />}
       {isLoading && <CircularProgress color="secondary" />}
-      {data && Array.isArray(data) && <PageScreen content={data[0].content} />}
+      {entity && <PageScreen content={entity.content} />}
     </StyledClassroomContainer>
   )
 }

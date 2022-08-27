@@ -16,20 +16,28 @@ function PageList({ pageParams, setPage }) {
 
   useEffect(() => {
     if (data) {
-      if (Array.isArray(data)) {
-        const [result] = data
+      if (Array.isArray(data.datas)) {
+        const [result] = data.datas
         setPage(result)
       }
     }
   }, [data])
 
+  if (!data || !Array.isArray(data.datas)) {
+    return null
+  }
+
+  const [page] = data.datas
+  const { content } = page
+
   return (
     <Grid item container className="react-editor-read" data-testid="page-list">
       {isError && <AlertMessage severity="error" message={errorMessage} />}
       {isLoading && <CircularProgress color="secondary" />}
-      {data && Array.isArray(data) && data.length > 0 && (
+      {/* {data && Array.isArray(data) && data.length > 0 && (
         <PageScreen content={data[0].content} />
-      )}
+      )} */}
+      {content && <PageScreen content={content} />}
     </Grid>
   )
 }

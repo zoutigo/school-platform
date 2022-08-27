@@ -16,6 +16,7 @@ import {
   setMainDialogDatas,
 } from '../../redux/settings/SettingsActions'
 import { apiFetchDialogs } from '../../utils/api'
+import useFetch from '../hooks/useFetch'
 
 const StyledFooterInfos = styled(Grid)(({ theme }) => ({
   background: theme.palette.secondary.main,
@@ -34,21 +35,30 @@ function Footer() {
   const dispatch = useDispatch()
   // load modal datas in redux
   const dialogsQueryKey = ['main-dialog']
-  const { data: dialogs } = useQuery(dialogsQueryKey, () => apiFetchDialogs())
+  const { isLoading, isError, data, errorMessage } = useFetch(
+    dialogsQueryKey,
+    '',
+    apiFetchDialogs
+  )
+
+  const dialogs = data ? data.datas : []
 
   useEffect(() => {
     if (dialogs && Array.isArray(dialogs) && dialogs.length > 0) {
       const today = new Date().getTime()
-      const goodDatas = dialogs.filter(
-        (dialog) => dialog.enddate > today && dialog.startdate < today
-      )
+      const goodDatas = dialogs
+        ? dialogs.filter(
+            (dialog) => dialog.enddate > today && dialog.startdate < today
+          )
+        : null
 
-      if (goodDatas.length > 0) {
+      if (goodDatas && goodDatas.length > 0) {
         dispatch(setMainDialogDatas(goodDatas[0]))
       }
     }
     return () => {
       dispatch(setMainDialogCount(0))
+      dispatch(setMainDialogDatas(null))
     }
   }, [dialogs])
   return (

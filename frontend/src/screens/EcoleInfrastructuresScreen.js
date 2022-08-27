@@ -20,7 +20,10 @@ function EcoleInfrastructuresScreen() {
   )
 
   const queryKey = [`album-${categoryAlias}`]
-  const queryParams = `alias=${categoryAlias}`
+
+  const queryParams = `slug=${categoryAlias}`
+
+  console.log('queryparams', queryParams)
   const { isLoading, isError, data, error } = useQuery(queryKey, () =>
     apiFetchAlbum(queryParams)
   )

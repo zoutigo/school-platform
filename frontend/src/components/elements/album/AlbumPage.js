@@ -11,6 +11,7 @@ import CustomButton from '../CustomButton'
 import Title from '../Title'
 import redefineAlias from '../../../utils/redefineAlias'
 import useRoutesInfos from '../../hooks/useRoutesInfos'
+import albumProptypes from '../../../constants/proytypes/albumProptypes'
 
 const StyledAlbumHeaderGrid = styled(Grid)(() => ({
   marginLeft: '0.5rem',
@@ -18,7 +19,7 @@ const StyledAlbumHeaderGrid = styled(Grid)(() => ({
   // height: '2rem',
 }))
 
-function AlbumPage({ currentAlbum, setShow, isAllowed, type }) {
+function AlbumPage({ currentAlbum, setShow, isAllowed, type, queryKey }) {
   const theme = useTheme()
   const [showPage, setShowPage] = useState({
     imagesForm: false,
@@ -30,8 +31,8 @@ function AlbumPage({ currentAlbum, setShow, isAllowed, type }) {
     redefineAlias(category.current.state.alias),
     [category]
   )
-  const queryKey = [`album-${currentAlbum.alias}`]
-  const queryParams = `alias=${currentAlbum.alias}`
+  // const queryKey = [`album-${currentAlbum.slug}`]
+  const queryParams = `slug=${currentAlbum.slug}`
 
   const handleBack = useCallback(
     () =>
@@ -120,13 +121,11 @@ AlbumPage.defaultProps = {
 }
 
 AlbumPage.propTypes = {
-  currentAlbum: PropTypes.shape({
-    name: PropTypes.string,
-    alias: PropTypes.string,
-  }),
+  currentAlbum: albumProptypes,
   setShow: PropTypes.func,
   isAllowed: PropTypes.bool,
   type: PropTypes.string,
+  queryKey: PropTypes.string.isRequired,
 }
 
 export default AlbumPage

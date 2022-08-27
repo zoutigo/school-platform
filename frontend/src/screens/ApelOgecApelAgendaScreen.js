@@ -1,5 +1,5 @@
 import React from 'react'
-import { apiFetchEvents, apiPostEvents } from '../utils/api'
+import { apiFetchPaper, apiPostPaper } from '../utils/api'
 
 import Paper from '../components/paper/Paper'
 import useRigths from '../components/hooks/useRigths'
@@ -14,9 +14,9 @@ function ApelOgecApelAgendaScreen() {
   const entityAlias = 'apel'
   const paperName = `Agenda ${entityAlias}`
   const queryKey = [paperName]
-  const queryParams = `entityAlias=${entityAlias}`
-  const fetcher = apiFetchEvents
-  const poster = apiPostEvents
+  const queryParams = `entityAlias=${entityAlias}&type=event`
+  const fetcher = apiFetchPaper
+  const poster = apiPostPaper
 
   const paper = {
     queryKey,

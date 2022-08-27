@@ -44,7 +44,7 @@ module.exports.getPage = async (req, res, next) => {
 }
 module.exports.listPages = async (req, res, next) => {
   try {
-    const { pageList, pageListError } = await listPagesService()
+    const { pageList, pageListError } = await listPagesService(req.query)
 
     if (pageListError) return next(pageListError)
     if (!pageList || pageList.length < 1)
